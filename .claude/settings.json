@@ -1,0 +1,322 @@
+{
+  "version": "2.0.0-ENHANCED",
+  "projectName": "CoolHan Builder",
+  "description": "100% Specification-Driven Development - Hooks enforce perfect alignment",
+
+  "hooks": {
+    "enabled": true,
+    "strategy": "enforced-with-specification-validation",
+    "documentation": "Hooks are unignorable enforcement gates. Three-layer validation: (1) Secret/Security, (2) Specification Compliance, (3) Runtime Validation. Bad outcomes technically impossible.",
+
+    "layers": {
+      "layer1": "Security & Basic Validation",
+      "layer2": "Specification Compliance (100% sync)",
+      "layer3": "Runtime & Health Checks"
+    },
+
+    "preCommitHook": {
+      "enabled": true,
+      "name": "pre-commit",
+      "purpose": "Block commits with secrets, specification violations, locked-mode violations",
+      "strictMode": true,
+      "validationLayers": [
+        {
+          "layer": 1,
+          "name": "SECURITY",
+          "checks": [
+            {
+              "rule": "BLOCK_ENV_FILES",
+              "pattern": "\\.env.*",
+              "action": "BLOCK_COMMIT",
+              "message": "❌ Cannot commit .env files",
+              "severity": "CRITICAL"
+            },
+            {
+              "rule": "BLOCK_CREDENTIALS",
+              "patterns": ["api[_-]?key", "secret[_-]?key", "password", "token"],
+              "action": "BLOCK_COMMIT",
+              "message": "❌ Cannot commit credentials",
+              "severity": "CRITICAL"
+            }
+          ]
+        },
+        {
+          "layer": 2,
+          "name": "SPECIFICATION_COMPLIANCE",
+          "checks": [
+            {
+              "rule": "VALIDATE_STATUS_VALUES",
+              "source": "00_STATUS_VALUE_REGISTRY.md",
+              "action": "BLOCK_COMMIT",
+              "message": "❌ Invalid status value",
+              "severity": "CRITICAL"
+            },
+            {
+              "rule": "VALIDATE_MODULE_CALLS",
+              "source": "00_MODULE_RESPONSIBILITY_MATRIX.md",
+              "action": "BLOCK_COMMIT",
+              "message": "❌ Unauthorized module API call",
+              "severity": "CRITICAL"
+            }
+          ]
+        },
+        {
+          "layer": 3,
+          "name": "LOCKED_MODE_ENFORCEMENT",
+          "checks": [
+            {
+              "rule": "NO_SELF_SOLVING",
+              "patterns": ["self[_-]?solv", "guess", "infer"],
+              "action": "BLOCK_COMMIT",
+              "message": "❌ Self-solving violates Development Locked Mode",
+              "severity": "CRITICAL"
+            },
+            {
+              "rule": "NO_HARDCODED_PATHS",
+              "patterns": ["[a-zA-Z]:\\\\", "/home/", "/opt/"],
+              "action": "BLOCK_COMMIT",
+              "message": "❌ Hardcoded file paths not allowed",
+              "severity": "CRITICAL"
+            }
+          ]
+        }
+      ]
+    },
+
+    "preDeployHook": {
+      "enabled": true,
+      "name": "pre-deploy",
+      "purpose": "Comprehensive validation: build, tests, specifications, 100% code-spec sync",
+      "strictMode": true,
+      "validationStages": [
+        {
+          "stage": 1,
+          "name": "PARSE_SPECIFICATIONS",
+          "description": "Convert markdown specs to JSON",
+          "command": "node .claude/hooks/spec-parser.js",
+          "timeoutSeconds": 30,
+          "onFailure": "BLOCK_DEPLOY",
+          "severity": "CRITICAL"
+        },
+        {
+          "stage": 2,
+          "name": "ANALYZE_CODEBASE",
+          "description": "Extract implementation details",
+          "command": "node .claude/hooks/code-analyzer.js",
+          "timeoutSeconds": 30,
+          "onFailure": "BLOCK_DEPLOY",
+          "severity": "CRITICAL"
+        },
+        {
+          "stage": 3,
+          "name": "VALIDATE_100_PERCENT_SPEC_COMPLIANCE",
+          "description": "Verify code matches specifications exactly",
+          "command": "node .claude/hooks/spec-validator.js",
+          "timeoutSeconds": 30,
+          "onFailure": "BLOCK_DEPLOY",
+          "severity": "CRITICAL",
+          "requirements": "All status values, API endpoints, tables must match spec 100%"
+        },
+        {
+          "stage": 4,
+          "name": "SYNTAX_VALIDATION",
+          "description": "Build validation",
+          "command": "npm run build",
+          "timeoutSeconds": 60,
+          "onFailure": "BLOCK_DEPLOY",
+          "severity": "CRITICAL"
+        },
+        {
+          "stage": 5,
+          "name": "SECURITY_SCAN",
+          "description": "Vulnerability scan",
+          "command": "npm audit --audit-level=moderate",
+          "timeoutSeconds": 30,
+          "onFailure": "BLOCK_DEPLOY",
+          "severity": "CRITICAL"
+        },
+        {
+          "stage": 6,
+          "name": "TEST_SUITE",
+          "description": "All tests must pass",
+          "command": "npm test",
+          "timeoutSeconds": 120,
+          "onFailure": "BLOCK_DEPLOY",
+          "severity": "CRITICAL"
+        },
+        {
+          "stage": 7,
+          "name": "SPEC_DOCUMENT_VERIFICATION",
+          "description": "All required specifications must exist",
+          "requiredDocs": [
+            "00_AI_MASTER_RULES.md",
+            "00_CORE_PRINCIPLES_SYSTEM.md",
+            "00_STATUS_VALUE_REGISTRY.md",
+            "00_MODULE_RESPONSIBILITY_MATRIX.md",
+            "00_DEVELOPMENT_LOCKED_MODE.md",
+            "shopping_mall_core.md"
+          ],
+          "onFailure": "BLOCK_DEPLOY",
+          "severity": "CRITICAL"
+        }
+      ]
+    },
+
+    "postDeployHook": {
+      "enabled": true,
+      "name": "post-deploy",
+      "purpose": "8 health checks + 4 specification validation checks",
+      "autoRun": true,
+      "displayResults": true,
+      "healthChecks": [
+        {
+          "check": 1,
+          "name": "API_HEALTH",
+          "type": "http",
+          "severity": "CRITICAL"
+        },
+        {
+          "check": 2,
+          "name": "DATABASE_CONNECTION",
+          "type": "database",
+          "severity": "CRITICAL"
+        },
+        {
+          "check": 3,
+          "name": "CACHE_HEALTH",
+          "type": "http",
+          "severity": "WARNING"
+        },
+        {
+          "check": 4,
+          "name": "EXTERNAL_API_CONNECTIVITY",
+          "type": "external",
+          "severity": "WARNING"
+        },
+        {
+          "check": 5,
+          "name": "PERFORMANCE_BASELINE",
+          "type": "performance",
+          "severity": "CRITICAL"
+        },
+        {
+          "check": 6,
+          "name": "ERROR_RATE",
+          "type": "monitoring",
+          "severity": "CRITICAL"
+        },
+        {
+          "check": 7,
+          "name": "SMOKE_TEST",
+          "type": "test",
+          "severity": "CRITICAL"
+        },
+        {
+          "check": 8,
+          "name": "SECURITY_HEADERS",
+          "type": "security",
+          "severity": "CRITICAL"
+        },
+        {
+          "check": 9,
+          "name": "STATUS_TRANSITION_VALIDATION",
+          "type": "spec-validation",
+          "source": "00_STATUS_VALUE_REGISTRY.md",
+          "severity": "CRITICAL"
+        },
+        {
+          "check": 10,
+          "name": "MODULE_ISOLATION_TEST",
+          "type": "spec-validation",
+          "source": "00_MODULE_RESPONSIBILITY_MATRIX.md",
+          "severity": "CRITICAL"
+        },
+        {
+          "check": 11,
+          "name": "API_SPECIFICATION_COMPLIANCE",
+          "type": "spec-validation",
+          "source": "shopping_mall_core.md",
+          "severity": "CRITICAL"
+        },
+        {
+          "check": 12,
+          "name": "SPEC_DRIFT_DETECTION",
+          "type": "spec-validation",
+          "source": "validation_report.json",
+          "severity": "CRITICAL"
+        }
+      ],
+      "onHealthCheckFailure": {
+        "action": "ALERT_AND_ROLLBACK",
+        "notifyChannels": ["slack", "email"],
+        "maxFailures": 1,
+        "message": "❌ Critical check failed. Automatic rollback initiated."
+      }
+    }
+  },
+
+  "enforcementRules": {
+    "description": "Unbypassable enforcement - bad outcomes technically impossible",
+    "rules": [
+      {
+        "type": "ABSOLUTE_PROHIBITION",
+        "rule": "NO_SPECIFICATION_DRIFT",
+        "prevents": "Deploying code that doesn't match specifications 100%",
+        "enforcement": "Pre-deploy hook runs spec-parser, code-analyzer, spec-validator",
+        "exception": "None. Perfect alignment is mandatory."
+      },
+      {
+        "type": "ABSOLUTE_PROHIBITION",
+        "rule": "NO_INVALID_STATUS_VALUES",
+        "prevents": "Using status values not in Status Value Registry",
+        "enforcement": "Pre-commit validates against parsed registry",
+        "exception": "None. All statuses must be predefined."
+      },
+      {
+        "type": "ABSOLUTE_PROHIBITION",
+        "rule": "NO_UNAUTHORIZED_MODULE_CALLS",
+        "prevents": "Module crossing without permission",
+        "enforcement": "Pre-commit validates against Module Responsibility Matrix",
+        "exception": "None. All calls must be in matrix."
+      },
+      {
+        "type": "ABSOLUTE_PROHIBITION",
+        "rule": "NO_LOCKED_MODE_VIOLATIONS",
+        "prevents": "Self-solving, uncertain logic, hardcoded paths",
+        "enforcement": "Pre-commit pattern matching + Development Locked Mode validation",
+        "exception": "None. Strict adherence to specifications only."
+      },
+      {
+        "type": "ABSOLUTE_PROHIBITION",
+        "rule": "NO_MISSING_SPECIFICATIONS",
+        "prevents": "Deploying without complete Single Source of Truth",
+        "enforcement": "Pre-deploy verifies all 6 required spec documents exist",
+        "exception": "None. Complete documentation is mandatory."
+      }
+    ]
+  },
+
+  "completeness": {
+    "target": "100% specification-driven development",
+    "current_status": "Enhanced hooks system with 3-layer validation",
+    "guarantee": "Code and specifications are always in perfect alignment",
+    "verification": "Automated at every commit, deployment, and post-deployment"
+  },
+
+  "reporting": {
+    "enabled": true,
+    "logHookExecution": true,
+    "displayFullResults": true,
+    "outputFormat": "json_and_human_readable",
+    "outputs": [
+      ".claude/parsed/status_registry.json",
+      ".claude/parsed/module_matrix.json",
+      ".claude/parsed/api_endpoints.json",
+      ".claude/analysis/api_analysis.json",
+      ".claude/analysis/status_analysis.json",
+      ".claude/analysis/module_calls_analysis.json",
+      ".claude/analysis/validation_report.json",
+      ".claude/health_check_log.json"
+    ]
+  }
+}

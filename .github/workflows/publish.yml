@@ -1,0 +1,112 @@
+name: Publish to npm
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'package.json'
+      - 'install.js'
+      - 'install.sh'
+      - 'install.ps1'
+      - '.claude/**'
+      - 'knowledge_base/**'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify package structure
+        run: |
+          echo "Verifying CoolHan package structure..."
+          [ -f "install.js" ] || exit 1
+          [ -f "install.sh" ] || exit 1
+          [ -f "install.ps1" ] || exit 1
+          [ -f "package.json" ] || exit 1
+          [ -f "README.md" ] || exit 1
+          [ -f "LICENSE" ] || exit 1
+          [ -f "CLAUDE.md" ] || exit 1
+          [ -d ".claude" ] || exit 1
+          [ -d "knowledge_base" ] || exit 1
+          echo "✅ Package structure verified"
+
+      - name: Check if version changed
+        id: version_check
+        run: |
+          VERSION=$(node -e "console.log(require('./package.json').version)")
+          PUBLISHED_VERSION=$(npm view coolhan-builder version 2>/dev/null || echo "0.0.0")
+          echo "Current version: $VERSION"
+          echo "Published version: $PUBLISHED_VERSION"
+          if [ "$VERSION" != "$PUBLISHED_VERSION" ]; then
+            echo "version_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "version_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish to npm
+        if: steps.version_check.outputs.version_changed == 'true'
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create Release
+        if: steps.version_check.outputs.version_changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
+          body: |
+            # CoolHan Framework v${{ env.VERSION }}
+
+            ## What's New
+            See [CHANGELOG.md](CHANGELOG.md) for detailed changes.
+
+            ## Installation
+
+            ```bash
+            npm install -g coolhan-builder
+            coolhan-install
+            ```
+
+            Or in an existing project:
+            ```bash
+            npx coolhan-builder
+            ```
+
+            ## Documentation
+            - [README](README.md) - Project overview and features
+            - [INSTALLATION_GUIDE](knowledge_base/INSTALLATION_GUIDE.md) - Detailed installation guide
+            - [CLAUDE.md](CLAUDE.md) - Project operations guide
+
+            ## Support
+            - GitHub Issues: https://github.com/zmjckim-fa/coolhan/issues
+            - Documentation: https://github.com/zmjckim-fa/coolhan#documentation
+          draft: false
+          prerelease: false
+
+      - name: Publish success notification
+        if: steps.version_check.outputs.version_changed == 'true'
+        run: |
+          echo "✅ CoolHan v$VERSION published to npm successfully!"
+          echo "Install with: npm install -g coolhan-builder"

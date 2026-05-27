@@ -1,0 +1,58 @@
+{
+  "name": "coolhan-builder",
+  "version": "1.0.0",
+  "description": "CoolHan Specification-Driven Development Framework - AI-based engineering orchestration with automatic validation",
+  "main": "install.js",
+  "bin": {
+    "coolhan-install": "./install.js"
+  },
+  "scripts": {
+    "install:coolhan": "node install.js",
+    "setup": "node install.js"
+  },
+  "keywords": [
+    "specification-driven",
+    "development",
+    "ai",
+    "framework",
+    "validation",
+    "automation",
+    "engineering",
+    "orchestration"
+  ],
+  "author": "CoolHan Project",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zmjckim-fa/coolhan.git"
+  },
+  "homepage": "https://github.com/zmjckim-fa/coolhan",
+  "bugs": {
+    "url": "https://github.com/zmjckim-fa/coolhan/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "install.js",
+    "install.sh",
+    "install.ps1",
+    "README.md",
+    "QUICK_START.md",
+    "INSTALLATION_GUIDE.md",
+    "CLAUDE.md",
+    "LICENSE",
+    "DOCUMENT_GUIDE.md",
+    "CONTRIBUTING.md",
+    "CHANGELOG.md",
+    "GITHUB_UPLOAD_CHECKLIST.md",
+    "FINAL_DEPLOYMENT_CHECKLIST.md",
+    "COMPLETION_REPORT.md",
+    ".claude/",
+    "knowledge_base/",
+    ".github/workflows/publish.yml",
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    ".github/ISSUE_TEMPLATE/",
+    ".gitignore"
+  ]
+}
