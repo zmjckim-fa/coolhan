@@ -1,0 +1,27 @@
+{
+  "skill_name": "coolhan-spec-driven-framework",
+  "description": "100% specification-driven development framework with automated validation hooks",
+  "evals": [
+    {
+      "id": 1,
+      "name": "setup-basic-framework-for-new-project",
+      "prompt": "I'm starting a new e-commerce project and I want to ensure 100% specification-driven development with automated validation. Set up the complete CoolHan Framework for me. I have: Node.js 16, Git configured, npm 7. I need LOCAL environment (port 3001), and I'll deploy to STAGING and PRODUCTION later. Generate all necessary files with sensible defaults for an e-commerce system.",
+      "expected_output": "Complete framework with 19 files: 3 environment configs (LOCAL/STAGING/PRODUCTION), 2 protocol documents (COMMIT/DEPLOY), 2 management documents (FILE_MANIFEST/DEPLOYMENT_MANIFEST), 7 validation hook scripts, 1 master specification module, plus settings.json. All files should be in .claude/ directory and ready to use.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "validate-existing-code-against-spec",
+      "prompt": "I have an existing project with some TypeScript code already written. I want to validate that my code matches my specifications 100%. My specifications define: 1) Status values (PENDING, CONFIRMED, PROCESSING, SHIPPED), 2) API endpoints (GET /api/orders/:id, POST /api/orders, PATCH /api/orders/:id), 3) Module responsibilities (Order module calls Product API but NOT Admin APIs). Run the spec-parser, code-analyzer, and spec-validator to check if my code matches my specs. Report any mismatches found.",
+      "expected_output": "Three analysis reports: (1) parsed specifications in JSON format showing status values, endpoints, and module matrix, (2) analyzed code showing actual endpoints, status values, and module calls in code, (3) validation report with PASS/FAIL status and detailed list of any mismatches (missing endpoints, undefined status values, module isolation violations).",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "deployment-with-lock-system-and-post-deploy-validation",
+      "prompt": "I need to deploy code to my STAGING environment. Before deploying, I need the pre-deploy validation to check: (1) spec-code compliance, (2) build success, (3) tests pass. During deployment, I need the deploy lock to prevent concurrent deployments (1-hour timeout). After deployment, I need all 12 post-deploy health checks (API health, DB connection, cache, error rate <0.1%, status transition validity, module isolation, API compliance, spec drift). Set up and execute this complete deployment validation pipeline.",
+      "expected_output": "Complete deployment validation report showing: (1) pre-deploy validation PASSED (spec match, build success, tests passed), (2) deployment lock acquired and held, (3) post-deploy validation results for all 12 checks with specific metrics (API response time, error rate, module isolation enforced, no spec drift detected), (4) DEPLOYMENT_MANIFEST entry created with version, commit, validation results, and monitoring period.",
+      "files": []
+    }
+  ]
+}
