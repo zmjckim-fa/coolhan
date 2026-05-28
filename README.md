@@ -6,6 +6,30 @@
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Language](https://img.shields.io/badge/language-Korean-red.svg)
 ![Status](https://img.shields.io/badge/status-Production%20Ready-success.svg)
+![Multilingual](https://img.shields.io/badge/multilingual-50%2B%20languages-brightgreen.svg)
+
+---
+
+## 🌍 다국어 지원 (Multilingual Support)
+
+CoolHan은 **50+ 언어**를 지원합니다. 모국어로 자연스럽게 개발하세요!
+
+**언어별 문서 (Language-Specific Documentation):**
+- 🇰🇷 [한국어](README.ko.md) | 🇺🇸 [English](README.en.md) | 🇯🇵 [日本語](README.ja.md)
+- 🇨🇳 [中文](README.zh.md) | 🇪🇸 [Español](README.es.md) | 🇫🇷 [Français](README.fr.md)
+- 🇩🇪 [Deutsch](README.de.md) | 🇮🇹 [Italiano](README.it.md) | 🇵🇹 [Português](README.pt.md)
+- 🇷🇺 [Русский](README.ru.md) | 🇮🇳 [हिन्दी](README.hi.md) | 🇹🇭 [ไทย](README.th.md)
+- [더 많은 언어 보기...](MULTILINGUAL_SUPPORT.md)
+
+**명령어 예시:**
+```
+한국어: "쿨한으로 사용자 로그인 기능 추가해"
+English: "CoolHan add user login feature"
+日本語: "CoolHanでユーザーログイン機能を追加して"
+中文: "用CoolHan添加用户登录功能"
+```
+
+더 자세한 다국어 지원 정보는 [`MULTILINGUAL_SUPPORT.md`](MULTILINGUAL_SUPPORT.md)를 참고하세요.
 
 ---
 
