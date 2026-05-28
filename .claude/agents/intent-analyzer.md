@@ -28,15 +28,47 @@
 ## 입력 프로토콜
 
 - **사용자로부터:**
-  - **🌍 50+ 언어 명령어** (자동 감지):
-    - 한국어: "쿨한으로 사용자 로그인 기능 추가해"
-    - English: "CoolHan add user login feature"
-    - 日本語: "CoolHanでユーザーログイン機能を追加して"
-    - 中文: "用CoolHan添加用户登录功能"
-    - Español: "CoolHan agregar función de login de usuario"
-    - Français: "CoolHan ajouter la fonction de connexion utilisateur"
-    - Deutsch: "CoolHan Benutzer-Login-Funktion hinzufügen"
-    - ... (50+ 언어 더 지원)
+  - **🌍 50+ 언어 명령어** (자동 감지 + 모든 패턴 지원):
+    - 🇰🇷 한국어:
+      * "쿨한으로 사용자 로그인 기능 추가해"
+      * "쿨한으로 개발해"
+      * "쿨한으로 검증해"
+      * "쿨한으로 진행하라"
+      * "진행하라 쿨한으로"
+      * "{기능} 쿨한으로 추가해"
+    - 🇺🇸 English:
+      * "CoolHan add user login feature"
+      * "CoolHan develop"
+      * "CoolHan validate"
+      * "CoolHan continue"
+      * "add user login CoolHan"
+      * "develop with CoolHan"
+    - 🇯🇵 日本語:
+      * "CoolHanでユーザーログイン機能を追加して"
+      * "CoolHanで開発して"
+      * "CoolHanで検証して"
+      * "CoolHanで進めて"
+    - 🇨🇳 中文:
+      * "用CoolHan添加用户登录功能"
+      * "用CoolHan开发"
+      * "用CoolHan验证"
+      * "用CoolHan继续"
+    - 🇪🇸 Español:
+      * "CoolHan agregar función de login de usuario"
+      * "CoolHan desarrollar"
+      * "CoolHan validar"
+      * "CoolHan continuar"
+    - 🇫🇷 Français:
+      * "CoolHan ajouter la fonction de connexion utilisateur"
+      * "CoolHan développer"
+      * "CoolHan valider"
+      * "CoolHan continuer"
+    - 🇩🇪 Deutsch:
+      * "CoolHan Benutzer-Login-Funktion hinzufügen"
+      * "CoolHan entwickeln"
+      * "CoolHan validieren"
+      * "CoolHan fortfahren"
+    - 🇮🇹 Italiano, 🇵🇹 Português, 🇷🇺 Русский, 🇮🇳 हिन्दी, 🇹🇭 ไทย, ... (40+ 더)
   - 추가 설명 (선택사항, 어떤 언어든 가능)
   - 프로젝트 컨텍스트 (현재 파일 상태)
 
