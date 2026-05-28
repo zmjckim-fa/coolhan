@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.0.2] - 2026-05-28
+
+### Added
+- **완전 다국어 트리거 구현**: 모든 50+ 언어의 모든 명령어 패턴 지원
+  - 🇰🇷 한국어: '쿨한으로 ~', '진행하라 쿨한으로', '~ 쿨한으로 추가해'
+  - 🇺🇸 English: 'CoolHan ~', '~ with CoolHan', 'CoolHan continue'
+  - 🇯🇵 日本語: 'CoolHanで~', 'CoolHanで進めて'
+  - 🇨🇳 中文: '用CoolHan~', '用CoolHan继续'
+  - 🇪🇸 Español, 🇫🇷 Français, 🇩🇪 Deutsch, 🇮🇹 Italiano, 🇵🇹 Português, 🇷🇺 Русский, 🇮🇳 हिन्दी, 🇹🇭 ไทย +40 more
+  - **자동 언어 감지**: 입력 언어 자동 인식 → 해당 언어의 모든 트리거 패턴 활성화
+
+- **Orchestrator description 강화**
+  - 각 언어별 구체적 명령어 예시 명시
+  - "이 스킬을 사용할 것"이라는 명확한 의도 표시
+  - Intent Analyzer 자동 활성화 보장
+
+- **Intent Analyzer 트리거 확장**
+  - 50+ 언어의 모든 명령어 형식 인식
+  - 문법적 변형 모두 지원 (전치사 위치, 조사, 시제 등)
+
+### Changed
+- `coolhan-development-orchestrator.md`: 모든 언어 명령어 패턴 명시적 추가
+- `intent-analyzer.md`: 50+ 언어 입력 프로토콜 완전 구현
+- `package.json`: 버전 1.0.1 → 1.0.2
+
+### Result
+✅ "coolhan으로 진행하라" → **즉시 intent-analyzer 활성화**
+✅ 모든 언어에서 작동 (50+ 언어)
+✅ 모든 문법적 변형 지원
+
+---
+
 ## [1.0.1] - 2026-05-28
 
 ### Added
