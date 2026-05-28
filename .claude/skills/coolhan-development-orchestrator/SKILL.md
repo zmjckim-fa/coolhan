@@ -26,7 +26,8 @@ compatibility: Claude Code + Agent Team + CoolHan Framework + Multilingual Suppo
 | 4️⃣ **자동 검증** | Validator | 9단계 검증 결과 |
 | 5️⃣ **테스트** | QA Tester | 테스트 리포트 |
 | 6️⃣ **통합 검증** | Integration Validator | 포트/API/DB/기획서 검증 |
-| 7️⃣ **배포** | DevOps/Deployer | 배포 완료 |
+| 7️⃣ **E2E 검증** | E2E Tester | 완전한 사용자 여정 검증 |
+| 8️⃣ **배포** | DevOps/Deployer | 배포 완료 |
 
 ---
 
