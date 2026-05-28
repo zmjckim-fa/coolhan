@@ -25,7 +25,8 @@ compatibility: Claude Code + Agent Team + CoolHan Framework + Multilingual Suppo
 | 3️⃣ **코드 구현** | Developer | 규격 기반 코드 |
 | 4️⃣ **자동 검증** | Validator | 9단계 검증 결과 |
 | 5️⃣ **테스트** | QA Tester | 테스트 리포트 |
-| 6️⃣ **배포** | DevOps/Deployer | 배포 완료 |
+| 6️⃣ **통합 검증** | Integration Validator | 포트/API/DB/기획서 검증 |
+| 7️⃣ **배포** | DevOps/Deployer | 배포 완료 |
 
 ---
 
@@ -182,8 +183,21 @@ Task 5: 테스트 실행 (QA Tester)
 └─ 의존: Task 4 완료 (PASS)
 └─ 산출: test-results-{timestamp}.json
 
-Task 6: 배포 (DevOps/Deployer)
-└─ 의존: Task 5 완료 (PASS)
+Task 6: 통합 검증 (Integration Validator) ⭐ NEW
+├─ 의존: Task 5 완료 (PASS)
+├─ 검증 항목:
+│  ├─ 포트 확인 (API, DB, 캐시, 웹)
+│  ├─ API 엔드포인트 실제 테스트
+│  ├─ 데이터베이스 연결 및 쿼리
+│  ├─ 빌드 성공 확인
+│  ├─ 데이터 로드 확인
+│  └─ 기획서 요구사항 체크리스트
+└─ 산출: 
+   ├─ integration-validation-report-{id}.json
+   └─ requirements-checklist-{id}.md
+
+Task 7: 배포 (DevOps/Deployer)
+└─ 의존: Task 6 완료 (PASS) ← 통합 검증 필수
 └─ 산출: deployment-log-{id}.json
 ```
 
