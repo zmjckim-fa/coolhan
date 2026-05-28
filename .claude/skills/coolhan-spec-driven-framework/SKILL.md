@@ -3,6 +3,13 @@ name: coolhan-spec-driven-framework
 description: |
   **CoolHan Specification-Driven Development Framework** - A complete system for 100% specification-driven development with automated validation hooks. Use this skill when: (1) users need to set up specification-driven development pipelines; (2) users want to prevent AI mistakes through automated validation; (3) users need deployment safety systems with pre-deploy/post-deploy validation; (4) users require environment isolation (LOCAL/STAGING/PRODUCTION); (5) users want to enforce code-spec compliance; (6) users need concurrent deployment prevention and locking systems; (7) users are setting up CI/CD pipelines with strict validation gates; (8) users need comprehensive deployment manifests and rollback capabilities. This skill generates production-ready framework files including environment configs, commit/deploy protocols, 7 validation hook scripts (spec-parser, code-analyzer, spec-validator, environment-validator, deploy-lock, pre-commit, pre-deploy, post-deploy), deployment tracking manifests, and complete documentation ensuring zero spec-code mismatch.
 
+working-mode: |
+  **Token Efficiency Mode (작동 원칙)**
+  - 결과만 보고: 생성완료/실패 형식으로만 보고
+  - 과정 설명 금지: 생각, 판단 과정 미표시
+  - 소스 화면 미표시: 코드나 내용 스크린샷 제외
+  - 토큰 최소화: 필수 정보만 간결하게 전달
+
 compatibility: |
   - Node.js 16+
   - Git 2.30+

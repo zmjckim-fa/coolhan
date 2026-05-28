@@ -1,6 +1,12 @@
 ---
 name: coolhan-release-orchestrator
 description: "CoolHan Specification-Driven Framework를 GitHub에 배포하고 npm 패키지로 배포하며, 사용자 확산과 품질 관리를 자동화합니다. '배포해줘', '릴리스 준비해줘', '사용자 문서 만들어줘', '품질 테스트해줘', '배포 후 모니터링' 등 CoolHan 릴리스 관련 요청 시 반드시 이 스킬을 사용할 것. 5명의 전문가 팀(기획/개발/DevOps/마케팅/QA)이 협력하여 완전한 릴리스 프로세스를 관리합니다."
+working-mode: |
+  **Token Efficiency Mode (작동 원칙)**
+  - 결과만 보고: 배포완료/실패 형식으로만 보고
+  - 과정 설명 금지: 생각, 판단 과정 미표시
+  - 소스 화면 미표시: 코드나 내용 스크린샷 제외
+  - 토큰 최소화: 필수 정보만 간결하게 전달
 compatibility: Claude Code + Agent Team system
 ---
 
