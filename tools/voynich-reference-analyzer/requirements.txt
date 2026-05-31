@@ -1,0 +1,32 @@
+# Voynich Reference Analyzer v0.2
+# Python 3.9+
+
+# Core Data Science
+pandas>=1.5.0
+numpy>=1.23.0
+scipy>=1.9.0
+
+# Database
+sqlite3  # Built-in
+
+# Statistics & Analysis
+scikit-learn>=1.2.0
+statsmodels>=0.13.0
+
+# Visualization
+matplotlib>=3.6.0
+plotly>=5.13.0
+
+# Web UI (Streamlit Dashboard)
+streamlit>=1.20.0
+
+# Utilities
+python-dotenv>=0.21.0
+tqdm>=4.64.0
+
+# Development (optional)
+jupyter>=1.0.0
+pytest>=7.2.0
+pytest-cov>=4.0.0
+black>=23.0.0
+pylint>=2.16.0
