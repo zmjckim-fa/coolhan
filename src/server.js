@@ -14,13 +14,20 @@
 const path = require('path');
 const express = require('express');
 const healthRouter = require('./routes/health');
+const feedbackRouter = require('./features/feedback/routes');
 
 function createApp() {
   const app = express();
   app.disable('x-powered-by'); // do not leak server internals (spec §4.1)
 
+  // Middleware for JSON parsing
+  app.use(express.json());
+
   // Health API.
   app.use(healthRouter);
+
+  // Feedback API (spec §2: User Feedback Collection).
+  app.use('/api', feedbackRouter);
 
   // Status page (single HTML file).
   app.get('/status', (req, res) => {
