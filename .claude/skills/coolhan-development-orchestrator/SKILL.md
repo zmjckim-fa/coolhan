@@ -18,16 +18,23 @@ compatibility: Claude Code + Agent Team + CoolHan Framework + Multilingual Suppo
 
 ## 🎯 핵심 목표
 
+### 메인 워크플로우 (필수, 6단계)
+
 | 단계 | 담당 에이전트 | 산출물 |
 |------|-------------|--------|
 | 1️⃣ **의도 분석** | Intent Analyzer | 구조화된 요구사항 |
 | 2️⃣ **스펙 작성** | Spec Writer | CoolHan 규격 문서 |
 | 3️⃣ **코드 구현** | Developer | 규격 기반 코드 |
-| 4️⃣ **자동 검증** | Validator | 9단계 검증 결과 |
+| 4️⃣ **소스 검증** | Validator | 9단계 검증 결과 |
 | 5️⃣ **테스트** | QA Tester | 테스트 리포트 |
-| 6️⃣ **통합 검증** | Integration Validator | 포트/API/DB/기획서 검증 |
-| 7️⃣ **E2E 검증** | E2E Tester | 완전한 사용자 여정 검증 |
-| 8️⃣ **배포** | DevOps/Deployer | 배포 완료 |
+| 6️⃣ **배포** | DevOps/Deployer | 배포 완료 |
+
+### 추가 검증 (선택, 배포 후)
+
+| 단계 | 담당 에이전트 | 목적 | 시점 |
+|------|-------------|------|------|
+| 7️⃣ **환경 검증** | Integration Validator | 포트/API/DB 실제 검증 | 배포 직후 |
+| 8️⃣ **사용자 여정** | E2E Tester | UI/UX/반응형/브라우저 | 환경 검증 후 |
 
 ---
 
@@ -57,14 +64,23 @@ compatibility: Claude Code + Agent Team + CoolHan Framework + Multilingual Suppo
 
 ### 지원하는 명령어
 
+**메인 워크플로우 (필수)**
+
 | 명령어 | 의도 | 워크플로우 |
 |--------|------|----------|
 | "쿨한으로 개발해" (모든 언어) | 신규 기능 개발 | 1️⃣→2️⃣→3️⃣→4️⃣→5️⃣→6️⃣ (전체) |
 | "쿨한으로 {기능} 추가해" | 특정 기능 추가 | 1️⃣→2️⃣→3️⃣→4️⃣→5️⃣→6️⃣ (전체) |
-| "쿨한으로 검증해" | 코드 검증 | 4️⃣ (검증만) |
+| "쿨한으로 검증해" | 소스 코드 검증 | 4️⃣ (소스 검증만) |
 | "쿨한으로 테스트해" | 테스트 실행 | 5️⃣ (테스트만) |
 | "쿨한으로 배포해" | 배포 실행 | 6️⃣ (배포만) |
-| "쿨한으로 디자인해" | UI/UX 설계 | 커스텀 (분석/설계만) |
+
+**추가 검증 (선택)**
+
+| 명령어 | 의도 | 워크플로우 |
+|--------|------|----------|
+| "쿨한으로 환경 검증해" | 배포 후 실제 환경 검증 | 7️⃣ (포트/API/DB) |
+| "쿨한으로 E2E 테스트해" | 사용자 여정 검증 | 8️⃣ (UI/UX/반응형) |
+| "쿨한으로 전체 검증해" | 배포 후 완전한 검증 | 7️⃣→8️⃣ (환경 + 사용자) |
 
 **다국어 예시:**
 ```
@@ -79,6 +95,113 @@ Deutsch: "CoolHan Benutzer-Login-Funktion hinzufügen"
 ```
 
 **자세한 다국어 지원:** [`MULTILINGUAL_SUPPORT.md`](MULTILINGUAL_SUPPORT.md) 참조
+
+---
+
+## 📊 워크플로우 다이어그램
+
+### 전체 흐름도
+
+```
+사용자 명령어 (모국어)
+    ↓
+[Phase 0: 컨텍스트 확인]
+    └─ 초기/재실행/부분 수정 판별
+    ↓
+    ┌─────────────────────────────────────────┐
+    │ Phase 1-6: 메인 워크플로우 (필수)       │
+    │ (6명 에이전트 팀)                       │
+    ├─────────────────────────────────────────┤
+    │ Task 1: Intent Analyzer (의도 분석)     │
+    │ Task 2: Spec Writer (스펙 작성)         │
+    │ Task 3: Developer (코드 구현)           │
+    │ Task 4: Validator (소스 검증)           │
+    │ Task 5: QA Tester (테스트)              │
+    │ Task 6: DevOps/Deployer (배포)          │
+    └─────────────────────────────────────────┘
+    ↓
+[배포 완료]
+    ↓
+    ┌─────────────────────────────────────────┐
+    │ Phase 7-8: 추가 검증 (선택)             │
+    │                                         │
+    │ 7️⃣ Integration Validator (환경 검증)   │
+    │    └─ 포트/API/DB/기획서 검증          │
+    │       ↓                                 │
+    │ 8️⃣ E2E Tester (사용자 여정 검증)      │
+    │    └─ UI/UX/반응형/브라우저 호환성     │
+    └─────────────────────────────────────────┘
+    ↓
+[완료]
+```
+
+### 메인 워크플로우 상세 (Task 1-6)
+
+```
+Task 1: 의도 분석
+└─ 사용자 명령어 → 19개 항목 요구사항 수집
+└─ 산출: requirements-{id}.md
+
+    ↓ (의존: Task 1 완료)
+
+Task 2: 스펙 작성
+└─ 요구사항 → CoolHan 규격 문서
+└─ 도메인 모듈 선택 & 스펙 생성
+└─ 산출: knowledge_base/{domain}.md
+
+    ↓ (의존: Task 2 완료)
+
+Task 3: 코드 구현
+└─ 스펙 → 규격 기반 코드
+└─ 테스트 케이스 작성
+└─ 산출: _workspace/03_code/
+
+    ↓ (의존: Task 3 완료)
+
+Task 4: 소스 검증 ⭐ 필수 PASS
+└─ 9단계 소스 코드 검증
+└─ 결과: PASS ✅ or FAIL ❌
+└─ FAIL 시: Developer 재실행 (Task 3)
+└─ 산출: validation-report-{id}.json
+
+    ↓ (의존: Task 4 PASS)
+
+Task 5: 테스트 ⭐ 필수 PASS
+└─ 스펙 기반 통합 테스트
+└─ 결과: PASS ✅ or FAIL ❌
+└─ FAIL 시: Developer 재실행 (Task 3)
+└─ 산출: test-results-{id}.json
+
+    ↓ (의존: Task 5 PASS)
+
+Task 6: 배포
+└─ Pre-Deploy 검증 → 빌드 → 마이그레이션 → 배포
+└─ Post-Deploy 헬스체크
+└─ 산출: deployment-log-{id}.json
+
+    ↓ (Phase 1-6 완료)
+
+[배포 완료]
+```
+
+### 추가 검증 (Task 7-8, 선택)
+
+```
+배포 후 (선택 실행)
+
+Task 7: 환경 검증 (Integration Validator)
+└─ 포트 확인, API 테스트, DB 연결, 기획서 체크리스트
+└─ 결과: PASS ✅ or FAIL ❌
+└─ 산출: integration-validation-report-{id}.json
+
+    ↓ (선택)
+
+Task 8: 사용자 여정 검증 (E2E Tester)
+└─ UI/UX, 데이터흐름, 반응형, 브라우저 호환성
+└─ 9단계 검증
+└─ 결과: PASS ✅ or FAIL ❌
+└─ 산출: e2e-validation-report-{id}.json
+```
 
 ---
 
@@ -101,39 +224,42 @@ Deutsch: "CoolHan Benutzer-Login-Funktion hinzufügen"
 - **재실행:** _workspace/ 존재 + 사용자 새 명령어 → _workspace_prev/ 이동 후 1단계부터
 - **부분 수정:** _workspace/ 존재 + 피드백 기반 수정 → 해당 단계만 재실행
 
-### Phase 1-6: 에이전트 팀 협업
+### Phase 1-6: 메인 워크플로우 (에이전트 팀)
 
 ```
 [오케스트레이터]
     ↓
-[TeamCreate: 6명 팀 구성]
-    ├─ intent-analyzer.md
-    ├─ spec-writer.md
-    ├─ developer.md
-    ├─ validator.md
-    ├─ qa-tester.md
-    └─ devops-deployer.md
+[Phase 0: 컨텍스트 확인]
+    └─ 기존 산출물 확인 → 초기/재실행/부분 수정 판별
     ↓
-[TaskCreate: 6개 작업 할당]
-    1. 의도 분석 (Intent Analyzer)
-    2. 스펙 작성 (Spec Writer)
-    3. 코드 구현 (Developer)
-    4. 자동 검증 (Validator)
-    5. 테스트 실행 (QA Tester)
-    6. 배포 (DevOps/Deployer)
+[TeamCreate: 6명 팀 구성 (메인 워크플로우)]
+    ├─ intent-analyzer.md (Task 1: 의도 분석)
+    ├─ spec-writer.md (Task 2: 스펙 작성)
+    ├─ developer.md (Task 3: 코드 구현)
+    ├─ validator.md (Task 4: 소스 검증)
+    ├─ qa-tester.md (Task 5: 테스트)
+    └─ devops-deployer.md (Task 6: 배포)
+    ↓
+[TaskCreate: 6개 작업 할당 (의존성 포함)]
+    1. 의도 분석 & 요구사항 수집
+    2. CoolHan 규격 작성 (Task 1 필수)
+    3. 규격 기반 코드 구현 (Task 2 필수)
+    4. 9단계 소스 검증 (Task 3 필수)
+    5. 통합 테스트 (Task 4 PASS 필수)
+    6. 배포 (Task 5 PASS 필수)
     ↓
 [팀원들이 자체 조율]
     - SendMessage: 팀원 간 협의, 피드백 교환
     - TaskUpdate: 진행 상황 업데이트
     - 파일 기반 산출물 공유 (_workspace/)
     ↓
-[오케스트레이터: 최종 결과 종합]
+[오케스트레이터: Phase 1-6 완료]
     - 팀 정리 (TeamDelete)
     - 산출물 정리
     - 최종 보고
 ```
 
-**실행 모드:** 🔄 **Agent Team** (6명이 협력)
+**실행 모드:** 🔄 **Agent Team** (6명이 협력하는 메인 워크플로우)
 
 **데이터 흐름:**
 ```
@@ -152,54 +278,102 @@ _workspace_prev/ (이전 버전, 롤백 가능)
 
 ## 📋 작업 할당 및 의존성
 
+### 메인 워크플로우 (Task 1-6)
+
 ```
 Task 1: 의도 분석 & 상세 정보 수집 (Intent Analyzer)
+├─ **[새] 기존 기능 확인:** knowledge_base/ 읽고 기존 기능 발견
+├─ **[새] 기획자 명확화:** "혹시 기존의 {기능}을 진행하시나요?" 확인
 ├─ 사용자의 초기 명령어 분석
-├─ **인터랙티브 질문 시작** (사용자가 지칠 때까지 계속)
+├─ **인터랙티브 질문** (사용자가 지칠 때까지)
 │  ├─ A. 사업 배경 (Q1-Q4): 목표, 고객, 경쟁력, 규모
 │  ├─ B. 사용 환경 (Q5-Q10): 지역, 플랫폼, 동시접속, 배송, 결제, PG사
 │  ├─ C. 기능 상세화 (Q11-Q15): 핵심/부가/관리 기능, 비즈니스 규칙, 보안
 │  └─ D. 조직/일정 (Q16-Q19): 팀 규모, 출시 일정, 법무/재무, 운영 담당
-├─ **사용자 피로도 관리**
-│  ├─ 사용자가 충분히 답변할 때까지 계속 질문
-│  ├─ "더 이상 답변 못하겠어" 또는 "개발 시작해" 말하면:
-│  │  ├─ 기획에 부족하다고 판단되는 **가장 중요한 1개 항목만 더 질문**
-│  │  └─ 그 답변 후 즉시 기획서 작성으로 전환
-│  └─ 충분한 정보가 수집되면 자동으로 Task 2로 진행
-└─ 산출: requirements-{id}.md (19개 항목 상세 포함)
+├─ **사용자 피로도 관리**: 충분할 때까지 질문, 부족 시 마지막 1개만 추가
+├─ **[새] 기획자 의도 명시:** requirements-{id}.md에 [기획자 의도] 섹션 필수 작성
+│  └─ 기능명 / 신규_또는_기존 / 기획자_승인(YES/NO) / 무단추가_금지 규칙
+└─ 산출: requirements-{id}.md (19개 항목 + 기획자 의도)
 
-Task 2: 스펙 작성 (Spec Writer)
-└─ 의존: Task 1 완료
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛑 기획자 승인 게이트 (Task 1-2 사이) ★ NEW - P0 요구사항 (자동 진행)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+**Task 1 완료 직후, 자동으로 Task 2로 진행:**
+
+기획자 승인 자동 확인 (게이트 유지, 기본값 YES)
+├─ requirements-{id}.md의 [기획자 의도] 섹션 읽기
+│  ├─ 기능명: {자동 인식}
+│  ├─ 신규/기존: {자동 인식}
+│  └─ 기획자_승인: YES (Task 1에서 이미 확인됨)
+│
+├─ 게이트 상태: PASS ✅
+├─ 자동으로 Task 2 진행 (중단 없음)
+└─ 기획서와 코드 불일치 시 → Task 4에서 FAIL 감지
+
+**게이트 역할:**
+- 기획자 의도 자동 검증 (Task 1 입력)
+- Task 4-7-8에서 무단 기능 추가 자동 감지
+- 기획서와 코드의 불일치 발견 시 전체 FAIL
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Task 2: CoolHan 규격 작성 (Spec Writer)
+├─ 의존: Task 1 완료 (기획자 승인 자동 확인됨) ✅
+├─ 도메인 모듈 선택 (knowledge_base/)
+├─ 스펙 작성 및 기존 스펙과 충돌 확인
 └─ 산출: knowledge_base/{domain}.md
 
-Task 3: 코드 구현 (Developer)
-└─ 의존: Task 2 완료
+Task 3: 규격 기반 코드 구현 (Developer)
+├─ 의존: Task 2 완료
+├─ 코드 작성, 테스트, 커밋
 └─ 산출: _workspace/03_code/
 
-Task 4: 자동 검증 (Validator)
-└─ 의존: Task 3 완료
-└─ 산출: validation-report-{id}.json
+Task 4: 10단계 소스 검증 (Validator) ⭐ PASS 필수 게이트
+├─ 의존: Task 3 완료
+├─ **진입 게이트:** 대상 앱 확인 (health check, 소스 경로 검증)
+├─ **[NEW] 0단계: 기획 의도 검증 ★ P0 - 무단 기능 추가 감지**
+│  └─ requirements-{id}.md의 기획자 의도와 코드 비교
+│  └─ 기획서에 없는 엔드포인트/테이블 감지 → FAIL
+│  └─ 예: 기획서는 "User Feedback" 인데 "Health Check API" 구현 → 감지!
+├─ 1-9단계: 스펙 파싱, 코드 분석, 데이터 모델, API, 상태값, 보안, 비즈니스 로직, 테스트, 배포 준비
+├─ **증거 필수:** 10단계 검증 각 단계의 실행 로그 + 결과 포함 (기획 의도 검증 증거 필수)
+├─ 결과: PASS ✅ or FAIL ❌ (증거 없으면 NOT_RUN)
+└─ 산출: validation-report-{id}.json (증거 field 필수, planning_intent_check 포함)
 
-Task 5: 테스트 실행 (QA Tester)
-└─ 의존: Task 4 완료 (PASS)
-└─ 산출: test-results-{timestamp}.json
+Task 5: 통합 테스트 (QA Tester) ⭐ PASS 필수 게이트
+├─ 의존: Task 4 완료 (PASS 증거 포함)
+├─ 스펙 기반 테스트 케이스 실행 (npm test)
+├─ **증거 필수:** 테스트 실행 명령어 + 로그 + 결과 포함
+├─ 결과: PASS ✅ or FAIL ❌ (증거 없으면 NOT_RUN)
+└─ 산출: test-results-{timestamp}.json (증거 field 필수)
 
-Task 6: 통합 검증 (Integration Validator) ⭐ NEW
-├─ 의존: Task 5 완료 (PASS)
-├─ 검증 항목:
-│  ├─ 포트 확인 (API, DB, 캐시, 웹)
-│  ├─ API 엔드포인트 실제 테스트
-│  ├─ 데이터베이스 연결 및 쿼리
-│  ├─ 빌드 성공 확인
-│  ├─ 데이터 로드 확인
-│  └─ 기획서 요구사항 체크리스트
-└─ 산출: 
-   ├─ integration-validation-report-{id}.json
-   └─ requirements-checklist-{id}.md
+Task 6: 배포 (DevOps/Deployer) ⭐ 배포 성공 확인 필수
+├─ 의존: Task 5 완료 (PASS 증거 포함)
+├─ Pre-Deploy 검증, 빌드, DB 마이그레이션, 배포
+├─ **증거 필수:** 배포 로그 + 헬스체크 응답 + 앱 접근 확인
+├─ 배포 성공 확인
+└─ 산출: deployment-log-{id}.json (증거 field 필수)
+```
 
-Task 7: 배포 (DevOps/Deployer)
-└─ 의존: Task 6 완료 (PASS) ← 통합 검증 필수
-└─ 산출: deployment-log-{id}.json
+### 추가 검증 (Task 7-8, 선택)
+
+```
+Task 7: 환경 검증 (Integration Validator) — 선택, 배포 직후 ⭐ 증거 필수
+├─ 의존: Task 6 완료 (배포 증거 포함)
+├─ **진입 게이트:** 앱 접근 확인 (curl 200 OK), DB 연결 테스트
+├─ 포트/API/DB/빌드/데이터 로드/기획서 체크리스트 검증
+├─ **증거 필수:** curl 응답 + DB 쿼리 결과 + 포트 확인 로그
+├─ 결과: PASS ✅ or FAIL ❌ (증거 없으면 NOT_RUN)
+└─ 산출: integration-validation-report-{id}.json (증거 field 필수)
+
+Task 8: 사용자 여정 검증 (E2E Tester) — 선택, 환경 검증 후 ⭐ 증거 필수
+├─ 의존: Task 7 완료 (PASS 증거 포함) 또는 Task 6 직후 (Task 7 스킵 시)
+├─ **진입 게이트:** 앱 UI 접근 확인, 기본 렌더링 확인
+├─ 소스/데이터흐름/UI/UX/반응형/CSS/브라우저 호환성 검증 (9단계)
+├─ **증거 필수:** 브라우저 스크린샷 + 개발자 도구 로그 + 데이터 흐름 확인
+├─ 결과: PASS ✅ or FAIL ❌ (증거 없으면 NOT_RUN)
+└─ 산출: e2e-validation-report-{id}.json (증거 field 필수)
 ```
 
 ---

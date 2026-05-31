@@ -56,14 +56,23 @@
 
 ### 팀 구성 (Development)
 
+#### 메인 워크플로우 (필수, 6명)
+
 | 역할 | 에이전트 | 책임 |
 |------|---------|------|
 | 의도 분석자 | `agents/intent-analyzer.md` | 명령어 → 요구사항 |
 | 스펙 작가 | `agents/spec-writer.md` | 요구사항 → 규격 문서 |
 | 개발자 | `agents/developer.md` | 규격 → 코드 구현 |
-| 검증자 | `agents/validator.md` | 9단계 자동 검증 |
+| 검증자 | `agents/validator.md` | 9단계 자동 검증 (진입 게이트, 증거 필수) |
 | QA 테스터 | `agents/qa-tester.md` | 통합 테스트, 승인 기준 |
 | DevOps/배포자 | `agents/devops-deployer.md` | 배포 락, 안전한 배포 |
+
+#### 추가 검증 (선택, 배포 후)
+
+| 역할 | 에이전트 | 책임 |
+|------|---------|------|
+| 통합 검증자 | `agents/integration-validator.md` | 포트/API/DB 실제 검증 (증거 필수) |
+| E2E 테스터 | `agents/e2e-tester.md` | UI/UX/반응형/브라우저 검증 (증거 필수) |
 
 ---
 
@@ -106,6 +115,8 @@
 | 2026-05-27 | **Phase 2 완료: 11개 아키텍처 충돌 해결** | knowledge_base/ | 도메인 모듈 동기화 및 아키텍처 일관성 확보 |
 | **2026-05-28** | **Development Harness 구축 (Phases 0-4)** | agents/ (6개) + skills/coolhan-development-orchestrator + CLAUDE.md | 사용자의 자연스러운 한국어 명령어로 규격 기반 개발을 자동화하는 완전한 에이전트 팀 시스템 |
 | **2026-05-28** | **Token Efficiency Mode 적용** | agents/ (6개) + skills/ (4개) | 토큰 절약 모드: 결과만 보고, 과정 설명 제외, 소스 화면 미표시 |
+| **2026-05-30** | **Phase D 트랙 1: Harness 고도화 (P0/P1 규칙 반영)** | agents/ (3개: validator, integration-validator, e2e-tester) + skills/coolhan-development-orchestrator + CLAUDE.md | P0 구조 결함 해결: 진입 게이트 추가, evidence field 필수화, Token Efficiency Mode 완화 |
+| **2026-05-30** | **Phase D 트랙 3: 기획자 의도 강제 메커니즘 (P0 구조 결함 해결)** | agents/ (intent-analyzer.md, validator.md, integration-validator.md) + skills/coolhan-development-orchestrator | **핵심: AI의 자의적 기능 추가 원천 차단** — Task 1에 기획자 명확화 + 승인 게이트 추가 / requirements-{id}.md에 기획자 의도 명시 필수 / Task 4에 기획 의도 검증 0단계 추가 (무단 기능 추가 감지) / Task 7에 기획서 체크리스트 강화 |
 
 ---
 
@@ -165,9 +176,40 @@
 | 하네스 | 상태 | 에이전트 | 스킬 | 마지막 업데이트 |
 |--------|------|---------|------|--------------|
 | Release Engineering | ✅ 구성 완료 | 5명 | 2개 | 2026-05-27 |
-| Development | ✅ 구성 완료 (Phases 0-4) | 6명 | 1개 | 2026-05-28 |
+| Development | ✅ 고도화 중 (Phase D-1) | 8명 (6 메인 + 2 추가) | 1개 | 2026-05-30 |
 
 ---
 
-**하네스 통합 상태:** ✅ 2개 하네스 운영 중  
-**마지막 업데이트:** 2026-05-28
+**하네스 통합 상태:** ✅ 2개 하네스 운영 + Phase D-1 (Harness 고도화) 진행 중  
+**마지막 업데이트:** 2026-05-30
+
+---
+
+## Phase D 현황 (Harness 고도화)
+
+### 트랙 1: 문서 + 에이전트 정의 동기화 (진행 중)
+
+| 항목 | 상태 | 내용 |
+|------|------|------|
+| CLAUDE.md | ✅ 완료 | 팀 구성 + 변경 이력 + Phase D-3 기록 |
+| SKILL.md | ✅ 완료 | Task 1-2 게이트 + Task 4 기획 의도 검증 추가 |
+| intent-analyzer.md | ✅ 완료 | 3단계 기존 기능 확인 + 4단계 기획자 승인 게이트 추가 |
+| validator.md | ✅ 완료 | 0단계 기획 의도 검증 + 10단계 파이프라인으로 확장 |
+| integration-validator.md | ✅ 완료 | 기획서 체크리스트 강화 (기획 의도 검증) |
+| e2e-tester.md | ✅ 완료 | 기획 의도 검증 (UI/UX 요소 무단 추가 감지) |
+
+### 트랙 3: 기획자 의도 강제 메커니즘 (NEW - P0 구조 결함 해결) ✅ 완료
+
+| 항목 | 상태 | 내용 |
+|------|------|------|
+| Task 1 강화 | ✅ 완료 | 기존 기능 확인 + 기획자 명확화 + 기획자 의도 명시 |
+| Task 1-2 게이트 | ✅ 완료 | 기획자 승인 YES 없이는 Task 2 진행 불가 (GATE LOCK) |
+| Task 4 강화 | ✅ 완료 | 0단계 기획 의도 검증 추가 (무단 기능 추가 감지) |
+| 검증 메커니즘 | ✅ 완료 | Task 4, 7, 8에서 기획서 외 기능 추가 자동 감지 |
+
+### 트랙 4: 실제 테스트 앱 기반 재검증 (선행 필요)
+
+| 항목 | 상태 | 내용 |
+|------|------|------|
+| 실제 테스트 앱 | ⏳ 필요 | Task 1-8을 실제로 실행할 샘플 프로젝트 |
+| Phase D-3 재검증 | 🔜 대기 | Task 1-8 실행 후 기획자 의도 강제 메커니즘 작동 확인 |
