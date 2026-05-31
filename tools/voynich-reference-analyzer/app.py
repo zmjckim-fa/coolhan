@@ -1,11 +1,17 @@
 """
-Voynich Reference Analyzer v0.2 - Streamlit Dashboard
+Voynich Reference Analyzer v0.3 - Streamlit Dashboard
 
 Interactive research analysis interface for testing hypothesis:
 Does the Voynich Manuscript encode a reference/taxonomic system?
 
 NOT a decipherment tool. This is a RESEARCH ANALYSIS PROGRAM.
 """
+
+import os
+import sys
+
+# Add modules path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import streamlit as st
 import pandas as pd
@@ -66,7 +72,7 @@ st.markdown("""
 # ============================================================================
 
 st.sidebar.markdown("# 📜 Voynich Reference Analyzer")
-st.sidebar.markdown("**v0.2** | Research Analysis Tool")
+st.sidebar.markdown("**v0.3** | Research Analysis Tool")
 st.sidebar.markdown("---")
 
 nav_options = [
@@ -81,7 +87,13 @@ nav_options = [
     "🔬 Entropy Analysis",
     "🎯 Rule Candidate Atlas",
     "🔀 Comparison Corpus",
-    "📋 Report Generator"
+    "📋 Report Generator",
+    "🗂️ Data Sources",
+    "📥 Import New Data",
+    "🗃️ Research Claims",
+    "❌ Failure Lessons",
+    "🔄 Rule Revalidation",
+    "🎯 Hypothesis Dashboard",
 ]
 
 selected = st.sidebar.radio("Navigation", nav_options, index=0)
@@ -106,6 +118,16 @@ structure resembles reference systems
 (like catalogs/classifications) rather
 than natural language or cipher text.
 """)
+
+# Import page handlers
+try:
+    from modules.dashboard_pages import (
+        page_data_sources, page_import_data, page_research_claims,
+        page_failure_lessons, page_rule_revalidation, page_hypothesis_dashboard
+    )
+    EVIDENCE_PAGES_READY = True
+except ImportError:
+    EVIDENCE_PAGES_READY = False
 
 # ============================================================================
 # PAGE: DASHBOARD
@@ -458,7 +480,7 @@ elif selected == "📋 Report Generator":
 
     with col1:
         st.subheader("Current Analysis Status")
-        st.write(f"**Version:** v0.2")
+        st.write(f"**Version:** v0.3")
         st.write(f"**Status:** Development (analysis framework complete)")
         st.write(f"**Last Updated:** {datetime.now().strftime('%Y-%m-%d')}")
 
@@ -483,12 +505,78 @@ elif selected == "📋 Report Generator":
         st.success("✅ Reports ready!")
 
 # ============================================================================
+# PAGE: DATA SOURCES
+# ============================================================================
+
+elif selected == "🗂️ Data Sources":
+    DB_PATH = str(Path(__file__).parent / "database" / "voynich.db")
+    if EVIDENCE_PAGES_READY:
+        page_data_sources(DB_PATH)
+    else:
+        st.error("dashboard_pages module not found.")
+
+# ============================================================================
+# PAGE: IMPORT NEW DATA
+# ============================================================================
+
+elif selected == "📥 Import New Data":
+    DB_PATH = str(Path(__file__).parent / "database" / "voynich.db")
+    if EVIDENCE_PAGES_READY:
+        page_import_data(DB_PATH)
+    else:
+        st.error("dashboard_pages module not found.")
+
+# ============================================================================
+# PAGE: RESEARCH CLAIMS
+# ============================================================================
+
+elif selected == "🗃️ Research Claims":
+    DB_PATH = str(Path(__file__).parent / "database" / "voynich.db")
+    if EVIDENCE_PAGES_READY:
+        page_research_claims(DB_PATH)
+    else:
+        st.error("dashboard_pages module not found.")
+
+# ============================================================================
+# PAGE: FAILURE LESSONS
+# ============================================================================
+
+elif selected == "❌ Failure Lessons":
+    DB_PATH = str(Path(__file__).parent / "database" / "voynich.db")
+    if EVIDENCE_PAGES_READY:
+        page_failure_lessons(DB_PATH)
+    else:
+        st.error("dashboard_pages module not found.")
+
+# ============================================================================
+# PAGE: RULE REVALIDATION
+# ============================================================================
+
+elif selected == "🔄 Rule Revalidation":
+    DB_PATH = str(Path(__file__).parent / "database" / "voynich.db")
+    if EVIDENCE_PAGES_READY:
+        page_rule_revalidation(DB_PATH)
+    else:
+        st.error("dashboard_pages module not found.")
+
+# ============================================================================
+# PAGE: HYPOTHESIS DASHBOARD
+# ============================================================================
+
+elif selected == "🎯 Hypothesis Dashboard":
+    DB_PATH = str(Path(__file__).parent / "database" / "voynich.db")
+    if EVIDENCE_PAGES_READY:
+        page_hypothesis_dashboard(DB_PATH)
+    else:
+        st.error("dashboard_pages module not found.")
+
+# ============================================================================
 # PAGE: OTHER SECTIONS (PLACEHOLDERS)
 # ============================================================================
 
 else:
     st.markdown(f"<h1 class='main-header'>{selected}</h1>", unsafe_allow_html=True)
-    st.info("⏳ Feature under development in v0.2")
+    st.info("⏳ Feature under development in v0.3")
 
     st.markdown("""
     ### Development Timeline
@@ -496,8 +584,8 @@ else:
     | Version | Status | Features |
     |---------|--------|----------|
     | **v0.1** | ✅ Complete | Core modules, EVA parser, DB schema |
-    | **v0.2** | 🔄 In Progress | Streamlit dashboard, script pipeline |
-    | **v0.3** | 🔜 Planned | Comparison corpora integration |
+    | **v0.2** | ✅ Complete | Streamlit dashboard, script pipeline |
+    | **v0.3** | 🔄 In Progress | Evidence ingestion, 6 new dashboard pages |
     | **v1.0** | 🔜 Planned | Production ready, image integration |
     """)
 
@@ -508,7 +596,7 @@ else:
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #7f8c8d; font-size: 0.9em;'>
-    <p><strong>Voynich Reference Analyzer v0.2</strong></p>
+    <p><strong>Voynich Reference Analyzer v0.3</strong></p>
     <p>A research tool for testing the hypothesis: Does the Voynich Manuscript encode a reference/taxonomic system?</p>
     <p>⚠️ <strong>Disclaimer:</strong> This is NOT a decipherment tool. We analyze structure, not meaning.</p>
     <p>License: MIT | GitHub: <a href='#'>coolhan/tools/voynich-reference-analyzer</a></p>
