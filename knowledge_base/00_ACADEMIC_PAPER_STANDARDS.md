@@ -17,9 +17,9 @@ AI 연구 프로젝트의 결과를 국제 학술지 수준의 논문으로 구�
 
 **예시:**
 ```
-보이니치 원고는 15세기 필사본으로 500년 이상 미해독 상태다.
-기존 연구는 암호문/자연어/의례적 텍스트 가설을 제시했으나,
-구조적 정의서/분류표 가설은 아직 체계적으로 검증되지 않았다.
+[Your research subject]의 배경과 기존 연구 상황을 설명합니다.
+기존 연구는 A/B/C 가설을 제시했으나,
+D 가설은 아직 체계적으로 검증되지 않았다.
 ```
 
 #### 1.1.2 Research Gap (연구 공백)
@@ -28,23 +28,23 @@ AI 연구 프로젝트의 결과를 국제 학술지 수준의 논문으로 구�
 
 **예시:**
 ```
-기존 연구는 보이니치의 구조적 제약을 발견했지만,
-그 기능이 분류체계/참조 데이터베이스와 양립 가능한지는 검토하지 않았다.
+기존 연구는 [Subject]의 구조적 제약을 발견했지만,
+그 기능이 [Alternative Hypothesis]와 양립 가능한지는 검토하지 않았다.
 ```
 
 #### 1.1.3 Research Questions (연구 질문)
-- RQ1: 보이니치 token이 일반 단어처럼 행동하는가, 아니면 코드/라벨처럼 행동하는가?
-- RQ2: 섹션별 token 분포가 우연보다 강한가?
-- RQ3: 비슷한 token들이 계열적으로 반복되는가?
+- RQ1: [Your data unit]이 [Feature A]처럼 행동하는가, 아니면 [Feature B]처럼 행동하는가?
+- RQ2: [Dimension 1]별 분포가 우연보다 강한가?
+- RQ3: [Item]들이 계열적으로 반복되는가?
 
 #### 1.1.4 Hypothesis (가설)
 **Primary Hypothesis:**
 ```
-The Voynich Manuscript may encode a taxonomic or reference-like 
-classification system rather than ordinary prose, as evidenced by:
-- Constrained token structure
-- Section-specific vocabulary
-- Repetitive token family patterns
+[Your subject] may exhibit structural patterns consistent with 
+[Your hypothesis], as evidenced by:
+- [Evidence type 1]
+- [Evidence type 2]
+- [Evidence type 3]
 ```
 
 ---
@@ -54,40 +54,33 @@ classification system rather than ordinary prose, as evidenced by:
 
 #### 1.2.1 Data Source (데이터 출처)
 ```
-Source:          IT2a-n.txt (Landini-Stolfi EVA Transcription v2a)
-Yale Beinecke:   MS 408 (MS 408 digital collection)
-Coverage:        f1r-f112v (224 pages, 6 sections)
-Token Count:     ~7,063 unique and repeated tokens
-Character Count: ~50,000 EVA characters
-Encoding:        UTF-8, EVA standard
+Source:          [Your primary data source and version]
+Collection:      [Your collection/archive name]
+Coverage:        [Your data scope and range]
+Unit Count:      [~Your total count of units]
+Total Characters: [~Your total character/feature count]
+Encoding:        [Your encoding standard]
 ```
 
 #### 1.2.2 Parsing Method (파싱 방법)
 ```
-Step 1: Raw EVA text
-<f1r.P1.1;H> fachys.ykal.ar.ataiin.shol...
+Step 1: Raw data format
+[Your raw data example line]
 
-Step 2: Line segmentation
-folio_id: f1r
-paragraph: 1
-line_number: 1
-physical_line_text: fachys.ykal.ar.ataiin.shol...
+Step 2: Segment extraction
+[Document how you parse the data]
+[Extract metadata like ID, section, etc]
 
-Step 3: Token segmentation (. delimiter)
-token_1: fachys
-token_2: ykal
-token_3: ar
-token_4: ataiin
-token_5: shol
+Step 3: Unit segmentation (your delimiter)
+[Show how you tokenize or segment the data]
 
-Step 4: Glyph extraction
-f -> [position: 1, shape: "gallows"]
-a -> [position: 2, shape: "arch"]
-...
+Step 4: Feature extraction
+[Show how you extract sub-units or features]
 
 Important: 
-- Distinguish physical_line (원고 실제 줄) vs EVA_segment (점 기준 분절)
-- Maintain folio_id → line_id → token_id → glyph_id hierarchy
+- Define your data hierarchy clearly
+- Document all assumptions about data structure
+- Maintain traceable IDs throughout the hierarchy
 ```
 
 #### 1.2.3 Analysis Methods (분석 방법)
@@ -128,29 +121,29 @@ Analysis:
 Output: position_rules.csv
 ```
 
-**E. Section-Level Analysis**
+**E. Category/Section-Level Analysis**
 ```
-Sections: Herbal, Botanical, Astronomical, Biological, Cosmological, Pharmaceutical
+Sections: [List your document sections/categories]
 For each section:
-  - Token count
-  - Character frequency
-  - Unique tokens (type)
-  - Repeated tokens (token families)
-  - TTR (Type-Token Ratio)
+  - Unit count
+  - Feature frequency
+  - Unique units (diversity)
+  - Repeated units (family/cluster analysis)
+  - TTR (Type-Token Ratio) or similar diversity metric
   - Top-10 concentration
-Output: section_comparison.csv
+Output: [Your category analysis file]
 ```
 
-**F. Token Clustering (Family Analysis)**
+**F. Unit Clustering (Family/Pattern Analysis)**
 ```
-Method: Edit distance (Levenshtein distance)
-Clustering: Group tokens by:
-  - Shared prefix (q*, ch*, k*)
-  - Shared suffix (*ain, *iin, *ol)
-  - Edit distance ≤ 2
+Method: [Your similarity/distance metric]
+Clustering: Group units by:
+  - Shared prefix patterns
+  - Shared suffix patterns
+  - Distance threshold
 Example:
-  Cluster TOKCL-AIN: aiin, ain, ataiin, chaiin, daiin
-Output: token_clusters.csv
+  Cluster [NAME]: [List example units in same cluster]
+Output: [Your clustering analysis file]
 ```
 
 #### 1.2.4 Validation Criteria (검증 기준)
@@ -176,70 +169,65 @@ Hypothesis is REJECTED if:
 ```
 For each of the following corpora, calculate identical metrics:
 
-Corpus A: Natural Language Baseline
-  Source: English Wikipedia articles
-  Sample: 50,000 characters of scientific text
+Corpus A: [Reference 1 - description]
+  Source: [Source]
+  Sample: [Sample size]
   
-Corpus B: Botanical/Herbal Text
-  Source: Medieval herbal descriptions
-  Sample: 10,000 tokens from herbal manuscripts
+Corpus B: [Reference 2 - description]
+  Source: [Source]
+  Sample: [Sample size]
   
-Corpus C: Taxonomic/Catalog Structure
-  Source: Plant species lists, taxonomic databases
-  Sample: 5,000 entries from Linnaean classification
+Corpus C: [Reference 3 - description]
+  Source: [Source]
+  Sample: [Sample size]
   
-Corpus D: Artificial/Generated Text
-  Source: Markov-generated text using Voynich unigram probabilities
-  Sample: 50,000 characters generated text
+Corpus D: [Reference 4 - description]
+  Source: [Source]
+  Sample: [Sample size]
   
-Corpus E: Substitution Cipher
-  Source: English text encrypted with simple substitution
-  Sample: 50,000 characters ciphertext
+Corpus E: [Reference 5 - description]
+  Source: [Source]
+  Sample: [Sample size]
 ```
 
-#### 1.2.6 Image-Folio Mapping (이미지 매핑)
+#### 1.2.6 Metadata & Image Mapping (메타데이터)
 ```
-Critical: Ensure image file ↔ folio_id correspondence
+Critical: Ensure complete metadata correspondence for all data units
 
-Yale Beinecke Digital Collection:
-  Image file naming: 2002046_1.jpg to 2002046_214.jpg
+Data Collection Metadata:
+  [Document how you track provenance]
+  [Document collection date and version]
+  [Document any image/physical correspondence if applicable]
   
-Mapping table:
-  image_file_number: 1
-  image_filename: 2002046_1.jpg
-  folio_id: f1r
-  recto_verso: recto
-  section: Herbal
-  yale_url: https://...
-  confidence: confirmed
-  notes: ""
+Mapping details:
+  [List all ID fields you track]
+  [Document confidence/quality indicators]
+  [List verification procedures]
 
-All image URLs and folio IDs must be verified before analysis.
+All IDs and references must be verified before analysis begins.
 ```
 
 #### 1.2.7 Limitations of Method (방법론 한계)
 ```
-⚠ Limitation 1: EVA transcription variation
-  Different transcribers may mark glyphs differently.
-  Mitigation: Use primary source (Takahashi/Landini-Stolfi)
+⚠ Limitation 1: [Your data source limitation]
+  [Description]
+  Mitigation: [Your mitigation strategy]
 
-⚠ Limitation 2: Folio missing/damaged
-  Some folios are damaged or missing.
-  Mitigation: Document missing pages in analysis_metadata.csv
+⚠ Limitation 2: [Your second limitation]
+  [Description]
+  Mitigation: [Your mitigation strategy]
 
-⚠ Limitation 3: Line parsing ambiguity
-  EVA transcription uses . as word delimiter, but sometimes
-  as abbreviation or punctuation. "Physical line" vs "EVA segment" 
-  distinction is critical.
-  Mitigation: Manually verify line parsing on 10% sample
+⚠ Limitation 3: [Your third limitation]
+  [Description]
+  Mitigation: [Your mitigation strategy]
 
-⚠ Limitation 4: Small sample for comparison corpora
-  Cannot perfectly match Voynich size/style with comparison corpora.
-  Mitigation: Normalize all metrics (TTR, entropy per 1000 chars)
+⚠ Limitation 4: [Your fourth limitation]
+  [Description]
+  Mitigation: [Your mitigation strategy]
 
-⚠ Limitation 5: No access to original manuscript
-  Analysis based on transcription only; color/ink analysis not included.
-  Mitigation: Note that future research with images should be incorporated
+⚠ Limitation 5: [Your fifth limitation]
+  [Description]
+  Mitigation: [Your mitigation strategy]
 ```
 
 ---
@@ -250,75 +238,68 @@ All image URLs and folio IDs must be verified before analysis.
 #### 1.3.1 Descriptive Statistics (기술 통계)
 ```
 # 데이터셋 개요
-Total folios analyzed:     112 (f1r-f112v)
-Total tokens:              7,063
-Unique tokens:             3,500
-Total characters (EVA):    50,000
-Unique characters:         19
+Total units analyzed:      [Your total count]
+Total measurements:        [Your total measurement count]
+Unique units:              [Your unique unit count]
+Total observations:        [Your total observation count]
+Unique features:           [Your unique feature count]
 
-Average tokens per folio:  63.1 (SD=21.4)
-Average characters per folio: 446.4 (SD=142.1)
-Token length mean:         5.2 (SD=1.8, range=1-14)
+Average per unit:          [Your mean] (SD=[Your SD])
+Average per category:      [Your mean] (SD=[Your SD])
+Unit length mean:          [Your mean] (SD=[Your SD], range=[Your range])
 ```
 
 #### 1.3.2 Key Findings Tables (주요 발견 표)
 
-**Table 1: Character Frequency Distribution**
+**Table 1: Feature Distribution**
 ```
-Rank | Character | Count | % of Total | Position Distribution
------|-----------|-------|------------|------------------------
-1    | d         | 5421  | 10.84%     | word-initial: 45%, final: 22%
-2    | o         | 4856  | 9.71%      | word-initial: 15%, final: 8%
-3    | a         | 4234  | 8.47%      | word-initial: 8%, final: 35%
+Rank | Feature | Count | % of Total | Position Distribution
+-----|---------|-------|------------|------------------------
+1    | [Name]  | [N]   | [%]        | [Distribution details]
+2    | [Name]  | [N]   | [%]        | [Distribution details]
+3    | [Name]  | [N]   | [%]        | [Distribution details]
 ...
 ```
 
-**Table 2: Top 20 Tokens**
+**Table 2: Top Units**
 ```
-Rank | Token    | Count | Unique Folios | Botanical% | Herbal% | ...
------|----------|-------|---------------|------------|---------|----
-1    | daiin    | 172   | 33            | 8.2%       | 1.2%    | ...
-2    | chol     | 116   | 24            | 4.1%       | 2.3%    | ...
-3    | chor     | 92    | 22            | 3.8%       | 1.9%    | ...
+Rank | Unit     | Count | Categories | Metrics
+-----|----------|-------|------------|---------|
+1    | [Name]   | [N]   | [N]        | [%]     |
+2    | [Name]   | [N]   | [N]        | [%]     |
+3    | [Name]   | [N]   | [N]        | [%]     |
 ...
 ```
 
-**Table 3: Entropy Measurements**
+**Table 3: Comparative Metrics**
 ```
-Metric                 | Voynich | English | Random | Cipher
------------------------|---------|---------|--------|--------
-1-gram entropy         | 3.81    | 4.0-4.5 | 4.25   | 3.95
-2-gram entropy         | 6.14    | 10-11   | 8.50   | 7.20
-Conditional entropy    | 2.33    | 3.0-3.5 | 4.20   | 3.25
-Word-final constraint  | 96.3%   | 75%     | 5%     | 50%
+Metric                 | Your Data | Reference 1 | Reference 2 | Reference 3
+-----------------------|-----------|-------------|-------------|------------
+Metric 1               | [Value]   | [Value]     | [Value]     | [Value]
+Metric 2               | [Value]   | [Value]     | [Value]     | [Value]
+Metric 3               | [Value]   | [Value]     | [Value]     | [Value]
 ```
 
-#### 1.3.3 Section-Level Differences
+#### 1.3.3 Category-Level Differences
 ```
-Table 4: Section Statistics
+Table 4: Category Statistics
 
-Section         | Token Count | Unique | TTR   | Top-10% | Word-final Y% | daiin%
-----------------|-------------|--------|-------|---------|---------------|---------
-Herbal          | 1200        | 650    | 54%   | 18%     | 22%           | 1.2%
-Botanical       | 3200        | 1850   | 58%   | 14%     | 18%           | 6.5%
-Astronomical    | 800         | 520    | 65%   | 9%      | 15%           | 0.5%
-Biological      | 950         | 600    | 63%   | 12%     | 17%           | 2.1%
-Cosmological    | 650         | 420    | 65%   | 11%     | 16%           | 0.8%
-Pharmaceutical  | 263         | 180    | 68%   | 8%      | 20%           | 0.3%
+Category    | Count | Unique | Diversity | Concentration | Metric 1 | Metric 2
+------------|-------|--------|-----------|----------------|----------|--------
+[Name]      | [N]   | [N]    | [%]       | [%]            | [Value]  | [Value]
+[Name]      | [N]   | [N]    | [%]       | [%]            | [Value]  | [Value]
+[Name]      | [N]   | [N]    | [%]       | [%]            | [Value]  | [Value]
 ```
 
 #### 1.3.4 Comparison Corpus Results
 ```
-Table 5: Voynichese vs Comparison Corpora
+Table 5: Your Data vs Comparison Corpora
 
-Metric                    | Voynich | English | Herbal | Catalog | Cipher | Random
---------------------------|---------|---------|--------|---------|--------|--------
-Avg token length          | 5.2     | 4.9     | 5.1    | 3.8     | 4.9    | 5.3
-Type-Token Ratio (norm)   | 58%     | 42%     | 48%    | 72%     | 41%    | 95%
-Word-final constraint     | 96.3%   | 75%     | 80%    | 89%     | 50%    | 5%
-Top-10 concentration      | 14%     | 18%     | 15%    | 28%     | 19%    | 0.1%
-Entropy (2-gram)          | 6.14    | 10.5    | 9.2    | 7.8     | 7.2    | 8.5
-Section divergence        | 23%     | 5%      | 8%     | 35%     | 12%    | 2%
+Metric                    | Your Data | Reference 1 | Reference 2 | Reference 3 | Reference 4 | Reference 5
+--------------------------|-----------|-------------|-------------|------------|------------|----------
+Metric 1                  | [Value]   | [Value]     | [Value]     | [Value]    | [Value]    | [Value]
+Metric 2                  | [Value]   | [Value]     | [Value]     | [Value]    | [Value]    | [Value]
+Metric 3                  | [Value]   | [Value]     | [Value]     | [Value]    | [Value]    | [Value]
 ```
 
 ---
@@ -328,37 +309,34 @@ Section divergence        | 23%     | 5%      | 8%     | 35%     | 12%    | 2%
 
 #### 1.4.1 Interpretation of Results
 ```
-**Observation 1: Word-final constraint (96.3%)**
-- Observed: 96.3% of Voynichese tokens end with {y, r, l, n, s, o, m, k}
-- English baseline: 75%
-- Interpretation: This constraint is significantly stronger than natural 
-  language (p < 0.001, χ²-test).
-- Could indicate: Either highly formalized language or rule-based system.
-- Cannot conclude: This alone proves any hypothesis.
+**Observation 1: [Your first finding]**
+- Observed: [Your observation]
+- Reference baseline: [Your baseline value]
+- Interpretation: [Statistical significance and interpretation]
+- Could indicate: [Possible interpretations]
+- Cannot conclude: [What cannot be concluded from this alone]
 
-**Observation 2: Section-specific token families**
-- Observed: Token "daiin" appears in 33 folios, 8.2% of Botanical section,
-  but <1% in other sections.
-- Interpretation: Token distribution is not random across sections.
-- Could indicate: Either subject-specific terminology OR layout-dependent labeling.
-- Cannot conclude: The token's meaning or function.
+**Observation 2: [Your second finding]**
+- Observed: [Your observation]
+- Interpretation: [How you interpret this]
+- Could indicate: [Alternative interpretations]
+- Cannot conclude: [What is not proven by this evidence]
 
-**Observation 3: Token length regularity**
-- Observed: 87% of tokens are 4-7 characters, Gaussian distribution (μ=5.2, σ=1.8)
-- English: More varied length distribution
-- Catalog entries: Similar tight distribution
-- Interpretation: Consistent with short identifier/label format
-- Cannot conclude: The purpose of this regularity
+**Observation 3: [Your third finding]**
+- Observed: [Your observation]
+- [Comparison with references]
+- Interpretation: [What this is consistent with]
+- Cannot conclude: [What remains uncertain]
 ```
 
 #### 1.4.2 Pattern Consistency
 ```
-Pattern 1 holds in: Botanical (yes), Herbal (yes), Astronomical (partial)
-Pattern 2 holds in: All sections (yes, with section-specific variants)
-Pattern 3 holds in: Catalog corpus (yes), Cipher corpus (no), English (no)
+Pattern 1 holds in: [List which categories/subsets] (yes/partial/no)
+Pattern 2 holds in: [List which categories/subsets] (yes/partial/no)
+Pattern 3 holds in: [List which comparisons] (yes/partial/no)
 
-→ Interpretation: Pattern is structural, not lexical
-→ But: Could be explained by multiple hypotheses
+→ Interpretation: [Structural or methodological meaning]
+→ But: [Alternative explanations must be considered]
 ```
 
 ---
@@ -460,31 +438,29 @@ If hypothesis is rejected:
 
 ```
 ## Summary
-This study presents a testable hypothesis that the Voynich Manuscript 
-may encode a taxonomic or reference-like classification system, based on 
-corpus structure analysis. Analysis of 7,063 tokens across 112 folios and 
-6 sections revealed:
+This study presents a testable hypothesis regarding [Your Research Question], 
+based on corpus structure analysis. Analysis of [Your Data] revealed:
 
-1. Unusually strong word-final character constraint (96.3%)
-2. Section-specific token distribution patterns
-3. Token family clustering consistent with identifiers
-4. Structural similarity to cataloging systems
+1. [Key finding 1]
+2. [Key finding 2]
+3. [Key finding 3]
+4. [Key finding 4]
 
 ## Evidence Status
-Evidence level: PRELIMINARY & CANDIDATE
+Evidence level: [Your assessment - PRELIMINARY, CANDIDATE, SUPPORTED, etc.]
 - Multiple patterns observed
-- Consistent across sections
+- Consistent across [Your domains/categories]
 - Compatible with hypothesis
 - But: Alternative explanations not ruled out
-- Comparison with corpora partially supportive
+- Comparison with corpora [partially/fully] supportive
 
 ## What this does NOT claim
 This study does NOT claim:
-  ✗ Translation of Voynich manuscript
-  ✗ Decipherment of any text
-  ✗ Proof of specific theory
-  ✗ Identification of language family
-  ✗ Historical origin determination
+  ✗ [Overclaim 1 to avoid]
+  ✗ [Overclaim 2 to avoid]
+  ✗ [Overclaim 3 to avoid]
+  ✗ [Overclaim 4 to avoid]
+  ✗ [Overclaim 5 to avoid]
 
 ## What this DOES provide
 This study DOES provide:
@@ -497,24 +473,24 @@ This study DOES provide:
 
 ## Next Steps
 Required for validation:
-  1. Manual verification of line parsing (500 lines × 3 annotators)
-  2. Domain expert review (paleography, botany, linguistics)
-  3. Larger comparison corpora (100k+ tokens)
-  4. Image analysis with color/layout features
-  5. Currier A/B and scribe hand controlled analysis
-  6. Replication by independent research team
+  1. [Validation step 1]
+  2. [Validation step 2]
+  3. [Validation step 3]
+  4. [Validation step 4]
+  5. [Validation step 5]
+  6. [Validation step 6]
 
 ## Reproducibility
 All data, code, and analysis scripts are available at:
-  https://github.com/zmjckim-fa/coolhan/tools/voynich-reference-analyzer/
+  [Your repository URL]
   
 To reproduce results:
-  $ git clone https://github.com/zmjckim-fa/coolhan
-  $ cd coolhan/tools/voynich-reference-analyzer
+  $ git clone [Your repo]
+  $ cd [Your path]
   $ pip install -r requirements.txt
-  $ python scripts/01_parse_eva.py
-  $ python scripts/02_analyze_tokens.py
-  $ streamlit run app.py
+  $ python scripts/[analysis 1]
+  $ python scripts/[analysis 2]
+  $ [Run your analysis]
 ```
 
 ---
@@ -523,11 +499,11 @@ To reproduce results:
 
 ### 2.1 절대 금지 표현
 ```
-❌ "The Voynich Manuscript has been decoded"
-❌ "This word means..."
-❌ "We have proven..."
-❌ "The text is definitely..."
-❌ "Voynich was a catalog of..."
+❌ "[Subject] has been completely solved/decoded"
+❌ "This element definitively means..."
+❌ "We have proven [claim]..."
+❌ "The evidence definitively shows..."
+❌ "[Subject] must be [specific interpretation]..."
 ```
 
 ### 2.2 권장 표현
