@@ -1,0 +1,195 @@
+name: CoolHan Harness Integrity Check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.claude/**'
+      - 'CLAUDE.md'
+      - 'knowledge_base/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.claude/**'
+      - 'CLAUDE.md'
+      - 'knowledge_base/**'
+  workflow_dispatch:
+
+jobs:
+  agent-files:
+    name: Agent Definition Files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required agent files
+        run: |
+          echo "Checking CoolHan Development Harness agents..."
+          AGENTS=(
+            ".claude/agents/intent-analyzer.md"
+            ".claude/agents/spec-writer.md"
+            ".claude/agents/developer.md"
+            ".claude/agents/validator.md"
+            ".claude/agents/qa-tester.md"
+            ".claude/agents/devops-deployer.md"
+            ".claude/agents/integration-validator.md"
+            ".claude/agents/e2e-tester.md"
+          )
+          FAIL=0
+          for agent in "${AGENTS[@]}"; do
+            if [ -f "$agent" ]; then
+              SIZE=$(wc -c < "$agent")
+              echo "OK $agent ($SIZE bytes)"
+              if [ "$SIZE" -lt 500 ]; then
+                echo "WARNING: $agent seems too small ($SIZE bytes)"
+              fi
+            else
+              echo "MISSING: $agent"
+              FAIL=1
+            fi
+          done
+
+          echo ""
+          echo "Checking Release Engineering agents..."
+          RE_AGENTS=(
+            ".claude/agents/planning-lead.md"
+            ".claude/agents/development-lead.md"
+            ".claude/agents/devops-lead.md"
+            ".claude/agents/marketing-lead.md"
+            ".claude/agents/qa-lead.md"
+          )
+          for agent in "${RE_AGENTS[@]}"; do
+            if [ -f "$agent" ]; then
+              echo "OK $agent"
+            else
+              echo "MISSING: $agent"
+              FAIL=1
+            fi
+          done
+
+          if [ "$FAIL" -eq 1 ]; then
+            echo "One or more agent files are missing"
+            exit 1
+          fi
+          echo "All agent files present"
+
+  skill-files:
+    name: Skill Files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required skill files
+        run: |
+          SKILLS=(
+            ".claude/skills/coolhan-development-orchestrator/SKILL.md"
+            ".claude/skills/coolhan-release-orchestrator/SKILL.md"
+            ".claude/skills/coolhan-installer/SKILL.md"
+            ".claude/skills/coolhan-spec-driven-framework/SKILL.md"
+          )
+          FAIL=0
+          for skill in "${SKILLS[@]}"; do
+            if [ -f "$skill" ]; then
+              SIZE=$(wc -c < "$skill")
+              echo "OK $skill ($SIZE bytes)"
+            else
+              echo "MISSING: $skill"
+              FAIL=1
+            fi
+          done
+          if [ "$FAIL" -eq 1 ]; then
+            exit 1
+          fi
+          echo "All skill files present"
+
+  knowledge-base:
+    name: Knowledge Base Modules
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check 10 domain modules
+        run: |
+          MODULES=(
+            "knowledge_base/01_member_system.md"
+            "knowledge_base/02_shopping_mall.md"
+            "knowledge_base/03_payment_system.md"
+            "knowledge_base/04_shipping_system.md"
+            "knowledge_base/05_admin_system.md"
+            "knowledge_base/06_notification_system.md"
+            "knowledge_base/07_review_rating_system.md"
+            "knowledge_base/08_inventory_management.md"
+            "knowledge_base/09_order_management.md"
+            "knowledge_base/10_privacy_gdpr.md"
+          )
+          FAIL=0
+          for mod in "${MODULES[@]}"; do
+            if [ -f "$mod" ]; then
+              SIZE=$(wc -c < "$mod")
+              echo "OK $mod ($SIZE bytes)"
+            else
+              echo "MISSING: $mod"
+              FAIL=1
+            fi
+          done
+          if [ "$FAIL" -eq 1 ]; then
+            exit 1
+          fi
+          echo "All 10 domain modules present"
+
+  planner-intent-guard:
+    name: Planner Intent Mechanism Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify intent enforcement in skill
+        run: |
+          SKILL=".claude/skills/coolhan-development-orchestrator/SKILL.md"
+          if [ ! -f "$SKILL" ]; then
+            echo "SKILL.md not found"
+            exit 1
+          fi
+
+          # Check for Task 1-2 gate
+          if grep -q "기획자 승인" "$SKILL"; then
+            echo "OK Planner approval gate present"
+          else
+            echo "WARNING: Planner approval gate not found in SKILL.md"
+          fi
+
+          # Check for Stage 0 validation
+          if grep -q "Stage 0\|기획 의도 검증\|planning_intent" "$SKILL"; then
+            echo "OK Stage 0 planning intent validation present"
+          else
+            echo "WARNING: Stage 0 planning intent validation not found"
+          fi
+
+          # Check validator
+          VALIDATOR=".claude/agents/validator.md"
+          if [ -f "$VALIDATOR" ]; then
+            if grep -q "기획 의도\|planning_intent\|Stage 0" "$VALIDATOR"; then
+              echo "OK Validator has planning intent check"
+            else
+              echo "WARNING: Validator may be missing planning intent check"
+            fi
+          fi
+
+          echo "Harness integrity check complete"
+
+  summary:
+    name: Harness Check Summary
+    runs-on: ubuntu-latest
+    needs: [agent-files, skill-files, knowledge-base, planner-intent-guard]
+    if: always()
+    steps:
+      - name: Report
+        run: |
+          echo "## CoolHan Harness Check" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Agent Files (13) | ${{ needs.agent-files.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Skill Files (4) | ${{ needs.skill-files.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Knowledge Base (10 modules) | ${{ needs.knowledge-base.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Planner Intent Guard | ${{ needs.planner-intent-guard.result }} |" >> $GITHUB_STEP_SUMMARY

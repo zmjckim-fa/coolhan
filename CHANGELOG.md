@@ -1,5 +1,49 @@
 # Changelog
 
+## [0.3.0] - 2026-05-31
+
+### Added
+
+- **Planner Intent Enforcement Mechanism** (Phase D-3/D-4)
+  - Task 1: Existing feature detection from knowledge_base/
+  - Task 1→2 Gate: Auto-proceeds based on documented planner intent (no user interruption)
+  - Task 4 Stage 0: Planning intent validation — detects unauthorized feature additions
+  - Task 7-8: Specification checklist re-validation
+  - Phase D-4 Verified: Zero unauthorized additions across full Task 1-8 pipeline
+
+- **Research Evidence Ingestion & Validation System** (Voynich v0.3)
+  - 12 new database tables (data_sources, research_claims, failure_cases, ...)
+  - 4-tier evidence separation: Primary / Derived / External Claim / Hypothesis Eval
+  - HypothesisGuard: Prevents external research from hijacking core hypothesis
+  - RevalidationEngine: Auto-revalidates rules when new data is ingested
+  - 6 new Streamlit dashboard pages
+
+- **Voynich Tool Pipeline Scripts**
+  - `scripts/init_db.py`: Creates 30-table SQLite database
+  - `scripts/demo_seed.py`: Loads sample EVA data, corpora, rules, failure cases
+  - `scripts/run_pipeline.py`: Full analysis pipeline orchestrator
+
+- **Dashboard Pages** (6 new — previously stubs)
+  - Folio Explorer with DB connectivity
+  - EVA Parser with live token breakdown
+  - Token Analysis with frequency charts
+  - Character Analysis with i-dominance detection
+  - Position Rules with confidence visualization
+  - Section Comparison with corpus comparison charts
+
+### Changed
+- CoolHan Development Harness upgraded to Phase D-4
+- Validator (Task 4): 9-stage → 10-stage pipeline (Stage 0 added)
+- Dashboard version: v0.2 → v0.3
+- `modules/__init__.py`: v0.3 modules registered with graceful fallback
+- Task 1→2 gate: Changed from AskUserQuestion → auto-proceed
+
+### Fixed
+- Nav label collision: `📋 Research Claims` → `🗃️ Research Claims`
+- `init_db.py`: CREATE INDEX idempotency fix (IF NOT EXISTS)
+
+---
+
 ## [1.0.4] - 2026-05-28
 
 ### Added

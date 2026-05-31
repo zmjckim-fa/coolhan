@@ -1,207 +1,301 @@
-# 🎯 CoolHan - AI 기반 개발 자동화
+<div align="center">
 
-> **모국어로 완벽한 개발을 자동화하세요**
+# 🎯 CoolHan
 
----
+**AI-Powered Specification-Driven Development Framework**
 
-## 🚀 CoolHan이란?
+[![CI](https://github.com/zmjckim-fa/coolhan/actions/workflows/test.yml/badge.svg)](https://github.com/zmjckim-fa/coolhan/actions/workflows/test.yml)
+[![npm version](https://img.shields.io/npm/v/coolhan-builder?color=blue)](https://www.npmjs.com/package/coolhan-builder)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Languages](https://img.shields.io/badge/Languages-50%2B-green)](MULTILINGUAL_SUPPORT.md)
+[![Node.js](https://img.shields.io/badge/Node.js-14%2B-brightgreen)](https://nodejs.org)
 
-**당신의 모국어 한 줄로 완벽한 소프트웨어가 완성됩니다.**
+> **한 줄의 모국어 명령어로 기획부터 배포까지 — One natural-language command, from planning to deployment.**
 
-CoolHan은 AI 6인 전문가 팀이 자동으로 협력하여 요구사항 분석부터 배포까지 전체 개발 프로세스를 처리합니다.
+[🇰🇷 한국어](#한국어) · [🇺🇸 English](#english) · [Quick Start](#-quick-start) · [Docs](#-documentation)
 
-### 📌 목적
-"만들어줘"라는 자연스러운 명령어 하나로 완벽한 결과물을 얻으세요.
-
-### 🎯 기능
-| 단계 | 자동 처리 내용 |
-|------|--------------|
-| 📋 분석 | 요구사항 자동 분석 및 구조화 |
-| 📐 규격 | 상세 규격 문서 자동 생성 |
-| 💻 개발 | 규격에 따른 코드 자동 구현 |
-| ✅ 검증 | 9단계 자동 검증 (100% 규격 준수) |
-| 🧪 테스트 | 자동 단위 테스트 및 통합 테스트 |
-| 🚀 배포 | 안전한 자동 배포 (동시 배포 방지) |
-
-### ✨ 특징
-- **🌍 50+ 언어 자동 지원** — 자동 언어 감지, 모국어로 입력하면 끝
-- **🤖 6인 AI 팀 자동 조율** — 의도분석 → 스펙작가 → 개발자 → 검증자 → QA → DevOps 자동 협력
-- **📏 100% 규격 준수** — 작성한 규격과 코드의 완벽한 일치 보장
-- **🔒 안전한 배포** — 배포 락, 검증 게이트, 자동 롤백
-- **📚 10개 도메인 모듈** — 회원시스템, 쇼핑, 결제, 배송, 관리 등 즉시 사용 가능
-- **⚡ 토큰 효율** — 최소한의 결과만 보고, 빠른 피드백
+</div>
 
 ---
 
-## 🌍 사용 예시
+## 한국어
 
-### 한국어
+### 무엇인가?
+
+**CoolHan**은 사용자의 자연스러운 모국어 명령어 한 줄을 6명의 AI 전문가 팀이 받아 기획 → 규격 → 코드 → 검증 → 테스트 → 배포의 전체 프로세스를 자동화하는 **Specification-Driven Development Framework**입니다.
+
 ```
 쿨한으로 사용자 로그인 기능 추가해
+         ↓
+[Intent Analyzer] → [Spec Writer] → [Developer] → [Validator] → [QA Tester] → [DevOps]
+         ↓                                              ↓
+   기획자 의도 명시                              10단계 자동 검증
+   무단 기능 추가 차단                           기획 의도 강제 메커니즘
 ```
 
-### English
+### 핵심 특징
+
+| 특징 | 설명 |
+|------|------|
+| 🌍 **50+ 언어 지원** | 한국어, 영어, 일본어, 중국어 등 자동 감지 |
+| 🤖 **AI 6인 팀** | 의도분석 → 스펙 → 개발 → 검증 → QA → 배포 자동 협력 |
+| 🛡️ **기획자 의도 강제** | AI의 자의적 기능 추가 원천 차단 (Phase D-4 검증 완료) |
+| 📏 **10단계 검증** | Stage 0 기획 의도 검증 포함, 증거 기반 |
+| 🔒 **안전 배포** | 배포 락, 검증 게이트, 자동 롤백 |
+| 📚 **10개 도메인 모듈** | 회원·쇼핑·결제·배송·관리·알림·리뷰·재고·주문·개인정보 |
+
+---
+
+## English
+
+### What is CoolHan?
+
+**CoolHan** is a Specification-Driven Development Framework where a team of 6 AI specialists automatically handles the entire software development lifecycle from a single natural-language command.
+
 ```
+"CoolHan add user login feature"
+         ↓
+[Intent Analyzer] analyzes & documents planner intent
+         ↓
+[Spec Writer] creates CoolHan specification documents
+         ↓
+[Developer] implements code strictly following specs
+         ↓
+[Validator] runs 10-stage validation (incl. planning intent check)
+         ↓
+[QA Tester] executes specification-based test suites
+         ↓
+[DevOps/Deployer] deploys safely with locks and health checks
+```
+
+### Key Innovation: Planner Intent Enforcement
+
+The critical problem in AI-assisted development: AI systems tend to add arbitrary features beyond what was requested, and this worsens over time as more features accumulate.
+
+CoolHan solves this with the **Planner Intent Enforcement Mechanism**:
+
+```
+Task 1 → Documents explicit planner intent in requirements-{id}.md
+         [기능명 / 신규_또는_기존 / 기획자_승인 / 무단추가_금지]
+         ↓
+Task 1→2 Gate → Auto-proceeds (no interruption) based on documented intent
+         ↓
+Task 4 Stage 0 → Compares actual code against planner intent
+                 Detects unauthorized additions → FAIL
+         ↓
+Task 7→8 → Re-validates against specification checklist
+```
+
+**Result (Phase D-4 Verified):** Zero unauthorized feature additions detected across full Task 1-8 pipeline.
+
+---
+
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+# Linux / macOS
+curl -fsSL https://raw.githubusercontent.com/zmjckim-fa/coolhan/main/install.sh | bash
+
+# Windows (PowerShell)
+iwr https://raw.githubusercontent.com/zmjckim-fa/coolhan/main/install.ps1 | iex
+
+# Node.js (Cross-platform)
+node -e "$(curl -fsSL https://raw.githubusercontent.com/zmjckim-fa/coolhan/main/install.js)"
+
+# npm
+npm install -g coolhan-builder
+```
+
+### Usage
+
+After installation, open Claude Code in your project directory and use natural language:
+
+```
+# Korean
+쿨한으로 사용자 로그인 기능 추가해
+
+# English
 CoolHan add user login feature
-```
 
-### 日本語
-```
+# Japanese
 CoolHanでユーザーログイン機能を追加して
-```
 
-### 中文
-```
+# Chinese
 用CoolHan添加用户登录功能
 ```
 
-더 많은 언어: [MULTILINGUAL_SUPPORT.md](MULTILINGUAL_SUPPORT.md)
+CoolHan automatically:
+1. Detects your language
+2. Assembles the 6-agent team
+3. Runs Task 1-8 pipeline
+4. Delivers working, tested, deployed code
 
 ---
 
-## ⚡ 3분 빠른 시작
+## 🏗️ Architecture
 
-### 1단계: Clone
+### Harness System
+
+CoolHan runs two parallel harnesses:
+
+```
+CoolHan Builder Repository
+├── Development Harness (coolhan-development-orchestrator)
+│   ├── Task 1: Intent Analyzer     ← Planner intent documentation
+│   ├── Task 1→2: Intent Gate       ← Auto-proceed (no interruption)
+│   ├── Task 2: Spec Writer
+│   ├── Task 3: Developer
+│   ├── Task 4: Validator           ← Stage 0: Planning intent check
+│   ├── Task 5: QA Tester
+│   ├── Task 6: DevOps/Deployer
+│   ├── Task 7: Integration Validator (optional)
+│   └── Task 8: E2E Tester (optional)
+│
+└── Release Engineering Harness (coolhan-release-orchestrator)
+    ├── Planning Lead
+    ├── Development Lead
+    ├── DevOps Lead
+    ├── Marketing Lead
+    └── QA Lead
+```
+
+### Domain Modules (Knowledge Base)
+
+```
+knowledge_base/
+├── 01_member_system.md          # Auth, profiles, permissions
+├── 02_shopping_mall.md          # Cart, catalog, checkout
+├── 03_payment_system.md         # PG integration, refunds
+├── 04_shipping_system.md        # Carriers, tracking
+├── 05_admin_system.md           # Dashboard, audit
+├── 06_notification_system.md    # Email, push, feedback
+├── 07_review_rating_system.md   # Reviews, ratings
+├── 08_inventory_management.md   # Stock, reservations
+├── 09_order_management.md       # Orders, cancellations
+└── 10_privacy_gdpr.md           # GDPR, data protection
+```
+
+### Evidence Separation (Validation Architecture)
+
+```
+Validation Pipeline (10 stages):
+  Stage 0: Planning Intent Check  ← NEW in Phase D-3/D-4
+           Compare code vs requirements-{id}.md
+           Detect unauthorized feature additions → FAIL
+  Stage 1: Spec Parsing & Compliance
+  Stage 2: Code Analysis (types, structure)
+  Stage 3: Data Model (DB schema)
+  Stage 4: API Endpoints (response format)
+  Stage 5: Status Values (registry check)
+  Stage 6: Security (SQL injection, auth)
+  Stage 7: Business Logic
+  Stage 8: Test Coverage
+  Stage 9: Deployment Readiness
+```
+
+---
+
+## 📚 Documentation
+
+| Document | Description |
+|----------|-------------|
+| [CLAUDE.md](CLAUDE.md) | Harness configuration & agent team structure |
+| [QUICK_START.md](QUICK_START.md) | 5-minute getting started guide |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
+| [CHANGELOG.md](CHANGELOG.md) | Version history |
+| [MULTILINGUAL_SUPPORT.md](MULTILINGUAL_SUPPORT.md) | 50+ language support details |
+| [CLAUDE_INSTALLATION_GUIDE.md](CLAUDE_INSTALLATION_GUIDE.md) | Installation troubleshooting |
+
+### Tools
+
+| Tool | Description |
+|------|-------------|
+| [Voynich Reference Analyzer](tools/voynich-reference-analyzer/) | Research platform for structural analysis of the Voynich Manuscript |
+
+---
+
+## 🔬 Voynich Reference Analyzer
+
+A research platform included in this repository for testing the hypothesis:
+
+> **"Does the Voynich Manuscript encode a reference/taxonomic system rather than natural prose or cipher text?"**
+
+⚠️ **This is NOT a decipherment tool.** It analyzes structural patterns only.
+
+### Features (v0.3)
+
+- **12 DB tables** for evidence ingestion & validation
+- **4-tier evidence separation**: Primary / Derived / External Claim / Hypothesis Eval
+- **Planner guardrail**: External research conclusions never adopted as facts
+- **Auto-revalidation**: Rules re-evaluated when new data is ingested
+- **18-page Streamlit dashboard** with live DB connectivity
+
+### Quick Start (Voynich Tool)
+
 ```bash
+cd tools/voynich-reference-analyzer
+pip install -r requirements.txt
+python scripts/init_db.py        # Initialize database (30 tables)
+python scripts/demo_seed.py      # Load sample data
+streamlit run app.py             # Launch dashboard
+```
+
+---
+
+## 📊 Project Status
+
+| Component | Status | Version |
+|-----------|--------|---------|
+| Development Harness | ✅ Production | Phase D-4 |
+| Release Engineering | ✅ Production | v1.0 |
+| Planner Intent Enforcement | ✅ Verified | Phase D-4 |
+| Knowledge Base (10 modules) | ✅ Complete | Phase 2 |
+| Voynich Research Tool | 🔄 Active | v0.3 |
+| npm Package | ✅ Published | Latest |
+
+### Phase D-4 Verification Results
+
+| Check | Result |
+|-------|--------|
+| Task 1 existing feature detection | ✅ PASS |
+| Task 1→2 gate auto-proceeds | ✅ PASS (no interruption) |
+| Task 4 Stage 0 intent validation | ✅ PASS |
+| Unauthorized additions detected | ✅ 0 detected |
+| Full Task 1-8 pipeline | ✅ ALL PASS |
+
+---
+
+## 🤝 Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+```bash
+# Clone
 git clone https://github.com/zmjckim-fa/coolhan.git
 cd coolhan
-```
 
-### 2단계: 설치
-```bash
+# Install
 npm install
-```
 
-### 3단계: 사용 시작
-```bash
-쿨한으로 사용자 로그인 기능 추가해
-```
+# Run tests
+npm test
 
----
-
-## 💡 어떻게 작동하나?
-
-### 👤 당신이 할 일 (구체적 정보 제공)
-
-**기획서 작성 없이도 됩니다. 당신이 알고 있는 것을 AI에게 말씀하세요.**
-
-CoolHan이 당신에게 물을 구체적 항목들:
-
-#### 📋 사업 배경
-- 사업 목표 (왜 이 서비스를 만드는가)
-- 대상 고객 (누가 사용할 것인가)
-- 경쟁사 (시장에 비슷한 서비스가 있는가)
-- 예상 규모 (월 사용자 수, 거래량)
-
-#### 🌍 사용 환경
-- 서비스 지역 (국내? 국제?)
-- 사용 국가/지역별 언어
-- 배송 지역 (필요시)
-- 결제 통화 및 PG사 (국내/해외)
-- 배송사 선택 (필요시)
-
-#### 💻 기술 환경
-- 모바일/웹/앱 (또는 전부)
-- 예상 동시 접속자 수
-- 보안 요구사항 (신용카드? 개인정보?)
-- 기존 시스템과의 연동 필요성
-
-#### 🔧 기능 상세화
-- 핵심 기능 (필수)
-- 부가 기능 (있으면 좋은 것)
-- 운영 기능 (관리자가 필요한 것)
-- 결제/배송/환불 규칙
-
-#### 👥 조직 구성
-- 개발팀 크기
-- 운영 담당자 배치
-- 법무/재무 검토 필요성
-- 출시 일정
-
-**AI는 당신이 지칠 때까지 계속 질문합니다.** 
-"더 이상 답변 못하겠어" 하면, 마지막 1개만 더 묻고 기획서 작성으로 넘어갑니다.
-
-### 🤖 AI 6인 팀이 할 일 (전부 자동)
-
-```
-당신의 설명
-    ↓
-[의도 분석자] — 요구사항 파악
-    ↓
-[스펙 작가] — 상세 규격 문서 작성
-    ↓
-[개발자] — 규격에 따라 코드 구현
-    ↓
-[검증자] — 규격과 코드 일치 확인 (9단계)
-    ↓
-[QA 테스터] — 테스트 및 품질 검증
-    ↓
-[DevOps] — 배포 및 모니터링
-    ↓
-완료 ✅ (규격 100% 준수, 완벽한 구현)
+# Validate structure
+npm run spec:validate
 ```
 
 ---
 
-## 🎯 사용 흐름
+## 📄 License
 
-| 단계 | 당신이 할 일 | AI가 할 일 |
-|------|-----------|---------|
-| **1단계** | "온라인 쇼핑몰 만들어줄래?" 입력 | 요구사항 분석 |
-| **2단계** | AI의 질문에 답변 (선택사항) | 상세 규격 생성 |
-| **3단계** | 진행 상황 확인 | 코드 구현, 테스트, 배포 |
-| **완료** | 결과 검토 | 완벽하게 구현된 소프트웨어 제공 |
+MIT © 2026 — See [LICENSE](LICENSE)
 
 ---
 
-## ⚡ 핵심 개념
+<div align="center">
 
-**기획서는 필요 없습니다.**
-당신이 원하는 것을 자연스럽게 설명하면, AI가 전문적인 규격 문서로 변환합니다.
+**Built with [Claude Code](https://claude.ai/claude-code) · Powered by Anthropic**
 
-**명세서는 필요 없습니다.**
-"이 기능은 이렇게 작동해야 한다"라는 상세한 설명도, 그냥 "결제 기능 추가해"라고 해도 AI가 최선의 방식으로 구현합니다.
-
-**기술 지식은 필요 없습니다.**
-데이터베이스, API, 검증 로직 — 모든 것을 AI가 자동으로 설계합니다.
-
-**당신이 할 일은 단 하나입니다:**
-"이런 기능이 있으면 좋겠어"라고 말씀하면 됩니다. 나머지는 AI가 완벽하게 처리합니다.
-
----
-
-## 📦 포함 사항
-
-- ✅ 10개 도메인 모듈 (회원, 쇼핑, 결제, 배송 등)
-- ✅ 자동 검증 (9단계)
-- ✅ 안전한 배포
-- ✅ 50+ 언어 지원
-
----
-
-## 📚 문서
-
-| 문서 | 내용 |
-|------|------|
-| [QUICK_START.md](QUICK_START.md) | 5분 시작 가이드 |
-| [MULTILINGUAL_SUPPORT.md](MULTILINGUAL_SUPPORT.md) | 50+ 언어 지원 |
-| [CLAUDE.md](CLAUDE.md) | 운영 가이드 |
-
----
-
-## 🤝 기여
-
-개선 사항을 제안해주세요!
-
-- [GitHub Issues](https://github.com/zmjckim-fa/coolhan/issues)
-- [GitHub Discussions](https://github.com/zmjckim-fa/coolhan/discussions)
-
----
-
-## 📄 라이선스
-
-MIT License - 자유롭게 사용, 수정, 배포 가능
-
----
-
-**CoolHan과 함께 완벽한 개발을 경험하세요! 🚀**
+</div>

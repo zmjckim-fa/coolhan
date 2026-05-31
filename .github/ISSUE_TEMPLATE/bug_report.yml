@@ -1,0 +1,84 @@
+name: "Bug Report"
+description: "Report a bug in CoolHan or the Voynich Research Tool"
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please fill in the details below.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: "Component"
+      description: "Which component has the bug?"
+      options:
+        - "CoolHan Development Harness (Task 1-8)"
+        - "Planner Intent Enforcement (Task 1->2 gate)"
+        - "Validator (Stage 0 planning intent check)"
+        - "Release Engineering Harness"
+        - "Installation (install.js/sh/ps1)"
+        - "Knowledge Base (domain modules)"
+        - "Voynich Research Tool"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Bug Description"
+      description: "Clear description of what went wrong"
+      placeholder: "The validator passed a task that added unauthorized features..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Exact steps to reproduce the bug"
+      value: |
+        1. Command used:
+        2. Expected behavior:
+        3. Actual behavior:
+    validations:
+      required: true
+
+  - type: textarea
+    id: workspace
+    attributes:
+      label: "Workspace Output (if applicable)"
+      description: "Paste relevant content from `_workspace/` files"
+      render: markdown
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "Severity"
+      options:
+        - "Critical (P0) -- blocks development"
+        - "High (P1) -- major feature broken"
+        - "Medium (P2) -- workaround exists"
+        - "Low (P3) -- minor issue"
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: "CoolHan Version"
+      placeholder: "e.g., Phase D-4, v0.3.0"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Checklist"
+      options:
+        - label: "I searched existing issues"
+          required: true
+        - label: "I can reproduce this consistently"
+          required: true

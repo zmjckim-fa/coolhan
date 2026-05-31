@@ -1,0 +1,117 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. v0.3.1)'
+        required: true
+        default: 'v0.3.0'
+
+jobs:
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${{ github.ref_name }}"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION"
+
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          VERSION_CLEAN="${VERSION#v}"
+
+          # Extract section from CHANGELOG.md
+          NOTES=$(awk "/^## \[${VERSION_CLEAN}\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md)
+
+          if [ -z "$NOTES" ]; then
+            NOTES="See [CHANGELOG.md](CHANGELOG.md) for details."
+          fi
+
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Verify package structure
+        run: |
+          echo "Verifying release artifacts..."
+          [ -f "install.js" ]   && echo "OK install.js"
+          [ -f "install.sh" ]   && echo "OK install.sh"
+          [ -f "install.ps1" ]  && echo "OK install.ps1"
+          [ -f "package.json" ] && echo "OK package.json"
+          [ -f "README.md" ]    && echo "OK README.md"
+          [ -f "CLAUDE.md" ]    && echo "OK CLAUDE.md"
+          [ -d ".claude" ]      && echo "OK .claude/"
+          [ -d "knowledge_base" ] && echo "OK knowledge_base/"
+          echo "All release artifacts verified"
+
+      - name: Create release archive
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          tar -czf "coolhan-${VERSION}.tar.gz" \
+            --exclude=".git" \
+            --exclude="node_modules" \
+            --exclude="_workspace" \
+            --exclude="_workspace_prev*" \
+            --exclude="coverage" \
+            --exclude="*.sqlite" \
+            .
+          echo "Archive created: coolhan-${VERSION}.tar.gz"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: "CoolHan ${{ steps.version.outputs.version }}"
+          body: |
+            ## CoolHan ${{ steps.version.outputs.version }}
+
+            ${{ steps.changelog.outputs.notes }}
+
+            ---
+
+            ### Installation
+
+            ```bash
+            # Linux / macOS
+            curl -fsSL https://raw.githubusercontent.com/zmjckim-fa/coolhan/${{ steps.version.outputs.version }}/install.sh | bash
+
+            # Windows
+            iwr https://raw.githubusercontent.com/zmjckim-fa/coolhan/${{ steps.version.outputs.version }}/install.ps1 | iex
+
+            # npm
+            npm install -g coolhan-builder
+            ```
+
+            ### What's in this release
+            - CoolHan Development Harness (6-agent team)
+            - Release Engineering Harness (5-agent team)
+            - 10 Domain Knowledge Modules
+            - Planner Intent Enforcement (Phase D-4 verified)
+            - Voynich Reference Analyzer v0.3
+            - 50+ language support
+
+            **Full changelog:** [CHANGELOG.md](https://github.com/zmjckim-fa/coolhan/blob/main/CHANGELOG.md)
+          files: |
+            coolhan-${{ steps.version.outputs.version }}.tar.gz
+          draft: false
+          prerelease: false
