@@ -1,6 +1,6 @@
 ---
 name: coolhan-development-orchestrator
-description: "CoolHan 규격 기반 개발 프레임워크 - 완전한 다국어 자동화 개발 시스템. 🌍 50+ 언어 완전 지원 (자동 감지): 🇰🇷 한국어: '쿨한으로 개발해', '쿨한으로 사용자 로그인 기능 추가해', '쿨한으로 검증해', '쿨한으로 진행하라' | 🇺🇸 English: 'CoolHan add feature', 'CoolHan develop', 'CoolHan validate', 'CoolHan continue' | 🇯🇵 日本語: 'CoolHanで開発して', 'CoolHanで機能を追加して', 'CoolHanで検証して' | 🇨🇳 中文: '用CoolHan开发', '用CoolHan添加功能', '用CoolHan验证' | 🇪🇸 Español: 'CoolHan desarrollar', 'CoolHan agregar función', 'CoolHan validar' | 🇫🇷 Français: 'CoolHan développer', 'CoolHan ajouter fonction', 'CoolHan valider' | 🇩🇪 Deutsch: 'CoolHan entwickeln', 'CoolHan Funktion hinzufügen', 'CoolHan validieren' | 🇮🇹 Italiano: 'CoolHan sviluppare', 'CoolHan aggiungere funzione', 'CoolHan convalidare' | 🇵🇹 Português: 'CoolHan desenvolver', 'CoolHan adicionar recurso', 'CoolHan validar' | 🇷🇺 Русский: 'CoolHan разработать', 'CoolHan добавить функцию', 'CoolHan проверить' | 🇮🇳 हिन्दी: 'CoolHan विकास करें', 'CoolHan फीचर जोड़ें' | 🇹🇭 ไทย: 'CoolHan พัฒนา', 'CoolHan เพิ่มฟีเจอร์' | +40 more languages. **모든 명령어 형식 지원**: '{action} coolhan으로', 'coolhan {action}', '쿨한으로 {action}'. **자동 감지 + 즉시 실행**: 언어 자동 감지 → intent-analyzer 자동 활성화 → 19개 질문 시작 → 기획서 자동 생성 → 6명 AI 팀 자동 협력 → 규격 기반 코드 자동 구현 → 9단계 검증 → 배포. 사용자는 그냥 모국어로 말하면 완벽한 개발이 됨. 자세히: MULTILINGUAL_SUPPORT.md"
+description: "CoolHan 규격 기반 개발 프레임워크 - 완전한 다국어 자동화 개발 시스템. 🌍 50+ 언어 완전 지원 (자동 감지): 🇰🇷 한국어: '쿨한으로 개발해', '쿨한으로 사용자 로그인 기능 추가해', '쿨한으로 검증해', '쿨한으로 진행하라', '쿨한 업데이트 확인해', '쿨한 최신 버전 확인', '쿨한 업데이트해' | 🇺🇸 English: 'CoolHan add feature', 'CoolHan develop', 'CoolHan validate', 'CoolHan continue', 'CoolHan check for updates', 'CoolHan update check', 'CoolHan update' | 🇯🇵 日本語: 'CoolHanで開発して', 'CoolHanで機能を追加して', 'CoolHanで検証して' | 🇨🇳 中文: '用CoolHan开发', '用CoolHan添加功能', '用CoolHan验证' | 🇪🇸 Español: 'CoolHan desarrollar', 'CoolHan agregar función', 'CoolHan validar' | 🇫🇷 Français: 'CoolHan développer', 'CoolHan ajouter fonction', 'CoolHan valider' | 🇩🇪 Deutsch: 'CoolHan entwickeln', 'CoolHan Funktion hinzufügen', 'CoolHan validieren' | 🇮🇹 Italiano: 'CoolHan sviluppare', 'CoolHan aggiungere funzione', 'CoolHan convalidare' | 🇵🇹 Português: 'CoolHan desenvolver', 'CoolHan adicionar recurso', 'CoolHan validar' | 🇷🇺 Русский: 'CoolHan разработать', 'CoolHan добавить функцию', 'CoolHan проверить' | 🇮🇳 हिन्दी: 'CoolHan विकास करें', 'CoolHan फीचर जोड़ें' | 🇹🇭 ไทย: 'CoolHan พัฒนา', 'CoolHan เพิ่มฟีเจอร์' | +40 more languages. **모든 명령어 형식 지원**: '{action} coolhan으로', 'coolhan {action}', '쿨한으로 {action}'. **자동 감지 + 즉시 실행**: 언어 자동 감지 → intent-analyzer 자동 활성화 → 19개 질문 시작 → 기획서 자동 생성 → 6명 AI 팀 자동 협력 → 규격 기반 코드 자동 구현 → 9단계 검증 → 배포. 사용자는 그냥 모국어로 말하면 완벽한 개발이 됨. 자세히: MULTILINGUAL_SUPPORT.md"
 working-mode: |
   **Token Efficiency Mode (작동 원칙)**
   - 결과만 보고: 분석완료/작업중/완료 형식으로만 보고
@@ -206,6 +206,38 @@ Task 8: 사용자 여정 검증 (E2E Tester)
 ---
 
 ## ⚙️ 실행 구조
+
+### Phase 0-pre: 업데이트 확인 (자동, 1회/실행)
+
+**매 CoolHan 실행 시 자동으로 버전을 확인한다 (네트워크 오류 시 무시하고 진행):**
+
+```
+[업데이트 체크 절차]
+1. ~/.coolhan-update-notice.json 읽기
+   - 파일 없음 또는 last_check가 6시간 이상 전 → GitHub API 확인
+   - 최근 확인됨 → 캐시 결과 사용
+
+2. GitHub API 확인 (선택):
+   - WebFetch: https://api.github.com/repos/zmjckim-fa/coolhan/releases/latest
+   - 응답에서 tag_name 추출
+   - ~/.coolhan-version.json의 version과 비교
+
+3. 결과 처리:
+   - 최신 버전 = 설치 버전 → 조용히 진행 (알림 없음)
+   - 새 버전 있음 → 업데이트 배너 표시 후 정상 진행
+   - 확인 실패 → 조용히 진행 (절대 중단하지 않음)
+```
+
+**업데이트 배너 형식 (새 버전 발견 시):**
+```
+╔══════════════════════════════════════════════════╗
+║  🚀 CoolHan 업데이트 알림 / Update Available!   ║
+║  현재: v1.0.4  →  최신: v1.0.5  ✨ NEW         ║
+║  업데이트: curl -fsSL .../install.sh | bash     ║
+║  또는: node scripts/check-update.js             ║
+╚══════════════════════════════════════════════════╝
+```
+(배너 표시 후 즉시 정상 워크플로우 진행 — 사용자 확인 불필요)
 
 ### Phase 0: 컨텍스트 확인
 
@@ -607,6 +639,29 @@ Task 8: 사용자 여정 검증 (E2E Tester) — 선택, 환경 검증 후 ⭐ �
 3. **팀 통신:** 팀원들이 자동으로 협력합니다 (중단할 필요 없음)
 4. **복구 가능:** 이전 결과는 _workspace_prev/에 보관됩니다
 5. **모니터링:** 배포 후 자동 모니터링이 시작됩니다
+
+---
+
+---
+
+## 업데이트 확인 명령어
+
+사용자가 다음 명령어를 입력하면 업데이트 체크만 실행하고 종료한다:
+
+| 명령어 | 동작 |
+|--------|------|
+| "쿨한 업데이트 확인해" | 최신 버전 확인 + 업데이트 방법 안내 |
+| "쿨한 최신 버전 확인" | 위와 동일 |
+| "CoolHan check for updates" | 위와 동일 |
+| "CoolHan update check" | 위와 동일 |
+| "쿨한 업데이트해" | 버전 확인 + 업데이트 명령어 실행 |
+
+**업데이트 확인 명령 실행 시:**
+1. ~/.coolhan-version.json 읽기 (설치 버전)
+2. WebFetch https://api.github.com/repos/zmjckim-fa/coolhan/releases/latest
+3. 비교 결과 출력
+4. 업데이트 방법 안내 (최신 설치 명령어 제공)
+5. 끝 (다른 Task 실행 안 함)
 
 ---
 
