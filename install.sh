@@ -147,6 +147,23 @@ EOF
     log_warn "Git이 설치되지 않았습니다"
   fi
 
+  # Write version tracking file
+  COOLHAN_VERSION="1.0.4"
+  VERSION_FILE="$HOME/.coolhan-version.json"
+  CLAUDE_DIR="$CURRENT_DIR/.claude"
+  cat > "$VERSION_FILE" << VEOF
+{
+  "version": "$COOLHAN_VERSION",
+  "installed_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "repo": "https://github.com/zmjckim-fa/coolhan",
+  "install_method": "install.sh",
+  "install_dir": "$CLAUDE_DIR",
+  "last_check": null,
+  "update_available": false
+}
+VEOF
+  log_success "버전 정보 저장됨: $VERSION_FILE"
+
   # Final summary
   echo -e "\n$(printf '=%.0s' {1..60})"
   echo -e "\n${GREEN}✨ CoolHan Framework 설치 완료!${NC}\n"

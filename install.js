@@ -13,6 +13,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { execSync } = require('child_process');
 
 const colors = {
@@ -256,6 +257,31 @@ build/
     }
   } catch (e) {
     warn('Git이 설치되지 않았습니다');
+  }
+
+  // Step 10: Write version tracking file
+  log('\n🔖 Step 10: 버전 정보 저장...', 'bright');
+
+  const pkg = fs.existsSync(path.join(__dirname, 'package.json'))
+    ? JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'))
+    : {};
+
+  const versionInfo = {
+    version: pkg.version || '1.0.4',
+    installed_at: new Date().toISOString(),
+    repo: 'https://github.com/zmjckim-fa/coolhan',
+    install_method: 'install.js',
+    install_dir: claudeDir,
+    last_check: null,
+    latest_known: null,
+    update_available: false,
+  };
+  const versionFilePath = path.join(os.homedir(), '.coolhan-version.json');
+  try {
+    fs.writeFileSync(versionFilePath, JSON.stringify(versionInfo, null, 2));
+    success(`버전 정보 저장됨: ${versionFilePath}`);
+  } catch (e) {
+    // Non-fatal
   }
 
   // 최종 요약

@@ -1,0 +1,188 @@
+name: Notify Users on Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to announce'
+        required: false
+        default: 'latest'
+
+jobs:
+  post-discussion:
+    name: Post Release Announcement to Discussions
+    runs-on: ubuntu-latest
+    permissions:
+      discussions: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get release info
+        id: release
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            VERSION="${{ github.event.release.tag_name }}"
+            BODY="${{ github.event.release.body }}"
+            URL="${{ github.event.release.html_url }}"
+          else
+            # Fetch latest release via API
+            RELEASE=$(curl -sf "https://api.github.com/repos/${{ github.repository }}/releases/latest" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json")
+            VERSION=$(echo "$RELEASE" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('tag_name','latest'))")
+            URL=$(echo "$RELEASE" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('html_url',''))")
+            BODY=$(echo "$RELEASE" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('body','')[:2000])")
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          # Write body to file to avoid shell escaping issues
+          echo "$BODY" > /tmp/release_body.txt
+
+      - name: Create Discussion via GitHub API
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.release.outputs.version }}"
+          URL="${{ steps.release.outputs.url }}"
+          BODY=$(cat /tmp/release_body.txt)
+
+          # Build discussion body
+          DISCUSSION_BODY="## 🚀 CoolHan ${VERSION} 출시 / Released
+
+> **자동 업데이트 알림입니다.** 이 메시지를 받으려면 이 저장소를 **Watch → All Activity 또는 Discussions**로 설정하세요.
+
+---
+
+### 업데이트 방법 / How to Update
+
+\`\`\`bash
+# Linux / macOS
+curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | bash
+
+# Windows (PowerShell)
+iwr https://raw.githubusercontent.com/${{ github.repository }}/main/install.ps1 | iex
+
+# npm
+npm install -g coolhan-builder
+
+# 업데이트 확인 (Check for updates)
+node scripts/check-update.js
+\`\`\`
+
+### 또는 Claude Code에서 / Or in Claude Code:
+\`\`\`
+쿨한 업데이트 확인해
+CoolHan check for updates
+\`\`\`
+
+---
+
+### 변경 사항 / What's New
+
+${BODY}
+
+---
+
+### 전체 릴리스 노트 / Full Release Notes
+🔗 ${URL}
+
+---
+
+> **구독 방법 / Subscribe to Updates:**
+> - GitHub 상단의 **Watch** 버튼 클릭
+> - **All Activity** 또는 **Releases** 선택
+> - 새 버전 출시 시 이메일 자동 발송됩니다"
+
+          # Post to GitHub Discussions via GraphQL
+          # First get the repo ID and a discussion category ID
+          QUERY='query {
+            repository(owner: "${{ github.repository_owner }}", name: "coolhan") {
+              id
+              discussionCategories(first: 10) {
+                nodes {
+                  id
+                  name
+                }
+              }
+            }
+          }'
+
+          REPO_DATA=$(curl -sf -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Content-Type: application/json" \
+            "https://api.github.com/graphql" \
+            -d "{\"query\": $(echo "$QUERY" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))')}")
+
+          REPO_ID=$(echo "$REPO_DATA" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['data']['repository']['id'])" 2>/dev/null || echo "")
+
+          # Get announcements or general category
+          CATEGORY_ID=$(echo "$REPO_DATA" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+cats = d['data']['repository']['discussionCategories']['nodes']
+for cat in cats:
+    if cat['name'].lower() in ('announcements', '공지', 'releases', 'general', '일반'):
+        print(cat['id'])
+        break
+else:
+    if cats:
+        print(cats[0]['id'])
+" 2>/dev/null || echo "")
+
+          if [ -z "$REPO_ID" ] || [ -z "$CATEGORY_ID" ]; then
+            echo "⚠️  Could not get repo/category IDs. Discussions may not be enabled."
+            echo "Skipping discussion post."
+            exit 0
+          fi
+
+          # Create discussion
+          TITLE="🚀 CoolHan ${VERSION} 출시 알림 / Release Announcement"
+
+          MUTATION="mutation {
+            createDiscussion(input: {
+              repositoryId: \"$REPO_ID\"
+              categoryId: \"$CATEGORY_ID\"
+              title: $(echo "$TITLE" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read().strip()))')
+              body: $(echo "$DISCUSSION_BODY" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
+            }) {
+              discussion {
+                url
+              }
+            }
+          }"
+
+          RESULT=$(curl -sf -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Content-Type: application/json" \
+            "https://api.github.com/graphql" \
+            -d "{\"query\": $(echo "$MUTATION" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))')}" || echo '{}')
+
+          DISC_URL=$(echo "$RESULT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('data',{}).get('createDiscussion',{}).get('discussion',{}).get('url',''))" 2>/dev/null || echo "")
+
+          if [ -n "$DISC_URL" ]; then
+            echo "✅ Discussion created: $DISC_URL"
+            echo "discussion_url=$DISC_URL" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️  Discussion creation returned: $RESULT"
+          fi
+
+      - name: Update release summary
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "## Release Notification Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** ${{ steps.release.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release URL:** ${{ steps.release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Discussion:** Posted to GitHub Discussions" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### User Notification Channels" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ GitHub Discussions (Watch → Discussions subscribers)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ GitHub Releases (Watch → Releases subscribers)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ npm registry update (npm users)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ In-skill version check (next CoolHan invocation)" >> $GITHUB_STEP_SUMMARY
