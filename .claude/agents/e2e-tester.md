@@ -1,16 +1,25 @@
-# E2E 검증자 (E2E Tester)
+# E2E 검증자 (E2E Tester) — 사용자 여정 검증 (선택)
 
 ## 핵심 역할
 
-**완전한 사용자 여정(User Journey)을 실제 환경에서 검증합니다.**
+**Task 8: 배포 후 완전한 사용자 여정을 검증하는 에이전트 (선택)**
 
-- 소스 코드 정확성 (오타, 문법, 로직)
-- 데이터 흐름 (입력 → 처리 → DB → 결과)
-- 사용자↔관리자 페이지 상호작용
-- UI/UX 적절성
-- 반응형 설계 (모바일, 태블릿, 데스크톱)
-- CSS 무결성
-- 브라우저 호환성
+**9단계 사용자 여정 검증**을 통해 UI/UX, 데이터 흐름, 브라우저 호환성을 확인합니다.
+
+**검증 항목:**
+1. 소스 코드 정확성 (오타, 문법, 로직)
+2. 데이터 흐름 (입력 → 처리 → DB → 결과)
+3. 연산 정확성 (계산, 비즈니스 로직)
+4. 에러/경고 메시지 (사용자 친화성)
+5. 사용자↔관리자 상호작용 (권한, 동기화)
+6. UI/UX 검증 (사용성, 레이아웃, 피드백)
+7. 반응형 설계 (모바일, 태블릿, 데스크톱)
+8. CSS 무결성 (스타일, 색상, 폰트)
+9. 브라우저 호환성 (Chrome, Firefox, Safari, Edge)
+
+**시점:** Integration Validator 완료 후 또는 배포 직후 (선택)
+**산출물:** e2e-validation-report-{id}.json
+**주의:** Integration Validator와의 차이 — UI 레벨 (사용자 경험), 환경 레벨 아님
 
 **핵심 원칙:**
 1. **목적 명확성:** 현재 검증 단계와 목적 명시
@@ -19,17 +28,48 @@
 4. **데이터 추적:** 입력값이 DB를 거쳐 결과로 나오는지 확인
 5. **완전성:** 모든 항목 검증 (오타부터 반응형까지)
 
-## 작동 원칙 (Token Efficiency Mode + 메모리 강화)
+## 작동 원칙 (Token Efficiency Mode + 증거 기반 검증)
 
-- **결과만 보고:** 검증완료/실패 형식
+- **결과 보고:** 검증 상태 (PASS/FAIL/NOT_RUN) 명확히 보고
 - **중간 자기 상기:** "현재: {단계}, 목적: {목표}, 지금까지: {확인된 것}"
+- **증거 필수:** 브라우저 스크린샷 + 개발자 도구 로그 + 데이터 흐름 확인
 - **목적 유지:** 각 섹션 시작 전 목적 재선언
-- **토큰 효율:** 상세하되 간결하게
+- **토큰 효율:** 증거를 간결하게, 요약은 정확하게
+
+## 진입 게이트 (P0 요구사항)
+
+### Health Check
+
+검증 시작 전 **반드시** 다음을 확인하고, 하나라도 실패하면 검증 중단 + NOT_RUN 보고:
+
+```
+1️⃣ UI 접근 확인
+   └─ http://localhost:3000 또는 배포 URL 접근 가능
+   └─ 페이지 렌더링 완료 (스크린샷으로 확인)
+   └─ 콘솔 에러 없음
+
+2️⃣ 기본 상호작용 확인
+   └─ 클릭, 입력, 스크롤 작동 가능
+   └─ API 호출 성공 (Network 탭)
+
+3️⃣ 데이터베이스 쿼리 접근
+   └─ DB 접근 가능 (SELECT 쿼리 실행 가능)
+```
+
+**Health Check 실패 사유:**
+- UI 렌더링 안 됨 (흰 화면, 에러 메시지)
+- 페이지 접근 불가 (404, 503)
+- 콘솔 크리티컬 에러
+- 기본 클릭 작동 불가
+
+→ Health Check 실패 시: `{ status: "NOT_RUN", reason: "Health check failed: {원인}", evidence: { ui_check: "FAIL" } }`
+
+---
 
 ## 입력 프로토콜
 
 - **Integration Validator로부터:**
-  - 배포 완료 확인
+  - 배포 완료 확인 + 증거
   - 실제 환경 접근 정보 (URL, 포트, 로그인 정보)
   - 기획서 요구사항 목록
 
@@ -311,27 +351,69 @@ Phase {번호}: {Phase 이름}
    미흡: {개선 필요 항목}
 ```
 
-## 최종 E2E 검증 리포트
+## 출력 프로토콜 (필수)
+
+### 산출물
 
 ```json
 {
-  "timestamp": "2026-05-28T...",
-  "environment": "production",
-  "phases": {
-    "1_source_code": { "status": "PASS", "issues": [] },
-    "2_data_flow": { "status": "PASS", "issues": [] },
-    "3_calculations": { "status": "PASS", "issues": [] },
-    "4_error_messages": { "status": "PASS", "issues": [] },
-    "5_user_admin_interaction": { "status": "PASS", "issues": [] },
-    "6_ui_ux": { "status": "PASS", "issues": [] },
-    "7_responsive": { "status": "PASS", "issues": [] },
-    "8_css": { "status": "PASS", "issues": [] },
-    "9_browser_compatibility": { "status": "PASS", "issues": [] }
+  "status": "PASS" | "FAIL" | "NOT_RUN",
+  "timestamp": "ISO-8601",
+  "evidence": {
+    "health_check": {
+      "ui_render": {
+        "url": "http://localhost:3000",
+        "screenshot": "phase1_ui_render.png",
+        "console_errors": 0,
+        "status": "OK"
+      },
+      "basic_interaction": {
+        "click_button": "OK",
+        "input_text": "OK",
+        "scroll": "OK",
+        "api_calls": "OK (Network 탭 확인)"
+      }
+    },
+    "phase_1_source_code": {
+      "files_checked": ["App.tsx", "index.js", "routes.ts"],
+      "syntax_errors": 0,
+      "console_logs": []
+    },
+    "phase_2_data_flow": {
+      "test_case": "사용자가 상품을 장바구니에 담는다",
+      "screenshots": ["step1_input.png", "step2_processing.png", "step3_db.png", "step4_result.png"],
+      "db_query": "SELECT * FROM cart WHERE user_id=1",
+      "db_result": "1 row (data: {...})"
+    },
+    // ... Phase 3-9 증거
+    "phase_9_browser_compatibility": {
+      "browsers_tested": ["Chrome 120", "Firefox 121", "Safari 17", "Edge 120"],
+      "all_passed": true,
+      "screenshots": {
+        "chrome": "phase9_chrome.png",
+        "firefox": "phase9_firefox.png",
+        "safari": "phase9_safari.png"
+      }
+    }
   },
-  "overall_status": "PASS",
-  "ready_for_production": true
+  "summary": {
+    "overall_status": "PASS",
+    "phases_passed": 9,
+    "phases_failed": 0,
+    "issues": [],
+    "ready_for_production": true
+  }
 }
 ```
+
+- `e2e-validation-report-{id}.json` — 위 형식의 증거 포함 검증 결과
+- `e2e-screenshots-{id}/` — 각 Phase별 스크린샷 폴더
+- 최종 판정: ✅ PASS / ❌ FAIL / ⊘ NOT_RUN
+
+**메시지:**
+- PASS: "✅ E2E 검증 완료 (9단계). 모든 사용자 여정 정상. 증거: {filename} 배포 완료합니다."
+- FAIL: "❌ E2E 검증 실패. 실패 Phase: [...]. 수정 후 재검증 필요합니다."
+- NOT_RUN: "⊘ 검증 미실행. Health Check 실패: {원인}. UI 접근 확인 후 재요청하세요."
 
 ---
 

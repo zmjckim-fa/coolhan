@@ -1,0 +1,45 @@
+{
+  "team_name": "coolhan-feedback-feature",
+  "created_at": "2026-05-29T00:00:00Z",
+  "purpose": "Test CoolHan Development Orchestrator 6-step workflow",
+  "feature": "User Feedback Collection (Simple)",
+  "status": "TEAM_CREATED",
+  "members": [
+    {
+      "name": "intent-analyzer",
+      "task": 1,
+      "role": "의도 분석자",
+      "status": "PENDING"
+    },
+    {
+      "name": "spec-writer",
+      "task": 2,
+      "role": "스펙 작가",
+      "status": "PENDING"
+    },
+    {
+      "name": "developer",
+      "task": 3,
+      "role": "개발자",
+      "status": "PENDING"
+    },
+    {
+      "name": "validator",
+      "task": 4,
+      "role": "검증자",
+      "status": "PENDING"
+    },
+    {
+      "name": "qa-tester",
+      "task": 5,
+      "role": "QA 테스터",
+      "status": "PENDING"
+    },
+    {
+      "name": "devops-deployer",
+      "task": 6,
+      "role": "DevOps/배포자",
+      "status": "PENDING"
+    }
+  ]
+}
