@@ -3,7 +3,7 @@
 
 **목적:** AI 연구를 Nature/Science/PNAS/eLife 수준의 국제 일급 저널에 투고 가능한 수준으로 작성
 
-**적용 대상:** 보이니치 필사본, 분자생물학, 데이터 과학, 인공지능 분야
+**적용 대상:** [당신의 주제] 필사본, 분자생물학, 데이터 과학, 인공지능 분야
 
 ---
 
@@ -63,13 +63,13 @@
 
 #### ❌ 나쁜 제목
 ```
-"Analysis of Voynich Manuscript Structure"
+"Analysis of [Your Subject] Manuscript Structure"
 (너무 일반적, 무엇을 발견했는지 불명확)
 ```
 
 #### ✅ 좋은 제목
 ```
-"Structural Evidence for Taxonomic Organization in the Voynich Manuscript:
+"Structural Evidence for Taxonomic Organization in the [Your Subject] Manuscript:
 A Quantitative Corpus Analysis Comparing Pre-Modern Reference Systems"
 (연구 대상, 주요 발견, 방법론을 한눈에 명시)
 ```
@@ -80,7 +80,7 @@ A Quantitative Corpus Analysis Comparing Pre-Modern Reference Systems"
 
 ```markdown
 **Background:**
-The Voynich Manuscript, an undeciphered 15th-century manuscript,
+The [Your Subject] Manuscript, an undeciphered 15th-century manuscript,
 has resisted decipherment for 500+ years. Existing theories—cipher,
 natural language, artificial language—remain unresolved. However,
 these theories assume the manuscript encodes readable text, overlooking
@@ -94,7 +94,7 @@ and section-level statistics, comparing results to English text,
 taxonomic catalogs, herbal descriptions, ciphers, and random text.
 
 **Results:**
-Voynich exhibits structural patterns inconsistent with natural language
+[Your Subject] exhibits structural patterns inconsistent with natural language
 but consistent with formal classification systems: 96.3% of tokens end
 with 8 constrained characters (English: 75%, catalog: 89%); vocabulary
 divergence is 23% across sections (English: 5%, catalog: 35%);
@@ -103,13 +103,13 @@ token family clustering at 9% (vs. 2% in English). Entropy metrics
 
 **Significance:**
 While not claiming decipherment, our analysis provides quantitative
-evidence that Voynich's structure is compatible with a pre-modern
+evidence that [Your Subject]'s structure is compatible with a pre-modern
 reference system hypothesis. This fundamentally reframes the problem
 from "What language/cipher?" to "What information system?"—opening
 new research avenues in manuscript studies and historical information
 technologies.
 
-**Keywords:** Voynich Manuscript, corpus linguistics, information
+**Keywords:** [Your Subject] Manuscript, corpus linguistics, information
 systems, manuscript analysis, quantitative methods
 ```
 
@@ -122,7 +122,7 @@ systems, manuscript analysis, quantitative methods
 [600 words on manuscript history, discovery, ownership timeline]
 
 ### Existing Hypotheses & Their Limitations
-The Voynich has generated theories for 500+ years:
+The [Your Subject] has generated theories for 500+ years:
 
 1. **Natural Language (Encrypted or Not)**
    - Rugg (2004): Supports cipher hypothesis
@@ -145,23 +145,23 @@ The Voynich has generated theories for 500+ years:
    - This has NEVER been systematically tested
 
 ### Research Gap
-No quantitative comparison between Voynich and reference/taxonomic
+No quantitative comparison between [Your Subject] and reference/taxonomic
 systems. All previous studies either assume decryption is possible or
 focus on artificial language generation. None test whether the structure
 itself encodes organizational information.
 
 ### Hypothesis & Research Questions
 **Primary Hypothesis:**
-The Voynich Manuscript may encode a pre-modern taxonomic or reference
+The [Your Subject] Manuscript may encode a pre-modern taxonomic or reference
 system with structural principles analogous to modern databases.
 
 **Research Questions:**
-1. Is Voynich structure compatible with formal classification systems?
+1. Is [Your Subject] structure compatible with formal classification systems?
 2. Can we quantify similarity to reference corpora?
 3. What alternative explanations are ruled out?
 
 ### Research Significance
-If correct, this reframes Voynichology from a cryptography problem to
+If correct, this reframes [Your Subject]ology from a cryptography problem to
 a manuscript studies problem, inviting collaboration from historians,
 paleographers, and information scientists.
 ```
@@ -177,8 +177,8 @@ paleographers, and information scientists.
 
 #### Primary Manuscript Data
 Source: IT2a-n.txt (Landini-Stolfi EVA Transcription v2a)
-Access: https://www.voynich.nu/ (open access)
-Format: EVA (European Voynich Alphabet) standard notation
+Access: https://www.[your subject].nu/ (open access)
+Format: EVA (European [Your Subject] Alphabet) standard notation
 Coverage: f1r-f112v, 112 folios, 224 pages
 Token count: 7,063 (calculated in Analysis section)
 Character count: ~50,000 glyphs
@@ -200,7 +200,7 @@ Yale Beinecke image IDs (2002046_1.jpg through 2002046_214.jpg)
 **Corpus A: English Natural Language (Baseline)**
 ```
 Source: Wikipedia articles (Science & Technology category)
-Sample size: 50,000 characters (matched to Voynich size)
+Sample size: 50,000 characters (matched to [Your Subject] size)
 Selection criteria: Published 2010+, high-quality articles
 Preprocessing: Lowercase, remove markup
 Expected metrics: TTR ~42%, Word-final variety ~75%
@@ -218,7 +218,7 @@ Expected: TTR ~48%, Word-final ~80%
 ```
 Source: Linnaean nomenclature, museum catalog entries
 Sample size: 5,000 entries
-Purpose: Test if Voynich resembles formal naming
+Purpose: Test if [Your Subject] resembles formal naming
 Expected: TTR ~72%, Word-final ~89%
 ```
 
@@ -232,7 +232,7 @@ Expected: TTR ~41% (preserved), Entropy ~7.2
 
 **Corpus E: Random Text (Null Hypothesis)**
 ```
-Source: Markov chain text using Voynich unigram probabilities
+Source: Markov chain text using [Your Subject] unigram probabilities
 Sample size: 50,000 characters
 Purpose: Establish baseline for "no structure"
 Expected: TTR ~95%, Entropy ~8.5
@@ -364,7 +364,7 @@ Interpretation:
   
 English prose sections: divergence ~0.05 (similar everywhere)
 Catalog sections: divergence ~0.35 (very different per section)
-Voynich prediction: divergence ~0.20-0.25 if hybrid structure
+[Your Subject] prediction: divergence ~0.20-0.25 if hybrid structure
 ```
 
 ### 2.4 Multiple Comparisons Correction
@@ -384,7 +384,7 @@ This controls family-wise error rate at 0.05
 ### 2.5 Effect Size Reporting (Never p-value alone!)
 
 ```
-For 2-group comparison (Voynich vs Corpus):
+For 2-group comparison ([Your Subject] vs Corpus):
   Cohen's d = (mean1 - mean2) / pooled_SD
   Interpretation:
     d = 0.2: Small effect
@@ -400,7 +400,7 @@ For categorical data (word-final constraint):
     V = 0.5: Large effect
     
 Example report (GOOD):
-  "Word-final constraint: 96.3% in Voynich vs 75% in English
+  "Word-final constraint: 96.3% in [Your Subject] vs 75% in English
    [χ²(1) = 234.5, p < .001, Cramér's V = 0.42 (large effect)]"
    
 Example report (BAD):
@@ -417,7 +417,7 @@ Every methods section MUST end with:
 
 **Code & Data Availability:**
 All analysis code, raw data, and comparison corpora are available at:
-  https://github.com/zmjckim-fa/coolhan/tools/voynich-reference-analyzer
+  https://github.com/zmjckim-fa/coolhan/tools/[your subject]-reference-analyzer
   License: MIT (code), CC0 (data)
 
 **Computational Environment:**
@@ -437,7 +437,7 @@ All analysis code, raw data, and comparison corpora are available at:
 **Estimated Runtime:** ~5 minutes on standard laptop (2020+)
 
 **Data Provenance:**
-  Voynich EVA text: IT2a-n.txt (Landini-Stolfi v2a, accessed 2026-05-31)
+  [Your Subject] EVA text: IT2a-n.txt (Landini-Stolfi v2a, accessed 2026-05-31)
   Yale images: https://brbl-dl.library.yale.edu/vufind/Record/3663539
   Comparison corpora: See Supplementary Methods
 ```
@@ -476,7 +476,7 @@ Rule 5: ALWAYS report confidence intervals
 ```
 Table 1 | Structural Metrics Compared Across Corpora
 
-Metric                | Voynich | English | Catalog | Cipher  | Random
+Metric                | [Your Subject] | English | Catalog | Cipher  | Random
                       | (n=7063)| (n=50k) | (n=5k)  | (n=50k) | (n=50k)
 ─────────────────────────────────────────────────────────────────────────
 Word-final constraint | 96.3%   | 75%     | 89%     | 50%     | 5%
@@ -497,9 +497,9 @@ Section Divergence    | 0.23    | 0.05    | 0.35    | 0.12    | 0.02
 ─────────────────────────────────────────────────────────────────────────
 
 Notes: SD = standard deviation. SE = standard error. Entropy reported
-as mean ± 95% CI. Voynich metrics computed on 112 folios (7,063 tokens).
+as mean ± 95% CI. [Your Subject] metrics computed on 112 folios (7,063 tokens).
 English, Cipher, Random metrics computed on 50,000-character samples
-matched to Voynich sample size. Catalog metrics computed on 5,000 entries
+matched to [Your Subject] sample size. Catalog metrics computed on 5,000 entries
 representing distinct species/items. See Methods for corpus details.
 ```
 
@@ -507,7 +507,7 @@ representing distinct species/items. See Methods for corpus details.
 ```
 Table 1 | Results
 
-Metric          | Voynich | English
+Metric          | [Your Subject] | English
 Word-final      | 96.3%   | 75%
 TTR             | 58%     | 42%
 Entropy         | 6.14    | 10.5
@@ -538,7 +538,7 @@ eLife/PLOS ONE:
 #### 예: 영문 초록
 ```markdown
 **Background:**
-The Voynich Manuscript, a 15th-century undeciphered manuscript,
+The [Your Subject] Manuscript, a 15th-century undeciphered manuscript,
 presents an enduring cryptological and linguistic puzzle. Despite
 500+ years of scholarly effort, no consensus explanation exists.
 
@@ -552,7 +552,7 @@ and section vocabulary divergence (23%) are consistent with formal
 classification systems but inconsistent with natural language (75%).
 
 **Conclusion:**
-Evidence suggests Voynich may encode a reference/taxonomic system
+Evidence suggests [Your Subject] may encode a reference/taxonomic system
 rather than decipherable text. This reframes the problem from
 "What language/cipher?" to "What information system?"
 ```
@@ -560,7 +560,7 @@ rather than decipherable text. This reframes the problem from
 #### 예: 한국어 초록
 ```markdown
 **배경:**
-보이니치 필사본은 15세기의 미해독 필사본으로, 500년 이상 암호학적·언어학적 
+[당신의 주제] 필사본은 15세기의 미해독 필사본으로, 500년 이상 암호학적·언어학적 
 수수께끼로 남아 있다.
 
 **방법:**
@@ -571,7 +571,7 @@ rather than decipherable text. This reframes the problem from
 형식적 분류 시스템과 일치하지만 자연어(75%)와는 불일치한다.
 
 **결론:**
-증거는 보이니치가 해독 가능한 텍스트가 아닌 참조/분류 시스템을 암호화하고 있음을 
+증거는 [당신의 주제]가 해독 가능한 텍스트가 아닌 참조/분류 시스템을 암호화하고 있음을 
 시사한다. 이는 문제를 "어떤 언어/암호인가?"에서 "어떤 정보 시스템인가?"로 
 재구성한다.
 ```
@@ -586,7 +586,7 @@ rather than decipherable text. This reframes the problem from
 ## Anticipated Reviewer Questions
 
 ### NOVELTY & SIGNIFICANCE
-[ ] Q1: How is this different from previous Voynich analyses?
+[ ] Q1: How is this different from previous [Your Subject] analyses?
     ANSWER: First quantitative comparison with reference/taxonomic systems
     
 [ ] Q2: Why should general audience care?
@@ -667,7 +667,7 @@ rather than decipherable text. This reframes the problem from
     ANSWER: Rugg tested cipher; we test reference system (independent question)
     
 [ ] Q22: Known prior art on taxonomic manuscript analysis?
-    ANSWER: None in Voynich literature; applies methods from corpus linguistics
+    ANSWER: None in [Your Subject] literature; applies methods from corpus linguistics
            and information science
 
 ### BROADER IMPACT

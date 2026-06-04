@@ -417,7 +417,7 @@ Critical Limitations:
 ```
 If hypothesis is correct:
   → Voynich might contain taxonomic/organizational information
-  → Botanical section might be plant classification system
+  → [Your Category 1] section might be plant classification system
   → Token families might encode hierarchical relationships
   → Future work: Attempt to link tokens to plant features/properties
 
@@ -519,7 +519,7 @@ To reproduce results:
 ### 2.3 데이터 인용 규칙
 ```
 Good: "In 33 folios (29.5% of manuscript), the token 'daiin' 
-       appears with 8.2% frequency in Botanical section, 
+       appears with 8.2% frequency in [Your Category 1] section, 
        compared to 1.2% average across other sections."
 
 Bad: "The word 'daiin' is a marker for botanical specimens."
