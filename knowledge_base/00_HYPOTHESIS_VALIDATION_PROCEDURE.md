@@ -1,7 +1,31 @@
 # 가설 검증 절차 (Hypothesis Validation Framework)
 
 ## 개요
-AI 기반 데이터 분석에서 가설을 체계적으로 검증하기 위한 5단계 프레임워크.
+AI 기반 데이터 분석에서 가설을 체계적으로 검증하기 위한 **6단계 프레임워크**.
+
+> ⚠️ **필수 선행 조건**: Phase 1 시작 전에 반드시
+> [`00_PROOF_GOAL_FRAMEWORK.md`](00_PROOF_GOAL_FRAMEWORK.md)의
+> **Phase 0: 증명 목적 선언**을 완료해야 한다.
+>
+> 증명 목적(Proof Goal)이 선언되지 않은 상태에서는
+> 어떤 분석도 시작할 수 없다.
+>
+> **매 단계 시작 시**: "이 분석이 선언된 증명 목적(PG-XXX)에 기여하는가?" 확인 필수.
+
+---
+
+## Phase 0 선행: 증명 목적 선언 → [`00_PROOF_GOAL_FRAMEWORK.md`](00_PROOF_GOAL_FRAMEWORK.md)
+
+```
+완료 체크리스트:
+  □ Proof Goal ID 발급 (예: PG-001)
+  □ 증명하려는 것 (한 문장, 측정 가능)
+  □ 성공 기준 (분석 전에 확정, 사후 수정 금지)
+  □ 실패 기준 (반드시 정의)
+  □ 범위 외 항목 (Out of Scope 목록)
+```
+
+**이 체크리스트 완료 후 Phase 1로 진행한다.**
 
 ---
 
@@ -15,14 +39,14 @@ AI 기반 데이터 분석에서 가설을 체계적으로 검증하기 위한 5
 
 **나쁜 예:**
 ```
-❌ "Voynich is mysterious"
+❌ "[Your Subject] is mysterious"
 ❌ "The text is meaningful"
 ❌ "The manuscript is organized"
 ```
 
 **좋은 예:**
 ```
-✅ "Voynich token word-final characters are constrained to {y,r,l,n,s,o,m,k}
+✅ "[Your Subject] token word-final characters are constrained to {y,r,l,n,s,o,m,k}
     with >95% consistency across folios"
     
 ✅ "Token distribution differs significantly between Botanical and Herbal 
@@ -37,7 +61,7 @@ AI 기반 데이터 분석에서 가설을 체계적으로 검증하기 위한 5
 
 ```
 HYPOTHESIS: H1
-Claim: "Voynich encodes taxonomic/reference system"
+Claim: "[Your Subject] encodes taxonomic/reference system"
 
 Prediction 1: Token families should show systematic variation
   If TRUE: Same token root + different suffixes (qo-, qok-, qoke-)
@@ -52,8 +76,8 @@ Prediction 3: Label-like structure (short, repeated tokens)
   If FALSE: Variable length, natural language TTR
 
 Prediction 4: Comparison with catalogs should show similarity
-  If TRUE: Voynich metrics closer to catalog than English
-  If FALSE: Voynich closer to natural language
+  If TRUE: [Your Subject] metrics closer to catalog than English
+  If FALSE: [Your Subject] closer to natural language
 ```
 
 ### 1.3 검증 불가능성 확인
@@ -87,7 +111,7 @@ Source Quality:
 
 ### 2.2 표본 크기 및 신뢰도
 ```
-For Voynich corpus:
+For [Your Subject] corpus:
   Sample: 112 folios (f1r-f112v) ~ all known surviving folios
   Confidence: 95% (population = full original manuscript)
   
@@ -268,12 +292,12 @@ EVIDENCE SET 2: Type-Token Ratio (TTR)
 ════════════════════════════════════════
 
 Raw Data:
-  - Voynich Botanical: 1,850 unique / 3,200 total = 57.8%
+  - [Your Subject] Botanical: 1,850 unique / 3,200 total = 57.8%
   - English corpus: 42% (vocabulary repeated more)
   - Catalog corpus: 72% (vocabulary less repeated)
 
 Statistical Test:
-  Voynich TTR significantly higher than English (p<0.01)
+  [Your Subject] TTR significantly higher than English (p<0.01)
   But lower than catalog (p<0.01)
 
 Interpretation:
@@ -298,7 +322,7 @@ Confidence: ⭐⭐⭐ (Medium)
 OVERALL HYPOTHESIS STATUS:
 ═════════════════════════
 
-Hypothesis: "Voynich = Reference/Taxonomic System"
+Hypothesis: "[Your Subject] = Reference/Taxonomic System"
 
 Support Score:
   Pattern 1 (Word-final constraint):        +3 points ⭐⭐⭐
@@ -349,7 +373,7 @@ Question 4: Can hypothesis explain confounding variables?
   No → Note as limitation, propose control experiment
 ```
 
-**Voynich Example:**
+**[Your Subject] Example:**
 ```
 Q1: Consistent? YES (word-final pattern strong)
 Q2: Excludes alternatives? PARTIALLY (TTR contradicts simple catalog)
@@ -443,6 +467,25 @@ Which is most likely?
 ---
 
 ## Validation Checklist
+
+### Phase 0 선행 체크 (분석 시작 전 — 없으면 진행 불가):
+```
+☐ Proof Goal ID 선언됨 (PG-XXX)
+☐ 증명 목적이 한 문장으로 명시됨 (측정 가능)
+☐ 성공 기준이 분석 전에 확정됨 (사후 수정 금지)
+☐ 실패 기준이 정의됨 (반증 가능)
+☐ 범위 외 항목 목록이 작성됨
+☐ 이 분석이 Proof Goal에 기여함이 확인됨
+```
+
+### Phase 0.5 단계별 목적 유지 체크 (매 분석 단계마다):
+```
+☐ 현재 Proof Goal ID가 문서에 명시됨
+☐ 이 분석이 성공/실패 기준 중 하나를 직접 검증함
+☐ 범위 외 항목을 침범하지 않음
+☐ 외부 연구자 결론을 전제로 삼고 있지 않음
+☐ Drift 신호 없음 (또는 Drift 발생 시 Goal Check 완료)
+```
 
 ### Before Publication:
 ```
