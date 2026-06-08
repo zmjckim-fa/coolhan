@@ -1,5 +1,35 @@
 # CoolHan Builder — 개발 운영 가이드
 
+## ⛔ 전역 출력 규칙 (모든 명령·모든 하네스에 강제, 2026-06-09)
+
+> **목적: 독백·과정설명으로 인한 토큰 낭비·개발 지연 차단. "글쓰다 끝나지 않는다."**
+
+1. **독백 금지** — 생각·계획·판단 과정을 글로 쓰지 않는다. 도구를 바로 실행한다.
+2. **도구 호출 전 설명 금지** — "이제 ~하겠습니다" 류 서두 금지. 필요하면 한 줄 이내.
+3. **하드 길이 제한** — 채팅 응답은 **최대 6줄**. 초과 내용은 파일에 기록하고 경로만 남긴다.
+4. **결과만 보고** — 성공/실패 · 판정 · 다음 작업. 이 3가지 외 서술 금지.
+5. **코드·파일 내용 미표시** — 채팅에 소스/파일 전문 붙여넣기 금지. 경로로 가리킨다.
+6. **요약 반복 금지** — 이미 한 말, 파일에 쓴 내용을 채팅에 다시 풀어쓰지 않는다.
+
+> 예외: 사용자가 "자세히/설명해/왜"를 명시할 때만 길게. 그 외엔 항상 위 규칙.
+
+---
+
+## 하네스: CoolHan Research & Verification
+
+**목표:** 연구작업의 논리검증, 가설의 검증연구, 암호 분석/해독을 자동화하는 전문가 팀 시스템.
+
+**트리거:** 가설 검증, 논리·증명 검증, 논리 오류 탐지, 암호 해독/디코드 관련 요청 시 `coolhan-research-orchestrator` 스킬을 사용합니다.
+
+**예시 트리거:**
+- "쿨한으로 이 가설 검증연구해" / "CoolHan validate hypothesis"
+- "이 논증/증명 타당성 검토해" / "논리 오류 찾아줘"
+- "이 암호문 풀어줘" / "이거 무슨 인코딩이야 디코드해" / "빈도분석 해줘"
+
+> 전문가 3명: 가설 검증자 / 논리·증명 검증자 / 암호 분석자. 증거 필수·추론금지(개발 하네스 P0 계승), 암호는 합법·윤리 경계 준수.
+
+---
+
 ## 하네스: CoolHan Release Engineering
 
 **목표:** CoolHan Specification-Driven Framework를 GitHub에서 npm까지, 완전하고 안정적으로 배포하고 관리하는 AI 에이전트 팀 시스템.
@@ -141,6 +171,8 @@
 | **2026-06-08** | **Phase D 트랙 4: 실제 테스트 앱 기반 재검증 완료** | _harness_test/track4/ (FastAPI 샘플 앱 + Task 1-6 산출물 + 리포트) + CLAUDE.md | **P0 메커니즘 실작동 입증** — 적대적 테스트(클린 vs 위반)로 Validator 0단계가 무단 기능 추가를 정확 감지함 확인 (클린→PASS, 위반→FAIL). 6명 팀 워크플로우 완주. **GAP-1 식별:** validator/qa-tester/devops-deployer가 Node/npm 전용 → Python 비호환 (스택 감지 + 명령 매핑 필요) |
 | **2026-06-08** | **GAP-3 수정: QA 음성 테스트 필수화** | agents/qa-tester.md | 트랙4 GAP-3 해결 — 양성만으론 PASS 불가, 음성(입력거부/인가거부/상태전이거부/중복멱등/경계/보안) 케이스 필수. 음성 0개 시 NOT_RUN. 스펙 섹션10 오류 시나리오 전수 커버 |
 | **2026-06-08** | **GAP-2 수정: 산출물 파일명 표준 통일** | skills/coolhan-development-orchestrator (파일명 표준 섹션) + agents/ (validator, qa-tester) | 트랙4 GAP-2 해결 — `{timestamp}`→`{id}` 통일, `_workspace/{NN}_{artifact}-{id}.{ext}` 단일 규칙 확정 (NN 접두 유무·id/timestamp 혼용 제거) |
+| **2026-06-09** | **전역 출력 규칙(독백 금지·6줄 하드캡) 추가** | CLAUDE.md(전역) + skills/(development·research orchestrator working-mode) | 독백·과정설명 토큰 낭비/개발 지연 차단. 모든 명령·하네스에 강제: 도구 즉시 실행, 채팅 최대 6줄, 결과만, 코드/재서술 미표시. 예외: "자세히/왜" 명시 시 |
+| **2026-06-09** | **연구·검증(Research & Verification) 하네스 신규 구축** | agents/(hypothesis-validator, logic-proof-verifier, cryptanalyst) + skills/coolhan-research-orchestrator + CLAUDE.md + _harness_test/track6-research/ | 연구작업 논리검증·가설 검증연구·암호 분석을 자동화하는 전문가 풀(3명). KB 구동(HYPOTHESIS_VALIDATION/PROOF_GOAL/ACADEMIC·JOURNAL STANDARDS). 증거 필수·추론금지(개발 P0 계승) + 확증편향 차단 + 암호 합법·윤리 경계. 트랙6 적대적 검증(가설 지지/기각, 논리 타당/오류, 암호 복호) |
 | **2026-06-09** | **연속개발 엔진 (Continuous Development Engine) 내장 — 하네스 자기 고도화** | skills/coolhan-development-orchestrator (🔄 엔진 섹션 + working-mode 기본 ON + 트리거) + _workspace/(_goal/_backlog/_checkpoint) + CLAUDE.md | 목표 1개 수신 시 _goal→_backlog 분해 후 백로그가 빌 때까지 단위별 실행·검증·재개를 사람 개입 없이 자가반복. 자기재개 3경로(세션내 연쇄/세션경계 baton/무인 /loop). 목표 범위 내 재질문 없음, 미지정 시에만 보류(P0). 본 엔진을 엔진 자신에게 적용(self-host)하여 백로그 U1~U6 소진으로 데모 |
 | **2026-06-08** | **지속 개발 릴레이 (Continuous Relay Mode) 추가** | skills/coolhan-development-orchestrator (working-mode + ♾️ 릴레이 섹션 + Phase 0 재개 분기 + 중단점 바통화) + agents/developer.md | 컨텍스트 한계에서 멈추지 않고 _checkpoint.md 저장 + 마지막 줄에 재시작 명령(baton) 방출 → 새 세션이 체크포인트부터 자동 재개. 반복으로 멈추지 않는 개발. 모델별 컨텍스트 예산(대형 3단위/중형 2/소형 1)으로 임계 판단. 무인 반복은 /loop 안내 |
 | **2026-06-08** | **Autonomous Mode 추가** | skills/coolhan-development-orchestrator (working-mode + 자율 진행 섹션) | 명령 1회로 파이프라인 끝까지 자동 연쇄, FAIL 시 자동 복구(1회 재시도→Developer 재실행, 2회 실패만 보고), 정지 조건(P0 게이트/복구불가/컨텍스트 한계/파괴작업)만 멈춤, 자동 결정 _autorun-log.md 기록 |
@@ -207,6 +239,7 @@
 |--------|------|---------|------|--------------|
 | Release Engineering | ✅ 구성 완료 | 5명 | 2개 | 2026-05-27 |
 | Development | ✅ 고도화 중 (Phase D-1) | 11명 (6 메인 + 2 추가 + 3 역방향) | 1개 | 2026-06-08 |
+| Research & Verification | ✅ 구성 완료 | 3명 (가설/논리/암호) | 1개 | 2026-06-09 |
 
 ---
 
