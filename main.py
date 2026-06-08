@@ -17,6 +17,7 @@ from src.routes.review import router as review_router
 from src.routes.shopping import router as shopping_router
 from src.routes.gdpr import router as gdpr_router
 from src.routes.admin import router as admin_router
+from src.routes.auth import router as auth_router
 
 # Initialize database
 init_db()
@@ -48,6 +49,7 @@ app.include_router(review_router)
 app.include_router(shopping_router)
 app.include_router(gdpr_router)
 app.include_router(admin_router)
+app.include_router(auth_router)
 
 
 @app.get("/")
@@ -72,9 +74,17 @@ async def health():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(
-        app,
-        host=settings.api_host,
-        port=settings.api_port,
-        reload=settings.debug,
-    )
+    if settings.debug:
+        # reload=True requires app as import string
+        uvicorn.run(
+            "main:app",
+            host=settings.api_host,
+            port=settings.api_port,
+            reload=True,
+        )
+    else:
+        uvicorn.run(
+            app,
+            host=settings.api_host,
+            port=settings.api_port,
+        )

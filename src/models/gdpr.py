@@ -3,7 +3,7 @@ GDPR & Privacy Models
 Data subject rights and consent management
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from sqlalchemy import Column, String, DateTime, Integer, ForeignKey, Text, Boolean
 from src.database import Base
@@ -43,8 +43,8 @@ class DataSubject(Base):
     profiling_consent = Column(Boolean, default=False)
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     def __repr__(self):
         return f"<DataSubject(user_id={self.user_id})>"
@@ -70,7 +70,7 @@ class ConsentLog(Base):
     method = Column(String(50))  # email, web-form, api, etc.
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
 
     def __repr__(self):
         return f"<ConsentLog(user_id={self.user_id}, type='{self.consent_type}', given={self.given})>"

@@ -27,6 +27,14 @@ CoolHan의 배포 락 시스템과 9단계 검증 파이프라인을 관리하�
 - **소스 화면 미표시:** 코드나 내용 스크린샷 제외
 - **토큰 최소화:** 필수 정보만 간결하게 전달
 
+## 스택 감지 + 명령 매핑 (GAP-1 수정, 2026-06-08)
+
+**배포 시작 전 반드시 스택을 먼저 감지하고, 아래 모든 단계의 `npm run ...` 예시를 감지된 스택 명령으로 치환한다. npm을 기본값으로 가정하지 않는다.**
+
+- 시그널 판정 + 명령 매핑 표: `.claude/skills/coolhan-development-orchestrator/references/stack-command-map.md` 참조
+- 예: Python → 빌드=SKIP/`docker build`, 마이그레이션=`alembic upgrade head`(또는 `python manage.py migrate`), 기동=`uvicorn`, 헬스체크=`curl /health`.
+- 배포 락/검증 훅은 언어 무관 로직으로 처리. 스택 전용 명령 없음이면 SKIP + 사유 기록.
+
 ## 입력 프로토콜
 
 - **QA Tester로부터:**

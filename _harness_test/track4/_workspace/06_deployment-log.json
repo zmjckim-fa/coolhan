@@ -1,0 +1,104 @@
+{
+  "task": "Task 6 - DevOps/Deployer deploy smoke test",
+  "agent": "devops-deployer",
+  "date": "2026-06-08",
+  "target_app": "C:\\sites\\CoolHan builder\\_harness_test\\track4\\sample-app",
+  "result": "PASS",
+  "summary": "App boots cleanly via uvicorn, root returns 200, /feedback without auth returns 401 (auth enforced). No /health endpoint exists (404), consistent with planner intent that FORBIDS /health. Server was started and cleanly stopped; port 8765 freed.",
+
+  "environment": {
+    "python_version": "Python 3.12.10",
+    "platform": "win32 (Windows 11 Pro)",
+    "server": "uvicorn (ASGI), serves FastAPI app directly - no build step",
+    "port": 8765
+  },
+
+  "phases": {
+    "pre_deploy": {
+      "description": "Confirm app imports cleanly and count routes",
+      "command": "python -c \"from src.main import app; print(len(app.routes), 'routes')\"",
+      "cwd": "C:\\sites\\CoolHan builder\\_harness_test\\track4\\sample-app",
+      "output": "7 routes",
+      "route_count": 7,
+      "routes": [
+        {"path": "/openapi.json", "methods": ["GET", "HEAD"]},
+        {"path": "/docs", "methods": ["GET", "HEAD"]},
+        {"path": "/docs/oauth2-redirect", "methods": ["GET", "HEAD"]},
+        {"path": "/redoc", "methods": ["GET", "HEAD"]},
+        {"path": "/feedback", "methods": ["POST"]},
+        {"path": "/feedback", "methods": ["GET"]},
+        {"path": "/", "methods": ["GET"]}
+      ],
+      "health_endpoint_present": false,
+      "health_endpoint_note": "No /health route - confirms planner intent that FORBIDS a /health endpoint",
+      "status": "PASS"
+    },
+
+    "deploy": {
+      "description": "Start uvicorn locally in background on free port 8765",
+      "command": "python -m uvicorn src.main:app --port 8765",
+      "cwd": "C:\\sites\\CoolHan builder\\_harness_test\\track4\\sample-app",
+      "process_pid": 24096,
+      "boot_log": [
+        "INFO:     Started server process [24096]",
+        "INFO:     Waiting for application startup.",
+        "INFO:     Application startup complete.",
+        "INFO:     Uvicorn running on http://127.0.0.1:8765 (Press CTRL+C to quit)"
+      ],
+      "boot_wait": "polled root until 200 (server ready within ~1s)",
+      "status": "PASS"
+    },
+
+    "post_deploy_healthcheck": {
+      "description": "Health-check baseline root (planner intent forbids /health) and verify auth enforcement on /feedback",
+      "checks": [
+        {
+          "name": "baseline root health",
+          "command": "curl -s -o NUL -w \"%{http_code}\" http://127.0.0.1:8765/",
+          "expected_status": 200,
+          "actual_status": 200,
+          "response_body": "{\"app\":\"track4-sample\",\"status\":\"baseline\"}",
+          "result": "PASS"
+        },
+        {
+          "name": "auth enforcement on /feedback (no auth)",
+          "command": "curl -s -o NUL -w \"%{http_code}\" http://127.0.0.1:8765/feedback",
+          "expected_status": 401,
+          "actual_status": 401,
+          "response_body": "{\"detail\":\"Missing authentication token\"}",
+          "result": "PASS"
+        },
+        {
+          "name": "no /health endpoint (planner intent forbids it)",
+          "command": "curl -s -o NUL -w \"%{http_code}\" http://127.0.0.1:8765/health",
+          "expected_status": 404,
+          "actual_status": 404,
+          "result": "PASS"
+        }
+      ],
+      "server_access_log": [
+        "127.0.0.1 - \"GET / HTTP/1.1\" 200 OK",
+        "127.0.0.1 - \"GET /feedback HTTP/1.1\" 401 Unauthorized",
+        "127.0.0.1 - \"GET /health HTTP/1.1\" 404 Not Found"
+      ],
+      "status": "PASS"
+    },
+
+    "teardown": {
+      "description": "Stop uvicorn process and verify port freed",
+      "command": "Get-NetTCPConnection -LocalPort 8765 -State Listen | Stop-Process -Id <pid> -Force",
+      "stopped_pid": 24096,
+      "port_after_stop": "PORT 8765 FREE - server stopped (no listening connections, no orphan python uvicorn processes)",
+      "background_task_note": "Background uvicorn task reported exit code 127 - this is the expected result of Stop-Process forcibly terminating the foreground-blocking server, NOT a boot failure. Boot log and all HTTP responses confirm the server ran correctly before teardown.",
+      "status": "PASS"
+    }
+  },
+
+  "stack_gap": {
+    "issue": "Node-build assumption vs Python/uvicorn reality",
+    "detail": "The CoolHan devops-deployer agent definition and harness assume a Node toolchain: it calls 'npm run build', 'npm run lock:status', 'npm run spec:validate', 'npm run deploy', 'npm run healthcheck', etc. The actual target app is a Python FastAPI project with NO build step - uvicorn serves the ASGI app directly from source (python -m uvicorn src.main:app). There is no package.json, no npm scripts, no compiled artifact. The entire npm-based lock/validate/deploy/healthcheck pipeline in devops-deployer.md is inapplicable to this stack and was substituted with equivalent Python/uvicorn + curl commands.",
+    "recommendation": "Harness should detect project type (presence of package.json vs requirements.txt/pyproject.toml) and select the appropriate deploy + healthcheck commands. For Python: pre-deploy = import check, deploy = uvicorn/gunicorn, healthcheck = HTTP probe."
+  },
+
+  "final_verdict": "PASS"
+}

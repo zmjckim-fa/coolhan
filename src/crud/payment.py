@@ -5,7 +5,7 @@ Payment processing and tracking operations
 
 from sqlalchemy.orm import Session
 from src.models.payment import Payment, PaymentStatus
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class PaymentCRUD:
@@ -61,7 +61,7 @@ class PaymentCRUD:
                 if hasattr(payment, key):
                     setattr(payment, key, value)
             if status == PaymentStatus.COMPLETED:
-                payment.completed_at = datetime.utcnow()
+                payment.completed_at = datetime.now(timezone.utc)
             db.commit()
             db.refresh(payment)
         return payment

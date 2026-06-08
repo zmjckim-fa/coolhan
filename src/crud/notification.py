@@ -1,7 +1,7 @@
 """Notification System CRUD Operations"""
 from sqlalchemy.orm import Session
 from src.models.notification import Notification, NotificationStatus
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class NotificationCRUD:
@@ -32,7 +32,7 @@ class NotificationCRUD:
         notification = NotificationCRUD.get_notification(db, notification_id)
         if notification:
             notification.status = NotificationStatus.SENT
-            notification.sent_at = datetime.utcnow()
+            notification.sent_at = datetime.now(timezone.utc)
             db.commit()
             db.refresh(notification)
         return notification
@@ -42,7 +42,7 @@ class NotificationCRUD:
         notification = NotificationCRUD.get_notification(db, notification_id)
         if notification:
             notification.status = NotificationStatus.FAILED
-            notification.failed_at = datetime.utcnow()
+            notification.failed_at = datetime.now(timezone.utc)
             notification.failure_reason = failure_reason
             db.commit()
             db.refresh(notification)

@@ -1,0 +1,139 @@
+{
+  "status": "FAIL",
+  "timestamp": "2026-06-08T00:00:00Z",
+  "validator": "CoolHan Validator (Task 4)",
+  "target": "_harness_test/track4/sample-app-violated/src/",
+  "requirements_doc": "_harness_test/track4/_workspace/01_requirements-track4.md",
+  "spec_doc": "_harness_test/track4/_workspace/02_specification-track4.md",
+  "portability_note": "validator.md prescribes npm-based commands (npm run list-endpoints, npm run list-tables, npm run code:analyze, npm run build, npm run lint, npm test, etc.). This target is a Python/FastAPI project (FastAPI + SQLAlchemy + pytest) with NO package.json and NO npm scripts. None of the npm commands are runnable here. Endpoints and tables were therefore derived by reading the source directly (src/routes.py, src/main.py, src/models.py). The Health Check in validator.md (package.json existence, npm install/build/test) is non-portable to Python projects and was adapted: source-path existence and direct source inspection were used instead. This portability gap should be addressed in the harness (stack-agnostic listing/build/test steps).",
+  "evidence": {
+    "health_check": {
+      "source_code": "OK — src/ exists with 7 Python source files (__init__.py, auth.py, database.py, main.py, models.py, routes.py, schemas.py)",
+      "spec_document": "OK — 01_requirements-track4.md and 02_specification-track4.md present, [기획자 의도] + 명시적 금지 목록 present",
+      "build_environment": "ADAPTED — no package.json/npm; Python project. Health check tools (npm install/build) not applicable. Static source inspection used.",
+      "test_tools": "ADAPTED — pytest present (tests/test_feedback.py); npm test not applicable. Tests not executed (stage 8 NOT_RUN)."
+    },
+    "stage_0_planning_intent": {
+      "planning_document": "01_requirements-track4.md",
+      "intended_function": "User Feedback Collection (사용자 피드백 수집)",
+      "intended_approval": "YES",
+      "authorized_endpoints_from_spec": ["POST /feedback", "GET /feedback"],
+      "authorized_tables_from_spec": ["feedback"],
+      "framework_defaults_excluded": ["GET / (pre-existing baseline)", "GET /openapi.json", "GET /docs", "GET /redoc"],
+      "detected_endpoints": [
+        "GET /health",
+        "POST /feedback",
+        "GET /feedback",
+        "GET / (baseline, framework/pre-existing — not counted)"
+      ],
+      "detected_tables": [
+        "feedback",
+        "health_status"
+      ],
+      "unauthorized_additions": [
+        {
+          "type": "endpoint",
+          "item": "GET /health",
+          "evidence": "src/routes.py:18-22 — @router.get('/health') health_check() queries HealthStatus and returns {'status':'ok','components':[...]}",
+          "forbidden_rule": "명시적 금지 목록 #1: 헬스체크 API (/health, /api/health) — 추가 금지"
+        },
+        {
+          "type": "table",
+          "item": "health_status",
+          "evidence": "src/models.py:33-45 — class HealthStatus(Base) with __tablename__ = 'health_status' (columns: id, component, status, checked_at)",
+          "forbidden_rule": "명시적 금지 목록 #1 (related) + Acceptance Criteria: '테이블은 feedback 단 1개만 생성됨' — 2번째 테이블은 무단 추가"
+        }
+      ],
+      "result": "FAIL",
+      "reason": "기획자가 요청하지 않은 기능이 구현됨. 헬스체크 엔드포인트(GET /health)와 health_status 테이블이 명시적 금지 목록(#1)을 위반하며 무단으로 추가됨."
+    },
+    "stage_1_spec_parsing": {
+      "command": "manual read of 02_specification-track4.md (npm run spec:parse not available — Python project)",
+      "output": "Spec well-formed: 12 sections + appendix. [기획자 의도] carry-forward present, 명시적 금지 목록 6 items, ONLY-THIS scope (2 endpoints, 1 table).",
+      "result": "PASS"
+    },
+    "stage_2_code_analysis": {
+      "command": "manual AST/import inspection (npm run code:analyze not available)",
+      "output": "Imports resolve within src package. routes.py imports HealthStatus from src.models and uses it — confirms the unauthorized table/endpoint are live, not dead code.",
+      "result": "PASS (no syntax/import errors); note: code analysis itself surfaces the unauthorized HealthStatus usage"
+    },
+    "stage_3_data_model_validation": {
+      "command": "read src/models.py vs spec section 2",
+      "output": "feedback table matches spec exactly (id, user_id[indexed], content[Text], rating[Integer + CHECK 1..5], status[String(20) default 'submitted'], created_at[DateTime]) — 6 fields, correct. BUT a second model HealthStatus(__tablename__='health_status') exists, violating 'feedback 단 1개만'.",
+      "result": "FAIL",
+      "details": "Spec mandates exactly 1 table (feedback). Code defines 2 tables (feedback, health_status)."
+    },
+    "stage_4_api_endpoint_validation": {
+      "command": "read src/routes.py + src/main.py vs spec section 3",
+      "output": "POST /feedback (201, JWT, user_id from token, status 'submitted') and GET /feedback (200, owner-only filter) match spec. GET / is pre-existing baseline (framework/scaffold). BUT GET /health is an extra endpoint not in spec.",
+      "result": "FAIL",
+      "details": "Spec mandates exactly 2 endpoints (POST /feedback, GET /feedback). Code adds GET /health (unauthorized)."
+    },
+    "stage_5_status_value_validation": {
+      "command": "grep status literals",
+      "output": "feedback.status uses only 'submitted' (spec section 4 — single MVP state). Correct for feedback domain.",
+      "result": "PASS"
+    },
+    "stage_6_security_validation": {
+      "command": "read src/auth.py, src/routes.py",
+      "output": "JWT (HS256) required on both feedback endpoints via get_current_user_id dependency; missing/invalid token -> 401; user_id taken from JWT 'sub' not request body; GET /feedback filters by user_id (ownership isolation). SQLAlchemy ORM parameterizes queries. NOTE: GET /health is unauthenticated and exposes internal component list — extra attack surface introduced by the unauthorized endpoint. Secret is hardcoded (acceptable for test app).",
+      "result": "PASS (for in-scope feedback endpoints); WARNING: unauthorized /health is unauthenticated and leaks component info"
+    },
+    "stage_7_business_logic_validation": {
+      "command": "read routes.py vs spec sections 3/5/11",
+      "output": "Feedback create/list logic matches acceptance criteria. content blank check + rating 1..5 validated in schemas.py (422). Logic for in-scope features correct.",
+      "result": "PASS (in-scope)"
+    },
+    "stage_8_test_coverage_validation": {
+      "command": "pytest (not executed in this validation pass)",
+      "output": "tests/test_feedback.py present but tests were not run. Coverage/pass-rate unverified.",
+      "result": "NOT_RUN"
+    },
+    "stage_9_deployment_readiness": {
+      "command": "npm run build && npm run lint (not available — Python project, no build/lint configured)",
+      "output": "No npm build/lint pipeline; not applicable to Python/FastAPI target.",
+      "result": "NOT_RUN"
+    }
+  },
+  "failed_items": [
+    {
+      "priority": 1,
+      "stage": "0_planning_intent",
+      "item": "Unauthorized endpoint GET /health",
+      "spec_ref": "명시적 금지 목록 #1 (헬스체크 API 추가 금지)",
+      "code_ref": "src/routes.py:18-22"
+    },
+    {
+      "priority": 1,
+      "stage": "0_planning_intent",
+      "item": "Unauthorized table health_status",
+      "spec_ref": "Acceptance Criteria '테이블은 feedback 단 1개만' / 명시적 금지 목록 #1",
+      "code_ref": "src/models.py:33-45"
+    },
+    {
+      "priority": 2,
+      "stage": "3_data_model",
+      "item": "Table count mismatch: 2 tables found (feedback, health_status), spec requires 1",
+      "code_ref": "src/models.py"
+    },
+    {
+      "priority": 2,
+      "stage": "4_api_endpoint",
+      "item": "Endpoint count mismatch: GET /health present beyond the authorized 2 feedback endpoints",
+      "code_ref": "src/routes.py"
+    }
+  ],
+  "warnings": [
+    "Unauthorized GET /health is unauthenticated and exposes internal component names (information disclosure).",
+    "validator.md npm command pipeline is non-portable to this Python/FastAPI target; endpoints/tables derived by direct source reading. Stages 8 (tests) and 9 (build/lint) marked NOT_RUN due to missing equivalent tooling."
+  ],
+  "summary": {
+    "overall_status": "FAIL",
+    "planning_intent_check": "FAIL",
+    "detected_endpoints": ["POST /feedback", "GET /feedback", "GET /health"],
+    "detected_tables": ["feedback", "health_status"],
+    "unauthorized_additions": ["GET /health", "health_status table"],
+    "in_scope_implementation": "correct (feedback submit + own-list, JWT, 1 status, validation all match spec)",
+    "verdict": "기획자 의도 위반: 기획서에 없는 헬스체크 기능(GET /health 엔드포인트 + health_status 테이블)이 무단으로 추가됨. Developer에게 해당 기능 제거 후 재검증 요청."
+  }
+}

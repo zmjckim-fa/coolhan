@@ -7,6 +7,14 @@ class InventoryCRUD:
     @staticmethod
     def create_inventory_item(db: Session, product_id: int, quantity_available: int = 0, **kwargs) -> InventoryItem:
         item = InventoryItem(product_id=product_id, quantity_available=quantity_available, **kwargs)
+        # Set initial status based on quantity
+        minimum = kwargs.get("minimum_level", 10)
+        if quantity_available <= 0:
+            item.status = InventoryStatus.OUT_OF_STOCK
+        elif quantity_available <= minimum:
+            item.status = InventoryStatus.LOW_STOCK
+        else:
+            item.status = InventoryStatus.IN_STOCK
         db.add(item)
         db.commit()
         db.refresh(item)

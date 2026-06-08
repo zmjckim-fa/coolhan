@@ -3,7 +3,7 @@ Inventory Management Models
 Stock levels, reservations, and transaction tracking
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from sqlalchemy import Column, String, DateTime, Integer, Float, ForeignKey, Text
 from src.database import Base
@@ -50,8 +50,8 @@ class InventoryItem(Base):
     status = Column(String(20), default=InventoryStatus.OUT_OF_STOCK)
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     last_restocked = Column(DateTime)
 
     @property
@@ -82,7 +82,7 @@ class InventoryTransaction(Base):
     notes = Column(Text)
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
 
     def __repr__(self):
         return f"<InventoryTransaction(type='{self.transaction_type}', qty_change={self.quantity_change})>"

@@ -1,7 +1,7 @@
 """Shipping & Logistics CRUD Operations"""
 from sqlalchemy.orm import Session
 from src.models.shipping import Shipment, ShipmentStatus
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class ShippingCRUD:
@@ -31,9 +31,9 @@ class ShippingCRUD:
         if shipment:
             shipment.status = status
             if status == ShipmentStatus.SHIPPED:
-                shipment.shipped_at = datetime.utcnow()
+                shipment.shipped_at = datetime.now(timezone.utc)
             elif status == ShipmentStatus.DELIVERED:
-                shipment.delivered_at = datetime.utcnow()
+                shipment.delivered_at = datetime.now(timezone.utc)
             db.commit()
             db.refresh(shipment)
         return shipment

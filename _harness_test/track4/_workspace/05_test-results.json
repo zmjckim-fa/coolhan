@@ -1,0 +1,146 @@
+{
+  "task": "Task 5 — QA Tester (CoolHan Development Harness)",
+  "feature": "User Feedback Collection (Track 4)",
+  "spec_ref": "_harness_test/track4/_workspace/02_specification-track4.md",
+  "requirements_ref": "_harness_test/track4/_workspace/01_requirements-track4.md",
+  "target_app": "_harness_test/track4/sample-app/",
+  "tested_at": "2026-06-08",
+  "result": "PASS",
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "acceptance_criteria_total": 8,
+    "acceptance_criteria_covered": 8,
+    "acceptance_criteria_uncovered": 0
+  },
+  "stack_gap_note": "qa-tester.md / validator.md prescribe an `npm test` (Node/Jest) workflow, but the Track 4 target app is Python (FastAPI + SQLAlchemy + pytest). The Node-oriented commands in the agent definition (npm run test:setup, npm run db:seed:test, npm test, etc.) do not apply. pytest was used instead. This is a documented harness stack gap: the agent definition assumes a JavaScript stack and does not account for Python targets.",
+  "evidence": {
+    "command": "python -m pytest tests/ -v   (run from C:\\sites\\CoolHan builder\\_harness_test\\track4\\sample-app)",
+    "environment": "platform win32 -- Python 3.12.10, pytest-7.4.3, pluggy-1.6.0",
+    "deps_installed": true,
+    "output": "============================= test session starts =============================\nplatform win32 -- Python 3.12.10, pytest-7.4.3, pluggy-1.6.0\nrootdir: C:\\sites\\CoolHan builder\\_harness_test\\track4\\sample-app\nplugins: anyio-3.7.1, cov-4.1.0\ncollected 8 items\n\ntests/test_feedback.py::test_submit_feedback_success PASSED              [ 12%]\ntests/test_feedback.py::test_submit_feedback_uses_jwt_user_not_body PASSED [ 25%]\ntests/test_feedback.py::test_submit_feedback_no_auth_401 PASSED          [ 37%]\ntests/test_feedback.py::test_submit_feedback_bad_rating_422 PASSED       [ 50%]\ntests/test_feedback.py::test_submit_feedback_blank_content_422 PASSED    [ 62%]\ntests/test_feedback.py::test_list_returns_only_own_feedback PASSED       [ 75%]\ntests/test_feedback.py::test_list_empty_returns_empty_array PASSED       [ 87%]\ntests/test_feedback.py::test_list_no_auth_401 PASSED                     [100%]\n\n======================== 8 passed, 1 warning in 2.46s =========================",
+    "warnings": "1 PendingDeprecationWarning from starlette.formparsers (python_multipart import) — unrelated to feedback feature, non-blocking."
+  },
+  "tests": [
+    {
+      "name": "test_submit_feedback_success",
+      "status": "PASSED",
+      "asserts": "POST /feedback with JWT -> 201; body has id>0, user_id=42, content, rating=5, status='submitted'"
+    },
+    {
+      "name": "test_submit_feedback_uses_jwt_user_not_body",
+      "status": "PASSED",
+      "asserts": "body user_id=999 ignored; persisted user_id=7 (from JWT sub)"
+    },
+    {
+      "name": "test_submit_feedback_no_auth_401",
+      "status": "PASSED",
+      "asserts": "POST /feedback without Authorization header -> 401"
+    },
+    {
+      "name": "test_submit_feedback_bad_rating_422",
+      "status": "PASSED",
+      "asserts": "rating=6 -> 422 and rating=0 -> 422"
+    },
+    {
+      "name": "test_submit_feedback_blank_content_422",
+      "status": "PASSED",
+      "asserts": "content='   ' (whitespace only) -> 422"
+    },
+    {
+      "name": "test_list_returns_only_own_feedback",
+      "status": "PASSED",
+      "asserts": "user 100 (2 items) vs user 200 (1 item); GET /feedback as 100 -> 200, exactly 2 items, all user_id=100"
+    },
+    {
+      "name": "test_list_empty_returns_empty_array",
+      "status": "PASSED",
+      "asserts": "user with no feedback -> 200 and []"
+    },
+    {
+      "name": "test_list_no_auth_401",
+      "status": "PASSED",
+      "asserts": "GET /feedback without Authorization header -> 401"
+    }
+  ],
+  "acceptance_criteria_mapping": [
+    {
+      "spec_section": "11 / POST /feedback",
+      "criterion": "로그인 사용자가 텍스트 + 별점(1~5)으로 제출 -> 201, 레코드 생성",
+      "covered_by": ["test_submit_feedback_success"],
+      "status": "COVERED_PASS"
+    },
+    {
+      "spec_section": "11 / POST /feedback (security 5)",
+      "criterion": "user_id가 JWT에서 설정됨 (요청 본문 user_id 무시)",
+      "covered_by": ["test_submit_feedback_uses_jwt_user_not_body", "test_submit_feedback_success"],
+      "status": "COVERED_PASS"
+    },
+    {
+      "spec_section": "11 / POST /feedback",
+      "criterion": "status 기본값 'submitted' 저장",
+      "covered_by": ["test_submit_feedback_success"],
+      "status": "COVERED_PASS"
+    },
+    {
+      "spec_section": "11 / POST /feedback",
+      "criterion": "rating 범위(1~5) 위반 -> 422",
+      "covered_by": ["test_submit_feedback_bad_rating_422"],
+      "status": "COVERED_PASS"
+    },
+    {
+      "spec_section": "11 / POST /feedback",
+      "criterion": "content 빈 값 -> 422",
+      "covered_by": ["test_submit_feedback_blank_content_422"],
+      "status": "COVERED_PASS"
+    },
+    {
+      "spec_section": "11 / POST /feedback (security 5)",
+      "criterion": "JWT 없음 -> 401",
+      "covered_by": ["test_submit_feedback_no_auth_401"],
+      "status": "COVERED_PASS"
+    },
+    {
+      "spec_section": "11 / GET /feedback",
+      "criterion": "로그인 사용자가 본인 피드백만 조회 (타인 것 미노출) — 소유권 격리",
+      "covered_by": ["test_list_returns_only_own_feedback"],
+      "status": "COVERED_PASS"
+    },
+    {
+      "spec_section": "11 / GET /feedback",
+      "criterion": "피드백 없으면 빈 배열 반환 (200)",
+      "covered_by": ["test_list_empty_returns_empty_array"],
+      "status": "COVERED_PASS"
+    },
+    {
+      "spec_section": "11 / GET /feedback",
+      "criterion": "JWT 없음 -> 401",
+      "covered_by": ["test_list_no_auth_401"],
+      "status": "COVERED_PASS"
+    }
+  ],
+  "requested_in_scope_checks": {
+    "submit_success_201": "PASS (test_submit_feedback_success)",
+    "submit_without_auth_401": "PASS (test_submit_feedback_no_auth_401)",
+    "bad_rating_422": "PASS (test_submit_feedback_bad_rating_422)",
+    "list_returns_only_own_feedback": "PASS (test_list_returns_only_own_feedback)",
+    "jwt_required": "PASS (test_submit_feedback_no_auth_401, test_list_no_auth_401)"
+  },
+  "scope_observations_static": {
+    "note": "Static read of src/ confirms scope boundary; these are observations, not automated assertions (no negative/anti-scope tests exist in the suite).",
+    "endpoints_present": ["POST /feedback", "GET /feedback", "GET / (baseline root, pre-existing app marker)"],
+    "tables_present": ["feedback (single table, 6 fields per spec section 2)"],
+    "no_health_endpoint": true,
+    "no_admin_endpoint": true,
+    "no_email_notification_code": true,
+    "no_edit_delete_endpoint": true,
+    "no_statistics_dashboard": true,
+    "no_external_integration": true,
+    "caveat": "GET / returns {'app':'track4-sample','status':'baseline'} — a pre-existing baseline marker, not a /health endpoint; not part of the feedback feature."
+  },
+  "bugs_found": [],
+  "next_step": "PASS -> proceed to Task 6 (DevOps/Deployer). No bugs to return to Developer.",
+  "verdict_rationale": "All 8 automated tests pass AND all 9 spec section-11 acceptance criteria are covered by passing tests. The 5 explicitly requested in-scope behaviors (201, 401, 422, own-feedback-only, JWT required) are each directly verified. Result = PASS."
+}
