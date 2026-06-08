@@ -1,0 +1,76 @@
+{
+  "expert": "Logic/Proof Verifier",
+  "principles_enforced": ["evidence_required", "validity_vs_soundness_separated", "no_inference_beyond_text", "fallacy_localization"],
+  "cases": [
+    {
+      "argument_id": "B1",
+      "input": "모든 사람은 죽는다. 소크라테스는 사람이다. 따라서 소크라테스는 죽는다.",
+      "entry_gate": { "premises_and_conclusion_identifiable": true, "is_argument": true, "passed": true },
+      "conclusion": "소크라테스는 죽는다",
+      "premises": [
+        { "text": "모든 사람은 죽는다", "implicit": false, "truth": "true", "basis": "empirical generalization, universally accepted" },
+        { "text": "소크라테스는 사람이다", "implicit": false, "truth": "true", "basis": "historical fact" }
+      ],
+      "inference_type": "deductive",
+      "form": "Barbara syllogism: All M are P; S is M; therefore S is P",
+      "validity": "valid",
+      "soundness": "sound",
+      "fallacies": [],
+      "expected": { "validity": "valid", "soundness": "sound", "fallacy_count": 0 },
+      "match": true,
+      "false_positive": false,
+      "false_negative": false,
+      "verdict_summary": "Valid universal-instantiation syllogism with true premises; therefore sound. No fallacies."
+    },
+    {
+      "argument_id": "B2",
+      "input": "모든 새는 난다. 펭귄은 새다. 따라서 펭귄은 난다.",
+      "entry_gate": { "premises_and_conclusion_identifiable": true, "is_argument": true, "passed": true },
+      "conclusion": "펭귄은 난다",
+      "premises": [
+        { "text": "모든 새는 난다", "implicit": false, "truth": "false", "basis": "counterexamples exist: penguins, ostriches, kiwis are flightless birds" },
+        { "text": "펭귄은 새다", "implicit": false, "truth": "true", "basis": "biological classification" }
+      ],
+      "inference_type": "deductive",
+      "form": "All M are P; S is M; therefore S is P (same valid form as B1)",
+      "validity": "valid",
+      "soundness": "unsound",
+      "fallacies": [
+        { "type": "false_premise", "location": "premise 1 (모든 새는 난다)", "why": "Premise is empirically false; the form is valid so the conclusion follows from premises, but a false premise makes the argument unsound." }
+      ],
+      "expected": { "validity": "valid", "soundness": "unsound", "fallacy": "false_premise" },
+      "match": true,
+      "false_positive": false,
+      "false_negative": false,
+      "verdict_summary": "Form is valid (identical to B1) but premise 1 is false, so the argument is unsound. Error = false premise. Validity and soundness correctly separated."
+    },
+    {
+      "argument_id": "B3",
+      "input": "비가 오면 땅이 젖는다. 땅이 젖었다. 따라서 비가 왔다.",
+      "entry_gate": { "premises_and_conclusion_identifiable": true, "is_argument": true, "passed": true },
+      "conclusion": "비가 왔다",
+      "premises": [
+        { "text": "비가 오면 땅이 젖는다 (P -> Q)", "implicit": false, "truth": "true", "basis": "given conditional" },
+        { "text": "땅이 젖었다 (Q)", "implicit": false, "truth": "unknown", "basis": "asserted observation" }
+      ],
+      "inference_type": "deductive",
+      "form": "P -> Q; Q; therefore P  (INVALID conditional form)",
+      "validity": "invalid",
+      "soundness": "undetermined",
+      "fallacies": [
+        { "type": "affirming_the_consequent", "location": "inference from (P->Q, Q) to P", "why": "The ground could be wet for other reasons (sprinkler, flood, dew). Q does not entail P; this is the formal fallacy of affirming the consequent." }
+      ],
+      "expected": { "validity": "invalid", "fallacy": "affirming_the_consequent" },
+      "match": true,
+      "false_positive": false,
+      "false_negative": false,
+      "verdict_summary": "Invalid: affirming the consequent. Conclusion does not follow even if premises are true; soundness is moot (undetermined) because validity fails."
+    }
+  ],
+  "summary": {
+    "cases_total": 3,
+    "matches": 3,
+    "false_positives": 0,
+    "false_negatives": 0
+  }
+}
