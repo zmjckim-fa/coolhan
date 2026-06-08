@@ -1,18 +1,87 @@
 ---
 name: coolhan-development-orchestrator
-description: "CoolHan 규격 기반 개발 프레임워크 - 완전한 다국어 자동화 개발 시스템. 🌍 50+ 언어 완전 지원 (자동 감지): 🇰🇷 한국어: '쿨한으로 개발해', '쿨한으로 사용자 로그인 기능 추가해', '쿨한으로 검증해', '쿨한으로 진행하라', '쿨한 업데이트 확인해', '쿨한 최신 버전 확인', '쿨한 업데이트해' | 🇺🇸 English: 'CoolHan add feature', 'CoolHan develop', 'CoolHan validate', 'CoolHan continue', 'CoolHan check for updates', 'CoolHan update check', 'CoolHan update' | 🇯🇵 日本語: 'CoolHanで開発して', 'CoolHanで機能を追加して', 'CoolHanで検証して' | 🇨🇳 中文: '用CoolHan开发', '用CoolHan添加功能', '用CoolHan验证' | 🇪🇸 Español: 'CoolHan desarrollar', 'CoolHan agregar función', 'CoolHan validar' | 🇫🇷 Français: 'CoolHan développer', 'CoolHan ajouter fonction', 'CoolHan valider' | 🇩🇪 Deutsch: 'CoolHan entwickeln', 'CoolHan Funktion hinzufügen', 'CoolHan validieren' | 🇮🇹 Italiano: 'CoolHan sviluppare', 'CoolHan aggiungere funzione', 'CoolHan convalidare' | 🇵🇹 Português: 'CoolHan desenvolver', 'CoolHan adicionar recurso', 'CoolHan validar' | 🇷🇺 Русский: 'CoolHan разработать', 'CoolHan добавить функцию', 'CoolHan проверить' | 🇮🇳 हिन्दी: 'CoolHan विकास करें', 'CoolHan फीचर जोड़ें' | 🇹🇭 ไทย: 'CoolHan พัฒนา', 'CoolHan เพิ่มฟีเจอร์' | +40 more languages. **모든 명령어 형식 지원**: '{action} coolhan으로', 'coolhan {action}', '쿨한으로 {action}'. **자동 감지 + 즉시 실행**: 언어 자동 감지 → intent-analyzer 자동 활성화 → 19개 질문 시작 → 기획서 자동 생성 → 6명 AI 팀 자동 협력 → 규격 기반 코드 자동 구현 → 9단계 검증 → 배포. 사용자는 그냥 모국어로 말하면 완벽한 개발이 됨. 자세히: MULTILINGUAL_SUPPORT.md"
+description: "CoolHan 규격 기반 개발 프레임워크 - 완전한 다국어 자동화 개발 시스템. 정방향(의도→스펙→코드) + 역방향/재사용(기존 사이트 분석→모듈화→타 사이트 응용 적용→개발 지속) 모두 지원. 🌍 50+ 언어 완전 지원 (자동 감지): 🇰🇷 한국어: '쿨한으로 개발해', '쿨한으로 사용자 로그인 기능 추가해', '쿨한으로 검증해', '쿨한으로 진행하라', '쿨한 업데이트 확인해', '쿨한 최신 버전 확인', '쿨한 업데이트해', '쿨한으로 분석해', '쿨한으로 이 사이트 분석해', '쿨한으로 모듈화해', '쿨한으로 A를 B에 적용해', '쿨한으로 개발 이어서', '쿨한으로 기존 사이트 분석해서 적용해', '쿨한으로 연속개발해', '쿨한으로 {목표} 연속개발해', '쿨한으로 개발 이어서 진행하라' | 🇺🇸 English: 'CoolHan add feature', 'CoolHan develop', 'CoolHan validate', 'CoolHan continue', 'CoolHan check for updates', 'CoolHan update check', 'CoolHan update', 'CoolHan analyze this site', 'CoolHan reverse engineer', 'CoolHan modularize', 'CoolHan apply A to B', 'CoolHan port modules', 'CoolHan resume development', 'CoolHan continuous develop', 'CoolHan keep developing' | 🇯🇵 日本語: 'CoolHanで開発して', 'CoolHanで機能を追加して', 'CoolHanで検証して' | 🇨🇳 中文: '用CoolHan开发', '用CoolHan添加功能', '用CoolHan验证' | 🇪🇸 Español: 'CoolHan desarrollar', 'CoolHan agregar función', 'CoolHan validar' | 🇫🇷 Français: 'CoolHan développer', 'CoolHan ajouter fonction', 'CoolHan valider' | 🇩🇪 Deutsch: 'CoolHan entwickeln', 'CoolHan Funktion hinzufügen', 'CoolHan validieren' | 🇮🇹 Italiano: 'CoolHan sviluppare', 'CoolHan aggiungere funzione', 'CoolHan convalidare' | 🇵🇹 Português: 'CoolHan desenvolver', 'CoolHan adicionar recurso', 'CoolHan validar' | 🇷🇺 Русский: 'CoolHan разработать', 'CoolHan добавить функцию', 'CoolHan проверить' | 🇮🇳 हिन्दी: 'CoolHan विकास करें', 'CoolHan फीचर जोड़ें' | 🇹🇭 ไทย: 'CoolHan พัฒนา', 'CoolHan เพิ่มฟีเจอร์' | +40 more languages. **모든 명령어 형식 지원**: '{action} coolhan으로', 'coolhan {action}', '쿨한으로 {action}'. **자동 감지 + 즉시 실행**: 언어 자동 감지 → intent-analyzer 자동 활성화 → 19개 질문 시작 → 기획서 자동 생성 → 6명 AI 팀 자동 협력 → 규격 기반 코드 자동 구현 → 9단계 검증 → 배포. 사용자는 그냥 모국어로 말하면 완벽한 개발이 됨. 자세히: MULTILINGUAL_SUPPORT.md"
 working-mode: |
   **Token Efficiency Mode (작동 원칙)**
   - 결과만 보고: 분석완료/작업중/완료 형식으로만 보고
   - 과정 설명 금지: 생각, 판단 과정 미표시
   - 소스 화면 미표시: 코드나 내용 스크린샷 제외
   - 토큰 최소화: 필수 정보만 간결하게 전달
+  **응답 규칙 (Chat Brevity Mode, 2026-06-08 추가)**
+  - 모든 답변은 짧게. 채팅에는 핵심 결과만.
+  - 자세한 내용은 파일에 기록. 채팅에는 성공/실패/판정/다음 작업만 10줄 이하로 보고.
+  - 질문하지 말고 다음 검증/작업을 자동으로 진행.
+  **자율 진행 (Autonomous Mode, 2026-06-08 추가)**
+  - Task 완료 시 사용자 확인 없이 다음 Task 자동 착수 (파이프라인 끝까지 연속 실행).
+  - FAIL 시 자동 복구: 1회 재시도 → Developer 재실행 → 재검증. 2회 연속 실패만 사용자 보고.
+  - 정지 조건(이때만 멈춤): P0 승인 게이트, 복구 불가 오류, 명시적 파괴 작업.
+  - 모든 자동 결정은 _workspace/에 기록 (감사 추적).
+  **연속개발 엔진 (Continuous Development Engine, 기본 ON, 2026-06-08)**
+  - CoolHan은 연속개발형이다. 목표 1개를 받으면 _goal.md→_backlog.md로 분해 후, 백로그가 빌 때까지 단위별 실행·검증·재개를 스스로 반복한다.
+  - 목표 범위 안에서는 매 단위마다 사람에게 묻지 않는다(P0 승인 게이트·파괴작업·2회 연속 실패 제외).
+  - 목표 미지정 시에만 시작 보류(임의 기능 생성 금지). 목표가 정해지면 끝까지 자가진행.
+  **지속 개발 릴레이 (Continuous Relay Mode, 2026-06-08 추가)**
+  - 컨텍스트 한계는 정지가 아니라 "바통 전달"로 처리한다. 한계 도달 전 체크포인트 저장 + 재시작 명령 방출.
+  - 매 작업 단위 완료 직후 `_workspace/_checkpoint.md` 갱신(완료/미착수/다음 단위/재개 명령).
+  - 컨텍스트 잔여가 임계(아래 모델별 표)에 근접하면, 현재 단위만 안전 종료하고 **응답의 마지막 줄에 재시작 명령(baton)을 코드블록으로 출력**한다.
+  - 재시작 명령을 새 세션에 입력하면 체크포인트부터 자동 재개 → 한계 도달까지 다시 작업 → 다시 바통 방출. 이 사이클을 반복하여 멈추지 않는 개발.
 compatibility: Claude Code + Agent Team + CoolHan Framework + Multilingual Support (50+ languages)
 ---
 
 # 🚀 CoolHan Development Orchestrator
 
 사용자의 자연스러운 한국어 명령어 하나로 **규격 기반 개발의 모든 단계**를 자동화하는 완전한 개발 팀입니다.
+
+---
+
+## ⚡ 절대 원칙: 결과가 나올 수 있는 명령만 내린다
+
+> **"시작하지 않을 거면 명령도 내리지 않는다"**
+
+### 작업 단위 분할 규칙
+
+모든 작업은 시작 전에 아래 기준으로 분할한다:
+
+```
+1단위 = 파일 3~7개 생성/수정 + 검증 명령 1개
+```
+
+| 기준 | 제한 |
+|------|------|
+| 파일 생성/수정 | 1단위당 최대 7개 |
+| Bash 실행 | 1단위당 최대 20회 |
+| 코드 라인 | 1단위당 최대 500줄 |
+| **종료 조건** | **pytest pass / curl 200 / 테스트 통과 — 반드시 검증 결과로 종료** |
+
+### 작업 전 선언 형식
+
+```
+[작업 분할]
+전체: {기능명} 구현
+단위 1: {파일 A, B, C} → pytest test_A.py 통과로 완료
+단위 2: {파일 D, E} → curl /api/endpoint 200으로 완료
+단위 3: {배포 설정} → docker build 성공으로 완료
+
+→ 단위 1 시작합니다
+```
+
+### 컨텍스트 한계 도달 시 → 멈추지 않고 바통 전달 (지속 개발 릴레이)
+
+한계에서 정지하지 않는다. 현재 단위를 검증까지 마친 뒤 체크포인트 저장 + 재시작 명령(baton)을 마지막 줄에 방출한다.
+
+```
+[중단점 + 바통]
+완료: ✅ 단위 1 (파일 A,B,C + pytest 통과)
+미착수: 단위 2,3 → _workspace/_checkpoint.md 기록
+```
+````
+```
+쿨한으로 개발 이어서 진행하라 (체크포인트 _workspace/_checkpoint.md 단위 2부터)
+```
+````
+> 새 세션에 위 명령 입력 → 체크포인트부터 재개 → 한계까지 작업 → 다시 바통. 반복하여 지속 개발. 상세: "♾️ 지속 개발 릴레이" 섹션.
+
+**검증 없이 완료 선언 금지. 결과 증거 없이 다음 단위 진행 금지. 검증 미완 상태에서 바통 방출 금지.**
 
 ---
 
@@ -69,6 +138,7 @@ compatibility: Claude Code + Agent Team + CoolHan Framework + Multilingual Suppo
 | 명령어 | 의도 | 워크플로우 |
 |--------|------|----------|
 | "쿨한으로 개발해" (모든 언어) | 신규 기능 개발 | 1️⃣→2️⃣→3️⃣→4️⃣→5️⃣→6️⃣ (전체) |
+| "쿨한으로 {목표} 연속개발해" | 목표를 백로그로 분해 후 자가진행 | 🔄 연속개발 엔진 (백로그 빌 때까지 자동 반복) |
 | "쿨한으로 {기능} 추가해" | 특정 기능 추가 | 1️⃣→2️⃣→3️⃣→4️⃣→5️⃣→6️⃣ (전체) |
 | "쿨한으로 검증해" | 소스 코드 검증 | 4️⃣ (소스 검증만) |
 | "쿨한으로 테스트해" | 테스트 실행 | 5️⃣ (테스트만) |
@@ -81,6 +151,17 @@ compatibility: Claude Code + Agent Team + CoolHan Framework + Multilingual Suppo
 | "쿨한으로 환경 검증해" | 배포 후 실제 환경 검증 | 7️⃣ (포트/API/DB) |
 | "쿨한으로 E2E 테스트해" | 사용자 여정 검증 | 8️⃣ (UI/UX/반응형) |
 | "쿨한으로 전체 검증해" | 배포 후 완전한 검증 | 7️⃣→8️⃣ (환경 + 사용자) |
+
+**역방향 + 재사용 (NEW — 기존 사이트 분석·모듈화·응용 적용)**
+
+| 명령어 | 의도 | 워크플로우 |
+|--------|------|----------|
+| "쿨한으로 분석해" / "이 사이트 분석해" | 기존 코드 역공학 | R1️⃣ (Site Analyzer) |
+| "쿨한으로 모듈화해" | 기능·메뉴를 재사용 모듈로 분해 | R1️⃣→R2️⃣ (Analyzer→Extractor) |
+| "쿨한으로 A를 B에 적용해" | 모듈을 타 사이트에 이식 | R1️⃣→R2️⃣→R3️⃣→3️⃣~6️⃣ (분석→모듈화→적용계획→정방향 이식) |
+| "쿨한으로 개발 이어서" / "개발 지속" | 기존 사이트 분석 후 개발 계속 | R1️⃣→2️⃣~6️⃣ (역공학 스펙→정방향) |
+
+> 역방향 상세 워크플로우: 아래 "🔁 역방향 + 재사용 워크플로우" 섹션 참조.
 
 **다국어 예시:**
 ```
@@ -205,6 +286,228 @@ Task 8: 사용자 여정 검증 (E2E Tester)
 
 ---
 
+## 🔄 연속개발 엔진 (Continuous Development Engine) — 기본 ON
+
+CoolHan은 **연속개발형**이다. 목표 1개를 받으면, 사람이 매 단계 명령하지 않아도 백로그가 빌 때까지 스스로 분해·실행·검증·재개를 반복한다. 멈추는 건 정지 조건뿐.
+
+### 3대 상태 파일
+| 파일 | 역할 |
+|------|------|
+| `_workspace/_goal.md` | 전체 목표(불변). 무엇을 끝까지 만들 것인가. |
+| `_workspace/_backlog.md` | 목표를 작업 단위로 분해한 큐. 각 항목 = 1단위(파일7+검증1). done/doing/todo 상태. |
+| `_workspace/_checkpoint.md` | 현재 위치 + 재개 명령(baton). |
+
+### 엔진 루프
+```
+[목표 수신] → _goal.md 저장 → 백로그 분해(_backlog.md)
+   ↓
+while (백로그에 todo 있음):
+   다음 todo 1단위 실행 (Task 1~6 해당 부분)
+   → 검증(pytest/curl 등)으로 종료
+   → 검증 PASS: 항목 done 표시, _checkpoint.md 갱신
+   → 검증 FAIL: 자동 복구(1회 재시도→Developer 재실행), 2회 실패만 보고·정지
+   → 컨텍스트 임계 근접? → baton 방출(릴레이) / 아니면 다음 todo 계속
+   ↓
+백로그 비면 → ✅ 전체 완료 (릴레이 종료)
+```
+
+### 자기 재개 (사람 개입 0)
+- **세션 내:** 컨텍스트 여유 있으면 다음 단위로 즉시 계속(자동 연쇄).
+- **세션 경계:** 임계 근접 시 `_checkpoint.md` 저장 + baton 방출. 다음 세션이 baton으로 재개.
+- **완전 무인:** 최초 1회 `/loop 쿨한으로 개발 이어서 진행하라` 를 걸면, 세션이 끊겨도 동일 명령이 자동 재발행되어 백로그가 빌 때까지 무한 자가진행. (엔진이 baton을 같은 문구로 고정 출력하므로 loop와 정합)
+
+### 시작 방법
+```
+쿨한으로 {목표} 연속개발해     → _goal.md 생성 + 백로그 분해 + 엔진 시작
+쿨한으로 개발 이어서 진행하라   → _checkpoint.md/_backlog.md 로드 후 다음 todo부터
+```
+목표가 비어 있으면(기능 미지정) 엔진은 시작하지 않는다(P0: 임의 기능 생성 금지) — 단, 목표가 한 번 설정되면 그 범위 안에서는 다시 묻지 않고 끝까지 진행한다.
+
+### 정지 조건 (이때만)
+P0 승인 게이트 / 복구 불가 오류(2회 실패) / 명시적 파괴 작업 / 백로그 완료. 그 외 전부 자동 진행.
+
+---
+
+## ♾️ 지속 개발 릴레이 (Context-Aware Auto-Resume)
+
+컨텍스트 길이·처리 용량은 한계가 있고 선택된 AI 모델마다 다르다. 한계에서 멈추는 대신, **한계 전에 바통(재시작 명령)을 마지막 문구로 넘겨** 새 세션이 이어받게 한다. 반복하면 멈추지 않는 개발이 가능하다.
+
+### 작동 원리
+```
+세션 1: 단위 1~k 실행 → 잔여 컨텍스트 임계 근접 감지
+   → _workspace/_checkpoint.md 저장
+   → 응답 마지막 줄에 baton(재시작 명령) 출력
+세션 2: baton 입력 → 체크포인트 로드 → 단위 k+1~m 실행 → 다시 baton
+세션 N: ... → 전체 완료 시 baton 대신 "✅ 전체 완료" 출력 (릴레이 종료)
+```
+
+### 모델별 컨텍스트 예산 (임계 트리거)
+처리 길이는 모델마다 다르므로, **절대 토큰이 아니라 작업 단위 수 + 잔여 비율**로 판단한다.
+
+| 모델 등급 | 대략 컨텍스트 | 세션당 안전 작업 단위 | 바통 임계 |
+|----------|--------------|--------------------|----------|
+| 대형 (200K급) | ~200K | 3~4 단위 | 잔여 ~25% |
+| 중형 (100K급) | ~100K | 2 단위 | 잔여 ~30% |
+| 소형 (32~64K급) | ~32-64K | 1 단위 | 잔여 ~35% |
+
+> 정확한 토큰 측정이 어려우면 **단위 수 기준**으로 보수적으로: "대형=3단위, 중형=2단위, 소형=1단위 완료 후 바통". 1단위 = 파일 7개 + 검증 1개(절대 원칙 준수).
+
+### 체크포인트 형식 (`_workspace/_checkpoint.md`)
+```markdown
+# Checkpoint
+run_id: {id}
+feature: {기능명}
+current_phase: Task {N} ({에이전트})
+completed_units:
+  - 단위 1: {파일들} ✅ (검증: pytest 8 pass)
+  - 단위 2: {파일들} ✅ (검증: curl 200)
+pending_units:
+  - 단위 3: {파일들} → 검증: {기준}
+  - 단위 4: ...
+next_action: {다음에 할 정확한 작업}
+resume_command: "쿨한으로 개발 이어서 진행하라 (체크포인트 _workspace/_checkpoint.md 단위 3부터)"
+```
+
+### 바통(baton) 출력 규칙
+- 컨텍스트 임계 근접 시, 현재 단위를 **검증까지 마친 뒤** 안전 종료.
+- 응답 맨 마지막 줄에, 새 세션에 그대로 붙여넣을 수 있는 재시작 명령을 코드블록으로 출력:
+````
+```
+쿨한으로 개발 이어서 진행하라 (체크포인트 _workspace/_checkpoint.md 단위 N부터)
+```
+````
+- 검증 미완 상태에서는 바통을 내지 않는다(절대 원칙: 검증 없이 완료/전달 금지).
+- 전체 작업 완료 시에는 바통 대신 `✅ 전체 완료`를 출력하여 릴레이를 종료한다.
+
+### 선택: 완전 무인 릴레이
+사용자가 매번 바통을 붙여넣지 않고 자동 반복을 원하면 `/loop` 사용을 안내한다 (예: `/loop 쿨한으로 개발 이어서 진행하라`). 그러면 세션이 한계에서 끊겨도 동일 명령이 자동 재발행되어 체크포인트부터 재개된다.
+
+---
+
+## 🤖 자율 진행 (Autonomous Mode)
+
+사용자 명령 1회로 파이프라인을 끝까지 자동 실행한다. 매 단계마다 확인을 묻지 않는다.
+
+### 자동 연쇄 (auto-chain)
+```
+Task N 완료(증거 확인)
+   ↓ [자동] 사용자 개입 없이
+Task N+1 착수 → ... → 마지막 Task → 완료 보고
+```
+- 각 Task는 증거(pytest/curl/로그)로 종료. 증거 없으면 완료로 보지 않고 다음으로 넘어가지 않는다.
+
+### 자동 복구 (auto-recover)
+```
+Task FAIL
+   ↓ 1회 재시도
+재실패 → Developer 재실행(Task 3) → 재검증(Task 4~)
+   ↓ 2회 연속 FAIL
+→ 사용자 보고 (정지)
+```
+
+### 정지 조건 (이때만 멈춘다)
+| 조건 | 행동 |
+|------|------|
+| P0 승인 게이트 (Cross-Site Adapter 모듈 승인 등) | 승인 대기 |
+| 복구 불가 오류 (환경/권한/외부 의존) | 원인 보고 후 정지 |
+| 컨텍스트 한계 도달 | 중단점 명시(완료/미착수), 다음 단위 안내 |
+| 명시적 파괴 작업 (강제 푸시/DB reset 등) | 확인 요청 |
+
+### 감사 추적
+모든 자동 결정(다음 Task 착수, 재시도, 복구 경로)을 `_workspace/_autorun-log.md`에 기록한다. 채팅에는 성공/실패/판정/다음 작업만 10줄 이하 보고.
+
+---
+
+## 🔁 역방향 + 재사용 워크플로우 (기존 사이트 분석·모듈화·응용 적용)
+
+정방향이 "의도→스펙→코드"라면, 역방향은 "코드→스펙→모듈→재적용"이다. 기존(만들고 있거나 완성된) 사이트를 분석하여 개발을 지속하거나 다른 사이트로 응용 적용한다.
+
+### 신규 에이전트 3명 (역방향 전용)
+
+| 단계 | 담당 에이전트 | 산출물 |
+|------|-------------|--------|
+| R1️⃣ **사이트 분석** | Site Analyzer | Site Analysis Map (스택/라우트/모델/컴포넌트/메뉴/기능) |
+| R2️⃣ **모듈 추출** | Module Extractor | Module Manifest (12섹션 도메인-모듈 포맷) |
+| R3️⃣ **교차 적용** | Cross-Site Adapter | Application Plan (A→B 변환·충돌·P0 승인) |
+
+> 이후 실제 이식/개발은 **기존 정방향 에이전트 재사용** (Spec Writer→Developer→Validator→QA→DevOps). 신규 에이전트 없음.
+
+### 통합 원칙 (4대)
+
+1. **stack-agnostic 우선** — Site Analyzer가 스택을 먼저 감지하고 명령을 매핑. npm/특정 스택 전제 금지 (트랙4 GAP-1 교훈).
+2. **파라미터화 재사용** — 사이트 간 DB명/테이블/API/디자인 차이는 Specification/Design Parameterization 시스템으로 흡수.
+3. **기획자 의도 강제(P0) 유지·확장** — Cross-Site Adapter가 "승인된 모듈만" 이식. Validator 0단계가 이식 후 "결과 ⊆ 승인 모듈" 교차 검증.
+4. **domain-module 라이브러리 환류** — 추출 모듈은 knowledge_base에 축적되어 다음 프로젝트에서 재사용.
+
+### 4가지 경로별 흐름
+
+```
+[경로 ①: 분석만]      "쿨한으로 분석해"
+   R1 (Site Analyzer) → Site Analysis Map → 보고
+
+[경로 ②: 모듈화]      "쿨한으로 모듈화해"
+   R1 → R2 (Module Extractor) → Module Manifest → KB 환류 제안
+
+[경로 ③: 응용 적용]   "쿨한으로 A를 B에 적용해"
+   R1 → R2 → R3 (Cross-Site Adapter)
+        ↓ [P0 승인 게이트: 적용 모듈 확정]
+        Application Plan
+        ↓ [핸드오프: 정방향 재가동]
+   Task 3 (Developer 이식) → Task 4 (Validator 0단계 교차검증) → Task 5 → Task 6
+
+[경로 ④: 개발 지속]   "쿨한으로 개발 이어서"
+   R1 → (역공학 스펙) → Task 2 (Spec Writer) → Task 3~6 (정방향 전체)
+```
+
+### 작업 할당 및 의존성 (역방향 Task R1-R3)
+
+```
+Task R1: 사이트 분석 (Site Analyzer)
+├─ 진입 게이트: 대상 경로 존재 + 소스 1개 이상 + 스택 감지 가능
+├─ 1단계: 스택 감지 (최우선, stack-agnostic) → command_map 도출
+├─ 라우트/모델/컴포넌트/메뉴/기능/통합점 추출 (증거 필수)
+├─ 추론 금지 (코드에 없는 기능 창작 금지 — 역방향 P0)
+└─ 산출: site-analysis-map-{id}.json (+ .md)
+
+Task R2: 모듈 추출 (Module Extractor)
+├─ 의존: R1 완료
+├─ 기능→모듈 분해, 기존 10모듈 우선 매핑, 12섹션 정규화
+├─ 결합도 평가 (high coupling 모듈 분리 비용 명시)
+├─ KB 환류 제안 (무단 덮어쓰기 금지)
+└─ 산출: module-manifest-{id}.json (+ 모듈별 .md)
+
+Task R3: 교차 적용 (Cross-Site Adapter) ⭐ P0 승인 게이트
+├─ 의존: R2 완료
+├─ ★ 진입 게이트(P0): 적용할 모듈 목록을 기획자가 확정했는가?
+│  └─ 미확정 → GATE_LOCK (승인 없이 이식 계획 생성 금지)
+├─ A→B 매핑표 (파라미터화 적용), 충돌 감지 (비파괴)
+├─ 의존성 검사: 미승인 모듈 자동 끌어오기 차단 (P0)
+└─ 산출: application-plan-{id}.json → 정방향 Developer 핸드오프
+
+[핸드오프] 정방향 Task 3~6 재가동
+├─ Developer: 승인된 모듈만 B에 이식
+├─ Validator 0단계 (교차-사이트 모드): 이식 결과 ⊆ approved_modules
+│  └─ 미승인 엔드포인트/테이블/기능 발견 → FAIL (무단 끌어오기 감지)
+├─ QA Tester: 이식 기능 동작 테스트
+└─ DevOps: 배포
+```
+
+**데이터 흐름 (역방향):**
+```
+_workspace/
+├── R1_site-analysis-map-{id}.json  (Site Analyzer)
+├── R2_module-manifest-{id}.json    (Module Extractor)
+├── R3_application-plan-{id}.json    (Cross-Site Adapter)
+└── (이후 03_code/ ~ 06_deployment-log.json — 정방향 재사용)
+```
+
+**스키마 표준 (references/):**
+- `references/site-analysis-map-schema.md`
+- `references/module-manifest-schema.md`
+- `references/application-plan-schema.md`
+
+---
+
 ## ⚙️ 실행 구조
 
 ### Phase 0-pre: 업데이트 확인 (자동, 1회/실행)
@@ -252,6 +555,7 @@ Task 8: 사용자 여정 검증 (E2E Tester)
 ```
 
 **분기:**
+- **릴레이 재개:** `_workspace/_checkpoint.md` 존재 + "이어서 진행" 류 명령 → 체크포인트의 next_action/단위부터 즉시 재개 (지속 개발 릴레이)
 - **초기 실행:** _workspace/ 없음 → 1단계부터 시작
 - **재실행:** _workspace/ 존재 + 사용자 새 명령어 → _workspace_prev/ 이동 후 1단계부터
 - **부분 수정:** _workspace/ 존재 + 피드백 기반 수정 → 해당 단계만 재실행
@@ -293,18 +597,24 @@ Task 8: 사용자 여정 검증 (E2E Tester)
 
 **실행 모드:** 🔄 **Agent Team** (6명이 협력하는 메인 워크플로우)
 
-**데이터 흐름:**
-```
-_workspace/
-├── 01_requirements.md (Intent Analyzer 산출)
-├── 02_specification.md (Spec Writer 산출)
-├── 03_code/ (Developer 산출)
-├── 04_validation-report.json (Validator 산출)
-├── 05_test-results.json (QA Tester 산출)
-└── 06_deployment-log.json (DevOps 산출)
+### 📛 산출물 파일명 표준 (GAP-2 수정, 2026-06-08)
 
-_workspace_prev/ (이전 버전, 롤백 가능)
-```
+**모든 산출물은 단일 규칙을 따른다:** `_workspace/{NN}_{artifact}-{id}.{ext}`
+- `{NN}` = 단계 순번(01~06, 역방향은 R1~R3), `{id}` = 실행 식별자(단일 토큰, `{timestamp}` 별칭 금지 — `{id}`로 통일).
+
+| 단계 | 표준 파일명 |
+|------|------------|
+| Task 1 | `_workspace/01_requirements-{id}.md` |
+| Task 2 | `_workspace/02_specification-{id}.md` |
+| Task 3 | `_workspace/03_code-{id}/` |
+| Task 4 | `_workspace/04_validation-report-{id}.json` |
+| Task 5 | `_workspace/05_test-results-{id}.json` |
+| Task 6 | `_workspace/06_deployment-log-{id}.json` |
+| Task 7 | `_workspace/07_integration-validation-report-{id}.json` |
+| Task 8 | `_workspace/08_e2e-validation-report-{id}.json` |
+| R1~R3 | `_workspace/R{n}_{artifact}-{id}.json` (+ .md) |
+
+> 에이전트 정의의 산출물명(`requirements-{id}.md` 등)은 위 표준의 `{NN}_` 접두 + `{id}` 형태로 기록한다. `_workspace_prev/`는 이전 버전(롤백용).
 
 ---
 
@@ -548,6 +858,36 @@ Task 8: 사용자 여정 검증 (E2E Tester) — 선택, 환경 검증 후 ⭐ �
   └─ 결과: PASS ✅
 
 ✅ 최종 완료!
+```
+
+---
+
+### 시나리오 3: 역방향 — 기존 사이트 분석 후 타 사이트 응용 적용
+
+```
+사용자: "쿨한으로 기존 쇼핑몰(사이트A) 분석해서 주문 모듈만 신규 사이트B에 적용해"
+
+→ Task R1 (Site Analyzer): 사이트 A 역공학
+  └─ 스택 감지: Python/FastAPI, PostgreSQL/SQLAlchemy
+  └─ 라우트 12 / 모델 8 / 기능 9개 추출 (증거 포함)
+  └─ 산출: site-analysis-map-A.json
+
+→ Task R2 (Module Extractor): 모듈 분해
+  └─ 9기능 → 4모듈 (주문/결제/재고/회원)
+  └─ 09_order_management에 매핑, 결합도 medium
+  └─ 산출: module-manifest-A.json
+
+→ Task R3 (Cross-Site Adapter): A→B 적용 계획 ⭐ P0 게이트
+  └─ 승인 게이트: 사용자가 "주문 모듈만" 명시 → approved_modules=[주문]
+  └─ 의존성 검사: 주문이 결제·재고에 의존 → 미승인 → 자동 끌어오기 차단
+  └─ 충돌: B에 'order' 테이블 존재 → 리네임 옵션 제시 (비파괴)
+  └─ 산출: application-plan-A-to-B.json (승인 1 / 거부 3)
+
+→ Task 3-6 (정방향 재가동): 승인된 주문 모듈만 B에 이식
+  └─ Validator 0단계 (교차검증): 이식 결과 = 주문 모듈만 → PASS ✅
+     (결제/재고가 새어 들어갔으면 → FAIL)
+
+✅ 완료! 무단 끌어오기 0건, P0 경계 유지됨.
 ```
 
 ---

@@ -1,7 +1,7 @@
 """GDPR & Privacy CRUD Operations"""
 from sqlalchemy.orm import Session
 from src.models.gdpr import DataSubject, ConsentLog
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class GDPRCRUDsys:
@@ -22,7 +22,7 @@ class GDPRCRUDsys:
         subject = GDPRCRUDsys.get_data_subject(db, user_id)
         if subject:
             subject.deletion_requested = True
-            subject.deletion_requested_at = datetime.utcnow()
+            subject.deletion_requested_at = datetime.now(timezone.utc)
             db.commit()
             db.refresh(subject)
         return subject
@@ -32,7 +32,7 @@ class GDPRCRUDsys:
         subject = GDPRCRUDsys.get_data_subject(db, user_id)
         if subject:
             subject.data_export_requested = True
-            subject.data_export_requested_at = datetime.utcnow()
+            subject.data_export_requested_at = datetime.now(timezone.utc)
             db.commit()
             db.refresh(subject)
         return subject

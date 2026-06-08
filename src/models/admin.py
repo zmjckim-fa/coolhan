@@ -3,7 +3,7 @@ Admin System Models
 Administration, audit logs, and system actions
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from sqlalchemy import Column, String, DateTime, Integer, ForeignKey, Text
 from src.database import Base
@@ -53,7 +53,7 @@ class AdminLog(Base):
     error_message = Column(Text)
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
 
     def __repr__(self):
         return f"<AdminLog(action='{self.action}', resource_id={self.resource_id})>"

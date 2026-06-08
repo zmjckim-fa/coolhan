@@ -3,7 +3,7 @@ Member System Models
 User account management, roles, and authentication
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from sqlalchemy import Column, String, DateTime, Boolean, Integer, Table, ForeignKey
 from sqlalchemy.orm import relationship
@@ -46,8 +46,8 @@ class Role(Base):
     name = Column(String(50), unique=True, nullable=False)
     description = Column(String(500))
     permissions = Column(String(1000))  # JSON array of permissions
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     # Relationships
     users = relationship("User", secondary=user_role, back_populates="roles")
@@ -70,8 +70,8 @@ class User(Base):
     email_verified = Column(Boolean, default=False)
     phone_number = Column(String(20))
     last_login = Column(DateTime)
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     # Relationships
     roles = relationship("Role", secondary=user_role, back_populates="users")
@@ -95,7 +95,7 @@ class UserRole(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     role_id = Column(Integer, ForeignKey('role.id'), nullable=False)
-    assigned_at = Column(DateTime, default=datetime.utcnow)
+    assigned_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     assigned_by = Column(Integer, ForeignKey('user.id'))
 
     def __repr__(self):

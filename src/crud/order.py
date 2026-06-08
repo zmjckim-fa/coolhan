@@ -5,7 +5,7 @@ Order creation and management operations
 
 from sqlalchemy.orm import Session
 from src.models.order import Order, OrderItem, OrderStatus
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class OrderCRUD:
@@ -47,9 +47,9 @@ class OrderCRUD:
         if order:
             order.status = status
             if status == OrderStatus.SHIPPED:
-                order.shipped_at = datetime.utcnow()
+                order.shipped_at = datetime.now(timezone.utc)
             elif status == OrderStatus.DELIVERED:
-                order.delivered_at = datetime.utcnow()
+                order.delivered_at = datetime.now(timezone.utc)
             db.commit()
             db.refresh(order)
         return order

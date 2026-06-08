@@ -33,6 +33,15 @@ CoolHan의 9단계 검증 파이프라인을 실행하여 코드가 100% 스펙�
 - **증거 필수:** 검증 로그, 실행 명령어, 오류 메시지 포함
 - **토큰 효율:** 증거를 간결하게, 요약은 정확하게
 
+## 스택 감지 + 명령 매핑 (GAP-1 수정, 2026-06-08)
+
+**검증 시작 전 반드시 스택을 먼저 감지하고, 아래 모든 단계의 `npm run ...` 예시를 감지된 스택의 명령으로 치환한다. npm을 기본값으로 가정하지 않는다.**
+
+- 시그널 판정 + 명령 매핑 표: `.claude/skills/coolhan-development-orchestrator/references/stack-command-map.md` 참조
+- 예: Python/FastAPI → 8단계 테스트=`pytest`, 9단계 빌드=SKIP(불필요)+린트=`ruff`, 라우트 추출=FastAPI 데코레이터 스캔
+- 명령 없음(예: Python build)은 억지 매핑 대신 SKIP + 사유 기록. 도구 미설치면 그 단계만 NOT_RUN.
+- **단, 0단계(기획 의도 검증)는 언어 무관 — 스택과 무관하게 항상 실행** (소스/스펙 텍스트 비교).
+
 ## CoolHan 10단계 검증 파이프라인 (기획 의도 검증 추가)
 
 ```
@@ -322,7 +331,7 @@ npm run spec:validate --strict
 }
 ```
 
-- `validation-report-{timestamp}.json` — 위 형식의 증거 포함 검증 결과
+- `validation-report-{id}.json` — 위 형식의 증거 포함 검증 결과
 - `spec-code-diff.md` — 스펙-코드 차이점 (있을 경우)
 
 ### 메시지
@@ -374,7 +383,7 @@ npm run spec:validate --strict
 
 다음 단계: QA 테스트
 
-보고서: validation-report-{timestamp}.json
+보고서: validation-report-{id}.json
 ```
 
 ### 메시지 발신 (검증 FAIL)

@@ -8,8 +8,11 @@ from pydantic import BaseModel
 router = APIRouter(prefix="/api/gdpr", tags=["gdpr"])
 
 class ConsentRequest(BaseModel):
-    consent_type: str
-    given: bool
+    consent_type: str = "general"
+    given: bool = True
+    marketing_consent: bool = False
+    analytics_consent: bool = False
+    third_party_consent: bool = False
 
 @router.get("/data-subject/{user_id}")
 def get_data_subject(user_id: int, db: Session = Depends(get_db)):

@@ -31,9 +31,18 @@ The Shipping Logistics module handles shipping address management, shipping meth
 ### 2.1 Shipping Address Management
 - **Purpose**: Store and validate customer shipping addresses
 - **Input**: Street address, city, state/province, ZIP/postal code, country, contact info
-- **Process**: Validation → Geocoding (optional) → Address standardization → Storage
-- **Output**: Validated shipping address record
-- **Error Handling**: Invalid address, non-deliverable address, missing fields
+- **Process**: Address search/lookup (Nominatim) → Geocoding (lat/lon resolved) → Address standardization → Storage
+- **Output**: Validated shipping address record (with latitude/longitude populated)
+- **Error Handling**: Invalid address, non-deliverable address, missing fields, geocoder unavailable (fall back to manual entry)
+- **Geocoding provider**: **Nominatim (OpenStreetMap)** — see §2.1a and §8 for usage policy
+
+### 2.1a Address Search / Postal-Code Lookup (Nominatim)
+- **Purpose**: Replace manual-only address entry with type-ahead search backed by OpenStreetMap. Supersedes any carrier/USPS/Daum/Kakao postcode lookup.
+- **Input**: Free-text query (partial street, place name, or postal code) + optional `countrycodes` filter
+- **Process**: Query Nominatim Search API → parse structured results (`address` object + `lat`/`lon`) → present candidates → on selection, map fields (street, city, state, postal_code, country_code) and store lat/lon
+- **Output**: List of address candidates; selected candidate fills the address form and `latitude`/`longitude`
+- **Why Nominatim**: license-free (ODbL), global coverage, no API key, self-hostable for volume — removes dependency on per-carrier or country-specific (Daum/Kakao) postcode services
+- **Error Handling**: No results (allow manual entry), rate-limited/unavailable (graceful fallback to manual entry — never block address submission)
 
 ### 2.2 Shipping Method Selection
 - **Purpose**: Display available shipping options with costs
@@ -134,8 +143,10 @@ The Shipping Logistics module handles shipping address management, shipping meth
 - country_code: VARCHAR(2) (ISO 3166-1 alpha-2)
 - phone_number: VARCHAR(20)
 - recipient_name: VARCHAR(255)
-- latitude: DECIMAL(10,8) (optional)
-- longitude: DECIMAL(11,8) (optional)
+- latitude: DECIMAL(10,8) (geocoded via Nominatim)
+- longitude: DECIMAL(11,8) (geocoded via Nominatim)
+- osm_place_id: VARCHAR(64) (optional — Nominatim place_id for re-lookup)
+- geocode_source: VARCHAR(20) (default 'nominatim'; 'manual' if user typed without search)
 - is_default: BOOLEAN
 - is_valid: BOOLEAN (address validation result)
 - created_at: TIMESTAMP
@@ -256,11 +267,12 @@ The Shipping Logistics module handles shipping address management, shipping meth
 
 ### Address Endpoints
 ```
-GET    /shipping-addresses        - List user's addresses
-POST   /shipping-addresses        - Add new address
-PUT    /shipping-addresses/:id    - Update address
-DELETE /shipping-addresses/:id    - Delete address
-POST   /shipping-addresses/:id/validate - Validate address
+GET    /shipping-addresses          - List user's addresses
+POST   /shipping-addresses          - Add new address
+PUT    /shipping-addresses/:id      - Update address
+DELETE /shipping-addresses/:id      - Delete address
+GET    /shipping-addresses/search   - Search/autocomplete address via Nominatim (q, countrycodes)
+POST   /shipping-addresses/:id/validate - Validate + geocode address via Nominatim
 ```
 
 ### Shipping Endpoints
@@ -344,8 +356,13 @@ PUT    /admin/shipping-methods/:id - Update shipping method
 
 ## 8. Security Standards
 
-### Address Security
-- Validate all addresses via USPS/UPS/FedEx address validation API
+### Address Security & Geocoding (Nominatim / OpenStreetMap)
+- Validate and geocode all addresses via **Nominatim (OpenStreetMap)** — not USPS/UPS/FedEx or country-specific (Daum/Kakao) postcode APIs
+- **Usage policy (public nominatim.openstreetmap.org):** max 1 request/second; set a descriptive `User-Agent`/`Referer` identifying the app; cache results to avoid repeat lookups; **do not** bulk-geocode against the public endpoint
+- **Production volume:** self-host Nominatim (Docker) or use a paid OSM provider; make the base URL a config parameter (`nominatim_base_url`)
+- **Attribution:** display "© OpenStreetMap contributors" wherever search results are shown (ODbL requirement)
+- **Privacy:** send only the minimal query string; never put full personal address + name in a single logged query; use HTTPS for all geocoder calls
+- Graceful degradation: if Nominatim is unavailable/rate-limited, allow manual address entry — never block submission
 - Prevent shipping to known high-fraud addresses
 - Encrypt sensitive address fields at rest
 - No address data in logs or error messages
@@ -376,7 +393,11 @@ PUT    /admin/shipping-methods/:id - Update shipping method
 
 ### Address Management
 - ✅ User can add shipping address
-- ✅ Address validated via API
+- ✅ Address search/autocomplete works via Nominatim (type-ahead by street/place/postal code)
+- ✅ Selecting a result fills address fields and populates latitude/longitude
+- ✅ Address validated + geocoded via Nominatim (geocode_source recorded)
+- ✅ Nominatim unavailable → manual entry still allowed (submission never blocked)
+- ✅ "© OpenStreetMap contributors" attribution shown on search UI
 - ✅ Invalid addresses rejected with guidance
 - ✅ Multiple addresses stored and retrievable
 - ✅ Default address set and used in checkout
@@ -419,9 +440,15 @@ PUT    /admin/shipping-methods/:id - Update shipping method
 
 ## 10. Integration Points
 
+### Geocoding / Address Integration
+- **Provider**: Nominatim (OpenStreetMap) — Search API for address lookup/autocomplete, Reverse API for lat/lon → address
+- **Endpoints**: `/search` (query → candidates), `/reverse` (coords → address)
+- **Config**: `nominatim_base_url` (public or self-hosted), `User-Agent` identifying the app
+- **Constraints**: ≤1 req/s on public endpoint, cache results, ODbL attribution required
+
 ### Carrier Integrations
 - **Carriers**: FedEx, UPS, USPS, DHL, local couriers
-- **Integration**: API for label generation, rate calculation, tracking
+- **Integration**: API for label generation, rate calculation, tracking (carrier APIs are NOT used for address validation — that is Nominatim's role)
 - **Webhooks**: Receive tracking updates from carriers
 
 ### Dependency Services
@@ -445,7 +472,10 @@ PUT    /admin/shipping-methods/:id - Update shipping method
 | Parameter | Default | Min | Max | Notes |
 |-----------|---------|-----|-----|-------|
 | Primary carrier | fedex | - | - | Default carrier |
-| Address validation API | usps | - | - | Provider for validation |
+| Address validation/geocoding provider | nominatim | - | - | OpenStreetMap Nominatim (replaces usps/ups/fedex/daum/kakao) |
+| nominatim_base_url | https://nominatim.openstreetmap.org | - | - | Public endpoint; self-host for volume |
+| Nominatim rate limit (req/s) | 1 | - | - | Public endpoint hard limit |
+| Nominatim language (accept-language) | (request locale) | - | - | Result localization |
 | Return window (days) | 30 | 0 | 365 | Days from delivery |
 | Weight unit | lbs | - | - | lbs or kg |
 | Signature required | false | - | - | Default for all shipments |

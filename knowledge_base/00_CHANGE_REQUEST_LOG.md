@@ -67,6 +67,30 @@ Without this log, specification versions diverge and implementations become unre
 
 ---
 
+### Development Phase: User Requests
+
+#### CR002 - [Status: COMPLETED]
+| Field | Value |
+|-------|-------|
+| Change ID | CR002 |
+| Date Submitted | 2026-06-08 |
+| Module(s) Affected | 04_shipping_logistics |
+| Change Type | [Modify Function], [New Function], [API Endpoint], [Database Schema], [Add Security], [Config Parameter] |
+| Change Description | Upgrade address input / postal-code search logic to use **Nominatim (OpenStreetMap)** for address search, validation, and geocoding. Replaces carrier-based (USPS/UPS/FedEx) and country-specific (Daum/Kakao) postcode lookups. |
+| Reason for Change | _User Request_ |
+| Detailed Rationale | Address validation was tied to per-carrier APIs and (implicitly) country-specific postcode services, creating vendor lock-in, per-country fragmentation, and API-key/cost dependencies. Nominatim is license-free (ODbL), global, key-less, and self-hostable — one consistent address-search standard across all regions. Without this, every storefront/region reimplements address lookup differently. |
+| Impact Analysis | 04 only. Schema: +osm_place_id, +geocode_source on shipping_addresses; lat/lon now populated (no longer "optional"). API: +GET /shipping-addresses/search; /validate now geocodes via Nominatim. Security: new Nominatim usage policy (≤1 req/s public, ODbL attribution, self-host for volume, graceful manual-entry fallback). No breaking change to carrier label/tracking integration (carriers still used for those). |
+| Proposed Solution | §2.1 process → Nominatim geocoding; new §2.1a Address Search; address endpoints +search; data model +osm_place_id/+geocode_source; §8 Address Security rewritten for Nominatim usage policy; §9 acceptance criteria updated; §10 Geocoding Integration added; §11 config params (nominatim_base_url, rate limit, language). |
+| Submitted By | User (via CoolHan harness operator) |
+| Approval Status | Approved |
+| Approved By | User |
+| Approval Date | 2026-06-08 |
+| Implementation Status | Completed |
+| Implemented Date | 2026-06-08 |
+| Notes | Verified: no carrier/Daum/Kakao reference remains in address-validation context; 26 Nominatim references; carriers retained for labels/tracking only. |
+
+---
+
 ### Phase 3: Integration Testing (Expected 2026-05-31)
 
 _Changes identified during user flow testing (signup → login → search → purchase → payment → fulfillment → tracking → returns → reviews → refunds → admin settlement) will be logged here._
@@ -83,12 +107,12 @@ _Changes identified during security review and performance optimization will be 
 
 | Metric | Value | Notes |
 |--------|-------|-------|
-| Total Changes Submitted | 0 | Updated as changes logged |
-| Changes Approved | 0 | Approved changes only |
+| Total Changes Submitted | 1 | Updated as changes logged |
+| Changes Approved | 1 | Approved changes only |
 | Changes Rejected | 0 | Rejected proposals |
 | Changes In Progress | 0 | Currently being implemented |
-| Changes Completed | 0 | Fully implemented and verified |
-| Most Affected Module | — | Module with most changes |
+| Changes Completed | 1 | Fully implemented and verified |
+| Most Affected Module | 04_shipping_logistics | Module with most changes |
 | Average Approval Time | — | Days from submission to approval |
 | Average Implementation Time | — | Days from approval to completion |
 

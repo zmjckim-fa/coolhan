@@ -3,7 +3,7 @@ Order Management Models
 Order creation, items, and state management
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from sqlalchemy import Column, String, DateTime, Integer, Float, ForeignKey, Text
 from sqlalchemy.orm import relationship
@@ -48,8 +48,8 @@ class Order(Base):
     notes = Column(Text)
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     shipped_at = Column(DateTime)
     delivered_at = Column(DateTime)
 
@@ -77,8 +77,8 @@ class OrderItem(Base):
     total_price = Column(Float, nullable=False)
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     # Relationships
     order = relationship("Order", back_populates="items")

@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "timestamp": "2026-06-08T00:00:00Z",
+  "validator": "CoolHan Validator (Task 4)",
+  "target": "C:/sites/CoolHan builder/_harness_test/track4/sample-app/src",
+  "validated_against": {
+    "requirements": "_harness_test/track4/_workspace/01_requirements-track4.md",
+    "specification": "_harness_test/track4/_workspace/02_specification-track4.md"
+  },
+  "portability_notes": [
+    "validator.md prescribes npm-based commands (npm run list-endpoints, npm run list-tables, npm run list-components, npm run spec:parse, npm run code:analyze, npm run build, npm run lint, npm test). This target is a Python/FastAPI project with NO package.json and NO npm scripts. None of the prescribed npm commands are runnable here.",
+    "Endpoints and DB tables were therefore derived by direct source inspection (FastAPI route decorators / APIRouter.include_router and SQLAlchemy __tablename__) instead of npm tooling.",
+    "ACTION ITEM for harness maintainers: validator.md must support a Python/FastAPI toolchain (e.g. route enumeration via app.routes, table enumeration via Base.metadata.tables, pytest, ruff/flake8, pip) or expose language-agnostic extraction steps. The current npm-only assumption is a portability gap."
+  ],
+  "evidence": {
+    "health_check": {
+      "source_code": "OK — src/ exists with 7 .py files (main.py, routes.py, models.py, schemas.py, auth.py, database.py, __init__.py)",
+      "spec_document": "OK — 01_requirements-track4.md and 02_specification-track4.md present; spec includes carried-forward [기획자 의도] boundary + 명시적 금지 목록",
+      "build_environment": "DEGRADED — no package.json/npm; Python project (requirements.txt: fastapi, sqlalchemy, pydantic, python-jose, pytest). npm build steps NOT_RUN due to portability gap.",
+      "test_tools": "PARTIAL — pytest test suite present at tests/test_feedback.py; npm test NOT applicable.",
+      "result": "PASS (sufficient to validate; npm-specific checks marked NOT_RUN with reason)"
+    },
+    "stage_0_planning_intent": {
+      "planning_document": "01_requirements-track4.md",
+      "intended_function": "User Feedback Collection (사용자 피드백 수집)",
+      "intended_approval": "YES",
+      "scope_boundary": "ONLY: (1) POST feedback submit, (2) GET own-feedback list, (3) single feedback table. Explicit forbidden list: health-check API, admin endpoints, email/notification, feedback edit/delete, statistics/dashboard, external integration.",
+      "extraction_method": "Direct source inspection (no npm run list-endpoints/list-tables available — see portability_notes).",
+      "detected_endpoints": [
+        "POST /feedback  (src/routes.py:18 — authorized, spec 3.1)",
+        "GET /feedback   (src/routes.py:37 — authorized, spec 3.2)",
+        "GET /           (src/main.py:20 — pre-existing baseline root route; framework/baseline default, not counted as violation per validation directive)"
+      ],
+      "framework_default_routes_excluded": [
+        "/openapi.json",
+        "/docs",
+        "/docs/oauth2-redirect",
+        "/redoc"
+      ],
+      "detected_tables": [
+        "feedback  (src/models.py:15 __tablename__='feedback' — authorized, spec section 2, 6 fields: id, user_id, content, rating, status, created_at)"
+      ],
+      "unauthorized_additions": [],
+      "forbidden_list_check": {
+        "health_check_endpoint": "ABSENT — no /health or /api/health route found",
+        "admin_endpoints": "ABSENT",
+        "email_notification": "ABSENT — no mail/notification code",
+        "feedback_edit_delete": "ABSENT — no PUT/PATCH/DELETE on /feedback",
+        "statistics_dashboard": "ABSENT — no aggregate/stats/dashboard route",
+        "external_integration": "ABSENT — no external system hooks"
+      },
+      "result": "PASS"
+    },
+    "stage_1_spec_parsing": {
+      "command": "manual spec read (npm run spec:parse NOT_RUN — no npm)",
+      "output": "Spec 02_specification-track4.md parsed: 12 sections + appendix, YAML headers well-formed, [기획자 의도] carry-forward present, data model (1 table/6 fields) and API (2 endpoints) defined.",
+      "result": "PASS"
+    },
+    "stage_2_code_analysis": {
+      "command": "manual AST/import inspection (npm run code:analyze NOT_RUN — no npm)",
+      "output": "All imports resolve within src package; no syntax issues; type hints present on route signatures and Pydantic schemas. FastAPI + SQLAlchemy + python-jose usage consistent.",
+      "result": "PASS"
+    },
+    "stage_3_data_model_validation": {
+      "command": "compared src/models.py vs spec section 2",
+      "output": "Table 'feedback' matches spec exactly: id (INTEGER PK autoincrement), user_id (INTEGER NOT NULL, index=True), content (Text NOT NULL), rating (INTEGER NOT NULL + CheckConstraint rating BETWEEN 1 AND 5), status (String(20) NOT NULL default 'submitted'), created_at (DateTime NOT NULL default utcnow). No updated_at (intentionally excluded). Exactly 1 table — no extra tables.",
+      "result": "PASS"
+    },
+    "stage_4_api_endpoint_validation": {
+      "command": "extracted FastAPI routes vs spec section 3",
+      "output": "POST /feedback -> 201, response_model=FeedbackOut, JWT dependency (get_current_user_id), user_id taken from token not body. GET /feedback -> 200, List[FeedbackOut], filtered by token user_id (ownership isolation). Status codes 201/401/422 (POST) and 200/401 (GET) achievable via dependency + Pydantic validation. Exactly 2 domain endpoints + baseline GET /.",
+      "result": "PASS"
+    },
+    "stage_5_status_value_validation": {
+      "command": "scanned status literals in code vs spec section 4",
+      "output": "Only 'submitted' status used (models.py default + routes.py create). Matches single-status MVP spec. No undefined status values.",
+      "result": "PASS"
+    },
+    "stage_6_security_validation": {
+      "command": "reviewed src/auth.py and routes",
+      "output": "JWT (HS256) required on both endpoints; missing/invalid token -> 401 (HTTPBearer auto_error=False). user_id extracted from JWT 'sub' (request-body user_id ignored). Ownership isolation enforced via WHERE user_id == token subject. SQLAlchemy ORM parameterized queries (no raw SQL injection). NOTE (advisory, not a planning-intent violation): SECRET is a hardcoded constant 'track4-test-secret' — acceptable for a test harness, would be a finding in production.",
+      "result": "PASS"
+    },
+    "stage_7_business_logic_validation": {
+      "command": "compared route handlers vs spec sections 5/10/11",
+      "output": "Submit creates record with server-set user_id and status='submitted'. List returns only caller's rows ordered by id; empty list -> []. content blank rejected (field_validator + min_length=1 -> 422); rating constrained 1..5 (Field ge/le -> 422). Matches acceptance criteria.",
+      "result": "PASS"
+    },
+    "stage_8_test_coverage_validation": {
+      "command": "pytest suite present (npm test NOT applicable)",
+      "output": "tests/test_feedback.py present covering submit/list/auth/validation scenarios. Test run not executed in this validation pass (environment); suite existence and scenario coverage confirmed by inspection.",
+      "result": "PASS"
+    },
+    "stage_9_deployment_readiness": {
+      "command": "npm run build && npm run lint (NOT_RUN — no npm; portability gap)",
+      "output": "npm build/lint not applicable to Python project. requirements.txt pins fastapi, sqlalchemy, pydantic, python-jose, pytest. Code imports are internally consistent. Marked NOT_RUN for npm-specific steps; no blocking issues found by inspection.",
+      "result": "PASS"
+    }
+  },
+  "failed_items": [],
+  "warnings": [
+    "Portability gap: validator.md npm commands (list-endpoints/list-tables/build/lint/test) are not runnable on this Python/FastAPI target; endpoints/tables derived by source inspection.",
+    "Advisory (out of stage-0 scope): JWT SECRET is hardcoded in src/auth.py — fine for harness, flag for production."
+  ],
+  "summary": {
+    "overall_status": "PASS",
+    "total_items": 11,
+    "passed": 11,
+    "failed": 0,
+    "warnings": 2,
+    "planning_intent_check": "PASS",
+    "detected_endpoints": ["POST /feedback", "GET /feedback", "GET / (baseline)"],
+    "detected_tables": ["feedback"],
+    "unauthorized_additions": []
+  }
+}

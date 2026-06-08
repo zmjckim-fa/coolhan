@@ -3,7 +3,7 @@ Notification System Models
 Email, SMS, and push notification management
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from sqlalchemy import Column, String, DateTime, Integer, ForeignKey, Text, Boolean
 from src.database import Base
@@ -59,8 +59,8 @@ class Notification(Base):
     failure_reason = Column(Text)
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
     def __repr__(self):
         return f"<Notification(id={self.id}, type='{self.notification_type}', status='{self.status}')>"

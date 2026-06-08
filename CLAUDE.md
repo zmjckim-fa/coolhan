@@ -78,6 +78,18 @@
 | 통합 검증자 | `agents/integration-validator.md` | 포트/API/DB 실제 검증 (증거 필수) |
 | E2E 테스터 | `agents/e2e-tester.md` | UI/UX/반응형/브라우저 검증 (증거 필수) |
 
+#### 역방향 + 재사용 확장 (NEW, 3명)
+
+기존 사이트를 분석 → 모듈화 → 타 사이트 응용 적용 또는 개발 지속. 정방향이 "의도→스펙→코드"라면 역방향은 "코드→스펙→모듈→재적용".
+
+| 역할 | 에이전트 | 책임 |
+|------|---------|------|
+| 사이트 분석자 | `agents/site-analyzer.md` | 코드 역공학 → Site Analysis Map (stack-agnostic, 증거 필수) |
+| 모듈 추출자 | `agents/module-extractor.md` | 기능·메뉴 → Module Manifest (12섹션 도메인-모듈 포맷, KB 환류) |
+| 교차 사이트 적용자 | `agents/cross-site-adapter.md` | A→B Application Plan (파라미터화 변환, 충돌 감지, P0 승인 게이트) |
+
+> 이식/개발 실행은 정방향 에이전트(Spec Writer→Developer→Validator→QA→DevOps) 재사용. 트리거: "쿨한으로 분석해 / 모듈화해 / A를 B에 적용해 / 개발 이어서".
+
 ---
 
 ## 디렉토리 구조
@@ -97,7 +109,11 @@
 │       ├── developer.md
 │       ├── validator.md
 │       ├── qa-tester.md
-│       └── devops-deployer.md
+│       ├── devops-deployer.md
+│       ├── [Reverse + Reuse Extension]  (NEW)
+│       ├── site-analyzer.md
+│       ├── module-extractor.md
+│       └── cross-site-adapter.md
 └── skills/
     ├── coolhan-spec-driven-framework/
     │   └── SKILL.md
@@ -120,7 +136,17 @@
 | **2026-05-28** | **Development Harness 구축 (Phases 0-4)** | agents/ (6개) + skills/coolhan-development-orchestrator + CLAUDE.md | 사용자의 자연스러운 한국어 명령어로 규격 기반 개발을 자동화하는 완전한 에이전트 팀 시스템 |
 | **2026-05-28** | **Token Efficiency Mode 적용** | agents/ (6개) + skills/ (4개) | 토큰 절약 모드: 결과만 보고, 과정 설명 제외, 소스 화면 미표시 |
 | **2026-05-30** | **Phase D 트랙 1: Harness 고도화 (P0/P1 규칙 반영)** | agents/ (3개: validator, integration-validator, e2e-tester) + skills/coolhan-development-orchestrator + CLAUDE.md | P0 구조 결함 해결: 진입 게이트 추가, evidence field 필수화, Token Efficiency Mode 완화 |
+| **2026-06-06** | **컨텍스트 기반 작업 분할 원칙 추가** | skills/coolhan-development-orchestrator/SKILL.md + agents/developer.md | "결과가 나올 수 있는 명령만 내린다" — 1단위=파일 7개+검증 1개, 검증 없이 완료 선언 금지, 컨텍스트 한계 시 중단점 명시 |
 | **2026-05-30** | **Phase D 트랙 3: 기획자 의도 강제 메커니즘 (P0 구조 결함 해결)** | agents/ (intent-analyzer.md, validator.md, integration-validator.md) + skills/coolhan-development-orchestrator | **핵심: AI의 자의적 기능 추가 원천 차단** — Task 1에 기획자 명확화 + 승인 게이트 추가 / requirements-{id}.md에 기획자 의도 명시 필수 / Task 4에 기획 의도 검증 0단계 추가 (무단 기능 추가 감지) / Task 7에 기획서 체크리스트 강화 |
+| **2026-06-08** | **Phase D 트랙 4: 실제 테스트 앱 기반 재검증 완료** | _harness_test/track4/ (FastAPI 샘플 앱 + Task 1-6 산출물 + 리포트) + CLAUDE.md | **P0 메커니즘 실작동 입증** — 적대적 테스트(클린 vs 위반)로 Validator 0단계가 무단 기능 추가를 정확 감지함 확인 (클린→PASS, 위반→FAIL). 6명 팀 워크플로우 완주. **GAP-1 식별:** validator/qa-tester/devops-deployer가 Node/npm 전용 → Python 비호환 (스택 감지 + 명령 매핑 필요) |
+| **2026-06-08** | **GAP-3 수정: QA 음성 테스트 필수화** | agents/qa-tester.md | 트랙4 GAP-3 해결 — 양성만으론 PASS 불가, 음성(입력거부/인가거부/상태전이거부/중복멱등/경계/보안) 케이스 필수. 음성 0개 시 NOT_RUN. 스펙 섹션10 오류 시나리오 전수 커버 |
+| **2026-06-08** | **GAP-2 수정: 산출물 파일명 표준 통일** | skills/coolhan-development-orchestrator (파일명 표준 섹션) + agents/ (validator, qa-tester) | 트랙4 GAP-2 해결 — `{timestamp}`→`{id}` 통일, `_workspace/{NN}_{artifact}-{id}.{ext}` 단일 규칙 확정 (NN 접두 유무·id/timestamp 혼용 제거) |
+| **2026-06-09** | **연속개발 엔진 (Continuous Development Engine) 내장 — 하네스 자기 고도화** | skills/coolhan-development-orchestrator (🔄 엔진 섹션 + working-mode 기본 ON + 트리거) + _workspace/(_goal/_backlog/_checkpoint) + CLAUDE.md | 목표 1개 수신 시 _goal→_backlog 분해 후 백로그가 빌 때까지 단위별 실행·검증·재개를 사람 개입 없이 자가반복. 자기재개 3경로(세션내 연쇄/세션경계 baton/무인 /loop). 목표 범위 내 재질문 없음, 미지정 시에만 보류(P0). 본 엔진을 엔진 자신에게 적용(self-host)하여 백로그 U1~U6 소진으로 데모 |
+| **2026-06-08** | **지속 개발 릴레이 (Continuous Relay Mode) 추가** | skills/coolhan-development-orchestrator (working-mode + ♾️ 릴레이 섹션 + Phase 0 재개 분기 + 중단점 바통화) + agents/developer.md | 컨텍스트 한계에서 멈추지 않고 _checkpoint.md 저장 + 마지막 줄에 재시작 명령(baton) 방출 → 새 세션이 체크포인트부터 자동 재개. 반복으로 멈추지 않는 개발. 모델별 컨텍스트 예산(대형 3단위/중형 2/소형 1)으로 임계 판단. 무인 반복은 /loop 안내 |
+| **2026-06-08** | **Autonomous Mode 추가** | skills/coolhan-development-orchestrator (working-mode + 자율 진행 섹션) | 명령 1회로 파이프라인 끝까지 자동 연쇄, FAIL 시 자동 복구(1회 재시도→Developer 재실행, 2회 실패만 보고), 정지 조건(P0 게이트/복구불가/컨텍스트 한계/파괴작업)만 멈춤, 자동 결정 _autorun-log.md 기록 |
+| **2026-06-08** | **GAP-1 수정: 정방향 에이전트 stack-agnostic화** | agents/ (validator, qa-tester, devops-deployer) + skills/coolhan-development-orchestrator/references/stack-command-map.md | 트랙4 GAP-1 해결 — 3개 에이전트가 작업 전 스택 감지 후 명령 치환(npm 전제 제거). Python/Django/PHP/Ruby/Go/Java 매핑표 추가. P0 0단계는 언어 무관 항상 실행. |
+| **2026-06-08** | **Chat Brevity Mode 추가** | skills/coolhan-development-orchestrator (working-mode) | 답변 짧게, 채팅엔 성공/실패/판정/다음작업 10줄 이하, 상세는 파일 기록, 질문 없이 다음 작업 자동 진행 |
+| **2026-06-08** | **역방향 + 재사용 하네스 확장 (Site Analyzer / Module Extractor / Cross-Site Adapter)** | agents/ (3개 신규) + skills/coolhan-development-orchestrator (SKILL.md + references 3개) + CLAUDE.md + _harness_test/track5-reverse/ | **기존 사이트 분석→모듈화→타 사이트 응용 적용 능력 추가.** 정방향 파이프라인에 역방향 서브-파이프라인(R1→R2→R3) 합류. 통합 원칙 4대: stack-agnostic 우선(GAP-1 교훈 반영), 파라미터화 재사용, **기획자 의도 강제(P0) 교차-사이트 확장**(승인 모듈만 이식 + Validator 0단계 교차검증), domain-module 환류. 트랙5 적대적 검증으로 무단 끌어오기 차단 입증. |
 
 ---
 
@@ -180,7 +206,7 @@
 | 하네스 | 상태 | 에이전트 | 스킬 | 마지막 업데이트 |
 |--------|------|---------|------|--------------|
 | Release Engineering | ✅ 구성 완료 | 5명 | 2개 | 2026-05-27 |
-| Development | ✅ 고도화 중 (Phase D-1) | 8명 (6 메인 + 2 추가) | 1개 | 2026-05-30 |
+| Development | ✅ 고도화 중 (Phase D-1) | 11명 (6 메인 + 2 추가 + 3 역방향) | 1개 | 2026-06-08 |
 
 ---
 
@@ -211,9 +237,19 @@
 | Task 4 강화 | ✅ 완료 | 0단계 기획 의도 검증 추가 (무단 기능 추가 감지) |
 | 검증 메커니즘 | ✅ 완료 | Task 4, 7, 8에서 기획서 외 기능 추가 자동 감지 |
 
-### 트랙 4: 실제 테스트 앱 기반 재검증 (선행 필요)
+### 트랙 4: 실제 테스트 앱 기반 재검증 ✅ 완료 (2026-06-08)
 
 | 항목 | 상태 | 내용 |
 |------|------|------|
-| 실제 테스트 앱 | ⏳ 필요 | Task 1-8을 실제로 실행할 샘플 프로젝트 |
-| Phase D-3 재검증 | 🔜 대기 | Task 1-8 실행 후 기획자 의도 강제 메커니즘 작동 확인 |
+| 실제 테스트 앱 | ✅ 완료 | FastAPI 샘플 앱 (`_harness_test/track4/sample-app/`) — Task 1-6 전체 실행 |
+| Phase D-3 재검증 | ✅ 완료 | 적대적 테스트(클린 vs 위반)로 기획자 의도 강제 메커니즘 작동 입증 |
+
+**재검증 결과 (`_harness_test/track4/track4-report.md`):**
+- ✅ **P0 메커니즘 작동 확인** — Validator 0단계가 무단 기능 추가를 정확 감지.
+  클린 코드 → PASS(무단추가 0), 위반 코드(`/health`+`health_status` 주입) → FAIL(항목·위치 명시). 오탐/누락 없음.
+- ✅ Task 1-6 6명 팀 워크플로우 실작동 완주 (pytest 8 pass, 배포 스모크 통과).
+- ⚠️ **GAP-1 (P0) 식별** — validator/qa-tester/devops-deployer.md가 Node/npm 전용.
+  Python/FastAPI에서 8·9단계 NOT_RUN. 스택 감지 + 명령 매핑 필요. (단, P0 핵심은 언어 무관이라 영향 없음)
+- ⚠️ GAP-2: 산출물 파일명 불일치 / GAP-3: QA 음성 테스트 부재.
+
+**다음 액션 후보:** GAP-1 수정 (스택 감지 + Python 매핑을 3개 에이전트 정의에 추가).

@@ -3,7 +3,7 @@ Shipping & Logistics Models
 Shipment tracking and delivery management
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from sqlalchemy import Column, String, DateTime, Integer, ForeignKey, Text
 from src.database import Base
@@ -46,8 +46,8 @@ class Shipment(Base):
     dimensions = Column(String(100))
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), index=True)
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     shipped_at = Column(DateTime)
     delivered_at = Column(DateTime)
     estimated_delivery = Column(DateTime)

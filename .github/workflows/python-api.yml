@@ -1,0 +1,71 @@
+name: Python API CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "main.py"
+      - "requirements.txt"
+      - "Dockerfile"
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests with coverage
+        run: |
+          python -m pytest tests/ -v \
+            --cov=src \
+            --cov-report=term-missing \
+            --cov-fail-under=70
+
+      - name: Verify server starts
+        run: |
+          python scripts/init_db.py
+          uvicorn main:app --host 0.0.0.0 --port 8000 &
+          sleep 3
+          curl -f http://localhost:8000/health
+          kill %1
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t coolhan-api:${{ github.sha }} .
+
+      - name: Smoke test Docker image
+        run: |
+          docker run -d --name coolhan-test -p 8000:8000 \
+            -e SECRET_KEY=ci-test-key \
+            coolhan-api:${{ github.sha }}
+          sleep 5
+          curl -f http://localhost:8000/health
+          docker stop coolhan-test
+          docker rm coolhan-test
+
+      - name: Tag as latest
+        run: docker tag coolhan-api:${{ github.sha }} coolhan-api:latest
