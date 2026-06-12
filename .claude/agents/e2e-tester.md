@@ -16,6 +16,7 @@
 7. 반응형 설계 (모바일, 태블릿, 데스크톱)
 8. CSS 무결성 (스타일, 색상, 폰트)
 9. 브라우저 호환성 (Chrome, Firefox, Safari, Edge)
+10. **HX 수용기준 대조 (NEW, 2026-06-09)** — UX Design Lead의 HX 수용기준 + `references/human-experience-standard.md` 체크리스트 전 항목 실측. P0(폼/접근성/반응형/모듈화) 미충족 시 FAIL. 증거(스크린샷/대비측정/개발자도구)를 첨부.
 
 **시점:** Integration Validator 완료 후 또는 배포 직후 (선택)
 **산출물:** e2e-validation-report-{id}.json

@@ -1,0 +1,65 @@
+{
+  "target": "signup-violated.html",
+  "logic_works": true,
+  "logic_note": "doSignup()는 빈 값 차단 후 통과 처리 — 로직은 동작함. 그러나 HX 미달로 FAIL.",
+  "hx_check": {
+    "form_ux": {
+      "pass": false,
+      "evidence": "label 없음 placeholder만(L39,L42), 에러문구 '오류'만 해결방안 없음(L58,L67), 인라인 실시간 검증 없음",
+      "fix": "<label for> 추가, 에러를 '문제+해결안'으로('이메일 형식 오류 → name@example.com'), 인라인 검증 추가"
+    },
+    "accessibility": {
+      "pass": false,
+      "evidence": "div onclick으로 버튼 대체 시맨틱X·키보드X(L51), label 미연결, 본문 텍스트 #aaa/#fff=2.32:1<4.5, 버튼텍스트 #ddd/#ccc=1.18:1, focus ring 없음",
+      "fix": "<button> 사용, <label for> 연결, 텍스트색 #1a1a1a로 대비≥4.5:1, focus-visible 추가"
+    },
+    "responsive": {
+      "pass": false,
+      "evidence": "viewport meta 없음(head), 고정 width:900px(L13), 미디어쿼리 없음, 터치타깃 height 18px<44px(L25)",
+      "fix": "viewport meta 추가, 고정폭 제거(max-width+%), 브레이크포인트 추가, 컨트롤 min-height 44px"
+    },
+    "readability": {
+      "pass": false,
+      "evidence": "본문 font-size 11px<16px(L9,L24,L33), 저대비로 가독 저하",
+      "fix": "본문 ≥16px, 대비 충족"
+    },
+    "buttons": {
+      "pass": false,
+      "evidence": "div 버튼(affordance 약함), hover/active/disabled/loading 상태 없음, 색만으로 비활성 표현",
+      "fix": "<button>+상태별 스타일"
+    },
+    "states": {
+      "pass": false,
+      "evidence": "로딩 상태 없음, 성공은 alert만(L70), 에러 상태 해결안 없음",
+      "fix": "로딩 스피너/성공 토스트/해결안 포함 에러 상태 구현"
+    },
+    "flow": {
+      "pass": true,
+      "evidence": "단일 동작 플로우 자체는 존재(빈값 차단)"
+    },
+    "security_ux": {
+      "pass": false,
+      "evidence": "비밀번호 input type=text로 마스킹 안됨(L42), 강도 안내 없음",
+      "fix": "type=password, autocomplete, 강도 안내"
+    },
+    "modularity": {
+      "pass": false,
+      "evidence": "디자인 토큰 없음, 색상 하드코딩 #aaa/#ccc/#ddd 다수(L9,L23,L30,L31), 인라인 style(L37)",
+      "fix": "CSS 변수 토큰화, 하드코딩 제거"
+    },
+    "integrity": {
+      "pass": false,
+      "evidence": "인라인 스타일 혼재, 위반 주석 다수, 일관성 결여",
+      "fix": "스타일 분리, 일관 네이밍/포맷"
+    }
+  },
+  "p0_items": ["form_ux", "accessibility", "responsive", "modularity"],
+  "p0_failed": ["form_ux", "accessibility", "responsive", "modularity"],
+  "verdict": "FAIL",
+  "reason": "P0 4항목 전부 미충족 — 로직이 동작해도 FAIL. 비P0(가독성·버튼·상태·보안UX·무결성)도 미달.",
+  "contrast_measurements": {
+    "body_text": "#aaaaaa on #ffffff = 2.32:1 (AA FAIL, <4.5)",
+    "button_text": "#dddddd on #cccccc = 1.18:1 (AA FAIL)",
+    "input_border": "#cccccc on #ffffff = 1.61:1 (AA FAIL)"
+  }
+}
