@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.1.0] - 2026-06-13
+
+### Added
+
+- **Cross-Cutting Capabilities (C1–C19)** — 19 harness-wide capability standards in
+  `references/harness-capabilities.md`, injected into agent definitions
+  - C1 interactive elicitation · C2 MCP live-evidence honesty · C3 web research as data
+    (instruction-source boundary) · C4 structured-output schema enforcement
+  - C5 reference-first mandatory pre-read · C6 long-session rule re-injection (relay baton)
+    · C7 workspace hygiene · C8 iterative long-output · C9 failure conduct
+  - C10 no-mock-execution (★ no fabricated test/build/deploy results) · C11 effort scaling
+    · C12 verify-before-assume (+freshness) · C13 completion self-check (+completeness critic)
+  - C14 self-contained delegation · C15 no silent truncation · C16 perspective-diverse
+    verification · C17 loop-until-dry · C18 action-risk taxonomy · C19 evidence-action match
+- **Track 8 adversarial verification** — 14/14 guardrails held under hostile pressure
+  (fabrication, coverage-hiding, prompt injection, approval generalization, destructive
+  pattern-match reflex) — `_harness_test/track8-capabilities/`
+- **Reverse + Reuse pipeline real-world run** — R1/R2 executed on CoolHan's own `src/`
+  (62 routes, 18 models → 10 modules mapped to existing domain library, 0 invented)
+- **Scientific verification standards** — engineering-pass vs scientific-truth separation
+  (`knowledge_base/00_SCIENTIFIC_VERIFICATION_STANDARDS.md`), two-layer verdicts
+- **Human-Experience (HX) first-class standard** — UX design lead agent (Task 1.5),
+  HX vision critic with unattended auto-loop, validator HX P0 gate
+- **Continuous development engine** — goal→backlog self-iterating loop with relay baton
+- **Nominatim (OpenStreetMap) address standard** — replaces carrier/country-specific
+  postcode lookups in `04_shipping_logistics` (CR002)
+
+### Changed
+
+- Global output rules (no monologue, 6-line cap, results-only) enforced across all
+  harnesses; artifact filename standard unified (GAP-2); QA negative tests mandatory (GAP-3)
+- Forward agents made stack-agnostic via detection + command mapping (GAP-1)
+
 ## [0.3.0] - 2026-05-31
 
 ### Added
