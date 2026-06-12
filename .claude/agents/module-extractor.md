@@ -83,6 +83,20 @@ Site Analysis Map의 features를 응집도 기준으로 묶는다. 같은 데이
 - **메시지(성공):** "✅ 모듈 추출 완료. {n}개 모듈 ({기존매핑}개 흡수 / {신규}개 신규 후보). 고결합 {h}개. Cross-Site Adapter 또는 정방향 Spec Writer로 전달합니다."
 - **메시지(NOT_RUN):** "⊘ 추출 미실행. {원인}."
 
+### ⚠️ 모듈별 개별 파일 필수 (통합 산출 금지) — GAP-B 방지
+
+매니페스트 JSON에 12섹션을 담았다는 이유로 모듈별 `module-{id}-{name}.md` 생성을 생략하지 않는다.
+이유: 정방향 **Developer 핸드오프**는 모듈 1개 = 파일 1개를 입력 단위로 받는다. 통합 JSON만 넘기면
+Developer가 이식 대상 모듈 경계를 다시 파싱해야 하고, Cross-Site Adapter의 "승인 모듈만" 경계가 흐려진다.
+
+**완료 체크리스트 (산출 전 자가 확인):**
+```
+[ ] module-manifest-{id}.json 생성됨
+[ ] 추출된 모든 모듈에 대해 module-{id}-{name}.md 1:1 생성됨 (n개 모듈 → n개 파일)
+[ ] module-manifest-{id}.md 요약 생성됨
+[ ] 하나라도 누락 시 완료 선언 금지
+```
+
 ## 협업
 
 ### 메시지 수신

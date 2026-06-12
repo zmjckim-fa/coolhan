@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <!-- 반응형: 뷰포트 meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입</title>
+  <style>
+    /* HX-9 디자인 토큰 (CSS 변수, 하드코딩 색상 금지) */
+    :root {
+      --color-text: #1a1a1a;        /* on #fff → 대비 충족 */
+      --color-bg: #ffffff;
+      --color-primary: #0b5fff;     /* primary 버튼 */
+      --color-primary-text: #ffffff;
+      --color-error: #b00020;       /* on #fff → 대비 충족 */
+      --color-success: #0a7d33;
+      --color-border: #6b7280;
+      --color-muted: #4b5563;
+      --font-base: 16px;            /* 본문 16px+ */
+      --font-label: 16px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --radius: 8px;
+      --touch-target: 44px;         /* 터치 타깃 44px */
+      --line-height: 1.5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-size: var(--font-base);
+      line-height: var(--line-height);
+      color: var(--color-text);
+      background: var(--color-bg);
+      margin: 0;
+      padding: var(--space-lg);
+    }
+    main { max-width: 440px; margin: 0 auto; }
+    h1 { font-size: 28px; margin-bottom: var(--space-lg); }
+    .field { margin-bottom: var(--space-md); }
+    label {
+      display: block;
+      font-size: var(--font-label);
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+    }
+    .required { color: var(--color-error); }
+    input {
+      width: 100%;
+      min-height: var(--touch-target);
+      font-size: var(--font-base);
+      padding: 0 var(--space-md);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+    }
+    /* 포커스 표시(focus ring) 유지 */
+    input:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+    .error-msg {
+      color: var(--color-error);
+      font-size: 14px;
+      margin-top: var(--space-sm);
+      display: none;
+    }
+    .field.invalid .error-msg { display: block; }
+    .field.invalid input { border-color: var(--color-error); }
+    /* primary 버튼 1개, 동사 라벨, 상태 구분 */
+    button.primary {
+      width: 100%;
+      min-height: var(--touch-target);
+      font-size: var(--font-base);
+      font-weight: 600;
+      color: var(--color-primary-text);
+      background: var(--color-primary);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      margin-top: var(--space-md);
+    }
+    button.primary:hover { filter: brightness(0.92); }
+    button.primary:active { filter: brightness(0.85); }
+    button.primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    /* HX-6 상태: 로딩/에러/성공 */
+    .status { margin-top: var(--space-md); font-size: 14px; }
+    .status.loading { color: var(--color-muted); }
+    .status.error { color: var(--color-error); }
+    .status.success { color: var(--color-success); font-weight: 600; }
+    .hint { color: var(--color-muted); font-size: 14px; margin-top: var(--space-sm); }
+    /* HX-3 반응형 미디어쿼리 */
+    @media (max-width: 640px) {
+      body { padding: var(--space-md); }
+      h1 { font-size: 24px; }
+    }
+    @media (min-width: 1025px) {
+      main { max-width: 480px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>회원가입</h1>
+    <!-- 시맨틱 form -->
+    <form id="signup-form" novalidate>
+      <div class="field" id="field-email">
+        <label for="email">이메일 <span class="required" aria-hidden="true">*</span></label>
+        <input type="email" id="email" name="email" autocomplete="email"
+               required aria-required="true" aria-describedby="email-error"
+               placeholder="name@example.com">
+        <!-- 에러문구 + 해결방안 동반 -->
+        <p class="error-msg" id="email-error" role="alert"></p>
+      </div>
+
+      <div class="field" id="field-password">
+        <label for="password">비밀번호 <span class="required" aria-hidden="true">*</span></label>
+        <input type="password" id="password" name="password" autocomplete="new-password"
+               required aria-required="true" aria-describedby="password-hint password-error">
+        <p class="hint" id="password-hint">영문·숫자 포함 8자 이상</p>
+        <p class="error-msg" id="password-error" role="alert"></p>
+      </div>
+
+      <button type="submit" class="primary" id="submit-btn">가입하기</button>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </form>
+  </main>
+
+  <script>
+    // HX-9 모듈화: 단일 책임 검증 함수
+    const form = document.getElementById('signup-form');
+    const emailEl = document.getElementById('email');
+    const pwEl = document.getElementById('password');
+    const statusEl = document.getElementById('status');
+    const submitBtn = document.getElementById('submit-btn');
+
+    function setError(fieldId, errorId, message) {
+      document.getElementById(fieldId).classList.add('invalid');
+      document.getElementById(errorId).textContent = message;
+    }
+    function clearError(fieldId, errorId) {
+      document.getElementById(fieldId).classList.remove('invalid');
+      document.getElementById(errorId).textContent = '';
+    }
+
+    // 에러문구 + 해결방안 동반
+    function validateEmail() {
+      const v = emailEl.value.trim();
+      if (!v) { setError('field-email', 'email-error', '이메일을 입력해 주세요 → name@example.com 형식으로 입력하세요'); return false; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+        setError('field-email', 'email-error', '이메일 형식이 올바르지 않습니다 → name@example.com 형식으로 입력하세요');
+        return false;
+      }
+      clearError('field-email', 'email-error');
+      return true;
+    }
+    function validatePassword() {
+      const v = pwEl.value;
+      if (v.length < 8 || !/[a-zA-Z]/.test(v) || !/[0-9]/.test(v)) {
+        setError('field-password', 'password-error', '비밀번호가 약합니다 → 영문과 숫자를 포함해 8자 이상으로 입력하세요');
+        return false;
+      }
+      clearError('field-password', 'password-error');
+      return true;
+    }
+
+    // 인라인 실시간 검증
+    emailEl.addEventListener('blur', validateEmail);
+    pwEl.addEventListener('blur', validatePassword);
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const ok = [validateEmail(), validatePassword()].every(Boolean);
+      if (!ok) {
+        statusEl.className = 'status error';
+        statusEl.textContent = '입력값을 확인해 주세요.';
+        return;
+      }
+      // 로딩 상태
+      submitBtn.disabled = true;
+      statusEl.className = 'status loading';
+      statusEl.textContent = '가입 처리 중…';
+      try {
+        await new Promise((res) => setTimeout(res, 600)); // 데모용 비동기
+        // 성공 피드백
+        statusEl.className = 'status success';
+        statusEl.textContent = '가입이 완료되었습니다.';
+      } catch (err) {
+        // 에러 상태 + 해결안 (빈 catch 금지)
+        statusEl.className = 'status error';
+        statusEl.textContent = '가입에 실패했습니다 → 잠시 후 다시 시도하거나 네트워크를 확인하세요.';
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
