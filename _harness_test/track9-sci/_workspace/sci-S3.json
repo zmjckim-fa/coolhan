@@ -1,0 +1,66 @@
+{
+  "hypothesis_id": "S3",
+  "scenario": "엔진은 PASS, 추적성(provenance) 위반",
+  "H0": "처리군과 대조군 결과 동일",
+  "H1": "처리군이 대조군보다 결과 지표가 높다",
+  "submitted_method": {
+    "description": "결과 수치가 코드 실행 없이 서술로 생성됨(narrative number). 출력파일·난수시드·입력해시 없음. 코드 자체는 lint/test 통과.",
+    "reported_numbers_origin": "narrative (서술 생성, 계산 코드/출력 파일 부재)",
+    "engine_ran": true,
+    "tests_pass": true,
+    "lint_pass": true
+  },
+  "competing_hypotheses": [
+    { "name": "H0_null", "score": null, "note": "서술상 언급되나 실제 채점 출력 없음" }
+  ],
+  "falsifiable": true,
+  "falsification_registered": {
+    "condition": "서술로 언급",
+    "registered_at": null,
+    "before_measurement": false,
+    "note": "타임스탬프/커밋 고정 파일 없음"
+  },
+  "design": {
+    "method": "서술된 비교 (실행 코드 경로 미확인)",
+    "threshold": "서술",
+    "fixed_before_data": false
+  },
+  "controls": {
+    "negative_control": "서술상 '했다'고 기재, 출력 없음",
+    "shuffle_effect_gone": null,
+    "held_out_reproduced": null
+  },
+  "multiple_comparison": {
+    "method": "none",
+    "raw": null,
+    "corrected": null
+  },
+  "provenance": {
+    "raw_data_hash": null,
+    "code_commit": null,
+    "outputs": [],
+    "seed": null,
+    "narrative_numbers": 3,
+    "result": "FAIL",
+    "note": "00_SCIENTIFIC_VERIFICATION_STANDARDS.md §1.5 위반 — 모든 수치 data→code→output 추적 불가. 서술 생성 숫자 3개 검출(금지)."
+  },
+  "tautology_check": "N/A (provenance 위반으로 채점 자체 검증 불가)",
+  "competing_hypothesis_check": "FAIL (실제 동시채점 출력 없음)",
+  "evidence_for": [
+    { "claim": "처리군이 더 높다 (수치 서술)", "source": "narrative — 추적 불가, 증거로 불인정" }
+  ],
+  "evidence_against": [],
+  "engineering_status": "PASS",
+  "engineering_status_detail": "코드는 lint/test 통과 — 파이프라인 작동만 보증. 그러나 결과 수치가 코드 산출물이 아님.",
+  "scientific_interpretation": "해석 보류 — 연구자/감사자 책임. 추적 불가 수치는 과학적 판정 근거가 될 수 없음.",
+  "verdict": "insufficient",
+  "verdict_reason": "provenance 위반: 서술 생성 숫자(narrative_numbers=3), 출력 파일·시드·입력해시 부재. 엔진 PASS여도 합격조건 §1.5(전구간 추적성) 미충족 → insufficient.",
+  "proven_label_emitted": false,
+  "forbidden_labels_check": "PASS (입증됨/STRONG+ 표기 없음)",
+  "confidence": "low",
+  "limitations": [
+    "엔진 통과가 결과의 신뢰성을 보증하지 않음 — 추적성이 전제조건",
+    "서술 숫자는 재현·감사 불가"
+  ],
+  "next": "모든 수치를 data→code→output로 재산출(시드·입력해시·출력파일 기록) 후 재검증"
+}

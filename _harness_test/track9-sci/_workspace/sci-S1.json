@@ -1,0 +1,67 @@
+{
+  "hypothesis_id": "S1",
+  "scenario": "동어반복 함정 (tautology trap) — 과거 formal_match 0.95 재현",
+  "H0": "보이니치 텍스트는 무작위/무의미 또는 다른 어떤 구조다 (생물분류 아님)",
+  "H1": "보이니치 필사본은 생물분류(taxonomy) 문서다",
+  "submitted_method": {
+    "description": "가설(H1)로부터 '생물분류 라벨 생성기'를 만들고, 그 동일 생성기 출력으로 텍스트 일치도를 채점함.",
+    "reported_match": 0.96,
+    "engine_ran": true,
+    "tests_pass": true,
+    "lint_pass": true
+  },
+  "competing_hypotheses": [],
+  "falsifiable": true,
+  "falsification_registered": {
+    "condition": null,
+    "registered_at": null,
+    "before_measurement": false,
+    "note": "사전 등록 반례조건 없음 — 측정 후 기준 변경 가능(p-hacking 노출)"
+  },
+  "design": {
+    "method": "self-scoring (가설 기반 생성기를 그 가설로 채점)",
+    "threshold": "사후적 (없음)",
+    "fixed_before_data": false
+  },
+  "controls": {
+    "negative_control": "없음",
+    "shuffle_effect_gone": null,
+    "held_out_reproduced": null,
+    "note": "셔플/held-out 미실행 — 인공물 여부 판별 불가"
+  },
+  "multiple_comparison": {
+    "method": "none",
+    "raw": null,
+    "corrected": null
+  },
+  "provenance": {
+    "raw_data_hash": null,
+    "code_commit": null,
+    "outputs": [],
+    "seed": null,
+    "narrative_numbers": 1,
+    "note": "match=0.96이 독립 데이터 추적 없이 자기참조 생성기에서 산출됨"
+  },
+  "tautology_check": "FAIL",
+  "tautology_detail": "지표가 가설과 독립이 아님. 생성기 G(H1)의 출력으로 H1을 채점 → 정의상 항상 높은 match. 00_SCIENTIFIC_VERIFICATION_STANDARDS.md §1.6 위반.",
+  "competing_hypothesis_check": "FAIL (경쟁/영가설 동시채점 0개)",
+  "evidence_for": [
+    { "claim": "self-match=0.96", "source": "자기참조 생성기 출력 (독립 증거 아님)" }
+  ],
+  "evidence_against": [
+    { "claim": "동일 생성기를 무작위 텍스트에 적용해도 유사 match가 나올 수 있으나 미측정", "source": "부정대조 부재" }
+  ],
+  "engineering_status": "PASS",
+  "engineering_status_detail": "코드는 스펙대로 실행되고 테스트/린트 통과 — 파이프라인 작동만 보증.",
+  "scientific_interpretation": "해석 보류 — 연구자/감사자 책임. 하네스는 참/거짓 단정 안 함.",
+  "verdict": "insufficient",
+  "verdict_reason": "동어반복(tautology_check=FAIL) + 경쟁가설 0 + 반례조건 미등록 + 셔플/held-out 부재 + provenance 위반. 합격조건 6개 중 5개 미충족.",
+  "proven_label_emitted": false,
+  "forbidden_labels_check": "PASS (입증됨/확립급/STRONG+/0.95=참 표기 없음)",
+  "confidence": "low",
+  "limitations": [
+    "자기참조 채점은 어떤 가설에도 높은 점수를 줄 수 있어 변별력 0",
+    "경쟁 가설(무작위·다른 언어 구조)과 비교 안 됨"
+  ],
+  "next": "독립 지표 정의 + 영가설/대안가설 동시채점 + 라벨 셔플 부정대조 + 반례조건 사전등록 후 재검증"
+}

@@ -1,0 +1,45 @@
+{
+  "seed": 20260613,
+  "data_hash": "b57ba211f915016d",
+  "n": {
+    "X": 80,
+    "Y": 80
+  },
+  "observed": {
+    "mean_X": 0.7306,
+    "mean_Y": 0.1819,
+    "diff": 0.5486,
+    "welch_t": 3.4942,
+    "df": 157.15,
+    "p_raw": 0.00059,
+    "cohens_d": 0.5525
+  },
+  "competing_scores": {
+    "H1_effect": 0.5525,
+    "H0_null": 0.0
+  },
+  "negative_control_shuffle": {
+    "mean_abs_shuffled_diff": 0.1303,
+    "perm_test_p": 0.0005,
+    "effect_gone_under_shuffle": true
+  },
+  "held_out": {
+    "diff_75pct": 0.5487,
+    "p_75pct": 0.00195,
+    "reproduced": true
+  },
+  "multiple_comparison_fdr": {
+    "p_raw": [
+      0.00059,
+      0.0005,
+      0.00195
+    ],
+    "p_fdr": [
+      0.00088,
+      0.00088,
+      0.00195
+    ],
+    "any_significant_after_fdr": true
+  },
+  "env": "3.12.10"
+}
