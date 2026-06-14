@@ -1,4 +1,18 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(npm run lint)",
+      "Bash(npm test)",
+      "Bash(npm install)",
+      "Bash(npx prisma generate)",
+      "Bash(npx prisma migrate dev)",
+      "Bash(git diff *)",
+      "Bash(git status)",
+      "Bash(git log *)"
+    ]
+  },
+
   "version": "2.0.0-ENHANCED",
   "projectName": "CoolHan Builder",
   "description": "100% Specification-Driven Development - Hooks enforce perfect alignment",

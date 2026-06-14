@@ -69,11 +69,41 @@ jobs:
 - 배포 실패 알림 설정
 
 ## 출력 프로토콜
-- **산출물:**
-  - `GitHub_Repository_Setup.md` — GitHub 저장소 설정 상세
-  - `.github/workflows/ci.yml` — CI 워크플로우
-  - `.github/workflows/publish.yml` — 배포 워크플로우
-  - `DevOps_Checklist.md` — DevOps 완료 체크리스트
+
+| 산출물 | 형식 | 내용 |
+|--------|------|------|
+| `GitHub_Repository_Setup.md` | Markdown | 저장소 URL, 브랜치 보호 규칙, Secrets 목록, 공동작업자 권한 |
+| `.github/workflows/ci.yml` | YAML | PR 트리거, npm install/test/lint 단계 |
+| `.github/workflows/publish.yml` | YAML | Release 트리거, npm build/publish 단계, NPM_TOKEN 참조 |
+| `DevOps_Checklist.md` | Markdown + JSON 블록 | 아래 스키마 준수 |
+
+### DevOps_Checklist.md 스키마 (JSON 블록)
+```json
+{
+  "checklist_version": "1.0",
+  "repo": {
+    "url": "https://github.com/{org}/{repo}",
+    "visibility": "public | private",
+    "branch_protection": { "main": true, "require_pr": true, "require_ci": true }
+  },
+  "secrets": [
+    { "name": "NPM_TOKEN", "status": "set | missing", "expires_at": "YYYY-MM-DD | never" }
+  ],
+  "workflows": [
+    { "file": "ci.yml", "trigger": "pull_request", "status": "active | disabled" },
+    { "file": "publish.yml", "trigger": "release:published", "status": "active | disabled" }
+  ],
+  "npm": {
+    "package_name": "@coolhan/spec-driven-framework",
+    "registry": "https://registry.npmjs.org",
+    "auth_verified": true
+  },
+  "overall_status": "READY | BLOCKED",
+  "blockers": []
+}
+```
+- `overall_status=READY` 조건: 모든 secrets `set`, 모든 workflows `active`, npm auth 검증 완료.
+- 하나라도 미충족 시 `BLOCKED` + `blockers` 배열에 항목명 기입.
 
 ## 협업
 - **기획 리드와의 통신:** GitHub 저장소 설정 확인
