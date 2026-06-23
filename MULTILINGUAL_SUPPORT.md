@@ -1,14 +1,14 @@
-# CoolHan Development Harness - 다국어 지원
+# CoolHan Development Harness - Multilingual Support
 
 **Complete Multilingual Support for 50+ Languages**
 
 ---
 
-## 🌍 지원 언어 및 명령어
+## 🌍 Supported Languages and Commands
 
-CoolHan은 자연스러운 모국어 명령어로 개발할 수 있습니다. 각 언어별로 "CoolHan {action}" 형식을 지원합니다.
+CoolHan lets you develop with natural commands in your own language. Each language supports the "CoolHan {action}" format.
 
-### 주요 언어 (Major Languages)
+### Major Languages
 
 #### 🇰🇷 한국어 (Korean)
 ```
@@ -154,9 +154,9 @@ CoolHan ปรับใช้
 
 ---
 
-### 추가 지원 언어 (Additional Supported Languages)
+### Additional Supported Languages
 
-| 언어 | 국가 | 명령어 패턴 |
+| Language | Country | Command Pattern |
 |------|------|----------|
 | العربية | Arabic | CoolHan {إجراء} |
 | ไทย | Thai | CoolHan {การกระทำ} |
@@ -167,41 +167,41 @@ CoolHan ปรับใช้
 | 한국어 | Hangul | 쿨한으로 {동작} |
 | Ελληνικά | Greek | CoolHan {δράση} |
 | עברית | Hebrew | CoolHan {פעולה} |
-| फार्सी | Persian | CoolHan {عمل} |
+| فارسی | Persian | CoolHan {عمل} |
 
 ---
 
-## 🔤 언어별 에이전트 지원
+## 🔤 Per-Language Agent Support
 
-모든 에이전트는 다국어를 지원합니다:
+All agents support multiple languages:
 
-### Intent Analyzer (의도 분석자)
-- 입력: 50+ 언어의 자연스러운 문장
-- 처리: 자동 언어 감지 및 의도 추출
-- 출력: 영어 구조화 문서 (내부 표준화)
+### Intent Analyzer
+- Input: Natural sentences in 50+ languages
+- Processing: Automatic language detection and intent extraction
+- Output: English structured document (internal standardization)
 
 ```javascript
-// 예시: 자동 언어 감지
+// Example: automatic language detection
 Input: "쿨한으로 사용자 로그인 기능 추가해"  // Korean
 Input: "CoolHan add user login feature"      // English
 Input: "CoolHanで ユーザーログイン機能を追加して" // Japanese
 
-→ 모두 동일한 의도로 인식
-→ 동일한 워크플로우 실행
+→ all recognized as the same intent
+→ same workflow executed
 ```
 
-### Spec Writer (스펙 작가)
-- 입력: 영어 구조화 요구사항
-- 처리: CoolHan 규격 작성 (영어)
-- 출력: 모든 에이전트가 사용 가능한 표준 규격
+### Spec Writer
+- Input: English structured requirements
+- Processing: Writes CoolHan specifications (English)
+- Output: Standard specification usable by all agents
 
-### Developer (개발자)
-- 입력: 영어 규격
-- 처리: 코드 구현 (언어 무관)
-- 출력: 다국어 주석 지원
+### Developer
+- Input: English specifications
+- Processing: Code implementation (language-agnostic)
+- Output: Multilingual comment support
 
 ```javascript
-// 예시: 다국어 주석
+// Example: multilingual comments
 /**
  * User login function
  * 사용자 로그인 함수
@@ -214,32 +214,32 @@ async function loginUser(email, password) {
 
 ---
 
-## 🛠️ 내부 처리 흐름
+## 🛠️ Internal Processing Flow
 
 ```
-사용자 입력 (50+ 언어)
+User input (50+ languages)
     ↓
 [Intent Analyzer]
-- 자동 언어 감지 (language detection)
-- 의도 추출 (intent extraction)
-- 의도 → 영어 표준화
+- Automatic language detection
+- Intent extraction
+- Intent → English standardization
     ↓
 [Spec Writer → Developer → QA/DevOps]
-- 모든 내부 처리는 영어 표준화 규격 기반
-- 코드는 다국어 주석 가능
+- All internal processing is based on the English-standardized specification
+- Code can have multilingual comments
     ↓
-완료 보고 (사용자 원래 언어로)
+Completion report (in the user's original language)
 ```
 
 ---
 
-## 📝 구현 상세
+## 📝 Implementation Details
 
-### Phase 1: Intent Analyzer 다국어 지원
+### Phase 1: Intent Analyzer Multilingual Support
 
-**명령어 패턴 인식:**
+**Command pattern recognition:**
 ```
-한국어:
+Korean:
   - "쿨한으로 {기능} 추가해"
   - "쿨한으로 {기능} 만들어"
   - "쿨한으로 {기능} 개발해"
@@ -249,22 +249,22 @@ English:
   - "CoolHan add {feature}"
   - "CoolHan create {feature}"
 
-日本語:
+Japanese:
   - "CoolHanで{機能}を追加して"
   - "CoolHanで{機能}を作って"
   - "CoolHanで{機能}を開発して"
 
-中文:
+Chinese:
   - "用CoolHan {操作}"
   - "用CoolHan添加{功能}"
   - "用CoolHan创建{功能}"
 
-[더 많은 언어...]
+[more languages...]
 ```
 
-**자동 언어 감지:**
+**Automatic language detection:**
 ```javascript
-// Intent Analyzer가 자동으로 감지
+// The Intent Analyzer detects automatically
 const detectedLanguage = detectLanguage(userInput);
 // Result: 'ko', 'en', 'ja', 'zh', 'es', 'fr', etc.
 
@@ -275,16 +275,16 @@ const standardized = toEnglish(intent);
 // Result: { action: 'add', feature: 'user login', language_source: 'ko' }
 ```
 
-### Phase 2-6: 표준화된 영어 워크플로우
-- 모든 에이전트가 동일한 영어 규격 기반 처리
-- 코드/주석은 다국어 가능
-- 최종 보고는 사용자 원래 언어로
+### Phase 2-6: Standardized English Workflow
+- All agents process based on the same English specification
+- Code/comments can be multilingual
+- The final report is in the user's original language
 
 ---
 
-## 🌐 GitHub 다국어 문서
+## 🌐 GitHub Multilingual Documents
 
-### README.md (다국어)
+### README.md (multilingual)
 ```markdown
 # CoolHan Framework
 
@@ -300,101 +300,101 @@ CoolHan {acción} (Spanish)
 ...
 ```
 
-### 각 언어별 README 생성
-- `README.ko.md` - 한국어
+### Per-language README generation
+- `README.ko.md` - Korean
 - `README.en.md` - English
-- `README.ja.md` - 日本語
-- `README.zh.md` - 中文
-- `README.es.md` - Español
-- `README.fr.md` - Français
-- `README.de.md` - Deutsch
-- `README.it.md` - Italiano
-- `README.pt.md` - Português
-- `README.ru.md` - Русский
-- `README.hi.md` - हिन्दी
+- `README.ja.md` - Japanese
+- `README.zh.md` - Chinese
+- `README.es.md` - Spanish
+- `README.fr.md` - French
+- `README.de.md` - German
+- `README.it.md` - Italian
+- `README.pt.md` - Portuguese
+- `README.ru.md` - Russian
+- `README.hi.md` - Hindi
 - ... (more languages)
 
-### QUICK_START.md (다국어)
-- 동일한 구조로 각 언어별 버전 제공
-- 각 언어의 명령어 예시 포함
+### QUICK_START.md (multilingual)
+- Same structure provided in a per-language version
+- Includes command examples for each language
 
 ---
 
-## 🎯 다국어 지원 체크리스트
+## 🎯 Multilingual Support Checklist
 
-### Intent Analyzer (의도 분석자)
-- [ ] 50+ 언어 자동 감지 로직 추가
-- [ ] 각 언어별 명령어 패턴 정의
-- [ ] 의도 추출 알고리즘 검증
-- [ ] 영어로 표준화하는 매핑 테이블
+### Intent Analyzer
+- [ ] Add auto-detection logic for 50+ languages
+- [ ] Define command patterns per language
+- [ ] Verify intent extraction algorithm
+- [ ] Mapping table for standardization to English
 
-### Spec Writer (스펙 작가)
-- [ ] 다국어 입력 처리 확인 (불필요 - 이미 표준화됨)
-- [ ] 규격 문서 작성 (영어 유지)
+### Spec Writer
+- [ ] Confirm multilingual input handling (not needed - already standardized)
+- [ ] Write specification documents (keep in English)
 
-### Developer (개발자)
-- [ ] 다국어 코드 주석 가이드 작성
-- [ ] 다국어 커밋 메시지 지원
+### Developer
+- [ ] Write multilingual code comment guide
+- [ ] Support multilingual commit messages
 
-### Validator (검증자)
-- [ ] 다국어 에러 메시지 지원
-- [ ] 다국어 검증 리포트
+### Validator
+- [ ] Support multilingual error messages
+- [ ] Multilingual validation reports
 
-### QA/DevOps (테스터/배포자)
-- [ ] 다국어 테스트 리포트
-- [ ] 다국어 배포 로그
+### QA/DevOps
+- [ ] Multilingual test reports
+- [ ] Multilingual deployment logs
 
-### 문서
-- [ ] README.md 다국어 버전
-- [ ] QUICK_START.md 다국어 버전
-- [ ] 각 에이전트 정의에 다국어 지원 명시
+### Documentation
+- [ ] Multilingual versions of README.md
+- [ ] Multilingual versions of QUICK_START.md
+- [ ] State multilingual support in each agent definition
 
 ---
 
-## 📊 언어별 사용 통계 (예상)
+## 📊 Per-Language Usage Statistics (Estimated)
 
-| 언어 | 사용자 수 | 지원 우선순위 |
+| Language | Users | Support Priority |
 |------|---------|------------|
-| 한국어 | 51M | 🟢 Tier 1 |
-| 中文 (Simplified) | 930M | 🟢 Tier 1 |
+| Korean | 51M | 🟢 Tier 1 |
+| Chinese (Simplified) | 930M | 🟢 Tier 1 |
 | English | 1.5B+ | 🟢 Tier 1 |
-| Español | 559M | 🟡 Tier 2 |
-| Français | 280M | 🟡 Tier 2 |
-| 日本語 | 99M | 🟡 Tier 2 |
-| Português | 263M | 🟡 Tier 2 |
-| Deutsch | 95M | 🟡 Tier 2 |
-| Русский | 258M | 🟡 Tier 2 |
-| हिन्दी | 260M | 🟡 Tier 2 |
-| 其他 | 1B+ | 🔴 Tier 3 |
+| Spanish | 559M | 🟡 Tier 2 |
+| French | 280M | 🟡 Tier 2 |
+| Japanese | 99M | 🟡 Tier 2 |
+| Portuguese | 263M | 🟡 Tier 2 |
+| German | 95M | 🟡 Tier 2 |
+| Russian | 258M | 🟡 Tier 2 |
+| Hindi | 260M | 🟡 Tier 2 |
+| Others | 1B+ | 🔴 Tier 3 |
 
 ---
 
-## 🚀 배포 계획
+## 🚀 Rollout Plan
 
-### Phase 1: Core Languages (이번 업데이트)
-- 한국어, English, 中文, 日本語, Español
+### Phase 1: Core Languages (this update)
+- Korean, English, Chinese, Japanese, Spanish
 
-### Phase 2: Extended Languages (다음 업데이트)
-- Français, Deutsch, Italiano, Português, Русский, हिन्दी
+### Phase 2: Extended Languages (next update)
+- French, German, Italian, Portuguese, Russian, Hindi
 
-### Phase 3: Global Languages (미래)
-- 50+ 모든 언어 지원
+### Phase 3: Global Languages (future)
+- Support for all 50+ languages
 
 ---
 
-## 💡 사용 예시
+## 💡 Usage Examples
 
-### 한국어 사용자
+### Korean user
 ```
-사용자: "쿨한으로 주문 결제 기능 만들어"
-→ 자동으로 Korean으로 감지
-→ 의도: add payment_processing feature
-→ 규격 작성 (영어)
-→ 개발 실행
-→ 완료 보고 (한국어로)
+User: "쿨한으로 주문 결제 기능 만들어"
+→ automatically detected as Korean
+→ Intent: add payment_processing feature
+→ Spec generation (English)
+→ Development execution
+→ Completion report (in Korean)
 ```
 
-### English 사용자
+### English user
 ```
 User: "CoolHan add payment processing feature"
 → Automatically detected as English
@@ -404,27 +404,26 @@ User: "CoolHan add payment processing feature"
 → Completion report (English)
 ```
 
-### Japanese 사용자
+### Japanese user
 ```
-ユーザー: "CoolHanで決済機能を追加して"
-→ 自動的に Japanese として検出
-→ 意図: add payment_processing feature
-→ 仕様書作成 (英語)
-→ 開発実行
-→ 完了報告 (日本語で)
+User: "CoolHanで決済機能を追加して"
+→ automatically detected as Japanese
+→ Intent: add payment_processing feature
+→ Spec generation (English)
+→ Development execution
+→ Completion report (in Japanese)
 ```
 
-### Chinese 사용자
+### Chinese user
 ```
-用户: "用CoolHan添加支付处理功能"
-→ 自动检测为 Chinese
-→ 意图: add payment_processing feature
-→ 规范生成 (英文)
-→ 开发执行
-→ 完成报告 (中文)
+User: "用CoolHan添加支付处理功能"
+→ automatically detected as Chinese
+→ Intent: add payment_processing feature
+→ Spec generation (English)
+→ Development execution
+→ Completion report (in Chinese)
 ```
 
 ---
 
-**다국어 지원으로 전 세계 개발자가 모국어로 CoolHan을 사용할 수 있습니다!** 🌍
-
+**With multilingual support, developers worldwide can use CoolHan in their native language!** 🌍

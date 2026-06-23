@@ -1,113 +1,113 @@
-# Windows 프로그램 - 기본 논리 (Windows Desktop App Basic Logic)
+# Windows Programs - Basic Logic (Windows Desktop App Basic Logic)
 
-## 1. Windows 프로그램의 특징
+## 1. Characteristics of Windows Programs
 
-Windows 프로그램은 **Windows 운영체제에서 실행되는 설치형 애플리케이션**입니다.
+A Windows program is an **installable application that runs on the Windows operating system**.
 
-### 핵심 특징
+### Key Characteristics
 ```
-- 사용자가 설치해서 사용
-- 로컬 리소스 (파일, 레지스트리) 접근 가능
-- 높은 성능과 자유도
-- 심사 없이 배포 가능
-- 유지보수 복잡성 증가
+- Installed and used by the user
+- Can access local resources (files, registry)
+- High performance and flexibility
+- Can be distributed without review
+- Increased maintenance complexity
 ```
 
 ---
 
-## 2. 앱 아키텍처 선택지
+## 2. App Architecture Options
 
 ### 2.1 WPF (Windows Presentation Foundation)
 ```
-.NET Framework 기반
-- XAML을 이용한 UI 정의
-- 데이터 바인딩 강력
-- MVVM 패턴에 적합
-- Windows 7 이상 지원
+Based on .NET Framework
+- UI defined with XAML
+- Powerful data binding
+- Well-suited to the MVVM pattern
+- Supports Windows 7 and later
 ```
 
 ### 2.2 WinForms
 ```
-.NET Framework 기반
-- 빠른 개발
-- 간단한 애플리케이션용
-- 최신 기술보다 구식
+Based on .NET Framework
+- Rapid development
+- For simple applications
+- Older than the latest technologies
 ```
 
 ### 2.3 UWP (Universal Windows Platform)
 ```
-Windows 10+ 전용
-- 모던 UI
-- Windows Store 배포
-- 제한된 권한 (Sandboxed)
+Windows 10+ only
+- Modern UI
+- Windows Store distribution
+- Restricted permissions (Sandboxed)
 ```
 
 ### 2.4 Electron
 ```
-웹 기술 기반 (HTML/CSS/JavaScript)
-- 크로스 플랫폼 (Windows/Mac/Linux)
-- 빠른 개발
-- 성능 오버헤드
+Based on web technologies (HTML/CSS/JavaScript)
+- Cross-platform (Windows/Mac/Linux)
+- Rapid development
+- Performance overhead
 ```
 
 ---
 
-## 3. 프로그램 생명주기
+## 3. Program Lifecycle
 
-### 3.1 시작 흐름
+### 3.1 Startup Flow
 ```
-1. 사용자가 exe 파일 실행
-2. Main() 함수 호출
-3. 애플리케이션 초기화
-4. 메인 윈도우 생성
-5. 이벤트 루프 시작
-```
-
-### 3.2 윈도우 메시지 루프
-```
-getMessage() - Windows 메시지 대기
-    ↓
-메시지 처리 (이벤트 발생)
-    ↓
-화면 갱신
-    ↓
-반복...
+1. User runs the exe file
+2. Main() function is called
+3. Application initialization
+4. Main window creation
+5. Event loop starts
 ```
 
-### 3.3 종료 흐름
+### 3.2 Window Message Loop
 ```
-1. 사용자가 X 버튼 클릭
-2. OnClosing 이벤트
-3. 리소스 정리
-4. 애플리케이션 종료
+getMessage() - Wait for a Windows message
+    ↓
+Message processing (event raised)
+    ↓
+Screen refresh
+    ↓
+Repeat...
+```
+
+### 3.3 Shutdown Flow
+```
+1. User clicks the X button
+2. OnClosing event
+3. Resource cleanup
+4. Application exit
 ```
 
 ---
 
-## 4. UI 구조
+## 4. UI Structure
 
-### 4.1 창(Window) 계층
+### 4.1 Window Hierarchy
 ```
-Main Window (메인 창)
-├─ Menu Bar (메뉴바)
-├─ Toolbar (도구모음)
-├─ Content Area (콘텐츠 영역)
-│   └─ Panels, Buttons, TextBox 등
-└─ Status Bar (상태바)
-```
-
-### 4.2 대화상자(Dialog)
-```
-Modal Dialog (모달)
-- 부모 창을 차단
-- OK/Cancel 버튼
-
-Modeless Dialog (비모달)
-- 독립적으로 작동
-- 여러 개 열 수 있음
+Main Window
+├─ Menu Bar
+├─ Toolbar
+├─ Content Area
+│   └─ Panels, Buttons, TextBox, etc.
+└─ Status Bar
 ```
 
-### 4.3 컨트롤(Control)
+### 4.2 Dialogs
+```
+Modal Dialog
+- Blocks the parent window
+- OK/Cancel buttons
+
+Modeless Dialog
+- Operates independently
+- Multiple can be open
+```
+
+### 4.3 Controls
 ```
 Button, TextBox, Label
 CheckBox, RadioButton
@@ -118,118 +118,118 @@ TreeView
 
 ---
 
-## 5. 데이터 저장소
+## 5. Data Stores
 
-### 5.1 윈도우 레지스트리
+### 5.1 Windows Registry
 ```
-목적: 설정 저장
-위치: HKEY_CURRENT_USER\Software\[AppName]\
-예:
-- 마지막 열었던 파일
-- 사용자 설정
-- 라이센스 정보
-```
-
-### 5.2 로컬 파일
-```
-XML, JSON, INI 파일
-- 사용자 데이터
-- 설정
-- 캐시
-
-위치:
-- AppData\Local (앱별)
-- AppData\Roaming (여러 PC 동기화)
+Purpose: Storing settings
+Location: HKEY_CURRENT_USER\Software\[AppName]\
+Examples:
+- Last opened file
+- User settings
+- License information
 ```
 
-### 5.3 데이터베이스
+### 5.2 Local Files
+```
+XML, JSON, INI files
+- User data
+- Settings
+- Cache
+
+Locations:
+- AppData\Local (per-app)
+- AppData\Roaming (synced across multiple PCs)
+```
+
+### 5.3 Database
 ```
 SQLite
-- 설치 불필요
-- 가벼움
-- 로컬 데이터 저장
+- No installation required
+- Lightweight
+- Stores local data
 
 SQL Server Express
-- 더 많은 기능
-- 설치 필요
-- 복잡한 애플리케이션용
+- More features
+- Requires installation
+- For complex applications
 ```
 
-### 5.4 클라우드/서버
+### 5.4 Cloud/Server
 ```
-REST API를 통한 통신
-- 클라우드 저장
-- 동기화
+Communication via REST API
+- Cloud storage
+- Synchronization
 ```
 
 ---
 
-## 6. 멀티스레딩 (Multithreading)
+## 6. Multithreading
 
-### 6.1 UI 스레드
+### 6.1 UI Thread
 ```
-메인 스레드 = UI 스레드
-- 모든 UI 업데이트는 메인 스레드에서만
-- 차단되면 UI 응답 없음
+Main thread = UI thread
+- All UI updates must happen on the main thread only
+- If blocked, the UI becomes unresponsive
 ```
 
-### 6.2 백그라운드 작업
+### 6.2 Background Work
 ```
-Task를 사용한 비동기 처리:
-1. 오래 걸리는 작업을 별도 스레드에서 실행
-2. 완료 후 UI 스레드에서 업데이트
-3. 사용자 응답성 유지
+Asynchronous processing using Task:
+1. Run long-running work on a separate thread
+2. Update on the UI thread after completion
+3. Keep the app responsive to the user
 
-예:
-- 파일 읽기/쓰기
-- 네트워크 요청
-- 데이터 처리
+Examples:
+- Reading/writing files
+- Network requests
+- Data processing
 ```
 
 ### 6.3 Async/Await
 ```
-비동기 프로그래밍 패턴
+Asynchronous programming pattern
 async Task LongRunningOperation()
 {
     await Task.Delay(1000);
-    // UI 업데이트
+    // UI update
 }
 ```
 
 ---
 
-## 7. 파일 시스템 (File System)
+## 7. File System
 
-### 7.1 파일 경로
+### 7.1 File Paths
 ```
-프로그램 설치 경로: Program Files
+Program install path: Program Files
 - C:\Program Files\[AppName]\
 
-사용자 데이터:
+User data:
 - C:\Users\[Username]\AppData\Local\[AppName]\
 - C:\Users\[Username]\AppData\Roaming\[AppName]\
 
-공용 폴더:
+Common folders:
 - Documents, Downloads, Desktop
 ```
 
-### 7.2 파일 I/O
+### 7.2 File I/O
 ```
 C# File/StreamReader/StreamWriter
-- 파일 읽기
-- 파일 쓰기
-- 스트림 처리
+- Reading files
+- Writing files
+- Stream processing
 
-권한 확인:
-- 쓰기 권한이 있는지 확인
-- 파일 존재 확인
+Permission checks:
+- Verify that write permission exists
+- Check whether the file exists
 ```
 
 ---
 
-## 8. 레지스트리 (Registry)
+## 8. Registry
 
-### 8.1 레지스트리 구조
+### 8.1 Registry Structure
 ```
 HKEY_CURRENT_USER
 ├─ Software
@@ -240,250 +240,249 @@ HKEY_CURRENT_USER
 │        └─ ...
 ```
 
-### 8.2 레지스트리 사용
+### 8.2 Using the Registry
 ```
-읽기: Registry.GetValue()
-쓰기: Registry.SetValue()
+Read: Registry.GetValue()
+Write: Registry.SetValue()
 
-주의:
-- 레지스트리 쓰기는 느림
-- 자주 쓰면 안 됨
-- 설정 저장소로만 사용
+Notes:
+- Registry writes are slow
+- Should not be written frequently
+- Use only as a settings store
 ```
 
 ---
 
-## 9. 설치 관리자 (Installer)
+## 9. Installer
 
 ### 9.1 MSI (Microsoft Installer)
 ```
-표준 Windows 설치 형식
-- 자동 제거(Uninstall) 가능
-- 버전 관리
-- 파일 무결성 검증
+Standard Windows installation format
+- Supports automatic uninstall
+- Version management
+- File integrity verification
 ```
 
-### 9.2 설치 프로세스
+### 9.2 Installation Process
 ```
-1. 설치 경로 선택
-2. 바로가기 생성
-3. 파일 복사
-4. 레지스트리 설정
-5. 서비스 등록 (필요시)
+1. Select install path
+2. Create shortcuts
+3. Copy files
+4. Configure registry
+5. Register service (if needed)
 ```
 
-### 9.3 자동 업데이트
+### 9.3 Automatic Updates
 ```
-프로그램 내부에서:
-1. 새 버전 확인
-2. 다운로드
-3. 백업
-4. 설치
-5. 재시작
+From within the program:
+1. Check for a new version
+2. Download
+3. Back up
+4. Install
+5. Restart
 ```
 
 ---
 
-## 10. 보안
+## 10. Security
 
-### 10.1 관리자 권한
+### 10.1 Administrator Privileges
 ```
-매니페스트 파일에서 선언:
-- requireAdministrator (항상 관리자)
-- asInvoker (일반 사용자)
+Declared in the manifest file:
+- requireAdministrator (always administrator)
+- asInvoker (normal user)
 
-관리자 권한이 필요한 경우:
-- 시스템 파일 수정
-- 서비스 설치
-```
-
-### 10.2 코드 서명
-```
-프로그램에 디지털 서명
-- 출판사 확인
-- 파일 무결성 보증
-- 사용자 신뢰성 증대
+When administrator privileges are required:
+- Modifying system files
+- Installing services
 ```
 
-### 10.3 데이터 보안
+### 10.2 Code Signing
 ```
-민감한 정보 암호화:
+Digitally sign the program
+- Verify the publisher
+- Guarantee file integrity
+- Increase user trust
+```
+
+### 10.3 Data Security
+```
+Encrypt sensitive information:
 - Data Protection API (DPAPI)
-- 비밀번호는 평문 저장 금지
+- Never store passwords in plaintext
 ```
 
 ---
 
-## 11. 성능 최적화
+## 11. Performance Optimization
 
-### 11.1 로딩 시간
+### 11.1 Loading Time
 ```
-- Lazy loading (필요할 때만 로드)
-- 백그라운드에서 초기화
-- 스플래시 화면 표시
-```
-
-### 11.2 메모리 관리
-```
-- 큰 이미지는 스트림으로 처리
-- 사용하지 않는 리소스는 해제
-- WeakReference 사용
+- Lazy loading (load only when needed)
+- Initialize in the background
+- Display a splash screen
 ```
 
-### 11.3 응답성 (Responsiveness)
+### 11.2 Memory Management
 ```
-- 메인 스레드 차단 금지
-- Task를 사용한 비동기 작업
-- Progress 표시 (진행률 바)
+- Process large images as streams
+- Release unused resources
+- Use WeakReference
+```
+
+### 11.3 Responsiveness
+```
+- Never block the main thread
+- Asynchronous work using Task
+- Show progress (progress bar)
 ```
 
 ---
 
-## 12. 배포 방식
+## 12. Distribution Methods
 
-### 12.1 MSI 설치 프로그램
+### 12.1 MSI Installer
 ```
-장점:
-- 표준 설치 프로세스
-- 자동 제거 가능
-- 버전 관리
+Pros:
+- Standard installation process
+- Supports automatic uninstall
+- Version management
 
-단점:
-- 개발 복잡
-- 파일 크기 큼
-```
-
-### 12.2 포터블 버전 (EXE)
-```
-장점:
-- 설치 불필요
-- 빠름
-- 여러 PC에서 사용 가능
-
-단점:
-- 사용자 설정 관리 복잡
-- 바로가기 생성 안 됨
+Cons:
+- Complex to develop
+- Large file size
 ```
 
-### 12.3 클라우드/앱 스토어
+### 12.2 Portable Version (EXE)
+```
+Pros:
+- No installation required
+- Fast
+- Usable on multiple PCs
+
+Cons:
+- Managing user settings is complex
+- Shortcuts are not created
+```
+
+### 12.3 Cloud/App Store
 ```
 Microsoft Store
-- 자동 업데이트
-- 사용자 신뢰성
+- Automatic updates
+- User trust
 ```
 
 ---
 
-## 13. 에러 처리 및 로깅
+## 13. Error Handling and Logging
 
-### 13.1 예외 처리
+### 13.1 Exception Handling
 ```
-try-catch 블록
-- 예상 가능한 에러 처리
-- 사용자에게 명확한 메시지
+try-catch blocks
+- Handle predictable errors
+- Clear messages to the user
 
 Unhandled Exception Handler
-- 예상 불가능한 에러 처리
-- 크래시 리포트 생성
+- Handle unpredictable errors
+- Generate crash reports
 ```
 
-### 13.2 로깅
+### 13.2 Logging
 ```
-파일 기반 로깅:
-- 디버깅 정보
-- 에러 로그
-- 사용 패턴
+File-based logging:
+- Debugging information
+- Error logs
+- Usage patterns
 
-위치:
+Location:
 - AppData\Local\[AppName]\Logs\
 ```
 
 ---
 
-## 14. 버전 관리
+## 14. Version Management
 
-### 14.1 프로그램 버전
+### 14.1 Program Version
 ```
-AssemblyVersion: 내부 버전
-FileVersion: 파일 속성에 표시
-ProductVersion: 사용자 보이는 버전
+AssemblyVersion: internal version
+FileVersion: shown in file properties
+ProductVersion: version visible to users
 
-형식: Major.Minor.Build.Revision
-예: 1.0.0.0
+Format: Major.Minor.Build.Revision
+Example: 1.0.0.0
 ```
 
-### 14.2 호환성
+### 14.2 Compatibility
 ```
-이전 버전 설정 마이그레이션
-- 레지스트리 구조 변경
-- 파일 형식 변경 시 변환
-- 롤백 지원
+Migrating settings from previous versions
+- Registry structure changes
+- Convert when file formats change
+- Rollback support
 ```
 
 ---
 
-## 15. 사용자 경험 (UX)
+## 15. User Experience (UX)
 
-### 15.1 설정 저장
+### 15.1 Saving Settings
 ```
-마지막 상태 저장:
-- 창 크기/위치
-- 열었던 문서
-- 사용자 선호도
+Save the last state:
+- Window size/position
+- Opened documents
+- User preferences
 ```
 
-### 15.2 진행 표시
+### 15.2 Progress Indication
 ```
-장시간 작업 시:
+For long-running operations:
 - Progress Bar
-- Status 메시지
-- Cancel 버튼
+- Status messages
+- Cancel button
 ```
 
-### 15.3 도움말
+### 15.3 Help
 ```
-- 온라인 도움말 (CHM)
-- 인앱 팁
-- 마우스 오버 Tooltip
+- Online help (CHM)
+- In-app tips
+- Mouse-over Tooltip
 ```
 
 ---
 
-## 16. 주요 프레임워크
+## 16. Key Frameworks
 
 ```
 UI:
-- WPF (권장)
-- WinForms (레거시)
+- WPF (recommended)
+- WinForms (legacy)
 
-데이터:
+Data:
 - Entity Framework Core
 - Dapper
 - SQLite
 
-네트워킹:
+Networking:
 - HttpClient
-- WCF (레거시)
+- WCF (legacy)
 
-로깅:
+Logging:
 - Serilog
 - NLog
 
-의존성 주입:
+Dependency Injection:
 - Microsoft.Extensions.DependencyInjection
 
-테스트:
+Testing:
 - xUnit
 - Moq
 ```
 
 ---
 
-## 17. 다음 문서로 읽어야 할 것
+## 17. Documents to Read Next
 
-1. **core_features.md** - Windows 앱의 일반적인 기능
-2. **architecture.md** - MVVM, MVP 패턴
-3. **installer_guide.md** - 설치 프로그램 구성
-4. **api_standard.md** - 네트워킹 표준
-5. **spec_template.md** - Windows 앱 기획서 템플릿
-
+1. **core_features.md** - Common features of Windows apps
+2. **architecture.md** - MVVM, MVP patterns
+3. **installer_guide.md** - Installer configuration
+4. **api_standard.md** - Networking standards
+5. **spec_template.md** - Windows app specification template

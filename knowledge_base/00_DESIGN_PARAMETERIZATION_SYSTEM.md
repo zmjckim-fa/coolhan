@@ -1,362 +1,362 @@
-# 디자인 매개변수화 시스템 (Design Parameterization System)
+# Design Parameterization System
 
-## 개요 (Overview)
+## Overview
 
-데이터베이스와 API만 다양화하는 것으로는 부족하다. **CSS, 색상, 레이아웃, 타이포그래피도 프로젝트마다 다르게 적용되어야 한다.**
+Diversifying only the database and API is not enough. **CSS, colors, layout, and typography must also be applied differently per project.**
 
-이 시스템은:
-1. 온라인에서 사용되는 색상과 디자인 철학을 체계화
-2. 개발 완료 후에도 CSS 세트만 교체하면 전체 UI가 달라지도록 모듈화
-3. 개발자가 "모던", "차가움", "발랄함" 같은 추상적 개념을 선택하면 구체적인 색상/타이포그래피/레이아웃이 자동 결정
+This system:
+1. Systematizes the colors and design philosophies used online
+2. Modularizes the UI so that swapping the CSS set alone changes the entire UI, even after development is complete
+3. Automatically determines concrete colors/typography/layout when the developer selects abstract concepts like "modern," "cool," or "vibrant"
 
 ---
 
-## 1. 디자인 특성 분류 (Design Characteristic Classification)
+## 1. Design Characteristic Classification
 
-### 1.1 디자인 스타일 차원 (Design Style Dimensions)
+### 1.1 Design Style Dimensions
 
-온라인 디자인의 주요 특성을 다차원 공간으로 정의:
+Defines the key characteristics of online design as a multidimensional space:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ 차원 1: 온도감 (Warmth)                                      │
-│  ├─ 차가움 (Cool) ←───────────────┼───────────→ 따뜻함 (Warm)
-│  └─ 특징: 파랑/보라 ←──────────────┼───────────→ 주황/빨강
+│ Dimension 1: Warmth                                          │
+│  ├─ Cool ←───────────────┼───────────→ Warm
+│  └─ Traits: blue/purple ←──────────────┼───────────→ orange/red
 │                                                              │
-│ 차원 2: 에너지 (Energy Level)                                │
-│  ├─ 차분함 (Calm) ←───────────────┼───────────→ 발랄함 (Vibrant)
-│  └─ 특징: 회색톤 ←──────────────────┼───────────→ 포화된 색
+│ Dimension 2: Energy Level                                   │
+│  ├─ Calm ←───────────────┼───────────→ Vibrant
+│  └─ Traits: gray tones ←──────────────────┼───────────→ saturated colors
 │                                                              │
-│ 차원 3: 현대성 (Modernity)                                   │
-│  ├─ 클래식 (Classic) ←───────────────┼───────────→ 모던 (Modern)
-│  └─ 특징: 의존형 ←──────────────────┼───────────→ 미니멀/기하
+│ Dimension 3: Modernity                                      │
+│  ├─ Classic ←───────────────┼───────────→ Modern
+│  └─ Traits: dependent ←──────────────────┼───────────→ minimal/geometric
 │                                                              │
-│ 차원 4: 형식성 (Formality)                                   │
-│  ├─ 캐주얼 (Casual) ←───────────────┼───────────→ 포멀 (Formal)
-│  └─ 특징: 둥근모서리 ←──────────────┼───────────→ 각진모서리
+│ Dimension 4: Formality                                      │
+│  ├─ Casual ←───────────────┼───────────→ Formal
+│  └─ Traits: rounded corners ←──────────────┼───────────→ sharp corners
 │                                                              │
-│ 차원 5: 복잡도 (Complexity)                                  │
-│  ├─ 미니멀 (Minimal) ←───────────────┼───────────→ 리치 (Rich)
-│  └─ 특징: 최소한의 요소 ←───────────┼───────────→ 많은 시각요소
+│ Dimension 5: Complexity                                     │
+│  ├─ Minimal ←───────────────┼───────────→ Rich
+│  └─ Traits: minimal elements ←───────────┼───────────→ many visual elements
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 1.2 디자인 프로필 정의 (Design Profile Definitions)
+### 1.2 Design Profile Definitions
 
-각 프로필은 5개 차원에서의 위치로 정의:
+Each profile is defined by its position across the 5 dimensions:
 
 ```
-프로필명: "우아함 (Elegant)"
-  온도감: 80 (따뜻함)
-  에너지: 30 (차분함)
-  현대성: 70 (모던)
-  형식성: 80 (포멀)
-  복잡도: 40 (미니멀 쪽)
+Profile name: "Elegant"
+  Warmth: 80 (warm)
+  Energy: 30 (calm)
+  Modernity: 70 (modern)
+  Formality: 80 (formal)
+  Complexity: 40 (toward minimal)
   
-특징: 고급스럽고 정제된 분위기, 금융/의료 분야에 적합
+Traits: Refined, high-end atmosphere; suited to finance/healthcare
 
-프로필명: "신선함 (Fresh)"
-  온도감: 50 (중립)
-  에너지: 75 (발랄함)
-  현대성: 85 (최신 모던)
-  형식성: 40 (캐주얼)
-  복잡도: 60 (평균)
+Profile name: "Fresh"
+  Warmth: 50 (neutral)
+  Energy: 75 (vibrant)
+  Modernity: 85 (latest modern)
+  Formality: 40 (casual)
+  Complexity: 60 (average)
   
-특징: 젊고 활발한 분위기, 소셜미디어/스타트업에 적합
+Traits: Young and lively atmosphere; suited to social media/startups
 
-프로필명: "신뢰감 (Trustworthy)"
-  온도감: 40 (차가움)
-  에너지: 40 (차분함)
-  현대성: 60 (모던)
-  형식성: 70 (포멀)
-  복잡도: 30 (미니멀)
+Profile name: "Trustworthy"
+  Warmth: 40 (cool)
+  Energy: 40 (calm)
+  Modernity: 60 (modern)
+  Formality: 70 (formal)
+  Complexity: 30 (minimal)
   
-특징: 안정적이고 신뢰할 수 있는 분위기, 금융/기업에 적합
+Traits: Stable and reliable atmosphere; suited to finance/enterprise
 ```
 
 ---
 
-## 2. 색상 정의 시스템 (Color Definition System)
+## 2. Color Definition System
 
-### 2.1 색상 팔레트 기본 라이브러리 (Base Color Palette Library)
+### 2.1 Base Color Palette Library
 
-#### A. 기본 색상군 (Primary Color Groups)
+#### A. Primary Color Groups
 
 ```yaml
-색상군_1: "파란계열 (Blue Family)"
-  특징: 신뢰, 안정, 전문성
-  온라인_용도: 기업사이트, 금융, 의료
-  팔레트:
-    - "스카이블루": "#87CEEB"
-    - "진한파랑": "#1E3A8A"
-    - "네이비": "#0F172A"
-    - "라이트블루": "#E0F2FE"
-    - "인디고": "#4F46E5"
+color_group_1: "Blue Family"
+  traits: trust, stability, professionalism
+  online_use: corporate sites, finance, healthcare
+  palette:
+    - "Sky Blue": "#87CEEB"
+    - "Deep Blue": "#1E3A8A"
+    - "Navy": "#0F172A"
+    - "Light Blue": "#E0F2FE"
+    - "Indigo": "#4F46E5"
 
-색상군_2: "초록계열 (Green Family)"
-  특징: 성장, 자연, 신선함
-  온라인_용도: 생태, 건강, 스타트업
-  팔레트:
-    - "라임그린": "#32CD32"
-    - "포레스트그린": "#228B22"
-    - "세이지그린": "#9DC183"
-    - "민트그린": "#98FF98"
-    - "에메랄드": "#50C878"
+color_group_2: "Green Family"
+  traits: growth, nature, freshness
+  online_use: ecology, health, startups
+  palette:
+    - "Lime Green": "#32CD32"
+    - "Forest Green": "#228B22"
+    - "Sage Green": "#9DC183"
+    - "Mint Green": "#98FF98"
+    - "Emerald": "#50C878"
 
-색상군_3: "주황계열 (Orange Family)"
-  특징: 따뜻함, 에너지, 활동성
-  온라인_용도: 음식, 엔터테인먼트, 이벤트
-  팔레트:
-    - "밝은주황": "#FF9500"
-    - "진한주황": "#FF6B35"
-    - "복숭아색": "#FFBC94"
-    - "호박색": "#FF8C00"
-    - "살구색": "#FBCF8E"
+color_group_3: "Orange Family"
+  traits: warmth, energy, activity
+  online_use: food, entertainment, events
+  palette:
+    - "Bright Orange": "#FF9500"
+    - "Deep Orange": "#FF6B35"
+    - "Peach": "#FFBC94"
+    - "Amber": "#FF8C00"
+    - "Apricot": "#FBCF8E"
 
-색상군_4: "자주계열 (Purple Family)"
-  특징: 창의성, 럭셔리, 신비로움
-  온라인_용도: 크리에이티브, 패션, 기술
-  팔레트:
-    - "라벤더": "#E6D7F0"
-    - "아메시스트": "#9966CC"
-    - "딥퍼플": "#663399"
-    - "바이올렛": "#EE82EE"
-    - "인디고": "#4B0082"
+color_group_4: "Purple Family"
+  traits: creativity, luxury, mystery
+  online_use: creative, fashion, technology
+  palette:
+    - "Lavender": "#E6D7F0"
+    - "Amethyst": "#9966CC"
+    - "Deep Purple": "#663399"
+    - "Violet": "#EE82EE"
+    - "Indigo": "#4B0082"
 
-색상군_5: "빨강계열 (Red Family)"
-  특징: 긴급, 열정, 주의
-  온라인_용도: 에러상태, 할인, 경고
-  팔레트:
-    - "밝은빨강": "#FF4444"
-    - "딥레드": "#8B0000"
-    - "핑크": "#FF69B4"
-    - "로즈": "#FF007F"
-    - "산호색": "#FF7F50"
+color_group_5: "Red Family"
+  traits: urgency, passion, caution
+  online_use: error states, discounts, warnings
+  palette:
+    - "Bright Red": "#FF4444"
+    - "Deep Red": "#8B0000"
+    - "Pink": "#FF69B4"
+    - "Rose": "#FF007F"
+    - "Coral": "#FF7F50"
 
-색상군_6: "회색계열 (Gray Family)"
-  특징: 중립, 배경, 비강조
-  온라인_용도: 배경, 텍스트, 보조색
-  팔레트:
-    - "라이트그레이": "#F3F4F6"
-    - "미디엄그레이": "#9CA3AF"
-    - "다크그레이": "#374151"
-    - "차콜": "#1F2937"
-    - "거의검정": "#111827"
+color_group_6: "Gray Family"
+  traits: neutral, background, de-emphasis
+  online_use: backgrounds, text, secondary colors
+  palette:
+    - "Light Gray": "#F3F4F6"
+    - "Medium Gray": "#9CA3AF"
+    - "Dark Gray": "#374151"
+    - "Charcoal": "#1F2937"
+    - "Near Black": "#111827"
 ```
 
-#### B. 심리학 기반 색상 조합 (Psychology-Based Color Combinations)
+#### B. Psychology-Based Color Combinations
 
 ```
-조합_1: "신뢰 + 활동성"
-  Primary: 진한파랑 (#1E3A8A)
-  Secondary: 주황 (#FF9500)
-  Accent: 화이트 (#FFFFFF)
-  용도: 금융앱, 전자상거래
-  심리효과: 안전하면서도 활동적
+Combination 1: "Trust + Activity"
+  Primary: Deep Blue (#1E3A8A)
+  Secondary: Orange (#FF9500)
+  Accent: White (#FFFFFF)
+  Use: finance apps, e-commerce
+  Psychological effect: safe yet active
 
-조합_2: "자연 + 현대성"
-  Primary: 세이지그린 (#9DC183)
-  Secondary: 딥차콜 (#1F2937)
-  Accent: 밝은주황 (#FF9500)
-  용도: 에코/라이프스타일
-  심리효과: 환경친화적이면서도 트렌디
+Combination 2: "Nature + Modernity"
+  Primary: Sage Green (#9DC183)
+  Secondary: Deep Charcoal (#1F2937)
+  Accent: Bright Orange (#FF9500)
+  Use: eco/lifestyle
+  Psychological effect: eco-friendly yet trendy
 
-조합_3: "럭셔리 + 고급스러움"
-  Primary: 딥퍼플 (#663399)
-  Secondary: 골드 (#FFD700)
-  Accent: 오프화이트 (#F5F5F0)
-  용도: 패션, 뷰티, 프리미엄 서비스
-  심리효과: 고급스럽고 배타적
+Combination 3: "Luxury + Sophistication"
+  Primary: Deep Purple (#663399)
+  Secondary: Gold (#FFD700)
+  Accent: Off-White (#F5F5F0)
+  Use: fashion, beauty, premium services
+  Psychological effect: luxurious and exclusive
 ```
 
-### 2.2 색상 패리티 (Color Parity) - 접근성
+### 2.2 Color Parity - Accessibility
 
 ```
-모든 색상 조합은 다음을 충족해야 함:
-✓ WCAG AA 표준: 명도 대비 4.5:1 이상 (텍스트)
-✓ WCAG AAA 표준: 명도 대비 7:1 이상 (중요 텍스트)
-✓ 색맹 친화: 색상만으로 정보 전달 금지
+Every color combination must satisfy:
+✓ WCAG AA standard: contrast ratio ≥ 4.5:1 (text)
+✓ WCAG AAA standard: contrast ratio ≥ 7:1 (important text)
+✓ Color-blind friendly: do not convey information by color alone
 
-예:
-  - 에러 표시: 빨강 (색상) + "✕" 기호 (모양)
-  - 성공 표시: 초록 (색상) + "✓" 기호 (모양)
+Example:
+  - Error indicator: red (color) + "✕" symbol (shape)
+  - Success indicator: green (color) + "✓" symbol (shape)
 ```
 
 ---
 
-## 3. 타이포그래피 시스템 (Typography System)
+## 3. Typography System
 
-### 3.1 폰트 선택 매개변수 (Font Selection Parameters)
+### 3.1 Font Selection Parameters
 
 ```yaml
-폰트_선택:
+font_selection:
   
-  # 본문 폰트 선택
+  # Body font selection
   body_font:
-    - "Serif (전통적)": "'Georgia', serif"
-    - "Sans-Serif (현대적)": "'Segoe UI', sans-serif"
-    - "Monospace (기술적)": "'Courier New', monospace"
+    - "Serif (traditional)": "'Georgia', serif"
+    - "Sans-Serif (modern)": "'Segoe UI', sans-serif"
+    - "Monospace (technical)": "'Courier New', monospace"
   
-  # 제목 폰트 선택
+  # Heading font selection
   heading_font:
     - "Bold Sans": "'Montserrat', sans-serif"
     - "Light Modern": "'Poppins', sans-serif"
     - "Display": "'Playfair Display', serif"
   
-  # 글자 크기 스케일
+  # Font size scale
   font_scale:
-    - "aggressive": "1.618 (골든레이션)"
-    - "moderate": "1.5 (완벽한 5분의 4)"
-    - "conservative": "1.25 (완벽한 4분의 5)"
+    - "aggressive": "1.618 (golden ratio)"
+    - "moderate": "1.5 (perfect fourth)"
+    - "conservative": "1.25 (major third)"
     
-  # 자간 (Letter Spacing)
+  # Letter Spacing
   letter_spacing:
     - "tight": "-0.5px"
     - "normal": "0px"
     - "loose": "1px"
     
-  # 행간 (Line Height)
+  # Line Height
   line_height:
     - "compact": "1.3"
     - "normal": "1.6"
     - "spacious": "1.9"
 
-예시_조합_1:
-  디자인_프로필: "우아함 (Elegant)"
+example_combination_1:
+  design_profile: "Elegant"
   body_font: "'Georgia', serif"
   heading_font: "'Playfair Display', serif"
   font_scale: 1.618
   letter_spacing: "1px"
   line_height: 1.6
-  결과: 고급스럽고 정제된 타이포그래피
+  result: refined, high-end typography
 
-예시_조합_2:
-  디자인_프로필: "신선함 (Fresh)"
+example_combination_2:
+  design_profile: "Fresh"
   body_font: "'Segoe UI', sans-serif"
   heading_font: "'Poppins', sans-serif"
   font_scale: 1.5
   letter_spacing: "0px"
   line_height: 1.6
-  결과: 현대적이고 생동감있는 타이포그래피
+  result: modern, lively typography
 ```
 
 ---
 
-## 4. 레이아웃 및 공간 시스템 (Layout & Spacing System)
+## 4. Layout & Spacing System
 
-### 4.1 그리드 및 간격 매개변수 (Grid & Spacing Parameters)
+### 4.1 Grid & Spacing Parameters
 
 ```yaml
-공간_시스템:
+spacing_system:
   
-  # 기본 간격 단위 (Base Spacing Unit)
+  # Base Spacing Unit
   base_unit:
-    - "4px": "세밀한 조정"
-    - "8px": "표준"
-    - "16px": "넉넉한"
+    - "4px": "fine adjustment"
+    - "8px": "standard"
+    - "16px": "generous"
   
-  # 컨테이너 최대 너비
+  # Container max width
   container_width:
-    - "960px": "고전적"
-    - "1200px": "현대 표준"
-    - "1440px": "와이드"
+    - "960px": "classic"
+    - "1200px": "modern standard"
+    - "1440px": "wide"
   
-  # 모서리 둥글기 (Border Radius)
+  # Border Radius
   border_radius:
-    - "0px": "각진 (포멀)"
-    - "4px": "약간 둥근"
-    - "8px": "중간 둥근"
-    - "16px": "많이 둥근 (캐주얼)"
+    - "0px": "sharp (formal)"
+    - "4px": "slightly rounded"
+    - "8px": "moderately rounded"
+    - "16px": "very rounded (casual)"
   
-  # 그림자 (Shadow)
+  # Shadow
   shadow_style:
-    - "flat": "그림자 없음 (플랫 디자인)"
-    - "subtle": "약한 그림자 (모던)"
-    - "prominent": "강한 그림자 (입체감)"
+    - "flat": "no shadow (flat design)"
+    - "subtle": "soft shadow (modern)"
+    - "prominent": "strong shadow (depth)"
 
-예시_조합_1:
-  디자인_프로필: "모던 미니멀"
+example_combination_1:
+  design_profile: "Modern Minimal"
   base_unit: "8px"
   container_width: "1200px"
   border_radius: "0px"
   shadow_style: "flat"
-  결과: 깨끗하고 미니멀한 레이아웃
+  result: clean, minimal layout
 
-예시_조합_2:
-  디자인_프로필: "따뜻한 캐주얼"
+example_combination_2:
+  design_profile: "Warm Casual"
   base_unit: "16px"
   container_width: "960px"
   border_radius: "16px"
   shadow_style: "subtle"
-  결과: 여유있고 친근한 레이아웃
+  result: spacious, friendly layout
 ```
 
-### 4.2 반응형 디자인 변수 (Responsive Design Parameters)
+### 4.2 Responsive Design Parameters
 
 ```yaml
-반응형_정의:
+responsive_definition:
   
   breakpoints:
-    - "모바일": "< 640px (기본)"
-    - "태블릿": "640px ~ 1024px"
-    - "데스크톱": "≥ 1024px"
+    - "mobile": "< 640px (base)"
+    - "tablet": "640px ~ 1024px"
+    - "desktop": "≥ 1024px"
   
-  # 모바일 우선 또는 데스크톱 우선
+  # Mobile-first or desktop-first
   design_approach:
-    - "mobile_first": "작은 화면부터 시작"
-    - "desktop_first": "큰 화면부터 시작"
+    - "mobile_first": "start from small screens"
+    - "desktop_first": "start from large screens"
   
-  # 레이아웃 변화
+  # Layout changes
   layout_changes:
-    - "dramatic": "큰 화면에서 완전히 다른 레이아웃"
-    - "gradual": "비율 조정만 함"
+    - "dramatic": "completely different layout on large screens"
+    - "gradual": "ratio adjustments only"
 ```
 
 ---
 
-## 5. CSS 모듈화 구조 (Modularized CSS Structure)
+## 5. Modularized CSS Structure
 
-### 5.1 CSS 세트로 전체 UI 교체 가능한 구조
+### 5.1 A structure where the entire UI can be swapped via CSS sets
 
 ```
 /css/
   ├─ config/
-  │  ├─ colors.css          # 색상 정의 (변수로만)
-  │  ├─ typography.css      # 폰트, 크기, 자간
-  │  ├─ spacing.css         # 간격, 그리드
-  │  └─ effects.css         # 그림자, 애니메이션
+  │  ├─ colors.css          # color definitions (variables only)
+  │  ├─ typography.css      # fonts, sizes, letter spacing
+  │  ├─ spacing.css         # spacing, grid
+  │  └─ effects.css         # shadows, animations
   │
   ├─ components/
-  │  ├─ button.css          # 버튼 (색상 변수 참조)
-  │  ├─ card.css            # 카드 (간격 변수 참조)
-  │  ├─ form.css            # 폼 요소
-  │  ├─ nav.css             # 네비게이션
-  │  └─ modal.css           # 모달
+  │  ├─ button.css          # button (references color variables)
+  │  ├─ card.css            # card (references spacing variables)
+  │  ├─ form.css            # form elements
+  │  ├─ nav.css             # navigation
+  │  └─ modal.css           # modal
   │
   ├─ layouts/
-  │  ├─ grid.css            # 그리드 시스템
-  │  ├─ flexbox.css         # 플렉스박스 레이아웃
-  │  └─ responsive.css      # 반응형 정의
+  │  ├─ grid.css            # grid system
+  │  ├─ flexbox.css         # flexbox layout
+  │  └─ responsive.css      # responsive definitions
   │
   ├─ profiles/
-  │  ├─ elegant.css         # 우아함 프로필
-  │  ├─ fresh.css           # 신선함 프로필
-  │  ├─ trustworthy.css     # 신뢰감 프로필
-  │  └─ vibrant.css         # 발랄함 프로필
+  │  ├─ elegant.css         # Elegant profile
+  │  ├─ fresh.css           # Fresh profile
+  │  ├─ trustworthy.css     # Trustworthy profile
+  │  └─ vibrant.css         # Vibrant profile
   │
-  └─ main.css               # 통합
+  └─ main.css               # integration
 ```
 
-### 5.2 CSS 변수 기반 구현 (CSS Variables Implementation)
+### 5.2 CSS Variables Implementation
 
 ```css
-/* /css/config/colors.css - 신뢰감 프로필 */
+/* /css/config/colors.css - Trustworthy profile */
 
 :root {
-  /* 프로필: 신뢰감 */
-  --primary-color: #1E3A8A;      /* 진한파랑 */
-  --secondary-color: #9CA3AF;    /* 회색 */
-  --accent-color: #FF9500;       /* 주황 */
+  /* Profile: Trustworthy */
+  --primary-color: #1E3A8A;      /* deep blue */
+  --secondary-color: #9CA3AF;    /* gray */
+  --accent-color: #FF9500;       /* orange */
   
   --success-color: #22C55E;
   --warning-color: #EAB308;
@@ -367,13 +367,13 @@
   --text-primary: #1F2937;
   --text-secondary: #6B7280;
   
-  /* 명도 대비 검증: 
-     텍스트 vs 배경 = 1F2937 vs F3F4F6
-     명도 대비: 12:1 ✓ (WCAG AAA 충족)
+  /* Contrast verification: 
+     text vs background = 1F2937 vs F3F4F6
+     contrast ratio: 12:1 ✓ (meets WCAG AAA)
   */
 }
 
-/* /css/config/typography.css - 우아함 타이포그래피 */
+/* /css/config/typography.css - Elegant typography */
 
 :root {
   --font-body: 'Georgia', serif;
@@ -419,213 +419,213 @@
 }
 
 .btn-primary:hover {
-  background-color: #163066;  /* 짙은 파랑 */
+  background-color: #163066;  /* darker blue */
 }
 ```
 
-### 5.3 프로필 전환 (Profile Switching)
+### 5.3 Profile Switching
 
 ```html
-<!-- 사용자가 프로필을 선택하면 CSS 세트가 교체됨 -->
+<!-- When the user selects a profile, the CSS set is swapped -->
 
-<!-- 기본: 신뢰감 프로필 -->
+<!-- Default: Trustworthy profile -->
 <link rel="stylesheet" href="/css/main.css">
 
-<!-- JavaScript로 동적 교체 -->
+<!-- Dynamic swap via JavaScript -->
 <script>
 function switchDesignProfile(profileName) {
-  // /css/profiles/[profileName].css 로드
-  // 모든 :root 변수 교체
-  // 즉시 전체 UI 업데이트
+  // Load /css/profiles/[profileName].css
+  // Replace all :root variables
+  // Instantly update the entire UI
 }
 </script>
 ```
 
 ---
 
-## 6. 디자인 매개변수 선택 프로세스 (Design Parameter Selection Process)
+## 6. Design Parameter Selection Process
 
-### 6.1 사용자 선택 흐름 (User Selection Flow)
+### 6.1 User Selection Flow
 
 ```
-단계 1: 솔루션 타입 선택
-  └─ 예: "E-Commerce Mall"
+Step 1: Select solution type
+  └─ e.g., "E-Commerce Mall"
 
-단계 2: 기본 디자인 프로필 선택 (선택지 제공)
-  ├─ "신뢰감 (Trustworthy)" ← 금융, 기업에 추천
-  ├─ "우아함 (Elegant)" ← 럭셔리, 프리미엄에 추천
-  ├─ "신선함 (Fresh)" ← 스타트업, 소셜에 추천
-  └─ "발랄함 (Vibrant)" ← 음식, 엔터테인먼트에 추천
+Step 2: Select base design profile (options provided)
+  ├─ "Trustworthy" ← recommended for finance, enterprise
+  ├─ "Elegant" ← recommended for luxury, premium
+  ├─ "Fresh" ← recommended for startups, social
+  └─ "Vibrant" ← recommended for food, entertainment
 
-단계 3: 프로필 커스터마이징 (선택사항)
-  ├─ 주색상 변경: 파랑 → 초록 선택
-  ├─ 온도감 조정: 차가움 → 따뜻함
-  ├─ 폰트 선택: Georgia → Poppins
-  └─ 간격 조정: 8px → 16px
+Step 3: Customize profile (optional)
+  ├─ Change primary color: blue → green
+  ├─ Adjust warmth: cool → warm
+  ├─ Font selection: Georgia → Poppins
+  └─ Adjust spacing: 8px → 16px
 
-단계 4: 색상 팔레트 검증
-  ├─ 명도 대비 자동 검사 (WCAG)
-  ├─ 색맹 친화 검증
-  └─ 디바이스 간 일관성 확인
+Step 4: Validate color palette
+  ├─ Automatic contrast check (WCAG)
+  ├─ Color-blind friendliness check
+  └─ Cross-device consistency check
 
-단계 5: CSS 생성
-  └─ /css/profiles/[projectName].css 자동 생성
+Step 5: Generate CSS
+  └─ /css/profiles/[projectName].css generated automatically
 ```
 
-### 6.2 프로필별 추천 사항 (Profile Recommendations by Industry)
+### 6.2 Profile Recommendations by Industry
 
 ```yaml
-소매_쇼핑:
-  추천_프로필: "신선함 (Fresh)"
-  이유: "현대적이고 활기찬 분위기 필요"
-  색상: 초록/주황 조합
-  타이포: Sans-serif, Poppins
+retail_shopping:
+  recommended_profile: "Fresh"
+  reason: "needs a modern, energetic atmosphere"
+  colors: green/orange combination
+  typography: Sans-serif, Poppins
 
-금융_서비스:
-  추천_프로필: "신뢰감 (Trustworthy)"
-  이유: "안정감과 전문성 강조"
-  색상: 파랑/회색 조합
-  타이포: Serif + sans-serif 조합
+financial_services:
+  recommended_profile: "Trustworthy"
+  reason: "emphasizes stability and professionalism"
+  colors: blue/gray combination
+  typography: Serif + sans-serif combination
 
-뷰티_패션:
-  추천_프로필: "우아함 (Elegant)"
-  이유: "고급스럽고 정제된 분위기"
-  색상: 자주/금색 조합
-  타이포: Serif, Playfair Display
+beauty_fashion:
+  recommended_profile: "Elegant"
+  reason: "luxurious, refined atmosphere"
+  colors: purple/gold combination
+  typography: Serif, Playfair Display
 
-음식_엔터테인먼트:
-  추천_프로필: "발랄함 (Vibrant)"
-  이유: "즐겁고 활동적인 느낌"
-  색상: 주황/분홍 조합
-  타이포: Sans-serif, Poppins
+food_entertainment:
+  recommended_profile: "Vibrant"
+  reason: "fun, active feel"
+  colors: orange/pink combination
+  typography: Sans-serif, Poppins
 ```
 
 ---
 
-## 7. 디자인 시스템 문서 (Design System Documentation)
+## 7. Design System Documentation
 
-### 7.1 자동 생성 디자인 가이드 (Auto-Generated Design Guide)
+### 7.1 Auto-Generated Design Guide
 
 ```
-/docs/DESIGN_GUIDE.md 자동 생성 내용:
+/docs/DESIGN_GUIDE.md auto-generated content:
 
-# 디자인 시스템 가이드 - [프로젝트명]
+# Design System Guide - [Project Name]
 
-## 선택된 프로필
-- 이름: "신뢰감"
-- 온도감: 40 (차가움)
-- 에너지: 40 (차분함)
-- 현대성: 60 (모던)
-- 형식성: 70 (포멀)
-- 복잡도: 30 (미니멀)
+## Selected Profile
+- Name: "Trustworthy"
+- Warmth: 40 (cool)
+- Energy: 40 (calm)
+- Modernity: 60 (modern)
+- Formality: 70 (formal)
+- Complexity: 30 (minimal)
 
-## 색상 팔레트
-- Primary: #1E3A8A (진한파랑)
-- Secondary: #9CA3AF (회색)
-- Accent: #FF9500 (주황)
+## Color Palette
+- Primary: #1E3A8A (deep blue)
+- Secondary: #9CA3AF (gray)
+- Accent: #FF9500 (orange)
 - Success: #22C55E
 - Error: #EF4444
 
-## 명도 대비 검증 ✓
-- 텍스트 vs 배경: 12:1 (WCAG AAA)
-- 색맹 친화: ✓
+## Contrast Verification ✓
+- text vs background: 12:1 (WCAG AAA)
+- color-blind friendly: ✓
 
-## 타이포그래피
-- 본문: Georgia, serif
-- 제목: Playfair Display, serif
-- 글자크기 스케일: 1.618
-- 행간: 1.6
+## Typography
+- Body: Georgia, serif
+- Heading: Playfair Display, serif
+- Font size scale: 1.618
+- Line height: 1.6
 
-## 간격 시스템
-- 기본 단위: 8px
+## Spacing System
+- Base unit: 8px
 - xs: 8px, sm: 16px, md: 32px, lg: 64px
 
-## 모서리 둥글기
-- 버튼: 4px
-- 카드: 4px
-- 모달: 8px
+## Border Radius
+- Button: 4px
+- Card: 4px
+- Modal: 8px
 
-## CSS 파일 위치
+## CSS File Location
 - /css/profiles/[projectName].css
 ```
 
 ---
 
-## 8. 프로필 추가 및 확장 (Adding New Profiles)
+## 8. Adding New Profiles
 
-### 8.1 새로운 프로필 생성 템플릿 (New Profile Template)
+### 8.1 New Profile Template
 
 ```yaml
-새_프로필_추가:
+add_new_profile:
   
-  이름: "[새 프로필명]"
-  설명: "[어떤 산업/용도에 적합한가]"
+  name: "[new profile name]"
+  description: "[which industry/use is it suited for]"
   
-  차원:
-    온도감: [0-100, 50=중립]
-    에너지: [0-100, 50=중립]
-    현대성: [0-100, 50=클래식-모던 균형]
-    형식성: [0-100, 50=캐주얼-포멀 균형]
-    복잡도: [0-100, 50=미니멀-리치 균형]
+  dimensions:
+    warmth: [0-100, 50=neutral]
+    energy: [0-100, 50=neutral]
+    modernity: [0-100, 50=classic-modern balance]
+    formality: [0-100, 50=casual-formal balance]
+    complexity: [0-100, 50=minimal-rich balance]
   
-  색상_팔레트:
-    primary: "[색상명] (#RRGGBB)"
-    secondary: "[색상명] (#RRGGBB)"
-    accent: "[색상명] (#RRGGBB)"
+  color_palette:
+    primary: "[color name] (#RRGGBB)"
+    secondary: "[color name] (#RRGGBB)"
+    accent: "[color name] (#RRGGBB)"
   
-  타이포그래피:
-    body_font: "[폰트명], [serif|sans-serif|monospace]"
-    heading_font: "[폰트명], [serif|sans-serif]"
+  typography:
+    body_font: "[font name], [serif|sans-serif|monospace]"
+    heading_font: "[font name], [serif|sans-serif]"
     font_scale: [1.25|1.5|1.618]
     line_height: "[1.3|1.6|1.9]"
   
-  레이아웃:
+  layout:
     base_unit: "[4px|8px|16px]"
     border_radius: "[0px|4px|8px|16px]"
     shadow_style: "[flat|subtle|prominent]"
   
-  업계_추천:
-    - "[업계1]"
-    - "[업계2]"
+  industry_recommendations:
+    - "[industry 1]"
+    - "[industry 2]"
 ```
 
 ---
 
-## 9. CSS 모듈화의 이점 (Benefits of Modularized CSS)
+## 9. Benefits of Modularized CSS
 
 ```
-이점 1: 빠른 테마 변경
-  개발 완료 후, CSS 파일만 교체하면 전체 UI 변경
+Benefit 1: Fast theme changes
+  After development, swapping the CSS file alone changes the entire UI
   
-이점 2: A/B 테스트
-  다른 프로필을 병행 테스트하여 사용자 반응 측정
+Benefit 2: A/B testing
+  Test different profiles in parallel to measure user response
   
-이점 3: 일관성
-  모든 컴포넌트가 동일한 변수 사용으로 일관된 디자인 유지
+Benefit 3: Consistency
+  All components use the same variables, maintaining consistent design
   
-이점 4: 유지보수
-  색상 변경 = 1개 파일 수정 (수십 개 파일이 아님)
+Benefit 4: Maintenance
+  Changing a color = editing 1 file (not dozens of files)
   
-이점 5: 확장성
-  새로운 컴포넌트 추가 시, 기존 변수만 참조하면 됨
+Benefit 5: Extensibility
+  When adding new components, you only need to reference existing variables
   
-이점 6: 접근성
-  한 곳에서 색상 대비 검증, 모든 조합에 자동 적용
+Benefit 6: Accessibility
+  Verify color contrast in one place, applied automatically to all combinations
 ```
 
 ---
 
-## 결론 (Conclusion)
+## Conclusion
 
-이 시스템은:
-1. **개발자가 색상, 폰트, 간격을 선택**하도록 함 (보안 + 개인화)
-2. **CSS를 모듈화**하여 개발 완료 후에도 **전체 테마 교체 가능**
-3. **추상적 개념** (우아함, 신선함)을 **구체적 변수**로 변환
-4. **자동 접근성 검증**으로 모든 색상 조합이 WCAG 준수
-5. **산업별 추천**으로 초기 선택을 단순화
+This system:
+1. **Lets the developer choose colors, fonts, and spacing** (security + personalization)
+2. **Modularizes CSS** so the **entire theme can be swapped even after development is complete**
+3. Converts **abstract concepts** (Elegant, Fresh) into **concrete variables**
+4. Ensures all color combinations comply with WCAG through **automatic accessibility checks**
+5. Simplifies the initial choice with **industry-specific recommendations**
 
 ---
 
-**버전**: 1.0
-**작성일**: 2026-05-27
-**상태**: 초안 - 팀 피드백 대기
+**Version**: 1.0
+**Date**: 2026-05-27
+**Status**: Draft - awaiting team feedback

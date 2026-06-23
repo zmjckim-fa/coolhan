@@ -1,123 +1,123 @@
-# Development Locked Mode - AI 실행 체계
+# Development Locked Mode - AI Execution System
 
 **Effective Date:** 2026-05-27  
 **Authority:** Executive Orchestrator  
-**Status:** MANDATORY - 모든 개발 세션에 강제 적용
+**Status:** MANDATORY - enforced on all development sessions
 
 ---
 
-## 핵심 원칙
+## Core Principles
 
-### AI 자유도 vs 정확성 트레이드오프
+### AI Freedom vs. Accuracy Trade-off
 
-**원칙:**
+**Principle:**
 ```
-자유도 ↑  →  정확성 ↓
-자유도 ↓  →  정확성 ↑
+Freedom ↑  →  Accuracy ↓
+Freedom ↓  →  Accuracy ↑
 ```
 
-**엔지니어링 결론:**
-- 기획 단계: 브레인스토밍, 자유로운 탐색 허용
-- **개발 단계: 규격 기반 실행만 허용** ← 지금 여기
+**Engineering conclusion:**
+- Planning stage: brainstorming and free exploration allowed
+- **Development stage: only specification-based execution allowed** ← we are here now
 
-**이유:**
-1. AI는 과거 대화를 모두 기억하며 섞임
-2. MD를 읽어도 원본 소스는 읽지 않음
-3. 화일명/포트가 바뀌어도 과거 경로로 계속 시도
-4. 막히면 문서 대신 자의적으로 문제 해결 시도
-5. 작업 시간이 길어지면 규칙 자체를 잊음
+**Reasons:**
+1. AI remembers all past conversations and mixes them together
+2. Even after reading the MD, it does not read the original source
+3. Even when file names/ports change, it keeps trying the old paths
+4. When stuck, it tries to solve problems arbitrarily instead of consulting the documents
+5. As work drags on, it forgets the rules themselves
 
 ---
 
 ## Development Locked Mode Rules
 
-### ✋ 금지 사항 (STRICT - 위반 시 즉시 중단)
+### ✋ Prohibitions (STRICT - stop immediately on violation)
 
-**절대 금지:**
-- [ ] 과거 대화 기억 참조 - 브레인스토밍, 임시 아이디어 사용 금지
-- [ ] 이전 세션의 추론 패턴 사용 - "이전에는 이렇게 했으니..." 금지
-- [ ] 일반적 패턴에 기반한 기능 생성 - 추측 기반 개발 금지
-- [ ] 막혔을 때 자의적 문제 해결 - 대신 문서 읽고 작업 중단
-- [ ] MD에서 "아마도"로 시작하는 시도 - 불확실하면 중단
-- [ ] 소스 코드 추측 - 실제 코드를 먼저 읽음
+**Absolutely forbidden:**
+- [ ] Referencing past conversation memory - using brainstorming or temporary ideas is forbidden
+- [ ] Using reasoning patterns from previous sessions - "since we did it this way before..." is forbidden
+- [ ] Generating features based on general patterns - guess-based development is forbidden
+- [ ] Solving problems arbitrarily when stuck - instead, read the documents and pause work
+- [ ] Attempts starting with "probably" from the MD - if uncertain, stop
+- [ ] Guessing source code - read the actual code first
 
-### ✓ 허용 사항만 사용
+### ✓ Use only permitted information
 
-**ONLY 사용 가능한 정보:**
+**ONLY usable information:**
 
-1. **Single Source of Truth 문서**
+1. **Single Source of Truth documents**
    - 00_TECH_PARAMETER_DEFINITION.md
    - 00_TECH_PARAMETER_MAPPING.md
-   - 각 Module Spec (01-10)
+   - Each Module Spec (01-10)
    - Approved ERD/API documentation
 
-2. **현재 Sprint 문서**
-   - 현재 모듈의 구현 계획서
-   - 현재 사용 중인 개발 가이드라인
+2. **Current Sprint documents**
+   - Implementation plan for the current module
+   - Development guidelines currently in use
 
 3. **Actual Source Code**
-   - 구현된 코드만 참조
-   - 코드에서 읽은 것만 사실로 취급
-   - MD와 코드가 다르면 코드가 정답
+   - Reference only implemented code
+   - Treat only what you read from the code as fact
+   - If the MD and the code differ, the code is correct
 
 4. **Previous Success Patterns (VERIFIED)**
-   - 이미 완성된 모듈에서 사용한 패턴만
-   - 작동하는 코드 패턴만
-   - 문서화되고 승인된 것만
+   - Only patterns used in already-completed modules
+   - Only working code patterns
+   - Only what is documented and approved
 
 ---
 
-## AI 행동 규칙 체크리스트
+## AI Behavior Rule Checklist
 
-### 각 세션 시작 시 (MANDATORY)
+### At the start of each session (MANDATORY)
 
-- [ ] **메모리 상태 확인:** "I will NOT use previous conversation memories"
-- [ ] **Mode 선언:** "DEVELOPMENT LOCKED MODE ACTIVE"
-- [ ] **문서 로드:** 
-  - [ ] 00_PROJECT_STATE.md 읽음
-  - [ ] 현재 Module Spec 읽음
-  - [ ] 00_CHANGE_REQUEST_LOG.md 읽음
-  - [ ] 이 문서 (00_DEVELOPMENT_LOCKED_MODE.md) 읽음
-- [ ] **금지 사항 재확인:** 위 7가지 금지 사항 모두 숙지
+- [ ] **Verify memory state:** "I will NOT use previous conversation memories"
+- [ ] **Declare mode:** "DEVELOPMENT LOCKED MODE ACTIVE"
+- [ ] **Load documents:** 
+  - [ ] Read 00_PROJECT_STATE.md
+  - [ ] Read the current Module Spec
+  - [ ] Read 00_CHANGE_REQUEST_LOG.md
+  - [ ] Read this document (00_DEVELOPMENT_LOCKED_MODE.md)
+- [ ] **Re-confirm prohibitions:** internalize all 7 prohibitions above
 
-### 각 작업 시작 전 (MANDATORY)
+### Before starting each task (MANDATORY)
 
-- [ ] **Single Source 확인:** "이게 문서에 명시되어 있나?"
-- [ ] **코드 현황 파악:** 실제 코드 구조 먼저 읽음
-- [ ] **추론 금지:** 추측 기반 개발 금지 - 문서/코드에 없으면 물어봄
-- [ ] **경로 확인:** 파일명, 포트, 경로가 문서와 일치하는지 확인
+- [ ] **Check Single Source:** "Is this specified in the documents?"
+- [ ] **Assess current code:** read the actual code structure first
+- [ ] **No inference:** guess-based development is forbidden - if not in the documents/code, ask
+- [ ] **Verify paths:** confirm that file names, ports, and paths match the documents
 
-### 작업 중 막혔을 때 (CRITICAL)
+### When stuck during work (CRITICAL)
 
-**절대 하지 말아야 할 것:**
-1. ❌ "이전에 이렇게 했으니까 이번에도..." - 금지
-2. ❌ "일반적으로 이렇게 하는데..." - 금지
-3. ❌ "아마도 이렇게 되겠지..." - 금지
-4. ❌ 자의적 시도 반복 - 2회 실패 후 중단
+**Things you must absolutely NOT do:**
+1. ❌ "Since we did it this way before, this time too..." - forbidden
+2. ❌ "This is generally done this way..." - forbidden
+3. ❌ "It will probably work like this..." - forbidden
+4. ❌ Repeating arbitrary attempts - stop after 2 failures
 
-**해야 할 것:**
-1. ✓ 현재 코드 전체 읽기 (Bash cat 또는 Read)
-2. ✓ 해당 Module Spec 관련 섹션 읽기
-3. ✓ 유사 완성 모듈의 구현 방식 찾기
-4. ✓ 문서/코드에 답이 없으면 **작업 중단 선언**
+**Things you must do:**
+1. ✓ Read the entire current code (Bash cat or Read)
+2. ✓ Read the relevant sections of the Module Spec
+3. ✓ Find how a similar completed module was implemented
+4. ✓ If the documents/code have no answer, **declare work paused**
 
 ```markdown
 [WORK PAUSED]
-Reason: [구체적 이유]
-Blocker: [막힌 이유]
-Need: [필요한 정보/결정]
-Waiting for: [누구의 지시/승인]
+Reason: [specific reason]
+Blocker: [why it is blocked]
+Need: [required information/decision]
+Waiting for: [whose instruction/approval]
 ```
 
 ---
 
-## 개발 및 배포 절차 모듈화
+## Modularizing Development and Deployment Procedures
 
-### 1. 코드 개발 (Development Phase)
+### 1. Code Development (Development Phase)
 
-**파일 구조 규칙:**
+**File structure rules:**
 ```
-프로젝트/
+project/
 ├── src/
 │   ├── modules/
 │   │   ├── 01_member/
@@ -131,14 +131,14 @@ Waiting for: [누구의 지시/승인]
 └── config/
 ```
 
-**명명 규칙 (변경 불가):**
-- 모듈명: 01_member, 02_shopping 등 (변경 금지)
-- 파일 경로: `/docs/api/` (변경 금지)
-- 포트 설정: config.md에 명시된 포트만 사용 (변경 금지)
+**Naming rules (immutable):**
+- Module names: 01_member, 02_shopping, etc. (do not change)
+- File paths: `/docs/api/` (do not change)
+- Port settings: use only the ports specified in config.md (do not change)
 
-### 2. API 저장 (Documentation)
+### 2. API Storage (Documentation)
 
-**API 문서 저장 위치:**
+**API documentation storage location:**
 ```
 /docs/api/
 ├── 01_member_system/
@@ -150,27 +150,27 @@ Waiting for: [누구의 지시/승인]
 └── INDEX.md
 ```
 
-**API 저장 프로세스:**
-1. **코드 작성** → 2. **테스트** → 3. **API 문서화** → 4. **docs/api에 저장** → 5. **변경 로그 기록**
+**API storage process:**
+1. **Write code** → 2. **Test** → 3. **Document API** → 4. **Save to docs/api** → 5. **Record change log**
 
-**AI 행동:**
-- [ ] API 변경 시: 즉시 docs/api에 업데이트
-- [ ] 기존 API와 다르면: change_request_log.md에 기록
-- [ ] 끝낼 때: INDEX.md에 추가된 엔드포인트 목록 정리
+**AI behavior:**
+- [ ] When the API changes: update docs/api immediately
+- [ ] If it differs from the existing API: record in change_request_log.md
+- [ ] When finishing: organize the list of added endpoints in INDEX.md
 
-### 3. GitHub 커밋 (Version Control)
+### 3. GitHub Commit (Version Control)
 
-**커밋 프로세스:**
+**Commit process:**
 ```
-1. 코드 작성 완료
-2. API 문서 업데이트
-3. change_request_log.md 업데이트 (변경사항 있으면)
-4. 모듈 테스트 완료
-5. git add [구체적 파일들]  ← 절대 "git add ." 금지
-6. git commit -m "[모듈번호][작업유형] 설명"
+1. Code writing complete
+2. Update API documentation
+3. Update change_request_log.md (if there are changes)
+4. Module testing complete
+5. git add [specific files]  ← never use "git add ."
+6. git commit -m "[module number][work type] description"
 ```
 
-**커밋 메시지 형식:**
+**Commit message format:**
 ```
 [01_member][feature] Add 2FA setup endpoint
 [02_shopping][fix] Cart total calculation
@@ -178,149 +178,149 @@ Waiting for: [누구의 지시/승인]
 [00_docs][update] API documentation
 ```
 
-**AI 행동 규칙:**
-- [ ] 커밋 전: git status로 의도하지 않은 파일 확인
-- [ ] 구체적 파일만 add (절대 "." 사용 금지)
-- [ ] 커밋 메시지 형식 준수
-- [ ] 1개 모듈 = 1개 커밋 (여러 모듈 섞지 말 것)
+**AI behavior rules:**
+- [ ] Before commit: check for unintended files via git status
+- [ ] Add only specific files (never use ".")
+- [ ] Follow the commit message format
+- [ ] 1 module = 1 commit (do not mix multiple modules)
 
-### 4. 서버 배포 (Server Deployment)
+### 4. Server Deployment (Server Deployment)
 
-**배포 절차:**
+**Deployment procedure:**
 ```
-1. 모든 테스트 통과
-2. GitHub 푸시 완료
-3. 배포 체크리스트 확인
-4. 서버 환경 설정 확인
-5. 배포 실행
-6. 배포 후 검증
+1. All tests pass
+2. GitHub push complete
+3. Verify deployment checklist
+4. Verify server environment settings
+5. Execute deployment
+6. Post-deployment verification
 ```
 
-**배포 체크리스트:**
-- [ ] 환경 변수 설정 (config/.env에서 읽음)
-- [ ] 데이터베이스 마이그레이션 완료
-- [ ] API 엔드포인트 정상 작동 확인
-- [ ] 이전 모듈과의 통합 테스트
-- [ ] 배포 로그 기록
+**Deployment checklist:**
+- [ ] Environment variables set (read from config/.env)
+- [ ] Database migration complete
+- [ ] API endpoints confirmed working
+- [ ] Integration test with previous modules
+- [ ] Deployment log recorded
 
-**AI 행동:**
-- [ ] 배포 전: 배포 체크리스트 항목 모두 확인
-- [ ] 환경 설정: 문서의 config.md에서만 읽음
-- [ ] 배포 실패 시: 로그 읽고 원인 파악 (추측 금지)
-- [ ] 배포 후: deployment_log.md에 시간, 모듈, 결과 기록
+**AI behavior:**
+- [ ] Before deployment: confirm all deployment checklist items
+- [ ] Environment settings: read only from config.md in the documents
+- [ ] On deployment failure: read the logs and identify the cause (no guessing)
+- [ ] After deployment: record time, module, and result in deployment_log.md
 
-### 5. 기록 및 추적
+### 5. Recording and Tracking
 
-**변경 이력 관리:**
+**Change history management:**
 ```
-각 배포/커밋마다:
-├── change_request_log.md 업데이트
-├── deployment_log.md 기록
-├── API 문서 업데이트
-└── git commit 메시지에 모두 반영
+For each deployment/commit:
+├── Update change_request_log.md
+├── Record in deployment_log.md
+├── Update API documentation
+└── Reflect everything in the git commit message
 ```
 
 ---
 
-## AI가 자주 하는 실수 & 대응
+## Common AI Mistakes & Responses
 
-### 실수 1: 과거 경로로 계속 시도
-**증상:** "파일명을 api.js → api_service.js로 바꿨는데 AI가 계속 api.js 참조"
+### Mistake 1: Continuing to try old paths
+**Symptom:** "I renamed the file api.js → api_service.js, but the AI keeps referencing api.js"
 
-**원인:** MD를 읽었어도 소스 코드의 실제 파일명을 읽지 않음
+**Cause:** Even after reading the MD, it did not read the actual file name in the source code
 
-**대응:**
+**Response:**
 ```
-❌ 금지: "아까 사용했던 경로로..."
-✓ 필수: 실제 파일 탐색
-  1. ls -la src/modules/01_member/  (현재 파일 확인)
-  2. grep -r "api" src/           (실제 파일명 검색)
-  3. Read로 실제 코드 읽기
+❌ Forbidden: "using the path we used earlier..."
+✓ Required: explore the actual files
+  1. ls -la src/modules/01_member/  (check current files)
+  2. grep -r "api" src/           (search for the actual file name)
+  3. Read the actual code with Read
 ```
 
-### 실수 2: 포트 번호 혼동
-**증상:** "config.md에 3000 명시되어 있는데 8000으로 시작"
+### Mistake 2: Confusing port numbers
+**Symptom:** "config.md specifies 3000, but it started on 8000"
 
-**원인:** 일반적 포트(3000, 8080)로 추론
+**Cause:** Inferred a general port (3000, 8080)
 
-**대응:**
+**Response:**
 ```
-❌ 금지: "일반적으로 3000은 Node..."
-✓ 필수: config.md에서만 읽기
+❌ Forbidden: "generally 3000 is for Node..."
+✓ Required: read only from config.md
   1. Read config.md
-  2. 명시된 포트만 사용
-  3. 의문나면 물어보기
+  2. Use only the specified port
+  3. If in doubt, ask
 ```
 
-### 실수 3: 막혔을 때 자의적 해결
-**증상:** "API 호출이 실패하는데 계속 다른 방식으로 시도"
+### Mistake 3: Arbitrary problem-solving when stuck
+**Symptom:** "An API call is failing, but it keeps trying different approaches"
 
-**원인:** 문서를 버리고 일반적 패턴으로 문제 해결 시도
+**Cause:** Discarding the documents and trying to solve the problem with general patterns
 
-**대응:**
+**Response:**
 ```
 BLOCKING CHECKLIST:
-1. ❌ 시도 1회 실패 → 로그 읽기
-2. ❌ 시도 2회 실패 → 코드 전체 읽기
-3. ❌ 시도 3회 이상 → 작업 중단, 이유 설명
+1. ❌ Attempt 1 fails → read the logs
+2. ❌ Attempt 2 fails → read the entire code
+3. ❌ 3 or more attempts → pause work, explain why
 
 [WORK PAUSED]
-Attempted: [2가지 시도]
+Attempted: [2 attempts]
 Result: Both failed
-Error: [정확한 에러 메시지]
-Need: [필요한 정보]
+Error: [exact error message]
+Need: [required information]
 ```
 
-### 실수 4: 문서 vs 코드 불일치 무시
-**증상:** "문서에는 이렇게 하라고 했는데 코드가 다르게 되어 있음을 무시"
+### Mistake 4: Ignoring document vs. code mismatch
+**Symptom:** "The document said to do it this way, but the code is different, and that mismatch is ignored"
 
-**원인:** MD는 이상적, 코드는 현실적 → 항상 코드가 정답
+**Cause:** The MD is ideal, the code is real → the code is always correct
 
-**대응:**
+**Response:**
 ```
-발견 시 즉시:
-1. 실제 코드 구조 파악
-2. change_request_log.md에 불일치 기록
-3. 코드 기반으로 진행
-4. 다음 리뷰에서 문서 수정
+On discovery, immediately:
+1. Assess the actual code structure
+2. Record the mismatch in change_request_log.md
+3. Proceed based on the code
+4. Fix the document in the next review
 ```
 
 ---
 
-## 배포 및 API 저장 프로세스
+## Deployment and API Storage Process
 
 ### Daily Development Cycle
 
 ```
 ┌─ START
 │
-├─ [1] 코드 개발
-│    └─ Module 01 구현
-│    └─ 테스트 통과
+├─ [1] Code development
+│    └─ Implement Module 01
+│    └─ Tests pass
 │
-├─ [2] API 문서화
-│    └─ /docs/api/01_member/endpoints.md 작성
-│    └─ examples.md 추가
-│    └─ schema.json 생성
+├─ [2] API documentation
+│    └─ Write /docs/api/01_member/endpoints.md
+│    └─ Add examples.md
+│    └─ Generate schema.json
 │
-├─ [3] 변경 기록
-│    └─ 00_CHANGE_REQUEST_LOG.md 업데이트
-│    └─ git 커밋 메시지 작성
+├─ [3] Record changes
+│    └─ Update 00_CHANGE_REQUEST_LOG.md
+│    └─ Write git commit message
 │
-├─ [4] 테스트 및 검증
-│    └─ 단위 테스트 실행
-│    └─ 이전 모듈과 통합 테스트
-│    └─ API 엔드포인트 검증
+├─ [4] Test and verify
+│    └─ Run unit tests
+│    └─ Integration test with previous modules
+│    └─ Verify API endpoints
 │
-├─ [5] GitHub 커밋
-│    └─ git add [구체적 파일]
+├─ [5] GitHub commit
+│    └─ git add [specific files]
 │    └─ git commit -m "[01_member][feature] ..."
 │    └─ git push
 │
-├─ [6] 서버 배포
-│    └─ 배포 체크리스트 확인
-│    └─ deployment_log.md 기록
-│    └─ 배포 후 검증
+├─ [6] Server deployment
+│    └─ Verify deployment checklist
+│    └─ Record in deployment_log.md
+│    └─ Post-deployment verification
 │
 └─ END
 ```
@@ -329,29 +329,29 @@ Need: [필요한 정보]
 
 ```
 Every Friday:
-1. 주간 커밋 리뷰
-2. API 문서 일관성 확인
-3. change_request_log.md 리뷰
-4. deployment_log.md 요약
-5. 다음 주 계획 수립
+1. Review the week's commits
+2. Check API documentation consistency
+3. Review change_request_log.md
+4. Summarize deployment_log.md
+5. Plan next week
 ```
 
 ---
 
-## 이 문서를 읽어야 하는 시점
+## When to Read This Document
 
-**필수 읽음 시점:**
-1. ✓ **각 개발 세션 시작 시** - 규칙 상기
-2. ✓ **모듈 전환 시** - 새 모듈 시작 전
-3. ✓ **막혔을 때** - 자의적 시도 전에
-4. ✓ **배포 전** - 커밋 및 배포 프로세스 확인
-5. ✓ **일주일마다** - 규칙 준수 여부 점검
+**Mandatory reading points:**
+1. ✓ **At the start of each development session** - to recall the rules
+2. ✓ **When switching modules** - before starting a new module
+3. ✓ **When stuck** - before any arbitrary attempt
+4. ✓ **Before deployment** - to confirm the commit and deployment process
+5. ✓ **Weekly** - to check rule compliance
 
-**금지된 시점:**
-- ❌ 규칙을 "참고"하고 "자의적 판단" - 금지
-- ❌ "이전에 잘 되었으니까" - 금지
-- ❌ "지금은 빠르게 진행해야 하니까" - 금지
-- ❌ "이건 작은 것이니까" - 금지
+**Forbidden moments:**
+- ❌ "Referencing" the rules but then making "arbitrary judgments" - forbidden
+- ❌ "Since it worked before" - forbidden
+- ❌ "We need to move fast right now" - forbidden
+- ❌ "This is a small thing" - forbidden
 
 ---
 
@@ -360,21 +360,21 @@ Every Friday:
 **Document:** 00_DEVELOPMENT_LOCKED_MODE.md  
 **Created:** 2026-05-27  
 **Authority:** Executive Orchestrator  
-**Status:** 🔴 **MANDATORY - 모든 개발 세션에 강제 적용**
+**Status:** 🔴 **MANDATORY - enforced on all development sessions**
 
-**핵심 메시지:**
-> "자유도를 주면 정확성이 떨어진다."
-> "개발 단계는 창작이 아니라 규격 기반 실행이다."
-> "AI가 막혀도 자의적으로 시도하지 않도록 강제해야 한다."
+**Core message:**
+> "Give freedom and accuracy drops."
+> "The development stage is specification-based execution, not creation."
+> "Even when the AI is stuck, it must be forced not to make arbitrary attempts."
 
-**AI 체크:**
-- [ ] 이 문서를 읽었는가? YES
-- [ ] 금지 사항 7가지를 모두 이해했는가? YES
-- [ ] 막혔을 때의 프로세스를 알겠는가? YES
-- [ ] 과거 기억을 사용하지 않겠는가? YES
-- [ ] 코드와 MD가 다르면 코드를 따르겠는가? YES
+**AI check:**
+- [ ] Have you read this document? YES
+- [ ] Do you understand all 7 prohibitions? YES
+- [ ] Do you know the process for when you are stuck? YES
+- [ ] Will you refrain from using past memory? YES
+- [ ] If the code and the MD differ, will you follow the code? YES
 
-**시작:**
+**Start:**
 ```
 [DEVELOPMENT LOCKED MODE: ACTIVE]
 Single Source of Truth: 00_PROJECT_STATE.md

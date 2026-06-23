@@ -1,229 +1,229 @@
-# CoolHan 문서 완벽 가이드 - 종류별 상세 설명
+# CoolHan Complete Documentation Guide - Detailed Breakdown by Type
 
-**문서 작성일:** 2026-05-27  
-**목적:** 각 문서의 역할, 사용 시점, 작성 방법을 한눈에 파악
+**Written:** 2026-05-27  
+**Purpose:** Understand at a glance the role, when to read, and how to write each document
 
 ---
 
-## 📚 문서 종류 및 분류
+## 📚 Document Types and Classification
 
-### 🔴 필수 문서 (반드시 읽어야 함)
+### 🔴 Essential Documents (must read)
 
-| 문서 | 읽는 시점 | 역할 | 분량 |
+| Document | When to Read | Role | Length |
 |------|---------|------|-----|
-| README.md | 맨 처음 | CoolHan 전체 개요 | 10분 |
-| INSTALLATION_GUIDE.md | 설치할 때 | 설치 및 기본 사용법 | 15분 |
-| 00_AI_MASTER_RULES.md | 개발 시작 전 | AI 실행 규칙 11개 | 20분 |
-| 00_DEVELOPMENT_LOCKED_MODE.md | 매 작업 시작 전 | 엄격한 개발 모드 | 10분 |
+| README.md | First | Full CoolHan overview | 10 min |
+| INSTALLATION_GUIDE.md | When installing | Installation and basic usage | 15 min |
+| 00_AI_MASTER_RULES.md | Before starting development | 11 AI execution rules | 20 min |
+| 00_DEVELOPMENT_LOCKED_MODE.md | Before each task | Strict development mode | 10 min |
 
-### 🟠 중요 문서 (프로젝트별로)
+### 🟠 Important Documents (per project)
 
-| 문서 | 사용 | 역할 | 분량 |
+| Document | Use | Role | Length |
 |------|------|------|-----|
-| 00_BASE_KNOWLEDGE_LOAD.md | 프로젝트 초기화 | Core 로드 프로세스 | 15분 |
-| 00_ARCHITECTURE_CONFLICT_RESOLUTION.md | 다중 모듈 | 11개 충돌 해결 방법 | 20분 |
-| 00_STATUS_VALUE_REGISTRY.md | API/DB 설계 | 모든 상태값 정의 | 30분 |
-| 00_MODULE_RESPONSIBILITY_MATRIX.md | 권한 설정 | 모듈 책임 행렬 | 25분 |
+| 00_BASE_KNOWLEDGE_LOAD.md | Project initialization | Core loading process | 15 min |
+| 00_ARCHITECTURE_CONFLICT_RESOLUTION.md | Multiple modules | How to resolve 11 conflicts | 20 min |
+| 00_STATUS_VALUE_REGISTRY.md | API/DB design | Definitions of all status values | 30 min |
+| 00_MODULE_RESPONSIBILITY_MATRIX.md | Permission setup | Module responsibility matrix | 25 min |
 
-### 🟡 선택 문서 (참고용)
+### 🟡 Optional Documents (for reference)
 
-| 문서 | 사용 | 역할 | 분량 |
+| Document | Use | Role | Length |
 |------|------|------|-----|
-| 00_SPECIFICATION_PARAMETERIZATION_SYSTEM.md | 요구사항 | 매개변수화된 spec | 20분 |
-| 00_DESIGN_PARAMETERIZATION_SYSTEM.md | 디자인 | 매개변수화된 디자인 | 20분 |
-| 00_CORE_PRINCIPLES_SYSTEM.md | 개념 이해 | 3가지 핵심 원칙 | 10분 |
-| 00_KNOWLEDGE_BASE_EXTENSIBILITY.md | 확장 | Core 확장 방법 | 15분 |
+| 00_SPECIFICATION_PARAMETERIZATION_SYSTEM.md | Requirements | Parameterized spec | 20 min |
+| 00_DESIGN_PARAMETERIZATION_SYSTEM.md | Design | Parameterized design | 20 min |
+| 00_CORE_PRINCIPLES_SYSTEM.md | Concept understanding | 3 core principles | 10 min |
+| 00_KNOWLEDGE_BASE_EXTENSIBILITY.md | Extension | How to extend the Core | 15 min |
 
-### 🟢 Base Knowledge Core들
+### 🟢 Base Knowledge Cores
 
-| Core | 프로젝트 타입 | 역할 | 분량 |
+| Core | Project Type | Role | Length |
 |------|-------------|------|-----|
-| shopping_mall_core.md | B2C 이커머스 | 쇼핑몰 표준 | 40분 |
-| marketplace_core.md | 다중 판매자 | 마켓플레이스 표준 | 50분 |
-| purchase_agency_core.md | 해외 구매대행 | 구매대행 표준 | 45분 |
-| logistics_core.md* | 배송 관리 | 배송 표준 | (예정) |
-| member_system_core.md* | 회원 관리 | 회원 표준 | (예정) |
-| admin_system_core.md* | 관리자 | 관리자 표준 | (예정) |
+| shopping_mall_core.md | B2C e-commerce | Shopping mall standard | 40 min |
+| marketplace_core.md | Multi-seller | Marketplace standard | 50 min |
+| purchase_agency_core.md | Overseas purchase agency | Purchase agency standard | 45 min |
+| logistics_core.md* | Shipping management | Shipping standard | (planned) |
+| member_system_core.md* | Member management | Member standard | (planned) |
+| admin_system_core.md* | Admin | Admin standard | (planned) |
 
-*예정 문서
+*Planned documents
 
-### 🔵 도메인 모듈 설명 (참고용)
+### 🔵 Domain Module Descriptions (for reference)
 
-| 모듈 | 기능 | 역할 | 분량 |
+| Module | Feature | Role | Length |
 |------|------|------|-----|
-| 01_member_system | 회원 | 회원가입, 로그인, 프로필 | 20분 |
-| 02_shopping_mall | 상품/장바구니 | 상품 카탈로그, 구매 | 20분 |
-| 03_payment_system | 결제 | 결제, 환불, 정산 | 20분 |
-| 04_shipping_logistics | 배송 | 배송 관리, 추적 | 20분 |
-| 05_admin_system | 관리 | 관리자 기능, 감사 | 20분 |
-| 06_notification | 알림 | 알림, 이메일, SMS | 15분 |
-| 07_review_rating | 리뷰 | 리뷰, 평점, 댓글 | 15분 |
-| 08_inventory_management | 재고 | 재고, 예약, 조정 | 20분 |
-| 09_order_management | 주문 | 주문, 반품, 정산 | 20분 |
-| 10_gdpr_privacy | 개인정보 | 동의, 삭제, 보호 | 15분 |
+| 01_member_system | Member | Signup, login, profile | 20 min |
+| 02_shopping_mall | Product/cart | Product catalog, purchase | 20 min |
+| 03_payment_system | Payment | Payment, refund, settlement | 20 min |
+| 04_shipping_logistics | Shipping | Shipping management, tracking | 20 min |
+| 05_admin_system | Admin | Admin features, audit | 20 min |
+| 06_notification | Notification | Notification, email, SMS | 15 min |
+| 07_review_rating | Review | Review, rating, comment | 15 min |
+| 08_inventory_management | Inventory | Stock, reservation, adjustment | 20 min |
+| 09_order_management | Order | Order, return, settlement | 20 min |
+| 10_gdpr_privacy | Privacy | Consent, deletion, protection | 15 min |
 
 ---
 
-## 1️⃣ 필수 문서 상세 가이드
+## 1️⃣ Essential Documents Detailed Guide
 
 ### README.md
-**언제:** 아주 처음  
-**읽는 시간:** 약 10분  
-**역할:** CoolHan 전체 개요  
+**When:** Very first  
+**Reading time:** About 10 minutes  
+**Role:** Full CoolHan overview  
 
-**내용:**
+**Contents:**
 ```
-- CoolHan이란 뭔가?
-- 해결하는 문제 5가지
-- 핵심 기능 5가지
-- 디렉토리 구조
-- 빠른 시작 3단계
-- 핵심 개념 5개
-- 아키텍처 충돌 해결 11개
-- 기술 스택
-- 로드맵
+- What is CoolHan?
+- 5 problems it solves
+- 5 core features
+- Directory structure
+- 3-step quick start
+- 5 core concepts
+- 11 architecture conflict resolutions
+- Tech stack
+- Roadmap
 ```
 
-**체크리스트:**
-- [ ] CoolHan의 목적 이해
-- [ ] 자신의 프로젝트 유형 파악 (e.g., 쇼핑몰)
-- [ ] 어떤 Core를 로드할지 결정
-- [ ] Base Knowledge Core vs Domain Module 구분
+**Checklist:**
+- [ ] Understand CoolHan's purpose
+- [ ] Identify your project type (e.g., shopping mall)
+- [ ] Decide which Core to load
+- [ ] Distinguish Base Knowledge Core vs Domain Module
 
-**다음:** INSTALLATION_GUIDE.md로 이동
+**Next:** Go to INSTALLATION_GUIDE.md
 
 ---
 
 ### INSTALLATION_GUIDE.md
-**언제:** 설치할 때  
-**읽는 시간:** 약 15분  
-**역할:** 설치 및 기본 사용법  
+**When:** When installing  
+**Reading time:** About 15 minutes  
+**Role:** Installation and basic usage  
 
-**내용:**
+**Contents:**
 ```
-- 개요
-- 시스템 요구사항
-- 설치 방법 4단계
-- 프로젝트 시작 체크리스트
-- 문서 구조 설명
-- 사용 방법 3가지
-- FAQ 5개
-- 문제 해결
-- 지원 및 피드백
+- Overview
+- System requirements
+- 4-step installation
+- Project start checklist
+- Documentation structure explanation
+- 3 usage methods
+- 5 FAQs
+- Troubleshooting
+- Support and feedback
 ```
 
-**체크리스트:**
-- [ ] GitHub에서 성공적으로 클론
-- [ ] 디렉토리 구조 확인
-- [ ] 핵심 문서 4개 찾음
-- [ ] VS Code 확장 설치 (선택)
-- [ ] 로컬 HTTP 서버 실행 (선택)
+**Checklist:**
+- [ ] Successfully cloned from GitHub
+- [ ] Verified directory structure
+- [ ] Found the 4 core documents
+- [ ] Installed VS Code extension (optional)
+- [ ] Ran local HTTP server (optional)
 
-**다음:** 00_AI_MASTER_RULES.md로 이동
+**Next:** Go to 00_AI_MASTER_RULES.md
 
 ---
 
 ### 00_AI_MASTER_RULES.md
-**언제:** 개발 시작 전, 개발 중간중간  
-**읽는 시간:** 약 20분  
-**역할:** AI 실행 규칙 11개 - 가장 중요한 문서  
+**When:** Before starting development, and throughout  
+**Reading time:** About 20 minutes  
+**Role:** 11 AI execution rules - the most important document  
 
-**11가지 규칙:**
+**The 11 rules:**
 ```
-Rule 1: Single Source of Truth (중앙 진실)
-  → 9개 필수 문서 (ERD, API spec, DB schema 등)
+Rule 1: Single Source of Truth
+  → 9 essential documents (ERD, API spec, DB schema, etc.)
 
-Rule 2: Absolute Prohibitions (절대 금지)
-  → 6가지 즉시 중단 행동
+Rule 2: Absolute Prohibitions
+  → 6 immediate-stop behaviors
 
-Rule 3: Pre-task Checklist (작업 전 체크)
-  → 매 작업 시작 전 4가지 확인
+Rule 3: Pre-task Checklist
+  → 4 checks before each task
 
-Rule 4: Task Lock (범위 고정)
-  → DO / DON'T 명시
+Rule 4: Task Lock (scope fixing)
+  → State DO / DON'T
 
-Rule 5: Status Report (상태 보고)
-  → 매 응답마다 현황 보고
+Rule 5: Status Report
+  → Report status in every response
 
-Rule 6: Self-Check (자체 검증)
-  → 9가지 자체 점검
+Rule 6: Self-Check
+  → 9 self-checks
 
-Rule 7: Stop Condition (중단 조건)
-  → 3회 이상 실패 시 [WORK PAUSED]
+Rule 7: Stop Condition
+  → [WORK PAUSED] after 3+ failures
 
-Rule 8: Approval Gates (승인 게이트)
-  → 단계 전환 전 확인
+Rule 8: Approval Gates
+  → Confirm before stage transitions
 
-Rule 9: Uncertainty Protocol (불확실성 대응)
-  → 해석이 여러 개일 때
+Rule 9: Uncertainty Protocol
+  → When multiple interpretations exist
 
-Rule 10: Doc/Code Consistency (문서/코드 일관성)
-  → 충돌 시 코드 따름
+Rule 10: Doc/Code Consistency
+  → Follow code on conflict
 
-Rule 11: Project State Storage (상태 저장)
-  → 프로젝트 상태 기록
+Rule 11: Project State Storage
+  → Record project state
 ```
 
-**체크리스트:**
-- [ ] 11개 규칙 모두 이해
-- [ ] 자신의 AI 도구에 이 파일 로드
-- [ ] 중단 조건 (Rule 7) 숙지
-- [ ] Status Report 형식 (Rule 5) 암기
+**Checklist:**
+- [ ] Understand all 11 rules
+- [ ] Load this file into your AI tool
+- [ ] Master the stop condition (Rule 7)
+- [ ] Memorize the Status Report format (Rule 5)
 
-**다음:** 00_DEVELOPMENT_LOCKED_MODE.md로 이동
+**Next:** Go to 00_DEVELOPMENT_LOCKED_MODE.md
 
 ---
 
 ### 00_DEVELOPMENT_LOCKED_MODE.md
-**언제:** 매 작업 시작 전  
-**읽는 시간:** 약 10분  
-**역할:** 엄격한 개발 모드 - 규칙을 잊지 않도록 강제  
+**When:** Before each task  
+**Reading time:** About 10 minutes  
+**Role:** Strict development mode - enforces not forgetting the rules  
 
-**핵심:**
+**Core:**
 ```
-금지사항 7가지:
-  ✗ 과거 대화 기억 참조
-  ✗ 이전 세션의 추론 패턴
-  ✗ 일반적 패턴에 기반한 생성
-  ✗ 막혔을 때 자의적 해결
-  ✗ "아마도"로 시작하는 시도
-  ✗ 소스 코드 추측
-  ✗ MD에서 불확실한 것
+7 prohibitions:
+  ✗ Referencing memory of past conversations
+  ✗ Reasoning patterns from previous sessions
+  ✗ Generation based on general patterns
+  ✗ Arbitrary resolution when stuck
+  ✗ Attempts starting with "probably"
+  ✗ Guessing source code
+  ✗ Anything uncertain in the MD
 
-허용 정보:
-  ✓ Single Source of Truth 문서
-  ✓ 현재 Sprint 문서
-  ✓ 현재 Module Spec
-  ✓ 승인된 ERD/API 문서
-  ✓ 실제 작동하는 이전 코드
+Allowed information:
+  ✓ Single Source of Truth documents
+  ✓ Current Sprint document
+  ✓ Current Module Spec
+  ✓ Approved ERD/API documents
+  ✓ Actually working previous code
 ```
 
-**체크리스트:**
-- [ ] 매 작업 시작 시 이 문서 재확인
-- [ ] 금지사항 7가지 숙지
-- [ ] 허용 정보 4가지만 사용
-- [ ] 막혔을 때 이 문서의 "막혔을 때" 섹션 읽음
+**Checklist:**
+- [ ] Re-check this document at the start of each task
+- [ ] Master the 7 prohibitions
+- [ ] Use only the 4 allowed information types
+- [ ] When stuck, read the "When stuck" section of this document
 
-**다음:** 프로젝트별 문서로 이동 (아래 참고)
+**Next:** Go to project-specific documents (see below)
 
 ---
 
-## 2️⃣ 프로젝트별 문서 선택 가이드
+## 2️⃣ Per-Project Document Selection Guide
 
-### 시나리오 1: B2C 쇼핑몰 만들기
+### Scenario 1: Building a B2C Shopping Mall
 
 ```
-프로젝트 준비:
+Project preparation:
   1. ✓ README.md
   2. ✓ INSTALLATION_GUIDE.md
   3. ✓ 00_AI_MASTER_RULES.md
   4. ✓ 00_DEVELOPMENT_LOCKED_MODE.md
   5. ✓ 00_BASE_KNOWLEDGE_LOAD.md
 
-Core 로드:
-  1. ✓ shopping_mall_core.md (필수)
+Core loading:
+  1. ✓ shopping_mall_core.md (required)
 
-중앙 진실 문서 작성:
+Single Source of Truth documents to write:
   1. 01_PROJECT_OVERVIEW.md
   2. 02_REQUIREMENTS.md
   3. 03_ERD.md
@@ -233,30 +233,30 @@ Core 로드:
   7. 07_PERMISSIONS.md
   8. 08_PROHIBITIONS.md
 
-개발 중 참고:
-  - 00_ARCHITECTURE_CONFLICT_RESOLUTION.md (선택)
-  - 00_STATUS_VALUE_REGISTRY.md (참고)
-  - 00_MODULE_RESPONSIBILITY_MATRIX.md (참고)
+Reference during development:
+  - 00_ARCHITECTURE_CONFLICT_RESOLUTION.md (optional)
+  - 00_STATUS_VALUE_REGISTRY.md (reference)
+  - 00_MODULE_RESPONSIBILITY_MATRIX.md (reference)
 
-읽는 시간: 약 2시간
-개발 준비 시간: 약 3일
+Reading time: About 2 hours
+Development prep time: About 3 days
 ```
 
-### 시나리오 2: 다중 판매자 마켓플레이스 만들기
+### Scenario 2: Building a Multi-Seller Marketplace
 
 ```
-프로젝트 준비:
+Project preparation:
   1. ✓ README.md
   2. ✓ INSTALLATION_GUIDE.md
   3. ✓ 00_AI_MASTER_RULES.md
   4. ✓ 00_DEVELOPMENT_LOCKED_MODE.md
   5. ✓ 00_BASE_KNOWLEDGE_LOAD.md
 
-Core 로드:
-  1. ✓ shopping_mall_core.md (필수)
-  2. ✓ marketplace_core.md (필수)
+Core loading:
+  1. ✓ shopping_mall_core.md (required)
+  2. ✓ marketplace_core.md (required)
 
-중앙 진실 문서 작성:
+Single Source of Truth documents to write:
   1. 01_PROJECT_OVERVIEW.md
   2. 02_REQUIREMENTS.md
   3. 03_ERD.md
@@ -266,31 +266,31 @@ Core 로드:
   7. 07_PERMISSIONS.md
   8. 08_PROHIBITIONS.md
 
-개발 중 필수:
-  - 00_ARCHITECTURE_CONFLICT_RESOLUTION.md (필수 - 충돌 해결)
-  - 00_STATUS_VALUE_REGISTRY.md (필수 - 상태값)
-  - 00_MODULE_RESPONSIBILITY_MATRIX.md (필수 - 권한)
+Required during development:
+  - 00_ARCHITECTURE_CONFLICT_RESOLUTION.md (required - conflict resolution)
+  - 00_STATUS_VALUE_REGISTRY.md (required - status values)
+  - 00_MODULE_RESPONSIBILITY_MATRIX.md (required - permissions)
 
-읽는 시간: 약 3시간
-개발 준비 시간: 약 5일
-개발 시간: 약 5개월 (6인 팀)
+Reading time: About 3 hours
+Development prep time: About 5 days
+Development time: About 5 months (6-person team)
 ```
 
-### 시나리오 3: 해외 구매대행 시스템 만들기
+### Scenario 3: Building an Overseas Purchase Agency System
 
 ```
-프로젝트 준비:
+Project preparation:
   1. ✓ README.md
   2. ✓ INSTALLATION_GUIDE.md
   3. ✓ 00_AI_MASTER_RULES.md
   4. ✓ 00_DEVELOPMENT_LOCKED_MODE.md
   5. ✓ 00_BASE_KNOWLEDGE_LOAD.md
 
-Core 로드:
-  1. ✓ purchase_agency_core.md (필수)
-  2. ✓ logistics_core.md (권장)
+Core loading:
+  1. ✓ purchase_agency_core.md (required)
+  2. ✓ logistics_core.md (recommended)
 
-중앙 진실 문서 작성:
+Single Source of Truth documents to write:
   1. 01_PROJECT_OVERVIEW.md
   2. 02_REQUIREMENTS.md
   3. 03_ERD.md
@@ -300,189 +300,189 @@ Core 로드:
   7. 07_PERMISSIONS.md
   8. 08_PROHIBITIONS.md
 
-개발 중 필수:
+Required during development:
   - 00_ARCHITECTURE_CONFLICT_RESOLUTION.md
   - 00_STATUS_VALUE_REGISTRY.md
   - 00_MODULE_RESPONSIBILITY_MATRIX.md
 
-특별 참고:
-  - purchase_agency_core.md의 "7. 제약사항" 섹션
-  - purchase_agency_core.md의 "6. 산업 표준 시나리오"
+Special reference:
+  - "7. Constraints" section of purchase_agency_core.md
+  - "6. Industry Standard Scenarios" of purchase_agency_core.md
 
-읽는 시간: 약 2.5시간
-개발 준비 시간: 약 4일
-개발 시간: 약 4개월 (5인 팀)
+Reading time: About 2.5 hours
+Development prep time: About 4 days
+Development time: About 4 months (5-person team)
 ```
 
 ---
 
-## 3️⃣ 문서별 깊이 가이드
+## 3️⃣ Per-Document Depth Guide
 
-### 초급자 (읽어야 할 문서)
+### Beginner (documents to read)
 ```
-1. README.md                          (10분)
-2. INSTALLATION_GUIDE.md              (15분)
-3. 00_DEVELOPMENT_LOCKED_MODE.md      (10분)
-4. 프로젝트 관련 Core 1개             (40분)
+1. README.md                          (10 min)
+2. INSTALLATION_GUIDE.md              (15 min)
+3. 00_DEVELOPMENT_LOCKED_MODE.md      (10 min)
+4. 1 project-related Core             (40 min)
 
-합계: 약 75분
-```
-
-### 중급자 (추가 읽을 문서)
-```
-위의 초급 4개 +
-5. 00_AI_MASTER_RULES.md              (20분)
-6. 00_BASE_KNOWLEDGE_LOAD.md          (15분)
-7. 00_ARCHITECTURE_CONFLICT_RESOLUTION.md (20분)
-
-합계: 약 130분 (2시간 10분)
+Total: About 75 min
 ```
 
-### 고급자 (모두 읽을 문서)
+### Intermediate (additional documents)
 ```
-위의 중급 7개 +
-8. 00_STATUS_VALUE_REGISTRY.md        (30분)
-9. 00_MODULE_RESPONSIBILITY_MATRIX.md (25분)
-10. 00_SPECIFICATION_PARAMETERIZATION_SYSTEM.md (20분)
-11. 00_DESIGN_PARAMETERIZATION_SYSTEM.md (20분)
-12. 00_CORE_PRINCIPLES_SYSTEM.md      (10분)
-13. 00_KNOWLEDGE_BASE_EXTENSIBILITY.md (15분)
-14. 도메인 모듈 설명 (필요한 것) (60분)
+The 4 beginner documents above +
+5. 00_AI_MASTER_RULES.md              (20 min)
+6. 00_BASE_KNOWLEDGE_LOAD.md          (15 min)
+7. 00_ARCHITECTURE_CONFLICT_RESOLUTION.md (20 min)
 
-합계: 약 350분 (5시간 50분)
+Total: About 130 min (2 hr 10 min)
+```
+
+### Advanced (all documents)
+```
+The 7 intermediate documents above +
+8. 00_STATUS_VALUE_REGISTRY.md        (30 min)
+9. 00_MODULE_RESPONSIBILITY_MATRIX.md (25 min)
+10. 00_SPECIFICATION_PARAMETERIZATION_SYSTEM.md (20 min)
+11. 00_DESIGN_PARAMETERIZATION_SYSTEM.md (20 min)
+12. 00_CORE_PRINCIPLES_SYSTEM.md      (10 min)
+13. 00_KNOWLEDGE_BASE_EXTENSIBILITY.md (15 min)
+14. Domain module descriptions (as needed) (60 min)
+
+Total: About 350 min (5 hr 50 min)
 ```
 
 ---
 
-## 4️⃣ 문서 활용 체크리스트
+## 4️⃣ Document Usage Checklist
 
-### 프로젝트 시작 체크리스트
+### Project Start Checklist
 ```
-□ README.md 읽음
-□ INSTALLATION_GUIDE.md 읽음
-□ 자신의 프로젝트 타입 파악 (쇼핑몰? 마켓플레이스?)
-□ 필요한 Core 결정
-□ 00_AI_MASTER_RULES.md 읽음
-□ 00_DEVELOPMENT_LOCKED_MODE.md 읽음
-□ 00_BASE_KNOWLEDGE_LOAD.md 읽음
-□ 중앙 진실 문서 8개 준비 (또는 생성)
-□ AI 도구에 규칙 문서 로드
-□ 개발 시작!
+□ Read README.md
+□ Read INSTALLATION_GUIDE.md
+□ Identify your project type (shopping mall? marketplace?)
+□ Decide which Cores you need
+□ Read 00_AI_MASTER_RULES.md
+□ Read 00_DEVELOPMENT_LOCKED_MODE.md
+□ Read 00_BASE_KNOWLEDGE_LOAD.md
+□ Prepare 8 Single Source of Truth documents (or create them)
+□ Load the rule documents into your AI tool
+□ Start development!
 ```
 
-### 개발 중 매일 체크리스트
+### Daily Development Checklist
 ```
-아침 (개발 시작):
-  □ 00_DEVELOPMENT_LOCKED_MODE.md 5분 읽음
-  □ 어제 프로젝트 상태 확인
-  □ 오늘의 Task Lock 작성
+Morning (start development):
+  □ Read 00_DEVELOPMENT_LOCKED_MODE.md for 5 min
+  □ Check yesterday's project state
+  □ Write today's Task Lock
   
-점심 (중간 점검):
-  □ 00_AI_MASTER_RULES.md의 관련 규칙 재확인
-  □ 상태값 변경이 있으면 STATUS_VALUE_REGISTRY 확인
+Midday (mid-check):
+  □ Re-check relevant rules in 00_AI_MASTER_RULES.md
+  □ If status values changed, check STATUS_VALUE_REGISTRY
   
-저녁 (완료):
-  □ 오늘의 Status Report 작성
-  □ 프로젝트 상태 파일 업데이트
-  □ 내일 계획 준비
+Evening (completion):
+  □ Write today's Status Report
+  □ Update the project state file
+  □ Prepare tomorrow's plan
 ```
 
-### 문제 발생 시 체크리스트
+### When-a-Problem-Occurs Checklist
 ```
-막혔을 때:
-  □ 00_DEVELOPMENT_LOCKED_MODE.md의 "작업 중 막혔을 때" 섹션 읽음
-  □ 로그 분석
-  □ 현재 코드 전체 읽음
-  □ 2회 이상 실패하면 [WORK PAUSED] 선언
+When stuck:
+  □ Read the "When stuck during work" section of 00_DEVELOPMENT_LOCKED_MODE.md
+  □ Analyze logs
+  □ Read the entire current code
+  □ Declare [WORK PAUSED] after 2+ failures
 
-상태값 불명확할 때:
-  □ 00_STATUS_VALUE_REGISTRY.md 검색
-  □ 해당 엔티티의 상태값 목록 확인
-  □ 상태 전이 규칙 확인
-  □ 없으면 문서 업데이트
+When a status value is unclear:
+  □ Search 00_STATUS_VALUE_REGISTRY.md
+  □ Check the entity's list of status values
+  □ Check the state transition rules
+  □ If absent, update the document
 
-권한 불명확할 때:
-  □ 00_MODULE_RESPONSIBILITY_MATRIX.md 검색
-  □ 테이블/API 소유 모듈 확인
-  □ 접근 권한 확인
-  □ FORBIDDEN CALLS 확인
+When permissions are unclear:
+  □ Search 00_MODULE_RESPONSIBILITY_MATRIX.md
+  □ Check the module that owns the table/API
+  □ Check access permissions
+  □ Check FORBIDDEN CALLS
 
-충돌 발생할 때:
-  □ 00_ARCHITECTURE_CONFLICT_RESOLUTION.md 검색
-  □ 충돌 번호 찾기
-  □ "Single Source of Truth" 모듈 확인
-  □ 해당 모듈에만 구현
-```
-
----
-
-## 5️⃣ 문서 학습 순서
-
-### 시간 순서별
-```
-| 시간 | 문서 | 목표 |
-|------|------|------|
-| 0시간 | README.md | 개요 이해 |
-| 10분 | INSTALLATION_GUIDE.md | 설치 완료 |
-| 25분 | 00_DEVELOPMENT_LOCKED_MODE.md | 규칙 숙지 |
-| 35분 | 00_AI_MASTER_RULES.md | 11개 규칙 이해 |
-| 55분 | 00_BASE_KNOWLEDGE_LOAD.md | Core 로드 프로세스 이해 |
-| 70분 | 프로젝트 Core | 표준 정의 이해 |
-| 110분 | 중앙 진실 문서 작성 시작 | 프로젝트 초기화 |
-```
-
-### 깊이 순서별
-```
-| 단계 | 문서 | 내용 |
-|------|------|------|
-| 1단계: 개념 | README.md | CoolHan이 뭔가? |
-| 2단계: 설치 | INSTALLATION_GUIDE.md | 어떻게 설치? |
-| 3단계: 규칙 | 00_DEVELOPMENT_LOCKED_MODE.md | 어떤 규칙? |
-| 4단계: 마스터 | 00_AI_MASTER_RULES.md | 모든 규칙은? |
-| 5단계: 프로세스 | 00_BASE_KNOWLEDGE_LOAD.md | 프로젝트는 어떻게? |
-| 6단계: 표준 | Core (1개) | 우리 도메인의 표준은? |
-| 7단계: 충돌 해결 | 00_ARCHITECTURE_CONFLICT_RESOLUTION.md | 여러 모듈이면 어떻게? |
-| 8단계: 상태값 | 00_STATUS_VALUE_REGISTRY.md | 모든 상태값은? |
-| 9단계: 권한 | 00_MODULE_RESPONSIBILITY_MATRIX.md | 누가 뭘 할 수 있는가? |
-| 10단계: 실무 | 프로젝트 | 실제 개발 시작 |
+When a conflict occurs:
+  □ Search 00_ARCHITECTURE_CONFLICT_RESOLUTION.md
+  □ Find the conflict number
+  □ Check the "Single Source of Truth" module
+  □ Implement only in that module
 ```
 
 ---
 
-## 6️⃣ 문서 인쇄/저장 팁
+## 5️⃣ Document Learning Order
 
-### 최적의 인쇄 순서
+### By time order
 ```
-1. README.md (1-2장)
-2. INSTALLATION_GUIDE.md (3-4장)
-3. 00_AI_MASTER_RULES.md (5-8장)
-4. 00_DEVELOPMENT_LOCKED_MODE.md (9-11장)
-5. 프로젝트 Core (12-30장)
-6. 00_ARCHITECTURE_CONFLICT_RESOLUTION.md (31-35장)
-7. 00_STATUS_VALUE_REGISTRY.md (36-50장)
-8. 00_MODULE_RESPONSIBILITY_MATRIX.md (51-60장)
-
-전체: 약 60페이지 (A4 기준)
+| Time | Document | Goal |
+|------|------|------|
+| 0 hr | README.md | Understand the overview |
+| 10 min | INSTALLATION_GUIDE.md | Complete installation |
+| 25 min | 00_DEVELOPMENT_LOCKED_MODE.md | Master the rules |
+| 35 min | 00_AI_MASTER_RULES.md | Understand the 11 rules |
+| 55 min | 00_BASE_KNOWLEDGE_LOAD.md | Understand the Core loading process |
+| 70 min | Project Core | Understand the standard definition |
+| 110 min | Start writing Single Source of Truth documents | Initialize the project |
 ```
 
-### 북마크 추천
+### By depth order
+```
+| Stage | Document | Content |
+|------|------|------|
+| Stage 1: Concept | README.md | What is CoolHan? |
+| Stage 2: Installation | INSTALLATION_GUIDE.md | How to install? |
+| Stage 3: Rules | 00_DEVELOPMENT_LOCKED_MODE.md | What rules? |
+| Stage 4: Master | 00_AI_MASTER_RULES.md | What are all the rules? |
+| Stage 5: Process | 00_BASE_KNOWLEDGE_LOAD.md | How does a project work? |
+| Stage 6: Standard | Core (1) | What is our domain's standard? |
+| Stage 7: Conflict resolution | 00_ARCHITECTURE_CONFLICT_RESOLUTION.md | What about multiple modules? |
+| Stage 8: Status values | 00_STATUS_VALUE_REGISTRY.md | What are all the status values? |
+| Stage 9: Permissions | 00_MODULE_RESPONSIBILITY_MATRIX.md | Who can do what? |
+| Stage 10: Practice | Project | Start actual development |
+```
+
+---
+
+## 6️⃣ Document Printing/Saving Tips
+
+### Optimal print order
+```
+1. README.md (pages 1-2)
+2. INSTALLATION_GUIDE.md (pages 3-4)
+3. 00_AI_MASTER_RULES.md (pages 5-8)
+4. 00_DEVELOPMENT_LOCKED_MODE.md (pages 9-11)
+5. Project Core (pages 12-30)
+6. 00_ARCHITECTURE_CONFLICT_RESOLUTION.md (pages 31-35)
+7. 00_STATUS_VALUE_REGISTRY.md (pages 36-50)
+8. 00_MODULE_RESPONSIBILITY_MATRIX.md (pages 51-60)
+
+Total: About 60 pages (A4)
+```
+
+### Bookmark recommendations
 ```
 VS Code:
-  Ctrl+B → outline 펼치기 → 주요 섹션 즐겨찾기
+  Ctrl+B → expand outline → bookmark major sections
 
 GitHub:
-  각 문서의 Table of Contents 링크 저장
+  Save the Table of Contents link of each document
 
-브라우저:
-  knowledge_base/ 폴더를 북마크 바에 고정
+Browser:
+  Pin the knowledge_base/ folder to the bookmark bar
 ```
 
-### PDF 변환
+### PDF conversion
 ```bash
-# Pandoc 사용
+# Using Pandoc
 pandoc knowledge_base/00_AI_MASTER_RULES.md -o rules.pdf
 
-# 한번에 모두 변환
+# Convert all at once
 for f in knowledge_base/*.md; do
   pandoc "$f" -o "${f%.md}.pdf"
 done
@@ -490,56 +490,55 @@ done
 
 ---
 
-## 7️⃣ 자주 참고하는 섹션
+## 7️⃣ Frequently Referenced Sections
 
-### 개발 중 자주 보는 부분
+### Frequently viewed during development
 ```
 00_STATUS_VALUE_REGISTRY.md
   → "1. Member System" → "User Status"
-  → 새로운 사용자 상태 추가할 때
+  → When adding a new user status
 
 00_MODULE_RESPONSIBILITY_MATRIX.md
   → "1. Database Tables"
-  → 새로운 테이블 생성할 때
+  → When creating a new table
   
   → "2. API Endpoints"
-  → 새로운 API 생성할 때
+  → When creating a new API
 
 00_DEVELOPMENT_LOCKED_MODE.md
-  → "작업 중 막혔을 때"
-  → 30분 이상 막혔을 때
+  → "When stuck during work"
+  → When stuck for over 30 minutes
 ```
 
-### 모듈 충돌 확인
+### Checking module conflicts
 ```
 00_ARCHITECTURE_CONFLICT_RESOLUTION.md
-  → "충돌 #1 ~ #11" 각각
-  → 특정 기능을 구현할 때마다 확인
+  → "Conflict #1 ~ #11" each
+  → Check each time you implement a specific feature
   
-예: "payment_status"라는 상태값을 추가하려고 함
-  → "충돌 #3: 상태값 레지스트리 부재" 참조
-  → STATUS_VALUE_REGISTRY.md에서 확인
-  → "3. Payment System" → "Payment Status" 섹션 읽음
+Example: trying to add a status value "payment_status"
+  → Refer to "Conflict #3: Missing status value registry"
+  → Check in STATUS_VALUE_REGISTRY.md
+  → Read "3. Payment System" → "Payment Status" section
 ```
 
 ---
 
-## 📝 최종 요약
+## 📝 Final Summary
 
-| 문서 | 언제 | 얼마나 자주 | 중요도 |
+| Document | When | How Often | Importance |
 |------|------|----------|--------|
-| README.md | 처음 1회 | 1회 | ⭐⭐⭐⭐⭐ |
-| INSTALLATION_GUIDE.md | 설치 시 | 1회 | ⭐⭐⭐⭐⭐ |
-| 00_AI_MASTER_RULES.md | 개발 전 | 매주 1회 | ⭐⭐⭐⭐⭐ |
-| 00_DEVELOPMENT_LOCKED_MODE.md | 매 일 아침 | 매일 1회 | ⭐⭐⭐⭐⭐ |
-| 00_BASE_KNOWLEDGE_LOAD.md | 프로젝트 시작 | 1회 | ⭐⭐⭐⭐ |
-| Core (프로젝트 타입) | 프로젝트 시작 | 1-2회 | ⭐⭐⭐⭐ |
-| 00_ARCHITECTURE_CONFLICT_RESOLUTION.md | 필요할 때 | 주 1-2회 | ⭐⭐⭐⭐ |
-| 00_STATUS_VALUE_REGISTRY.md | 필요할 때 | 주 2-3회 | ⭐⭐⭐⭐ |
-| 00_MODULE_RESPONSIBILITY_MATRIX.md | 필요할 때 | 주 1-2회 | ⭐⭐⭐ |
-| 기타 참고 문서 | 심화 학습 | 월 1-2회 | ⭐⭐⭐ |
+| README.md | First time | Once | ⭐⭐⭐⭐⭐ |
+| INSTALLATION_GUIDE.md | When installing | Once | ⭐⭐⭐⭐⭐ |
+| 00_AI_MASTER_RULES.md | Before development | Weekly | ⭐⭐⭐⭐⭐ |
+| 00_DEVELOPMENT_LOCKED_MODE.md | Every morning | Daily | ⭐⭐⭐⭐⭐ |
+| 00_BASE_KNOWLEDGE_LOAD.md | Project start | Once | ⭐⭐⭐⭐ |
+| Core (project type) | Project start | 1-2 times | ⭐⭐⭐⭐ |
+| 00_ARCHITECTURE_CONFLICT_RESOLUTION.md | As needed | 1-2 times/week | ⭐⭐⭐⭐ |
+| 00_STATUS_VALUE_REGISTRY.md | As needed | 2-3 times/week | ⭐⭐⭐⭐ |
+| 00_MODULE_RESPONSIBILITY_MATRIX.md | As needed | 1-2 times/week | ⭐⭐⭐ |
+| Other reference documents | Advanced study | 1-2 times/month | ⭐⭐⭐ |
 
 ---
 
-**이 가이드로 CoolHan의 모든 문서를 효율적으로 활용하세요! 📚**
-
+**Use this guide to efficiently leverage all of CoolHan's documents! 📚**

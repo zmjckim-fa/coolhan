@@ -1,35 +1,35 @@
-# 도메인 모듈 11: 구매신청 (Purchase Application)
+# Domain Module 11: Purchase Application
 
-## 섹션 1: 모듈 식별
+## Section 1: Module Identification
 
-- **모듈 ID:** 11_purchase_application
-- **도메인:** 구매신청 / Purchase Application
-- **버전:** 1.0.0
-- **상태:** 활성
-- **의존 모듈:** 01_member_system, 09_order_management
+- **Module ID:** 11_purchase_application
+- **Domain:** Purchase Application
+- **Version:** 1.0.0
+- **Status:** Active
+- **Dependent Modules:** 01_member_system, 09_order_management
 
 ---
 
-## 섹션 2: 핵심 기능 (10개)
+## Section 2: Core Features (10)
 
-| # | 기능 | 설명 |
+| # | Feature | Description |
 |---|------|------|
-| F1 | 구매신청 접수 | 상품 + 배송지 + 결제방법 입력 후 신청 생성 |
-| F2 | 신청 상세 조회 | 신청번호로 단건 조회 (마이페이지) |
-| F3 | 신청 목록 조회 | 고객별 신청 목록 (페이지네이션) |
-| F4 | 상태 업데이트 | 관리자가 상태 전이 실행 |
-| F5 | 신청 취소 | pending/reviewing 상태에서만 가능 |
-| F6 | 상태 타임라인 | 상태 이력 순서대로 표시 |
-| F7 | 상품 명세 계산 | 수량 × 단가 = 소계, 합계 |
-| F8 | 배송지 검증 | 필수 필드(이름, 주소, 연락처) 검증 |
-| F9 | 신청번호 생성 | PA-YYYYMMDD-XXXX 포맷 자동 생성 |
-| F10 | 마이페이지 HTML 렌더 | 반응형 상세 화면 (360px~) |
+| F1 | Submit purchase application | Create an application after entering product + shipping address + payment method |
+| F2 | View application details | Single-record lookup by application number (My Page) |
+| F3 | View application list | Customer's application list (paginated) |
+| F4 | Update status | Admin executes status transitions |
+| F5 | Cancel application | Allowed only in pending/reviewing status |
+| F6 | Status timeline | Display status history in order |
+| F7 | Calculate line items | quantity × unit price = subtotal, total |
+| F8 | Validate shipping address | Validate required fields (name, address, contact) |
+| F9 | Generate application number | Auto-generate in PA-YYYYMMDD-XXXX format |
+| F10 | Render My Page HTML | Responsive detail view (360px and up) |
 
 ---
 
-## 섹션 3: 데이터베이스 스키마
+## Section 3: Database Schema
 
-### purchase_applications 테이블
+### purchase_applications table
 ```sql
 CREATE TABLE purchase_applications (
     id              VARCHAR(20) PRIMARY KEY,   -- PA-YYYYMMDD-XXXX
@@ -65,121 +65,121 @@ CREATE TABLE purchase_recipients (
 
 ---
 
-## 섹션 4: 상태값 (00_STATUS_VALUE_REGISTRY.md 준수)
+## Section 4: Status Values (Compliant with 00_STATUS_VALUE_REGISTRY.md)
 
-| 상태 코드 | 한국어 | 색상 | 전이 가능 대상 |
+| Status Code | Label | Color | Allowed Transition Targets |
 |---------|--------|------|---------------|
-| `pending` | 접수 완료 | #6B7280 | reviewing, cancelled |
-| `reviewing` | 검토 중 | #D97706 | approved, cancelled |
-| `approved` | 승인 완료 | #059669 | shipping |
-| `shipping` | 배송 중 | #2563EB | delivered |
-| `delivered` | 배달 완료 | #15803D | (종료) |
-| `cancelled` | 취소 | #DC2626 | (종료) |
+| `pending` | Application received | #6B7280 | reviewing, cancelled |
+| `reviewing` | Under review | #D97706 | approved, cancelled |
+| `approved` | Approved | #059669 | shipping |
+| `shipping` | Shipping | #2563EB | delivered |
+| `delivered` | Delivered | #15803D | (terminal) |
+| `cancelled` | Cancelled | #DC2626 | (terminal) |
 
 ---
 
-## 섹션 5: API 엔드포인트
+## Section 5: API Endpoints
 
-| 메서드 | 경로 | 설명 | 권한 |
+| Method | Path | Description | Permission |
 |-------|------|------|------|
-| POST | `/api/purchase` | 신청 접수 | 로그인 고객 |
-| GET | `/api/purchase/{id}` | 단건 조회 | 본인 또는 관리자 |
-| GET | `/api/purchase` | 목록 조회 | 본인 또는 관리자 |
-| PATCH | `/api/purchase/{id}/status` | 상태 변경 | 관리자 |
-| DELETE | `/api/purchase/{id}` | 취소 | 본인 (pending/reviewing만) |
-| GET | `/mypage/purchase/{id}` | HTML 상세 화면 | 본인 |
+| POST | `/api/purchase` | Submit application | Logged-in customer |
+| GET | `/api/purchase/{id}` | Single-record lookup | Owner or admin |
+| GET | `/api/purchase` | List lookup | Owner or admin |
+| PATCH | `/api/purchase/{id}/status` | Change status | Admin |
+| DELETE | `/api/purchase/{id}` | Cancel | Owner (pending/reviewing only) |
+| GET | `/mypage/purchase/{id}` | HTML detail view | Owner |
 
 ---
 
-## 섹션 6: 보안 기준
+## Section 6: Security Standards
 
-- 본인 확인: `customer_email` 매칭 (JWT 또는 세션)
-- 타인 신청 조회 시 403 반환
-- 없는 신청번호 조회 시 404 반환
-- 취소 불가 상태(approved 이후) 에서 취소 요청 시 422 반환
-
----
-
-## 섹션 7: 통합 포인트
-
-- **01_member_system:** 고객 인증, 이메일 조회
-- **09_order_management:** 주문 확정 전 구매신청 → 주문 전환 흐름
-- **08_inventory_management:** 승인 시 재고 예약 트리거 (선택)
+- Identity verification: `customer_email` matching (JWT or session)
+- Return 403 when viewing another user's application
+- Return 404 when looking up a nonexistent application number
+- Return 422 when requesting cancellation in a non-cancellable status (after approved)
 
 ---
 
-## 섹션 8: 인수 기준 (Acceptance Criteria)
+## Section 7: Integration Points
 
-| # | 기준 | 검증 방법 |
+- **01_member_system:** Customer authentication, email lookup
+- **09_order_management:** Purchase application → order conversion flow before order confirmation
+- **08_inventory_management:** Inventory reservation trigger on approval (optional)
+
+---
+
+## Section 8: Acceptance Criteria
+
+| # | Criterion | Verification Method |
 |---|------|---------|
-| AC1 | 신청번호 PA-YYYYMMDD-XXXX 형식 자동 생성 | 단위 테스트 |
-| AC2 | 상세 조회 시 모든 섹션(기본/상품/배송/결제) 포함 | API 응답 구조 검증 |
-| AC3 | 타인 신청 조회 시 403 반환 | 음성 테스트 |
-| AC4 | HTML 화면이 360px 모바일에서 레이아웃 깨짐 없음 | 반응형 검증 |
-| AC5 | pending 상태만 취소 가능 | 상태 전이 테스트 |
-| AC6 | 소계 = qty × unit_price 자동 계산 | 계산 검증 |
+| AC1 | Application number auto-generated in PA-YYYYMMDD-XXXX format | Unit test |
+| AC2 | Detail lookup includes all sections (basic/product/shipping/payment) | API response structure validation |
+| AC3 | Return 403 when viewing another user's application | Negative test |
+| AC4 | HTML view has no layout breakage on 360px mobile | Responsive validation |
+| AC5 | Only pending status can be cancelled | Status transition test |
+| AC6 | Subtotal = qty × unit_price auto-calculated | Calculation validation |
 
 ---
 
-## 섹션 9: 오류 시나리오
+## Section 9: Error Scenarios
 
-| 오류 | 코드 | 메시지 |
+| Error | Code | Message |
 |------|------|--------|
-| 신청 미존재 | 404 | "신청번호를 찾을 수 없습니다" |
-| 타인 신청 접근 | 403 | "접근 권한이 없습니다" |
-| 취소 불가 상태 | 422 | "현재 상태에서는 취소할 수 없습니다" |
-| 필수 필드 누락 | 422 | "필수 항목이 누락되었습니다: {field}" |
-| 수량 오류 | 422 | "수량은 1 이상이어야 합니다" |
+| Application not found | 404 | "Application number not found" |
+| Access to another user's application | 403 | "You do not have access permission" |
+| Non-cancellable status | 422 | "Cannot cancel in the current status" |
+| Missing required field | 422 | "Required field is missing: {field}" |
+| Quantity error | 422 | "Quantity must be 1 or greater" |
 
 ---
 
-## 섹션 10: 마이페이지 화면 명세
+## Section 10: My Page View Specification
 
-### 레이아웃 (모바일 우선)
+### Layout (mobile-first)
 ```
-[페이지 제목: 구매신청 상세]
-[브레드크럼: 마이페이지 › 구매신청 › {id}]
+[Page title: Purchase Application Detail]
+[Breadcrumb: My Page › Purchase Application › {id}]
 
-카드 1: 신청 정보
-  - 신청번호 | 상태 뱃지 | 신청일
+Card 1: Application Info
+  - Application number | Status badge | Application date
 
-카드 2: 상품 목록
-  - 테이블: 상품명 | 수량 | 단가 | 소계
-  - 합계 행
+Card 2: Product List
+  - Table: Product name | Quantity | Unit price | Subtotal
+  - Total row
 
-카드 3: 배송지 정보
-  - 수취인 | 연락처 | 주소
+Card 3: Shipping Address Info
+  - Recipient | Contact | Address
 
-카드 4: 결제 정보
-  - 결제방법 | 총 금액
+Card 4: Payment Info
+  - Payment method | Total amount
 
-카드 5: 상태 타임라인
-  - 접수 → 검토 → 승인 → 배송 → 완료 (현재 상태 하이라이트)
+Card 5: Status Timeline
+  - Received → Review → Approved → Shipping → Completed (current status highlighted)
 
-[버튼: ← 목록으로]
+[Button: ← Back to list]
 ```
 
-### 반응형 기준
-- 모바일(~767px): 단일 컬럼, 카드 100% 너비
-- 태블릿(768px~): 2컬럼 그리드 가능
-- 데스크탑(1024px~): max-width 900px, 중앙 정렬
+### Responsive Standards
+- Mobile (~767px): single column, cards at 100% width
+- Tablet (768px and up): 2-column grid allowed
+- Desktop (1024px and up): max-width 900px, centered
 
 ---
 
-## 섹션 11: 데모 구현 (track10)
+## Section 11: Demo Implementation (track10)
 
-경로: `_harness_test/track10/`
+Path: `_harness_test/track10/`
 
-| 파일 | 역할 |
+| File | Role |
 |------|------|
-| `main.py` | FastAPI 앱 엔트리포인트 |
-| `models.py` | Pydantic 모델 + 파일 기반 스토어 |
-| `templates/mypage_purchase_detail.html` | Jinja2 반응형 HTML 템플릿 |
+| `main.py` | FastAPI app entry point |
+| `models.py` | Pydantic models + file-based store |
+| `templates/mypage_purchase_detail.html` | Jinja2 responsive HTML template |
 
 ---
 
-## 섹션 12: 변경 이력
+## Section 12: Change History
 
-| 날짜 | 버전 | 변경 내용 |
+| Date | Version | Change |
 |------|------|---------|
-| 2026-06-13 | 1.0.0 | 최초 작성 — 마이페이지 구매신청 상세 화면 |
+| 2026-06-13 | 1.0.0 | Initial draft — My Page purchase application detail view |

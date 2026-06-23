@@ -1,108 +1,108 @@
-# Purchase Agency Core - 해외 구매대행 표준 정의
+# Purchase Agency Core - Overseas Purchase Agency Standard Definition
 
 **Version:** 1.0.0  
 **Effective Date:** 2026-05-27  
 **Purpose:** Overseas Purchase Agency Platform Standard Definition  
 **Status:** MANDATORY for purchase agency projects  
-**Language:** Korean (한국어)
+**Language:** English
 
 ---
 
 ## 📌 Executive Summary
 
-Purchase Agency Core는 해외 상품 구매 대행 플랫폼의 최소 필요 기능, 데이터 구조, 상태값, API 패턴을 정의합니다. 
+Purchase Agency Core defines the minimum required features, data structures, status values, and API patterns for an overseas product purchase agency platform.
 
-**4단계 흐름:**
-1. **해외 구매 (Overseas Purchase)**: 고객이 해외 상품 구매 요청 → 대행사가 구매
-2. **국제 배송 (International Shipping)**: 판매처 → 현지 창고 (1-2주)
-3. **통관 처리 (Customs Processing)**: 관세 신고, 서류, 검사 (3-7일)
-4. **국내 배송 (Domestic Shipping)**: 현지 창고 → 최종 고객 (2-5일)
+**4-Stage Flow:**
+1. **Overseas Purchase**: Customer requests purchase of an overseas product → agency buys it
+2. **International Shipping**: Seller → local warehouse (1–2 weeks)
+3. **Customs Processing**: Customs declaration, documents, inspection (3–7 days)
+4. **Domestic Shipping**: Local warehouse → final customer (2–5 days)
 
-**핵심 원칙:**
-- 고객 1명 → 국가 1곳 → 판매처 여러 개 가능
-- 환율 고정 (구매 시점 기준)
-- 비용 명확 (구매가 + 배송 + 관세 + 국내 배송)
-- 정산 자동화
-
----
-
-## 1️⃣ 기본 포함 기능 (Non-Negotiable)
-
-### 구매 요청 관리
-- **구매 요청 생성**: 고객이 해외 상품 구매 신청
-  - 상품명, URL, 판매처, 수량, 원화 환산
-  - 요청 상태 추적
-  - 한 요청 = 한 국가 (다국가 혼합 불가)
-- **구매 요청 검토**: 대행사가 구매 가능 여부 판단
-  - 가능: 수락 (구매 진행)
-  - 불가: 거절 (사유 기록)
-- **구매 추적**: 구매 진행상황 모니터링
-  - 구매 완료 확인
-  - 배송 준비 확인
-
-### 비용 추정 및 확인
-- **비용 추정 (Estimate)**
-  - 상품 구매가 (고정)
-  - 국제 배송료 (무게/크기 기반, 보험 포함)
-  - 환율 (구매 시점)
-  - 예상 관세 (상품 종류별)
-  - 국내 배송료 (지역별)
-  - 대행 수수료 (기본 10%)
-  - 총 비용 = 구매가 × 환율 + 국제 배송 + 예상 관세 + 국내 배송 + 수수료
-- **비용 확인 (Confirmation)**
-  - 고객이 추정 비용 검토
-  - 동의하면 진행, 거절하면 취소
-- **최종 정산 (Final Settlement)**
-  - 실제 비용 (관세는 실제 청구 금액으로 조정)
-  - 초과 비용 징수 또는 환불
-
-### 국제 배송
-- **배송사 선택**: 국가별 배송사 (DHL, FedEx, UPS 등)
-- **추적**: 실시간 위치 확인
-- **현지 창고 도착**: 배송 완료, 통관 준비
-
-### 통관 처리
-- **통관 신청**: 대행사가 관세청에 신고
-  - 상품 정보 (HS Code, 원산지)
-  - 인보이스
-  - 기타 서류
-- **관세 계산**: 상품가 기반 자동 계산
-- **통관 상태 추적**: 신청 → 검사 → 승인/보류 → 납세 → 통관
-- **통관 실패**: 반송 또는 재신고 절차
-
-### 국내 배송
-- **배송사 선택**: 국내 택배 (CJ, 대한통운, 로젠 등)
-- **배송 추적**: 실시간 위치 및 배송 상태
-- **최종 배송**: 고객 주소로 배송
-
-### 고객 커뮤니케이션
-- **상태 알림**: 각 단계별 자동 알림
-- **질의응답**: 고객 질문 수렴 및 답변
-
-### 반품 및 환불
-- **반품 신청**: 배송받은 후 30일 이내
-- **반품 배송**: 역순 배송 (고객 → 국내 → 통관 → 국제 → 판매처)
-- **환불 처리**: 판매처 환불 → 고객 환불
-- **비용 차감**: 배송료 및 통관료는 환급 불가
+**Core Principles:**
+- One customer → one country → multiple sellers possible
+- Exchange rate fixed (as of purchase time)
+- Costs are explicit (purchase price + shipping + tariff + domestic shipping)
+- Settlement automated
 
 ---
 
-## 2️⃣ 기본 DB 구조 (10개 핵심 테이블)
+## 1️⃣ Built-in Features (Non-Negotiable)
 
-| # | 테이블 | 목적 | 소유 모듈 | 행 수 추정 (1년) |
+### Purchase Request Management
+- **Create purchase request**: Customer applies to purchase an overseas product
+  - Product name, URL, seller, quantity, KRW conversion
+  - Request status tracking
+  - One request = one country (multi-country mix not allowed)
+- **Review purchase request**: Agency decides whether purchase is feasible
+  - Feasible: accept (proceed with purchase)
+  - Not feasible: reject (record reason)
+- **Purchase tracking**: Monitor purchase progress
+  - Confirm purchase completion
+  - Confirm shipping readiness
+
+### Cost Estimation and Confirmation
+- **Cost estimate (Estimate)**
+  - Product purchase price (fixed)
+  - International shipping fee (weight/size-based, insurance included)
+  - Exchange rate (as of purchase time)
+  - Estimated tariff (by product type)
+  - Domestic shipping fee (by region)
+  - Agency fee (default 10%)
+  - Total cost = purchase price × exchange rate + international shipping + estimated tariff + domestic shipping + fee
+- **Cost confirmation (Confirmation)**
+  - Customer reviews the estimated cost
+  - Proceed if agreed, cancel if rejected
+- **Final settlement (Final Settlement)**
+  - Actual cost (tariff adjusted to the actual billed amount)
+  - Collect overage or refund difference
+
+### International Shipping
+- **Carrier selection**: Carrier by country (DHL, FedEx, UPS, etc.)
+- **Tracking**: Real-time location lookup
+- **Arrival at local warehouse**: Delivery complete, ready for customs
+
+### Customs Processing
+- **Customs filing**: Agency declares to customs
+  - Product info (HS Code, country of origin)
+  - Invoice
+  - Other documents
+- **Tariff calculation**: Auto-calculated based on product price
+- **Customs status tracking**: Filed → inspection → approved/held → tax payment → cleared
+- **Customs failure**: Return or re-filing procedure
+
+### Domestic Shipping
+- **Carrier selection**: Domestic courier (CJ, Korea Express, Logen, etc.)
+- **Delivery tracking**: Real-time location and delivery status
+- **Final delivery**: Delivered to customer's address
+
+### Customer Communication
+- **Status notifications**: Automatic notifications at each stage
+- **Q&A**: Collect and answer customer questions
+
+### Returns and Refunds
+- **Return request**: Within 30 days of receiving delivery
+- **Return shipping**: Reverse-order shipping (customer → domestic → customs → international → seller)
+- **Refund processing**: Seller refund → customer refund
+- **Cost deduction**: Shipping fees and customs fees are non-refundable
+
+---
+
+## 2️⃣ Base DB Structure (10 core tables)
+
+| # | Table | Purpose | Owning Module | Row Estimate (1 year) |
 |---|--------|------|---------|-----------------|
-| 1 | `users` | 회원 정보 | 01_member_system | 10K-100K |
-| 2 | `purchase_requests` | 구매 요청 | 09_order_management | 1K-10K |
-| 3 | `purchase_orders` | 실제 해외 구매 | 09_order_management | 1K-10K |
-| 4 | `cost_estimates` | 비용 추정 | 03_payment_system | 5K-50K |
-| 5 | `exchange_rates` | 환율 정보 | 03_payment_system | 365 (일일 1개) |
-| 6 | `international_shipments` | 국제 배송 | 04_shipping_logistics | 1K-10K |
-| 7 | `customs_declarations` | 통관 신청 | 04_shipping_logistics | 1K-10K |
-| 8 | `domestic_shipments` | 국내 배송 | 04_shipping_logistics | 1K-10K |
-| 9 | `settlements` | 정산 내역 | 03_payment_system | 1K-10K |
-| 10 | `agency_staff` | 대행사 직원 | 05_admin_system | 10-100 |
+| 1 | `users` | Member info | 01_member_system | 10K-100K |
+| 2 | `purchase_requests` | Purchase requests | 09_order_management | 1K-10K |
+| 3 | `purchase_orders` | Actual overseas purchases | 09_order_management | 1K-10K |
+| 4 | `cost_estimates` | Cost estimates | 03_payment_system | 5K-50K |
+| 5 | `exchange_rates` | Exchange rate info | 03_payment_system | 365 (1 per day) |
+| 6 | `international_shipments` | International shipments | 04_shipping_logistics | 1K-10K |
+| 7 | `customs_declarations` | Customs filings | 04_shipping_logistics | 1K-10K |
+| 8 | `domestic_shipments` | Domestic shipments | 04_shipping_logistics | 1K-10K |
+| 9 | `settlements` | Settlement history | 03_payment_system | 1K-10K |
+| 10 | `agency_staff` | Agency staff | 05_admin_system | 10-100 |
 
-### 테이블 스키마 개요
+### Table Schema Overview
 
 **purchase_requests**
 ```
@@ -126,9 +126,9 @@ shipping_company | status | dispatched_at | arrived_at | created_at
 
 ---
 
-## 3️⃣ 기본 상태값 (Status Value Registry)
+## 3️⃣ Base Status Values (Status Value Registry)
 
-### Purchase Request Status (구매 요청 상태)
+### Purchase Request Status
 ```
 (1) pending
     → (2) accepted
@@ -141,27 +141,27 @@ shipping_company | status | dispatched_at | arrived_at | created_at
                                 → (9) in_transit_domestic
                                     → (10) delivered
                                         → (11) completed
-또는
+or
 (1) pending → (X) rejected
 Any state → (X) canceled
 ```
 
-**상태별 설명:**
-- `pending`: 구매 요청 생성, 대행사 검토 대기
-- `accepted`: 대행사 수락, 구매 진행
-- `purchased`: 해외에서 상품 구매 완료
-- `in_transit_international`: 국제 배송 중
-- `arrived_warehouse`: 현지 창고 도착
-- `processing_customs`: 통관 신청/검사 중
-- `customs_cleared`: 통관 완료
-- `ready_to_ship_domestic`: 국내 배송 준비
-- `in_transit_domestic`: 국내 배송 중
-- `delivered`: 최종 배송 완료
-- `completed`: 거래 완료 (30일 반품 가능 기간 경과)
-- `rejected`: 대행사가 구매 불가 판단
-- `canceled`: 고객 취소 요청
+**Status descriptions:**
+- `pending`: Purchase request created, awaiting agency review
+- `accepted`: Agency accepted, purchase in progress
+- `purchased`: Product purchased overseas
+- `in_transit_international`: In international transit
+- `arrived_warehouse`: Arrived at local warehouse
+- `processing_customs`: Customs filing/inspection in progress
+- `customs_cleared`: Customs cleared
+- `ready_to_ship_domestic`: Ready for domestic shipping
+- `in_transit_domestic`: In domestic transit
+- `delivered`: Final delivery complete
+- `completed`: Transaction complete (30-day return window elapsed)
+- `rejected`: Agency deemed purchase infeasible
+- `canceled`: Customer cancellation request
 
-### Cost Status (비용 상태)
+### Cost Status
 ```
 (1) estimated
     → (2) confirmed
@@ -169,255 +169,255 @@ Any state → (X) canceled
             → (4) paid
 ```
 
-### International Shipment Status (국제 배송 상태)
+### International Shipment Status
 ```
 (1) dispatched
     → (2) in_transit
         → (3) arrived_warehouse
 ```
 
-### Customs Declaration Status (통관 신청 상태)
+### Customs Declaration Status
 ```
 (1) submitted
     → (2) inspecting
         → (3) approved
-    또는 → (X) failed
+    or → (X) failed
 ```
 
-### Domestic Shipment Status (국내 배송 상태)
+### Domestic Shipment Status
 ```
 (1) ready_to_ship
     → (2) in_transit
         → (3) delivered
-    또는 → (X) failed
+    or → (X) failed
 ```
 
 ---
 
-## 4️⃣ 기본 API 엔드포인트 (40+ endpoints)
+## 4️⃣ Base API Endpoints (40+ endpoints)
 
 ### Purchase Request (8 endpoints)
 ```
-POST   /purchase-requests                 구매 요청 생성
-GET    /purchase-requests                 구매 요청 목록 (개인)
-GET    /purchase-requests/{id}            구매 요청 상세
-PUT    /purchase-requests/{id}/cancel     구매 요청 취소
-GET    /purchase-requests/{id}/tracking   전체 추적 정보 (통합)
-POST   /admin/purchase-requests/{id}/accept 구매 요청 수락 (관리자)
-POST   /admin/purchase-requests/{id}/reject 구매 요청 거절 (관리자)
-GET    /admin/purchase-requests           구매 요청 목록 (관리자)
+POST   /purchase-requests                 Create purchase request
+GET    /purchase-requests                 Purchase request list (personal)
+GET    /purchase-requests/{id}            Purchase request detail
+PUT    /purchase-requests/{id}/cancel     Cancel purchase request
+GET    /purchase-requests/{id}/tracking   Full tracking info (consolidated)
+POST   /admin/purchase-requests/{id}/accept Accept purchase request (admin)
+POST   /admin/purchase-requests/{id}/reject Reject purchase request (admin)
+GET    /admin/purchase-requests           Purchase request list (admin)
 ```
 
 ### Cost Estimation (6 endpoints)
 ```
-POST   /purchase-requests/{id}/estimate-costs  비용 추정
-GET    /purchase-requests/{id}/cost-estimate   추정 비용 조회
-POST   /purchase-requests/{id}/confirm-costs   비용 확인/동의
-GET    /purchase-requests/{id}/cost-history    비용 변경 이력
-POST   /purchase-requests/{id}/finalize-costs  최종 비용 정산 (관리자)
-GET    /purchase-requests/{id}/tariff-estimate 예상 관세 조회
+POST   /purchase-requests/{id}/estimate-costs  Estimate costs
+GET    /purchase-requests/{id}/cost-estimate   Look up estimated cost
+POST   /purchase-requests/{id}/confirm-costs   Confirm/agree to costs
+GET    /purchase-requests/{id}/cost-history    Cost change history
+POST   /purchase-requests/{id}/finalize-costs  Final cost settlement (admin)
+GET    /purchase-requests/{id}/tariff-estimate Look up estimated tariff
 ```
 
 ### Exchange Rate (3 endpoints)
 ```
-GET    /exchange-rates                    현재 환율 조회
-GET    /exchange-rates/history/{currency} 환율 이력
-POST   /admin/exchange-rates/update       환율 수동 업데이트 (관리자)
+GET    /exchange-rates                    Look up current exchange rate
+GET    /exchange-rates/history/{currency} Exchange rate history
+POST   /admin/exchange-rates/update       Manual exchange rate update (admin)
 ```
 
 ### International Shipment Tracking (5 endpoints)
 ```
-GET    /purchase-requests/{id}/international-shipment  국제 배송 조회
-POST   /admin/shipments/{id}/dispatch                  배송 시작 (관리자)
-PUT    /admin/shipments/{id}/tracking-update           추적정보 수동 업데이트 (관리자)
-GET    /admin/shipments                                전체 국제 배송 (관리자)
-POST   /admin/shipments/{id}/arrive-warehouse          창고 도착 기록 (관리자)
+GET    /purchase-requests/{id}/international-shipment  Look up international shipment
+POST   /admin/shipments/{id}/dispatch                  Start shipment (admin)
+PUT    /admin/shipments/{id}/tracking-update           Manual tracking update (admin)
+GET    /admin/shipments                                All international shipments (admin)
+POST   /admin/shipments/{id}/arrive-warehouse          Record warehouse arrival (admin)
 ```
 
 ### Customs Processing (6 endpoints)
 ```
-GET    /purchase-requests/{id}/customs-declaration    통관 신청 현황
-POST   /admin/customs/{id}/submit                     통관 신청 (관리자)
-PUT    /admin/customs/{id}/update-status              통관 상태 변경 (관리자)
-GET    /admin/customs/{id}/tariff-actual              실제 관세 확인 (관리자)
-POST   /admin/customs/{id}/approve                    통관 승인 (관리자)
-POST   /admin/customs/{id}/fail-shipment              통관 실패 - 반송 (관리자)
+GET    /purchase-requests/{id}/customs-declaration    Customs filing status
+POST   /admin/customs/{id}/submit                     Submit customs filing (admin)
+PUT    /admin/customs/{id}/update-status              Change customs status (admin)
+GET    /admin/customs/{id}/tariff-actual              Confirm actual tariff (admin)
+POST   /admin/customs/{id}/approve                    Approve customs clearance (admin)
+POST   /admin/customs/{id}/fail-shipment              Customs failure - return (admin)
 ```
 
 ### Domestic Shipment Tracking (5 endpoints)
 ```
-GET    /purchase-requests/{id}/domestic-shipment      국내 배송 조회
-POST   /admin/domestic-shipments/{id}/dispatch        국내 배송 시작 (관리자)
-PUT    /admin/domestic-shipments/{id}/tracking-update 추적정보 수동 업데이트 (관리자)
-GET    /admin/domestic-shipments                      전체 국내 배송 (관리자)
-POST   /admin/domestic-shipments/{id}/deliver         배송 완료 기록 (관리자)
+GET    /purchase-requests/{id}/domestic-shipment      Look up domestic shipment
+POST   /admin/domestic-shipments/{id}/dispatch        Start domestic shipment (admin)
+PUT    /admin/domestic-shipments/{id}/tracking-update Manual tracking update (admin)
+GET    /admin/domestic-shipments                      All domestic shipments (admin)
+POST   /admin/domestic-shipments/{id}/deliver         Record delivery completion (admin)
 ```
 
 ### Settlement & Refund (4 endpoints)
 ```
-GET    /user/settlements                  개인 정산 내역
-GET    /admin/settlements                 전체 정산 현황
-POST   /admin/settlements/process-monthly 월별 정산 처리 (관리자)
-POST   /purchase-requests/{id}/refund     환불 처리 (관리자)
+GET    /user/settlements                  Personal settlement history
+GET    /admin/settlements                 Overall settlement status
+POST   /admin/settlements/process-monthly Process monthly settlement (admin)
+POST   /purchase-requests/{id}/refund     Process refund (admin)
 ```
 
 ### Customer Communication (3 endpoints)
 ```
-GET    /purchase-requests/{id}/messages   상태 알림 메시지
-POST   /purchase-requests/{id}/inquiry    고객 질의
-GET    /admin/inquiries                   전체 고객 질의 (관리자)
+GET    /purchase-requests/{id}/messages   Status notification messages
+POST   /purchase-requests/{id}/inquiry    Customer inquiry
+GET    /admin/inquiries                   All customer inquiries (admin)
 ```
 
 ---
 
-## 5️⃣ 금지사항 (Prohibitions)
+## 5️⃣ Prohibitions
 
-- ❌ **다중 통화 표시 (Multi-currency pricing)**
-- ❌ **자동 환율 조정 (Exchange rate retroactive adjustments)**
-- ❌ **부분 환불 (Partial refunds)**
-- ❌ **다국가 혼합 구매 (Multi-country orders)**
-- ❌ **배송 옵션 변경 (Post-confirmation shipping changes)**
-- ❌ **관세 환불 (Tariff refunds)**
-- ❌ **자동 재배송 (Automatic reshipping after failure)**
-
----
-
-## 6️⃣ 산업 표준 시나리오
-
-### Scenario 1: Happy Path - 정상 해외 구매
-
-```
-Step 1: 구매 요청 (10분)
-  고객: 해외 사이트에서 상품 찾음 (예: 아마존 미국)
-  고객: 상품명, URL, 수량 입력 → 국가 선택 (미국)
-  시스템: 요청 생성, 상태 → "pending"
-  
-Step 2: 대행사 검토 및 수락 (24시간)
-  대행사: 요청 검토 (배송 가능 지역? 금지 상품?)
-  대행사: "수락" 클릭
-  시스템: 상태 → "accepted"
-  
-Step 3: 비용 추정 (1시간)
-  시스템: 자동 계산
-    상품가 $100 + 국제 배송 $20 + 예상 관세 $20 + 국내 배송 10,000원 + 수수료 14달러
-    총 = 182,800 KRW
-  
-Step 4: 비용 확인 (5분)
-  고객: 비용 검토 → "동의" 클릭
-  시스템: 상태 → "cost_confirmed"
-  
-Step 5: 결제 (5분)
-  고객: 신용카드/계좌이체
-  시스템: 결제 완료 → "purchased"
-
-Step 6: 국제 배송 (7-14일)
-  대행사: FedEx에 배송 의뢰
-  시스템: 상태 → "in_transit_international" → "arrived_warehouse"
-  
-Step 7: 통관 처리 (3-7일)
-  대행사: 관세청에 통관 신청
-  시스템: 상태 → "processing_customs" → "customs_cleared"
-  
-Step 8: 국내 배송 (2-5일)
-  대행사: 국내 택배에 의뢰
-  시스템: 상태 → "ready_to_ship_domestic" → "in_transit_domestic" → "delivered"
-  
-Step 9: 거래 완료 (30일 후)
-  시스템: 반품 가능 기간 경과 → "completed"
-```
-
-**예상 시간:** 3-5주
+- ❌ **Multi-currency pricing**
+- ❌ **Exchange rate retroactive adjustments**
+- ❌ **Partial refunds**
+- ❌ **Multi-country orders**
+- ❌ **Post-confirmation shipping changes**
+- ❌ **Tariff refunds**
+- ❌ **Automatic reshipping after failure**
 
 ---
 
-### Scenario 2: 통관 실패
+## 6️⃣ Industry-Standard Scenarios
+
+### Scenario 1: Happy Path - Normal Overseas Purchase
 
 ```
-상황: 관세청 검사 중 문제 발생
+Step 1: Purchase request (10 min)
+  Customer: Finds a product on an overseas site (e.g., Amazon US)
+  Customer: Enters product name, URL, quantity → selects country (US)
+  System: Creates request, status → "pending"
+  
+Step 2: Agency review and acceptance (24 hours)
+  Agency: Reviews request (shippable region? prohibited item?)
+  Agency: Clicks "Accept"
+  System: Status → "accepted"
+  
+Step 3: Cost estimation (1 hour)
+  System: Auto-calculates
+    Product price $100 + international shipping $20 + estimated tariff $20 + domestic shipping 10,000 KRW + fee $14
+    Total = 182,800 KRW
+  
+Step 4: Cost confirmation (5 min)
+  Customer: Reviews cost → clicks "Agree"
+  System: Status → "cost_confirmed"
+  
+Step 5: Payment (5 min)
+  Customer: Credit card / bank transfer
+  System: Payment complete → "purchased"
 
-Step 1: 문제 감지
-  관세청: 상품 검사 중 문제 발견
-  시스템: 상태 → "customs_failed"
-
-Step 2: 고객 알림
-  시스템: 고객에게 "통관 실패" 알림
-  고객: 재신고 또는 반송 선택
-
-Step 3-A: 재신고 선택
-  대행사: 관세청과 협의 → 재신고 신청
-  (Step 7부터 다시 시작)
-
-Step 3-B: 반송 선택
-  시스템: 상태 → "return_initiated"
-  배송사: 반송 배송 시작
-  판매처: 환불 처리
-  시스템: 상태 → "refunded"
+Step 6: International shipping (7–14 days)
+  Agency: Requests shipment via FedEx
+  System: Status → "in_transit_international" → "arrived_warehouse"
+  
+Step 7: Customs processing (3–7 days)
+  Agency: Files customs declaration
+  System: Status → "processing_customs" → "customs_cleared"
+  
+Step 8: Domestic shipping (2–5 days)
+  Agency: Requests via domestic courier
+  System: Status → "ready_to_ship_domestic" → "in_transit_domestic" → "delivered"
+  
+Step 9: Transaction complete (after 30 days)
+  System: Return window elapsed → "completed"
 ```
+
+**Estimated time:** 3–5 weeks
 
 ---
 
-### Scenario 3: 배송 완료 후 반품
+### Scenario 2: Customs Failure
 
 ```
-상황: 배송받은 상품이 원치 않음
+Situation: A problem arises during customs inspection
 
-Step 1: 반품 신청 (배송 후 30일 이내)
-  고객: "반품 신청" → 반품 사유 선택
-  시스템: 상태 → "return_requested"
+Step 1: Problem detected
+  Customs: Finds a problem during product inspection
+  System: Status → "customs_failed"
 
-Step 2: 반품 배송 (고객 → 대행사)
-  대행사: 고객에게 반품 배송 주소 제공
-  고객: 상품을 반품 주소로 배송
-  시스템: 상태 → "return_in_transit_domestic"
+Step 2: Customer notification
+  System: Notifies customer of "customs failure"
+  Customer: Chooses re-filing or return
 
-Step 3: 창고 도착 (대행사)
-  대행사: 상품 검수
-  시스템: 상태 → "return_at_warehouse"
+Step 3-A: Re-filing chosen
+  Agency: Consults with customs → submits re-filing
+  (Restart from Step 7)
 
-Step 4: 역배송 (대행사 → 판매처)
-  대행사: 판매처로 역배송
-  판매처: 환불 승인
-  시스템: 상태 → "return_completed"
-
-Step 5: 고객 환불
-  대행사: 고객 계좌로 환불
-    원가 - 배송료 - 수수료 (배송료는 환급 불가)
-  시스템: 상태 → "refunded"
+Step 3-B: Return chosen
+  System: Status → "return_initiated"
+  Carrier: Starts return shipping
+  Seller: Processes refund
+  System: Status → "refunded"
 ```
 
 ---
 
-## 7️⃣ 제약사항 (Constraints)
+### Scenario 3: Return After Delivery
 
-| 항목 | 제약 | 이유 |
+```
+Situation: Delivered product is not wanted
+
+Step 1: Return request (within 30 days of delivery)
+  Customer: "Request return" → select return reason
+  System: Status → "return_requested"
+
+Step 2: Return shipping (customer → agency)
+  Agency: Provides customer with return shipping address
+  Customer: Ships product to return address
+  System: Status → "return_in_transit_domestic"
+
+Step 3: Warehouse arrival (agency)
+  Agency: Inspects product
+  System: Status → "return_at_warehouse"
+
+Step 4: Reverse shipping (agency → seller)
+  Agency: Reverse-ships to seller
+  Seller: Approves refund
+  System: Status → "return_completed"
+
+Step 5: Customer refund
+  Agency: Refunds to customer's account
+    Original price − shipping fee − fee (shipping fee non-refundable)
+  System: Status → "refunded"
+```
+
+---
+
+## 7️⃣ Constraints
+
+| Item | Constraint | Reason |
 |------|------|------|
-| **한 요청의 국가 수** | 1개 국가만 | 통관 단순화 |
-| **최대 구매 금액** | $5,000 | 통관 한도 |
-| **최소 배송 기간** | 7일 (국제) | 현실적 배송 기간 |
-| **통관 예상 기간** | 3-7일 | 검사 절차 |
-| **반품 가능 기간** | 30일 | 산업 표준 |
-| **환율 고정 시점** | 구매 시점 | 금리 변동 위험 회피 |
-| **환율 변경** | 차월부터 적용 | 고객 보호 |
-| **관세 추정 정확도** | ±10% | 예측 불가능성 |
-| **배송료 고정** | 무게/크기 기반 | 투명성 |
-| **대행 수수료** | 기본 10% | 가치 제공 |
-| **결제 타임아웃** | 24시간 | 재고 확보 기간 |
+| **Countries per request** | 1 country only | Simplify customs |
+| **Maximum purchase amount** | $5,000 | Customs limit |
+| **Minimum shipping period** | 7 days (international) | Realistic shipping period |
+| **Estimated customs period** | 3–7 days | Inspection procedure |
+| **Return window** | 30 days | Industry standard |
+| **Exchange rate fixing point** | At purchase time | Avoid rate fluctuation risk |
+| **Exchange rate change** | Applied from the following month | Customer protection |
+| **Tariff estimate accuracy** | ±10% | Unpredictability |
+| **Fixed shipping fee** | Weight/size-based | Transparency |
+| **Agency fee** | Default 10% | Value provided |
+| **Payment timeout** | 24 hours | Stock-securing period |
 
 ---
 
-## ✅ 체크리스트
+## ✅ Checklist
 
-- [ ] 10개 기본 DB 테이블 생성됨
-- [ ] 40+ API 엔드포인트 구현됨
-- [ ] 구매 요청 상태 전이 로직 구현됨
-- [ ] 비용 추정 및 확인 프로세스 구현됨
-- [ ] 환율 고정 로직 구현됨 (구매 시점 기준)
-- [ ] 국제 배송 추적 통합됨
-- [ ] 통관 신청 및 추적 구현됨
-- [ ] 최종 관세 반영한 비용 정산 구현됨
-- [ ] 국내 배송 추적 통합됨
-- [ ] 환불 프로세스 구현됨 (배송료/수수료 제외)
-- [ ] 월별 정산 자동화됨
-- [ ] 고객 상태 알림 자동화됨
-- [ ] 다국가 혼합 방지 로직 구현됨
-- [ ] 배송 옵션 변경 불가 처리됨
+- [ ] 10 base DB tables created
+- [ ] 40+ API endpoints implemented
+- [ ] Purchase request status transition logic implemented
+- [ ] Cost estimation and confirmation process implemented
+- [ ] Exchange rate fixing logic implemented (as of purchase time)
+- [ ] International shipment tracking integrated
+- [ ] Customs filing and tracking implemented
+- [ ] Cost settlement reflecting final tariff implemented
+- [ ] Domestic shipment tracking integrated
+- [ ] Refund process implemented (excluding shipping/fee)
+- [ ] Monthly settlement automated
+- [ ] Customer status notifications automated
+- [ ] Multi-country mix prevention logic implemented
+- [ ] Post-confirmation shipping change disabling handled

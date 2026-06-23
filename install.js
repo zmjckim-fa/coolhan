@@ -72,10 +72,10 @@ function main() {
   const claudeDir = path.join(currentDir, '.claude');
   const installDir = path.join(__dirname);
 
-  info(`설치 위치: ${currentDir}`);
+  info(`Install location: ${currentDir}`);
 
-  // Step 1: 디렉토리 구조 확인
-  log('\n📁 Step 1: 디렉토리 구조 생성...', 'bright');
+  // Step 1: Verify directory structure
+  log('\n📁 Step 1: Creating directory structure...', 'bright');
 
   const dirs = [
     '.claude',
@@ -92,14 +92,14 @@ function main() {
     const fullPath = path.join(currentDir, dir);
     if (!fs.existsSync(fullPath)) {
       fs.mkdirSync(fullPath, { recursive: true });
-      success(`생성됨: ${dir}`);
+      success(`Created: ${dir}`);
     } else {
-      info(`이미 존재: ${dir}`);
+      info(`Already exists: ${dir}`);
     }
   });
 
-  // Step 2: 핵심 파일 복사
-  log('\n📋 Step 2: 핵심 파일 복사...', 'bright');
+  // Step 2: Copy core files
+  log('\n📋 Step 2: Copying core files...', 'bright');
 
   const filesToCopy = [
     'CLAUDE.md',
@@ -116,15 +116,15 @@ function main() {
     if (fs.existsSync(src)) {
       if (!fs.existsSync(dest)) {
         fs.copyFileSync(src, dest);
-        success(`복사됨: ${file}`);
+        success(`Copied: ${file}`);
       } else {
-        warn(`이미 존재: ${file} (건너뜀)`);
+        warn(`Already exists: ${file} (skipped)`);
       }
     }
   });
 
-  // Step 3: .claude 디렉토리 파일 복사
-  log('\n⚙️  Step 3: Claude Code 설정 복사...', 'bright');
+  // Step 3: Copy .claude directory files
+  log('\n⚙️  Step 3: Copying Claude Code configuration...', 'bright');
 
   const claudeFiles = [
     { src: path.join(installDir, '.claude', 'settings.json'), dest: path.join(claudeDir, 'settings.json') },
@@ -141,63 +141,63 @@ function main() {
   claudeFiles.forEach(({ src, dest }) => {
     if (fs.existsSync(src)) {
       fs.copyFileSync(src, dest);
-      success(`복사됨: ${path.basename(dest)}`);
+      success(`Copied: ${path.basename(dest)}`);
     }
   });
 
-  // Step 4: Hooks 복사
-  log('\n🔧 Step 4: 검증 훅 복사...', 'bright');
+  // Step 4: Copy hooks
+  log('\n🔧 Step 4: Copying validation hooks...', 'bright');
 
   const hooksDir = path.join(installDir, '.claude', 'hooks');
   const destHooksDir = path.join(claudeDir, 'hooks');
 
   if (fs.existsSync(hooksDir)) {
     copyDir(hooksDir, destHooksDir);
-    success('모든 훅이 복사되었습니다');
+    success('All hooks have been copied');
   }
 
-  // Step 5: Agents 복사
-  log('\n👥 Step 5: 에이전트 설정 복사...', 'bright');
+  // Step 5: Copy agents
+  log('\n👥 Step 5: Copying agent configuration...', 'bright');
 
   const agentsDir = path.join(installDir, '.claude', 'agents');
   const destAgentsDir = path.join(claudeDir, 'agents');
 
   if (fs.existsSync(agentsDir)) {
     copyDir(agentsDir, destAgentsDir);
-    success('모든 에이전트가 복사되었습니다');
+    success('All agents have been copied');
   }
 
-  // Step 6: Skills 복사
-  log('\n💡 Step 6: Claude Code 스킬 복사...', 'bright');
+  // Step 6: Copy skills
+  log('\n💡 Step 6: Copying Claude Code skills...', 'bright');
 
   const skillsDir = path.join(installDir, '.claude', 'skills');
   const destSkillsDir = path.join(claudeDir, 'skills');
 
   if (fs.existsSync(skillsDir)) {
     copyDir(skillsDir, destSkillsDir);
-    success('모든 스킬이 복사되었습니다');
+    success('All skills have been copied');
   }
 
-  // Step 7: Knowledge Base 복사
-  log('\n📚 Step 7: 지식 기반 복사...', 'bright');
+  // Step 7: Copy Knowledge Base
+  log('\n📚 Step 7: Copying knowledge base...', 'bright');
 
   const kbDir = path.join(installDir, 'knowledge_base');
   const destKbDir = path.join(currentDir, 'knowledge_base');
 
   if (fs.existsSync(kbDir)) {
     copyDir(kbDir, destKbDir);
-    success('지식 기반이 복사되었습니다');
+    success('Knowledge base has been copied');
   }
 
-  // Step 8: package.json 업데이트 (있는 경우)
-  log('\n📦 Step 8: package.json 검증...', 'bright');
+  // Step 8: Update package.json (if present)
+  log('\n📦 Step 8: Validating package.json...', 'bright');
 
   const packageJsonPath = path.join(currentDir, 'package.json');
 
   if (fs.existsSync(packageJsonPath)) {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
-    // 스크립트 추가
+    // Add scripts
     if (!packageJson.scripts) {
       packageJson.scripts = {};
     }
@@ -214,13 +214,13 @@ function main() {
     Object.assign(packageJson.scripts, scripts);
 
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-    success('package.json이 업데이트되었습니다');
+    success('package.json has been updated');
   } else {
-    info('package.json을 찾을 수 없습니다. (Node.js 프로젝트가 아닌 경우)');
+    info('package.json not found. (Not a Node.js project)');
   }
 
-  // Step 9: Git 설정
-  log('\n📝 Step 9: Git 설정 확인...', 'bright');
+  // Step 9: Git setup
+  log('\n📝 Step 9: Checking Git configuration...', 'bright');
 
   try {
     execSync('git --version', { stdio: 'ignore' });
@@ -251,16 +251,16 @@ build/
 
     if (!fs.existsSync(gitignorePath)) {
       fs.writeFileSync(gitignorePath, gitignoreContent);
-      success('.gitignore 생성됨');
+      success('.gitignore created');
     } else {
-      info('.gitignore가 이미 존재합니다');
+      info('.gitignore already exists');
     }
   } catch (e) {
-    warn('Git이 설치되지 않았습니다');
+    warn('Git is not installed');
   }
 
   // Step 10: Write version tracking file
-  log('\n🔖 Step 10: 버전 정보 저장...', 'bright');
+  log('\n🔖 Step 10: Saving version information...', 'bright');
 
   const pkg = fs.existsSync(path.join(__dirname, 'package.json'))
     ? JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'))
@@ -279,41 +279,41 @@ build/
   const versionFilePath = path.join(os.homedir(), '.coolhan-version.json');
   try {
     fs.writeFileSync(versionFilePath, JSON.stringify(versionInfo, null, 2));
-    success(`버전 정보 저장됨: ${versionFilePath}`);
+    success(`Version information saved: ${versionFilePath}`);
   } catch (e) {
     // Non-fatal
   }
 
-  // 최종 요약
+  // Final summary
   log('\n' + '='.repeat(60), 'bright');
-  log('\n✨ CoolHan Framework 설치 완료!\n', 'green');
+  log('\n✨ CoolHan Framework installation complete!\n', 'green');
 
-  log('📂 설치된 항목:', 'bright');
-  log('  ✅ .claude/ - Claude Code 설정');
-  log('  ✅ .claude/hooks/ - 검증 훅 스크립트 (8개)');
-  log('  ✅ .claude/agents/ - 에이전트 정의 (5개)');
-  log('  ✅ .claude/skills/ - Claude Code 스킬');
-  log('  ✅ knowledge_base/ - 핵심 문서 및 모듈');
-  log('  ✅ CLAUDE.md - 프로젝트 운영 가이드');
+  log('📂 Installed items:', 'bright');
+  log('  ✅ .claude/ - Claude Code configuration');
+  log('  ✅ .claude/hooks/ - Validation hook scripts (8)');
+  log('  ✅ .claude/agents/ - Agent definitions (5)');
+  log('  ✅ .claude/skills/ - Claude Code skills');
+  log('  ✅ knowledge_base/ - Core documents and modules');
+  log('  ✅ CLAUDE.md - Project operations guide');
 
-  log('\n🚀 다음 단계:', 'bright');
-  log('  1. CLAUDE.md 읽기');
-  log('  2. knowledge_base/00_AI_MASTER_RULES.md 읽기');
-  log('  3. knowledge_base/00_DEVELOPMENT_LOCKED_MODE.md 읽기');
-  log('  4. 프로젝트 특화 문서 작성 시작');
+  log('\n🚀 Next steps:', 'bright');
+  log('  1. Read CLAUDE.md');
+  log('  2. Read knowledge_base/00_AI_MASTER_RULES.md');
+  log('  3. Read knowledge_base/00_DEVELOPMENT_LOCKED_MODE.md');
+  log('  4. Start writing project-specific documents');
 
-  log('\n📖 유용한 명령어:', 'bright');
-  log('  npm run spec:validate  - 규격 검증');
-  log('  npm run env:validate   - 환경 감지');
-  log('  npm run lock:status    - 배포 락 상태');
+  log('\n📖 Useful commands:', 'bright');
+  log('  npm run spec:validate  - Validate specifications');
+  log('  npm run env:validate   - Detect environment');
+  log('  npm run lock:status    - Deploy lock status');
 
-  log('\n💡 문서:', 'bright');
-  log('  README.md - 프로젝트 개요');
-  log('  INSTALLATION_GUIDE.md - 설치 가이드');
+  log('\n💡 Documentation:', 'bright');
+  log('  README.md - Project overview');
+  log('  INSTALLATION_GUIDE.md - Installation guide');
 
   log('\n' + '='.repeat(60) + '\n', 'bright');
 
-  log('CoolHan Framework와 함께 규칙 기반의 완벽한 개발을 시작하세요! 🎯\n', 'green');
+  log('Start rule-based, flawless development with CoolHan Framework! 🎯\n', 'green');
 }
 
 main();

@@ -1,11 +1,11 @@
-# 쇼핑몰 - 데이터베이스 스키마 (E-Commerce Mall Database Schema)
+# E-Commerce Mall - Database Schema
 
-## 1. 엔티티 관계도 (ER Diagram)
+## 1. ER Diagram
 
 ```
 ┌─────────────┐
 │   User      │─────────┐
-│ (사용자)     │         │
+│ (user)      │         │
 └─────────────┘         │
         │               │
         │ 1:N           │
@@ -16,12 +16,12 @@
         ▼                   ▼              ▼
     ┌───────────┐  ┌──────────────┐  ┌────────────┐
     │ Cart      │  │ Wishlist     │  │ Address    │
-    │ (장바구니)│  │ (찜)          │  │ (주소)     │
+    │ (cart)    │  │ (wishlist)   │  │ (address)  │
     └───────────┘  └──────────────┘  └────────────┘
 
 ┌─────────────┐
 │ Product     │─────────┬────────────┐
-│ (상품)       │         │            │
+│ (product)   │         │            │
 └─────────────┘    1:N   │ 1:N        │
         │                │            │
     ┌───┴───────┬────────┴─┐    ┌────┴─────────┐
@@ -29,12 +29,12 @@
     ▼           ▼          ▼    ▼               ▼
 ┌─────────┐ ┌────────┐ ┌────────┐ ┌───────────┐
 │ Category│ │  Review│ │ CartItem│ │ WishItem  │
-│ (카테고리) │ │ (리뷰) │ │(장바구니상품)│ │(찜상품)  │
+│(category)│ │(review)│ │(cart item)│ │(wish item)│
 └─────────┘ └────────┘ └────────┘ └───────────┘
 
 ┌─────────────┐
 │ Order       │─────────┬─────────────┐
-│ (주문)       │    1:N  │             │
+│ (order)     │    1:N  │             │
 └─────────────┘         │             │
         │          ┌─────┴─────┐     │
         │ 1:N      │           │     │
@@ -43,15 +43,15 @@
     ▼            ▼       ▼ ▼                ▼
 ┌─────────┐ ┌────────┐ ┌──────────┐ ┌──────────┐
 │OrderItem│ │Payment │ │ Shipping │ │  Return  │
-│(주문항목)│ │(결제)  │ │ (배송)   │ │ (반품)   │
+│(order item)│ │(payment)│ │ (shipping)│ │ (return) │
 └─────────┘ └────────┘ └──────────┘ └──────────┘
 ```
 
 ---
 
-## 2. 테이블 정의
+## 2. Table Definitions
 
-### 2.1 User 테이블
+### 2.1 User Table
 ```sql
 CREATE TABLE users (
     user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -75,7 +75,7 @@ CREATE TABLE users (
 );
 ```
 
-### 2.2 Product 테이블
+### 2.2 Product Table
 ```sql
 CREATE TABLE products (
     product_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -113,7 +113,7 @@ CREATE TABLE products (
 );
 ```
 
-### 2.3 Category 테이블
+### 2.3 Category Table
 ```sql
 CREATE TABLE categories (
     category_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -129,7 +129,7 @@ CREATE TABLE categories (
 );
 ```
 
-### 2.4 Cart 테이블
+### 2.4 Cart Table
 ```sql
 CREATE TABLE cart (
     cart_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -143,7 +143,7 @@ CREATE TABLE cart (
 );
 ```
 
-### 2.5 CartItem 테이블
+### 2.5 CartItem Table
 ```sql
 CREATE TABLE cart_items (
     cart_item_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -160,7 +160,7 @@ CREATE TABLE cart_items (
 );
 ```
 
-### 2.6 Wishlist 테이블
+### 2.6 Wishlist Table
 ```sql
 CREATE TABLE wishlist (
     wishlist_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -176,7 +176,7 @@ CREATE TABLE wishlist (
 );
 ```
 
-### 2.7 Address 테이블
+### 2.7 Address Table
 ```sql
 CREATE TABLE addresses (
     address_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -196,7 +196,7 @@ CREATE TABLE addresses (
 );
 ```
 
-### 2.8 Order 테이블
+### 2.8 Order Table
 ```sql
 CREATE TABLE orders (
     order_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -239,7 +239,7 @@ CREATE TABLE orders (
 );
 ```
 
-### 2.9 OrderItem 테이블
+### 2.9 OrderItem Table
 ```sql
 CREATE TABLE order_items (
     order_item_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -260,7 +260,7 @@ CREATE TABLE order_items (
 );
 ```
 
-### 2.10 Payment 테이블
+### 2.10 Payment Table
 ```sql
 CREATE TABLE payments (
     payment_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -283,7 +283,7 @@ CREATE TABLE payments (
 );
 ```
 
-### 2.11 Shipping 테이블
+### 2.11 Shipping Table
 ```sql
 CREATE TABLE shipping (
     shipping_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -305,7 +305,7 @@ CREATE TABLE shipping (
 );
 ```
 
-### 2.12 Review 테이블
+### 2.12 Review Table
 ```sql
 CREATE TABLE reviews (
     review_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -333,7 +333,7 @@ CREATE TABLE reviews (
 );
 ```
 
-### 2.13 ReviewImage 테이블
+### 2.13 ReviewImage Table
 ```sql
 CREATE TABLE review_images (
     review_image_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -346,7 +346,7 @@ CREATE TABLE review_images (
 );
 ```
 
-### 2.14 Return 테이블
+### 2.14 Return Table
 ```sql
 CREATE TABLE returns (
     return_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -377,7 +377,7 @@ CREATE TABLE returns (
 );
 ```
 
-### 2.15 Points 테이블
+### 2.15 Points Table
 ```sql
 CREATE TABLE points (
     point_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -397,7 +397,7 @@ CREATE TABLE points (
 );
 ```
 
-### 2.16 Settlement 테이블
+### 2.16 Settlement Table
 ```sql
 CREATE TABLE settlements (
     settlement_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -423,92 +423,92 @@ CREATE TABLE settlements (
 
 ---
 
-## 3. 중요 관계 (Key Relationships)
+## 3. Key Relationships
 
-### 1:N 관계
-- User → Cart (1:1, 사용자는 1개의 장바구니)
-- User → Order (1:N, 사용자는 여러 주문)
-- User → Address (1:N, 사용자는 여러 배송지)
-- User → Wishlist (1:N, 사용자는 여러 찜)
-- User → Review (1:N, 사용자는 여러 리뷰)
-- Product → Review (1:N, 상품은 여러 리뷰)
-- Product → CartItem (1:N, 상품은 여러 장바구니 항목)
-- Cart → CartItem (1:N, 장바구니는 여러 항목)
-- Order → OrderItem (1:N, 주문은 여러 항목)
-- Order → Payment (1:1, 주문은 1개의 결제)
-- Order → Shipping (1:1, 주문은 1개의 배송)
-- Order → Return (1:N, 주문은 여러 반품)
+### 1:N Relationships
+- User → Cart (1:1, a user has 1 cart)
+- User → Order (1:N, a user has multiple orders)
+- User → Address (1:N, a user has multiple delivery addresses)
+- User → Wishlist (1:N, a user has multiple wishlist items)
+- User → Review (1:N, a user has multiple reviews)
+- Product → Review (1:N, a product has multiple reviews)
+- Product → CartItem (1:N, a product appears in multiple cart items)
+- Cart → CartItem (1:N, a cart has multiple items)
+- Order → OrderItem (1:N, an order has multiple items)
+- Order → Payment (1:1, an order has 1 payment)
+- Order → Shipping (1:1, an order has 1 shipment)
+- Order → Return (1:N, an order has multiple returns)
 
 ---
 
-## 4. 인덱싱 전략
+## 4. Indexing Strategy
 
-### 성능 최적화 인덱스
+### Performance Optimization Indexes
 ```
-1. 자주 검색되는 필드:
+1. Frequently searched fields:
    - product: product_name, category_id, price, status, seller_id
    - order: buyer_id, status, order_date
    - user: email
 
-2. 자주 정렬되는 필드:
+2. Frequently sorted fields:
    - product: created_at, view_count, average_rating, sales_count
    - order: order_date, created_at
    - review: created_at, rating
 
-3. 조인 필드:
-   - user_id, product_id, order_id, cart_id 등의 외래키
+3. Join fields:
+   - Foreign keys such as user_id, product_id, order_id, cart_id
 
-4. 범위 검색:
-   - price: 가격 범위 검색
-   - created_at: 날짜 범위 검색
+4. Range searches:
+   - price: price range search
+   - created_at: date range search
 ```
 
 ---
 
-## 5. 데이터 정규화 규칙
+## 5. Data Normalization Rules
 
-- **1NF:** 모든 속성은 원자값 (분해 불가능한 값)
-- **2NF:** 부분 종속성 제거 (모든 비키 속성이 기본키에 완전 종속)
-- **3NF:** 이행 종속성 제거 (비키 속성 간 종속성 제거)
+- **1NF:** All attributes are atomic values (indivisible values)
+- **2NF:** Eliminate partial dependencies (every non-key attribute fully depends on the primary key)
+- **3NF:** Eliminate transitive dependencies (remove dependencies between non-key attributes)
 
-예시:
-- User 정보와 Address는 별도 테이블 (한 사용자는 여러 주소)
-- Order와 OrderItem은 별도 테이블 (주문 단위가 다름)
-- Payment와 Order는 별도 테이블 (결제는 주문과 별개 엔티티)
+Examples:
+- User info and Address are separate tables (one user has multiple addresses)
+- Order and OrderItem are separate tables (different units of granularity)
+- Payment and Order are separate tables (payment is an entity distinct from order)
 
 ---
 
-## 6. 트랜잭션 관리
+## 6. Transaction Management
 
-### ACID 원칙
+### ACID Principles
 ```
-Atomicity (원자성):
-- 주문 생성 시: 주문, 주문항목, 재고 업데이트가 모두 완료되거나 모두 롤백
+Atomicity:
+- On order creation: order, order items, and stock updates all complete or all roll back
 
-Consistency (일관성):
-- 재고는 음수가 될 수 없음
-- 주문 총액 = Σ(항목별 가격)
+Consistency:
+- Stock cannot be negative
+- Order total = Σ(price per item)
 
-Isolation (격리성):
-- 동일 상품에 대한 동시 주문 시 재고 초과 방지
+Isolation:
+- Prevent stock overrun during concurrent orders for the same product
 
-Durability (지속성):
-- 결제 완료 후 데이터는 안전하게 보관
+Durability:
+- After payment completion, data is safely retained
 ```
 
 ---
 
-## 7. 백업 및 복구 전략
+## 7. Backup and Recovery Strategy
 
-- 일일 자동 백업
-- 트랜잭션 로그 유지
-- 주기적 전체 백업 (주 1회, 월 1회)
-- 재해 복구 계획 (RTO: 4시간, RPO: 1시간)
+- Daily automatic backup
+- Maintain transaction logs
+- Periodic full backups (weekly, monthly)
+- Disaster recovery plan (RTO: 4 hours, RPO: 1 hour)
 
 ---
 
-## 다음 문서로 읽어야 할 것
+## What to Read Next
 
-1. **05_api_standard.md** - REST API 표준
-2. **06_security_requirements.md** - 보안 요구사항
-3. **07_spec_template.md** - 기획서 템플릿
+1. **05_api_standard.md** - REST API standard
+2. **06_security_requirements.md** - Security requirements
+3. **07_spec_template.md** - Specification template

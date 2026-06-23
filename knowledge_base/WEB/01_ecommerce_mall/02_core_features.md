@@ -1,585 +1,585 @@
-# 쇼핑몰 - 핵심 기능 (E-Commerce Mall Core Features)
+# E-Commerce Mall - Core Features
 
-## 1. 상품 관리 기능
+## 1. Product Management Features
 
-### 1.1 상품 등록/수정/삭제
+### 1.1 Product Registration/Edit/Delete
 ```
-판매자 (Seller):
-- 상품명, 설명, 가격, 재고 입력
-- 이미지 업로드 (썸네일, 상세 이미지)
-- 카테고리 선택
-- 태그 추가 (검색 최적화)
-- 배송정보 (배송비, 배송방법)
-- SKU (Stock Keeping Unit) 관리
-- 상품 수정 (판매중에도 가능)
-- 상품 삭제 (판매 중단)
+Seller:
+- Enter product name, description, price, stock
+- Upload images (thumbnail, detail images)
+- Select category
+- Add tags (search optimization)
+- Shipping info (shipping fee, shipping method)
+- Manage SKU (Stock Keeping Unit)
+- Edit product (possible even while on sale)
+- Delete product (discontinue sale)
 
-관리자 (Admin):
-- 모든 상품 관리 권한
-- 상품 강제 삭제
-- 상품 상태 변경 (판매중/품절/중단)
-```
-
-### 1.2 재고 관리
-```
-- 실시간 재고 수량 업데이트
-- 품절 알림 (고객, 판매자)
-- 자동 상품 상태 변경 (재고 0 → 품절)
-- 판매자 재고 알림 (재고 부족 시)
-- 재고 예약 (주문 생성 시)
-- 주문 취소 시 재고 복구
+Admin:
+- Full product management permission
+- Force-delete product
+- Change product status (on sale / out of stock / discontinued)
 ```
 
-### 1.3 상품 검색 및 필터링
+### 1.2 Inventory Management
 ```
-검색 방식:
-- 키워드 검색 (상품명, 설명, 태그)
-- 카테고리 검색
-- 고급 검색 (가격범위, 평점, 배송방식)
-
-필터링:
-- 가격 범위 (최저~최고)
-- 평점 (3점 이상, 5점 등)
-- 배송방식 (무료배송, 빠른배송, 직배송)
-- 신상품 (최근 7일, 30일)
-- 인기순 (판매량, 조회수)
-- 할인율
-- 판매자 평점
+- Real-time stock quantity updates
+- Out-of-stock notification (customer, seller)
+- Automatic product status change (stock 0 → out of stock)
+- Seller stock alert (when stock is low)
+- Stock reservation (when order is created)
+- Stock restoration when order is cancelled
 ```
 
-### 1.4 상품 상세 페이지
+### 1.3 Product Search and Filtering
 ```
-표시 정보:
-- 상품 이미지 (갤러리, 확대)
-- 상품명, 설명, 상세 설명
-- 가격 (정가, 할인가, 할인율)
-- 재고 상태
-- 배송정보 (배송비, 배송예상일)
-- 판매자 정보 (명, 평점, 상품수)
-- 리뷰 요약 (평균평점, 리뷰수)
-- 옵션 선택 (색상, 크기 등)
-- 수량 선택
-- 장바구니 추가, 바로구매, 찜 버튼
-- Q&A 섹션
-- 리뷰 섹션
+Search methods:
+- Keyword search (product name, description, tags)
+- Category search
+- Advanced search (price range, rating, shipping method)
+
+Filtering:
+- Price range (lowest~highest)
+- Rating (3 stars and up, 5 stars, etc.)
+- Shipping method (free shipping, fast shipping, direct delivery)
+- New arrivals (last 7 days, 30 days)
+- Popularity (sales volume, views)
+- Discount rate
+- Seller rating
 ```
 
----
-
-## 2. 장바구니 기능
-
-### 2.1 장바구니 관리
+### 1.4 Product Detail Page
 ```
-- 상품 추가 (수량 지정)
-- 수량 변경
-- 상품 삭제
-- 여러 상품 선택 삭제
-- 장바구니 저장 (로그인 후 복구)
-- 장바구니 공유 (다른 사용자에게)
-- 찜 기능 (저장 리스트)
-```
-
-### 2.2 장바구니 계산
-```
-- 선택한 상품의 소계 계산
-- 배송비 계산 (조건별)
-- 할인금액 계산
-- 포인트 적용
-- 최종 금액 표시
-- 결제예정액 표시
-```
-
-### 2.3 장바구니 유지
-```
-- 세션 기반 임시 저장
-- 로그인 후 동기화
-- 유효성 검사 (상품 존재, 재고 확인)
-- 가격 변동 감지 (상품 가격 수정 시)
-- 품절 상품 경고
+Displayed information:
+- Product images (gallery, zoom)
+- Product name, description, detailed description
+- Price (list price, discounted price, discount rate)
+- Stock status
+- Shipping info (shipping fee, estimated delivery date)
+- Seller info (name, rating, product count)
+- Review summary (average rating, review count)
+- Option selection (color, size, etc.)
+- Quantity selection
+- Add to cart, buy now, wishlist buttons
+- Q&A section
+- Review section
 ```
 
 ---
 
-## 3. 주문 기능
+## 2. Cart Features
 
-### 3.1 주문 생성
+### 2.1 Cart Management
 ```
-단계:
-1. 장바구니에서 '주문' 클릭
-2. 배송지 선택/변경
-3. 배송방법 선택
-4. 최종 확인 (수량, 가격, 배송지)
-5. 주문 생성
-
-주문 정보 저장:
-- 주문ID 생성
-- 주문항목 저장 (상품, 수량, 단가)
-- 배송지 정보 저장
-- 주문 상태 = '결제대기'
+- Add product (specify quantity)
+- Change quantity
+- Delete product
+- Delete multiple selected products
+- Save cart (restore after login)
+- Share cart (with other users)
+- Wishlist feature (saved list)
 ```
 
-### 3.2 결제
+### 2.2 Cart Calculation
 ```
-결제수단 선택:
-- 신용카드
-- 무통장입금
-- 계좌이체
-- 휴대폰결제
-- 간편결제 (PayPal, Apple Pay 등)
-
-결제 프로세스:
-1. 결제수단 선택
-2. PG(Payment Gateway)로 리다이렉트
-3. 결제 승인/거절
-4. 결과 콜백 수신
-5. 데이터베이스 업데이트 (결제 완료/실패)
-6. 사용자에게 결과 표시
+- Calculate subtotal of selected products
+- Calculate shipping fee (by condition)
+- Calculate discount amount
+- Apply points
+- Display final amount
+- Display amount to be paid
 ```
 
-### 3.3 주문 조회
+### 2.3 Cart Persistence
 ```
-구매자:
-- 내 주문 목록 조회 (상태별 필터)
-- 주문 상세 조회
-- 배송 추적
-- 배송 예상일
-
-판매자:
-- 자신 상품 주문 목록
-- 주문 상태 업데이트
-- 배송정보 입력
+- Session-based temporary storage
+- Sync after login
+- Validity check (product exists, stock confirmed)
+- Price change detection (when product price is edited)
+- Out-of-stock product warning
 ```
 
 ---
 
-## 4. 배송 기능
+## 3. Order Features
 
-### 4.1 배송 관리
+### 3.1 Order Creation
 ```
-판매자:
-- 주문 확인 후 상품 준비
-- 배송사 선택 (택배, 우체국, 직배송)
-- 송장번호 입력
-- 배송 상태 업데이트 (배송준비 → 배송중 → 배송완료)
+Steps:
+1. Click 'Order' from cart
+2. Select/change delivery address
+3. Select shipping method
+4. Final confirmation (quantity, price, delivery address)
+5. Create order
 
-시스템:
-- 배송사 API 연동 (배송 추적)
-- 배송 예상일 계산
-- 배송 지연 알림
-```
-
-### 4.2 배송 추적
-```
-고객:
-- 배송 상태 확인 (배송준비, 배송중, 배송완료)
-- 예상 배송일 확인
-- 송장번호로 배송사 사이트 이동
-- 배송 지연 시 알림 수신
+Order information saved:
+- Generate order ID
+- Save order items (product, quantity, unit price)
+- Save delivery address info
+- Order status = 'Awaiting payment'
 ```
 
----
-
-## 5. 결제 기능
-
-### 5.1 결제 처리
+### 3.2 Payment
 ```
-- 결제 수단별 처리 로직
-- 결제 금액 검증 (주문금액 == 결제금액)
-- 결제 실패 시 재결제 유도
-- 결제 취소 (주문 취소 시)
-- 환불 처리
-```
+Payment method selection:
+- Credit card
+- Bank deposit
+- Account transfer
+- Mobile payment
+- Simple payment (PayPal, Apple Pay, etc.)
 
-### 5.2 결제 보안
-```
-- HTTPS 통신
-- PCI DSS 준수 (신용카드 직접 저장 금지)
-- 토큰화 (PG에서 토큰 발급)
-- 결제 중복 방지
-- 이상 거래 감지
+Payment process:
+1. Select payment method
+2. Redirect to PG (Payment Gateway)
+3. Payment approval/rejection
+4. Receive result callback
+5. Update database (payment completed/failed)
+6. Display result to user
 ```
 
----
-
-## 6. 리뷰 및 평점 기능
-
-### 6.1 리뷰 작성
+### 3.3 Order Lookup
 ```
-조건:
-- 배송 완료 후 리뷰 작성 가능
-- 상품당 1명이 여러 리뷰 가능 (구매 횟수별)
+Buyer:
+- View my order list (filter by status)
+- View order details
+- Track shipping
+- Estimated delivery date
 
-작성 항목:
-- 평점 (1~5점)
-- 제목
-- 내용 (텍스트)
-- 사진 (선택사항, 최대 5장)
-- 비공개/공개 선택
-
-시스템:
-- 스팸 필터링 (욕설, 중복)
-- 리뷰 승인 (관리자 또는 자동)
-- 리뷰 게시
-```
-
-### 6.2 리뷰 조회
-```
-상품 페이지:
-- 평균 평점 표시
-- 평점별 리뷰 개수 (5점 100개, 4점 50개 등)
-- 리뷰 목록 (최신순, 인기순, 평점순)
-- 사진이 있는 리뷰 필터
-- 리뷰 도움도 (도움됨/안 됨)
-```
-
-### 6.3 리뷰 관리
-```
-작성자:
-- 리뷰 수정/삭제 (배송 후 30일 내)
-
-판매자:
-- 리뷰 답글 작성 (고객 응답)
-
-관리자:
-- 리뷰 삭제 (부적절한 내용)
-- 리뷰 숨김 (스팸 판정)
+Seller:
+- Order list for their own products
+- Update order status
+- Enter shipping info
 ```
 
 ---
 
-## 7. 반품/환불 기능
+## 4. Shipping Features
 
-### 7.1 반품 신청
+### 4.1 Shipping Management
 ```
-조건:
-- 배송 완료 후 7일(또는 30일) 이내
-- 미개봉 상태 (또는 사유 구분)
+Seller:
+- Prepare product after confirming order
+- Select carrier (courier, postal service, direct delivery)
+- Enter tracking number
+- Update shipping status (preparing shipment → shipping → delivered)
 
-신청 정보:
-- 반품 사유 (상품 불량, 맞지 않음, 단순 변심 등)
-- 설명 (추가 정보)
-- 사진 (증거사진)
-```
-
-### 7.2 반품 승인/거절
-```
-판매자:
-- 반품 신청 검토
-- 승인 또는 거절
-- 반품 배송지 제공
-- 반품 배송비 부담 규칙
-
-시스템:
-- 반품 승인 → 배송지 전달 → 고객 반품 진행
-- 반품 거절 → 사유 전달 → 이의 신청 가능
+System:
+- Carrier API integration (shipment tracking)
+- Calculate estimated delivery date
+- Shipping delay notification
 ```
 
-### 7.3 환불 처리
+### 4.2 Shipment Tracking
 ```
-단계:
-1. 판매자가 반품 상품 수령
-2. 상품 확인 (양호 확인)
-3. 환불 승인
-4. 결제수단으로 환불
-5. 환불 완료 알림
-
-환불액:
-- 상품금 (일부 또는 전액)
-- 배송비 (판매자 부담 또는 고객 부담)
-- 환불 수수료 (정책에 따라)
+Customer:
+- Check shipping status (preparing shipment, shipping, delivered)
+- Check estimated delivery date
+- Go to carrier site by tracking number
+- Receive notification on shipping delay
 ```
 
 ---
 
-## 8. 할인/프로모션 기능
+## 5. Payment Features
 
-### 8.1 할인 방식
+### 5.1 Payment Processing
 ```
-- 정가 할인 (원가 기준)
-- 쿠폰 할인 (특정 금액, 비율)
-- 시즌 할인 (기간별)
-- 판매량 할인 (대량구매)
-- 번들 할인 (여러 상품 함께 구매)
-- 신규 고객 할인
-- 재구매 할인
+- Processing logic per payment method
+- Payment amount validation (order amount == payment amount)
+- Prompt retry on payment failure
+- Payment cancellation (on order cancellation)
+- Refund processing
 ```
 
-### 8.2 포인트 시스템
+### 5.2 Payment Security
 ```
-적립:
-- 구매금액의 일정% 적립 (예: 1% 또는 2%)
-- 리뷰 작성 시 추가 포인트
-- 로그인 이벤트
-
-사용:
-- 포인트로 할인
-- 환전 (현금화)
-- 다른 상품에 사용
-```
-
-### 8.3 프로모션/이벤트
-```
-- 플래시 세일 (기간/수량 제한)
-- 번들 이벤트
-- 신상품 프로모션
-- 계절 세일
-- 카테고리별 특가
+- HTTPS communication
+- PCI DSS compliance (direct storage of credit cards prohibited)
+- Tokenization (token issued by PG)
+- Prevent duplicate payments
+- Detect anomalous transactions
 ```
 
 ---
 
-## 9. 사용자 관리 기능
+## 6. Review and Rating Features
 
-### 9.1 회원가입/로그인
+### 6.1 Writing Reviews
 ```
-회원가입:
-- 이메일 중복 확인
-- 이메일 인증
-- 비밀번호 설정 (강도 검사)
-- 약관 동의
+Conditions:
+- Review can be written after delivery is completed
+- One person can write multiple reviews per product (per purchase)
 
-로그인:
-- 이메일/비밀번호 인증
-- 자동 로그인 (쿠키/토큰)
-- 비밀번호 찾기 (이메일 인증)
-- SNS 로그인 (Google, Facebook 등)
-```
+Input items:
+- Rating (1~5)
+- Title
+- Content (text)
+- Photos (optional, up to 5)
+- Private/public selection
 
-### 9.2 프로필 관리
-```
-기본 정보:
-- 이름, 이메일, 전화번호
-- 성별, 생년월일
-- 프로필 이미지
-
-주소 관리:
-- 기본 배송지
-- 여러 배송지 저장
-- 주소 수정/삭제
-
-설정:
-- 알림 수신 설정
-- 개인정보 공개/비공개
-- 계정 보안 (2FA, 비밀번호 변경)
+System:
+- Spam filtering (profanity, duplicates)
+- Review approval (admin or automatic)
+- Review published
 ```
 
-### 9.3 구매 이력
+### 6.2 Viewing Reviews
 ```
-- 주문 목록 조회
-- 주문 상세 조회
-- 배송 추적
-- 재구매 기능
-- 좋아하는 상품 관리
-- 검색 이력
-```
-
----
-
-## 10. 판매자 기능
-
-### 10.1 판매자 대시보드
-```
-- 판매액 (일/주/월/년)
-- 주문건수
-- 환불/반품율
-- 고객 만족도 (평점, 리뷰)
-- 상품 조회수
-- 판매 순위 (상품별, 카테고리별)
+Product page:
+- Display average rating
+- Review count by rating (100 at 5 stars, 50 at 4 stars, etc.)
+- Review list (newest, popular, by rating)
+- Filter for reviews with photos
+- Review helpfulness (helpful/not helpful)
 ```
 
-### 10.2 정산 관리
+### 6.3 Review Management
 ```
-- 정산액 계산 (판매액 - 수수료 - 환불액)
-- 정산 주기 (주 1회, 월 1회 등)
-- 정산 이력 조회
-- 정산 계좌 관리
-- 정산금 입금 확인
-```
+Author:
+- Edit/delete review (within 30 days after delivery)
 
-### 10.3 고객 관리
-```
-- 고객 목록 (재구매율, 구매액 순)
-- 고객별 구매 이력
-- 고객 피드백 (리뷰, Q&A)
+Seller:
+- Write review replies (respond to customers)
+
+Admin:
+- Delete review (inappropriate content)
+- Hide review (judged as spam)
 ```
 
 ---
 
-## 11. 관리자 기능
+## 7. Return/Refund Features
 
-### 11.1 회원 관리
+### 7.1 Return Request
 ```
-- 전체 회원 목록
-- 회원 상태 (활성, 정지, 탈퇴)
-- 회원 강제 정지
-- 회원 정보 조회
-- 회원별 구매 이력
-```
+Conditions:
+- Within 7 (or 30) days after delivery is completed
+- Unopened condition (or distinguished by reason)
 
-### 11.2 콘텐츠 관리
-```
-- 배너 관리
-- 공지사항 관리
-- 이벤트 관리
-- 카테고리 관리
-- 추천 상품 관리
+Request information:
+- Return reason (defective product, wrong fit, simple change of mind, etc.)
+- Description (additional info)
+- Photos (evidence photos)
 ```
 
-### 11.3 정책 관리
+### 7.2 Return Approval/Rejection
 ```
-- 배송비 정책
-- 환불 정책
-- 수수료율 설정
-- 할인 정책
+Seller:
+- Review return request
+- Approve or reject
+- Provide return shipping address
+- Return shipping fee responsibility rules
+
+System:
+- Return approved → forward shipping address → customer proceeds with return
+- Return rejected → forward reason → appeal possible
 ```
 
-### 11.4 신고/처리
+### 7.3 Refund Processing
 ```
-- 부적절한 상품 신고 처리
-- 부적절한 리뷰 삭제
-- 사기 거래 감지
-- 분쟁 조재 (구매자-판매자)
-```
+Steps:
+1. Seller receives returned product
+2. Inspect product (confirm condition)
+3. Approve refund
+4. Refund via payment method
+5. Refund completion notification
 
----
-
-## 12. 알림 기능
-
-### 12.1 알림 종류
-```
-구매자:
-- 배송 상태 변경 (준비, 배송중, 완료)
-- 결제 완료/실패
-- 반품 승인/거절
-- 리뷰 답글
-- 가격 인하 (찜한 상품)
-- 신상품 입고 (구독 카테고리)
-- 이벤트 알림
-
-판매자:
-- 새 주문 알림
-- 반품 신청
-- 고객 리뷰
-- 고객 Q&A
-```
-
-### 12.2 알림 전달 방식
-```
-- 인앱 알림
-- 푸시 알림 (모바일)
-- 이메일 알림
-- SMS 알림 (선택사항)
+Refund amount:
+- Product amount (partial or full)
+- Shipping fee (seller-paid or customer-paid)
+- Refund fee (per policy)
 ```
 
 ---
 
-## 13. 검색 및 추천 기능
+## 8. Discount/Promotion Features
 
-### 13.1 검색 최적화
+### 8.1 Discount Methods
 ```
-- 키워드 자동완성
-- 최근 검색어
-- 인기 검색어
-- 검색 필터 (가격, 평점, 배송)
-- 정렬 (인기순, 신상순, 가격순)
-```
-
-### 13.2 추천 기능
-```
-- 구매 이력 기반 추천
-- 카테고리 기반 추천
-- 인기 상품 추천
-- 함께 구매한 상품 추천
-- 개인화 추천 (ML)
+- List price discount (based on original price)
+- Coupon discount (specific amount, percentage)
+- Seasonal discount (by period)
+- Volume discount (bulk purchase)
+- Bundle discount (buying multiple products together)
+- New customer discount
+- Repeat purchase discount
 ```
 
----
-
-## 14. 보안 기능
-
-### 14.1 데이터 보안
+### 8.2 Points System
 ```
-- 비밀번호 암호화 (해시)
-- 민감한 데이터 암호화
-- HTTPS 통신
-- SQL 인젝션 방지
-- XSS 방지
-```
+Earning:
+- Earn a percentage of purchase amount (e.g., 1% or 2%)
+- Additional points for writing reviews
+- Login events
 
-### 14.2 결제 보안
-```
-- 결제액 검증
-- PCI DSS 준수
-- 토큰화
-- 3D Secure (신용카드)
+Usage:
+- Discount with points
+- Conversion (cash out)
+- Use on other products
 ```
 
-### 14.3 계정 보안
+### 8.3 Promotions/Events
 ```
-- 이중인증 (2FA)
-- 로그인 시도 제한
-- 비밀번호 강도 검사
-- 세션 관리
-- CSRF 방지
+- Flash sale (time/quantity limited)
+- Bundle event
+- New arrival promotion
+- Seasonal sale
+- Category-specific special prices
 ```
 
 ---
 
-## 15. 성능 최적화
+## 9. User Management Features
 
-### 15.1 캐싱
+### 9.1 Sign-up/Login
 ```
-- 상품 정보 캐싱
-- 카테고리 캐싱
-- 이미지 캐싱 (CDN)
-```
+Sign-up:
+- Email duplicate check
+- Email verification
+- Password setup (strength check)
+- Terms agreement
 
-### 15.2 데이터베이스 최적화
-```
-- 인덱싱 (상품, 주문)
-- 쿼리 최적화
-- 데이터 파티셔닝 (대용량)
-```
-
-### 15.3 프론트엔드 최적화
-```
-- 이미지 최적화 (압축, WebP)
-- 지연 로딩 (Lazy loading)
-- 번들 최적화
+Login:
+- Email/password authentication
+- Auto login (cookie/token)
+- Password recovery (email verification)
+- SNS login (Google, Facebook, etc.)
 ```
 
----
+### 9.2 Profile Management
+```
+Basic info:
+- Name, email, phone number
+- Gender, date of birth
+- Profile image
 
-## 16. 규정 준수
+Address management:
+- Default delivery address
+- Save multiple delivery addresses
+- Edit/delete address
 
-### 16.1 개인정보 보호
-```
-- GDPR 준수 (EU)
-- 개인정보처리방침 명시
-- 데이터 삭제 권리 (Right to Forget)
-```
-
-### 16.2 결제 관련
-```
-- PCI DSS 준수
-- 환불 정책 명시
-- 취소 정책 명시
+Settings:
+- Notification reception settings
+- Personal info public/private
+- Account security (2FA, password change)
 ```
 
-### 16.3 상거래 관련
+### 9.3 Purchase History
 ```
-- 상품 설명 정확성
-- 가격 표시 명확성
-- 배송정보 명시
-- 반품 정책 명시
+- View order list
+- View order details
+- Track shipping
+- Repeat purchase feature
+- Manage favorite products
+- Search history
 ```
 
 ---
 
-## 다음 문서로 읽어야 할 것
+## 10. Seller Features
 
-1. **03_terminology.md** - 쇼핑몰 관련 용어 정의
-2. **04_database_schema.md** - 데이터베이스 설계
-3. **05_api_standard.md** - REST API 표준
-4. **06_security_requirements.md** - 보안 요구사항 상세
-5. **07_spec_template.md** - 기획서 템플릿
+### 10.1 Seller Dashboard
+```
+- Sales amount (day/week/month/year)
+- Order count
+- Refund/return rate
+- Customer satisfaction (ratings, reviews)
+- Product views
+- Sales ranking (by product, by category)
+```
+
+### 10.2 Settlement Management
+```
+- Calculate settlement amount (sales - commission - refunds)
+- Settlement cycle (weekly, monthly, etc.)
+- View settlement history
+- Manage settlement account
+- Confirm settlement deposit
+```
+
+### 10.3 Customer Management
+```
+- Customer list (by repeat purchase rate, purchase amount)
+- Purchase history per customer
+- Customer feedback (reviews, Q&A)
+```
+
+---
+
+## 11. Admin Features
+
+### 11.1 Member Management
+```
+- Full member list
+- Member status (active, suspended, withdrawn)
+- Force-suspend member
+- View member info
+- Purchase history per member
+```
+
+### 11.2 Content Management
+```
+- Banner management
+- Notice management
+- Event management
+- Category management
+- Recommended product management
+```
+
+### 11.3 Policy Management
+```
+- Shipping fee policy
+- Refund policy
+- Commission rate setting
+- Discount policy
+```
+
+### 11.4 Reports/Handling
+```
+- Handle inappropriate product reports
+- Delete inappropriate reviews
+- Detect fraudulent transactions
+- Dispute mediation (buyer-seller)
+```
+
+---
+
+## 12. Notification Features
+
+### 12.1 Notification Types
+```
+Buyer:
+- Shipping status change (preparing, shipping, completed)
+- Payment completed/failed
+- Return approved/rejected
+- Review reply
+- Price drop (wishlisted product)
+- New arrival in stock (subscribed category)
+- Event notification
+
+Seller:
+- New order notification
+- Return request
+- Customer review
+- Customer Q&A
+```
+
+### 12.2 Notification Delivery Methods
+```
+- In-app notification
+- Push notification (mobile)
+- Email notification
+- SMS notification (optional)
+```
+
+---
+
+## 13. Search and Recommendation Features
+
+### 13.1 Search Optimization
+```
+- Keyword autocomplete
+- Recent searches
+- Popular searches
+- Search filters (price, rating, shipping)
+- Sorting (popularity, newest, price)
+```
+
+### 13.2 Recommendation Features
+```
+- Recommendations based on purchase history
+- Category-based recommendations
+- Popular product recommendations
+- Frequently bought together recommendations
+- Personalized recommendations (ML)
+```
+
+---
+
+## 14. Security Features
+
+### 14.1 Data Security
+```
+- Password encryption (hash)
+- Encryption of sensitive data
+- HTTPS communication
+- SQL injection prevention
+- XSS prevention
+```
+
+### 14.2 Payment Security
+```
+- Payment amount validation
+- PCI DSS compliance
+- Tokenization
+- 3D Secure (credit card)
+```
+
+### 14.3 Account Security
+```
+- Two-factor authentication (2FA)
+- Login attempt limiting
+- Password strength check
+- Session management
+- CSRF prevention
+```
+
+---
+
+## 15. Performance Optimization
+
+### 15.1 Caching
+```
+- Product information caching
+- Category caching
+- Image caching (CDN)
+```
+
+### 15.2 Database Optimization
+```
+- Indexing (products, orders)
+- Query optimization
+- Data partitioning (large volumes)
+```
+
+### 15.3 Frontend Optimization
+```
+- Image optimization (compression, WebP)
+- Lazy loading
+- Bundle optimization
+```
+
+---
+
+## 16. Compliance
+
+### 16.1 Privacy Protection
+```
+- GDPR compliance (EU)
+- State privacy policy
+- Right to data deletion (Right to Forget)
+```
+
+### 16.2 Payment-Related
+```
+- PCI DSS compliance
+- State refund policy
+- State cancellation policy
+```
+
+### 16.3 Commerce-Related
+```
+- Product description accuracy
+- Price display clarity
+- Shipping info statement
+- Return policy statement
+```
+
+---
+
+## What to Read Next
+
+1. **03_terminology.md** - E-commerce mall term definitions
+2. **04_database_schema.md** - Database design
+3. **05_api_standard.md** - REST API standard
+4. **06_security_requirements.md** - Detailed security requirements
+5. **07_spec_template.md** - Specification template

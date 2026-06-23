@@ -1,35 +1,35 @@
 {
   "hypothesis_id": "S2",
-  "scenario": "합격조건 충족 (정상 과학)",
-  "H0": "그룹X 평균 = 그룹Y 평균 (차이 없음)",
-  "H1": "그룹X 평균 > 그룹Y 평균",
+  "scenario": "pass conditions satisfied (normal science)",
+  "H0": "mean of group X = mean of group Y (no difference)",
+  "H1": "mean of group X > mean of group Y",
   "submitted_method": {
-    "description": "경쟁가설(영가설) 동시채점 + 사전등록 반례조건 + 라벨셔플 부정대조 + held-out 25% + FDR 보정. 모든 수치 Python으로 실계산.",
+    "description": "Co-scoring of competing hypothesis (null) + pre-registered counterexample condition + label-shuffle negative control + 25% held-out + FDR correction. All figures computed for real in Python.",
     "engine_ran": true,
     "tests_pass": true,
     "lint_pass": true
   },
   "competing_hypotheses": [
-    { "name": "H0_null (효과 없음)", "score": 0.0 },
+    { "name": "H0_null (no effect)", "score": 0.0 },
     { "name": "H1_effect (X>Y)", "score": 0.5525 }
   ],
   "falsifiable": true,
   "falsification_registered": {
-    "condition": "diff(X-Y) <= 0 이거나 p_raw >= 0.05 이면 H1 기각",
-    "registered_at": "pre-measurement (seed 20260613 고정, 측정 전 임계 확정)",
+    "condition": "reject H1 if diff(X-Y) <= 0 or p_raw >= 0.05",
+    "registered_at": "pre-measurement (seed 20260613 fixed, threshold set before measurement)",
     "before_measurement": true
   },
   "design": {
-    "method": "Welch's t (two-sided) + permutation test + Cohen's d 효과크기",
-    "threshold": "alpha=0.05, 방향 X>Y, 측정 전 고정",
+    "method": "Welch's t (two-sided) + permutation test + Cohen's d effect size",
+    "threshold": "alpha=0.05, direction X>Y, fixed before measurement",
     "fixed_before_data": true
   },
   "controls": {
-    "negative_control": "라벨 2000회 셔플 → 효과 소멸 확인",
+    "negative_control": "label shuffle 2000 times → effect confirmed to vanish",
     "mean_abs_shuffled_diff": 0.1303,
     "observed_diff": 0.5486,
     "shuffle_effect_gone": true,
-    "held_out_split": "25% held-out, 75%로 재계산",
+    "held_out_split": "25% held-out, recomputed on 75%",
     "held_out_diff": 0.5487,
     "held_out_p": 0.00195,
     "held_out_reproduced": true
@@ -55,30 +55,30 @@
     "outputs": ["_workspace/sci-S2-results.json"],
     "seed": 20260613,
     "narrative_numbers": 0,
-    "note": "모든 수치 data(seed생성)→code(sci-S2-compute.py)→output(sci-S2-results.json) 추적 가능"
+    "note": "All figures traceable data(seed-generated)→code(sci-S2-compute.py)→output(sci-S2-results.json)"
   },
   "tautology_check": "PASS",
-  "tautology_detail": "지표(평균차·t·효과크기)가 가설 진술과 독립. 영가설이 같은 데이터·지표로 동시채점됨.",
-  "competing_hypothesis_check": "PASS (영가설 동시채점, H1이 H0 대비 우월)",
+  "tautology_detail": "The metrics (mean diff, t, effect size) are independent of the hypothesis statement. The null is co-scored on the same data and metrics.",
+  "competing_hypothesis_check": "PASS (null co-scored, H1 superior to H0)",
   "evidence_for": [
     { "claim": "diff=+0.55, p_raw=0.00059, d=0.55", "source": "sci-S2-results.json" },
-    { "claim": "held-out 75%에서 재현(diff=+0.55, p=0.002)", "source": "sci-S2-results.json" },
-    { "claim": "FDR 보정 후에도 유의(p_fdr<0.05)", "source": "sci-S2-results.json" }
+    { "claim": "reproduced on 75% held-out (diff=+0.55, p=0.002)", "source": "sci-S2-results.json" },
+    { "claim": "significant even after FDR correction (p_fdr<0.05)", "source": "sci-S2-results.json" }
   ],
   "evidence_against": [
-    { "claim": "셔플 시 평균차 0.13으로 축소(인공물 아님 — 지지 방향)", "source": "negative_control" }
+    { "claim": "under shuffle the mean diff shrinks to 0.13 (not an artifact — supporting direction)", "source": "negative_control" }
   ],
   "engineering_status": "PASS",
-  "engineering_status_detail": "합격조건 6개 코드 구현·실행·출력파일 생성됨. 재현·추적 가능.",
-  "scientific_interpretation": "데이터가 H1을 지지. 단, 최종 과학적 해석(인과·일반화·외적타당도)은 연구자/감사자 책임. 하네스는 '참/입증'을 단정하지 않음.",
+  "engineering_status_detail": "All 6 pass conditions implemented, run, and output files generated. Reproducible and traceable.",
+  "scientific_interpretation": "The data supports H1. However, the final scientific interpretation (causality, generalization, external validity) is the responsibility of the researcher/auditor. The harness does not assert 'true/proven'.",
   "verdict": "supported_by_data",
-  "verdict_reason": "합격조건 6개 모두 충족: 경쟁가설 동시채점·반례조건 사전등록·셔플(효과소멸)·held-out(재현)·FDR보정·전구간 추적성. 동어반복 없음.",
+  "verdict_reason": "All 6 pass conditions satisfied: competing-hypothesis co-scoring, pre-registered counterexample condition, shuffle (effect vanishes), held-out (reproduced), FDR correction, end-to-end traceability. No tautology.",
   "proven_label_emitted": false,
-  "forbidden_labels_check": "PASS (입증됨/확립급/STRONG+/참 단정 없음 — 'supported_by_data'까지만)",
+  "forbidden_labels_check": "PASS (no proven/established-grade/STRONG+/true assertion — only as far as 'supported_by_data')",
   "confidence": "high",
   "limitations": [
-    "합성 데이터(시뮬레이션 검증용) — 실제 도메인 데이터로 외적타당도 재확인 필요",
-    "supported_by_data는 '데이터 지지'이지 '명제가 참'이 아님"
+    "Synthetic data (for simulation verification) — external validity must be re-confirmed with real domain data",
+    "supported_by_data means 'supported by data', not 'the proposition is true'"
   ],
-  "next": "실데이터 적용 + 사전등록 프로토콜 공개 + 독립 재현 의뢰 (연구자/감사자)"
+  "next": "Apply real data + publish the pre-registered protocol + commission independent reproduction (researcher/auditor)"
 }

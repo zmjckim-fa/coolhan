@@ -1,32 +1,32 @@
 {
   "hypothesis_id": "S3",
-  "scenario": "엔진은 PASS, 추적성(provenance) 위반",
-  "H0": "처리군과 대조군 결과 동일",
-  "H1": "처리군이 대조군보다 결과 지표가 높다",
+  "scenario": "engine PASS, provenance violation",
+  "H0": "treatment and control groups have identical results",
+  "H1": "the treatment group has a higher outcome metric than the control group",
   "submitted_method": {
-    "description": "결과 수치가 코드 실행 없이 서술로 생성됨(narrative number). 출력파일·난수시드·입력해시 없음. 코드 자체는 lint/test 통과.",
-    "reported_numbers_origin": "narrative (서술 생성, 계산 코드/출력 파일 부재)",
+    "description": "Result figures were generated narratively without running code (narrative numbers). No output file, random seed, or input hash. The code itself passes lint/test.",
+    "reported_numbers_origin": "narrative (narratively generated, no computation code / output file)",
     "engine_ran": true,
     "tests_pass": true,
     "lint_pass": true
   },
   "competing_hypotheses": [
-    { "name": "H0_null", "score": null, "note": "서술상 언급되나 실제 채점 출력 없음" }
+    { "name": "H0_null", "score": null, "note": "mentioned in narrative but no actual scoring output" }
   ],
   "falsifiable": true,
   "falsification_registered": {
-    "condition": "서술로 언급",
+    "condition": "mentioned narratively",
     "registered_at": null,
     "before_measurement": false,
-    "note": "타임스탬프/커밋 고정 파일 없음"
+    "note": "no timestamp/commit-fixed file"
   },
   "design": {
-    "method": "서술된 비교 (실행 코드 경로 미확인)",
-    "threshold": "서술",
+    "method": "narrated comparison (execution code path unconfirmed)",
+    "threshold": "narrative",
     "fixed_before_data": false
   },
   "controls": {
-    "negative_control": "서술상 '했다'고 기재, 출력 없음",
+    "negative_control": "stated as 'done' narratively, no output",
     "shuffle_effect_gone": null,
     "held_out_reproduced": null
   },
@@ -42,25 +42,25 @@
     "seed": null,
     "narrative_numbers": 3,
     "result": "FAIL",
-    "note": "00_SCIENTIFIC_VERIFICATION_STANDARDS.md §1.5 위반 — 모든 수치 data→code→output 추적 불가. 서술 생성 숫자 3개 검출(금지)."
+    "note": "Violates 00_SCIENTIFIC_VERIFICATION_STANDARDS.md §1.5 — no figure is traceable data→code→output. 3 narratively generated numbers detected (prohibited)."
   },
-  "tautology_check": "N/A (provenance 위반으로 채점 자체 검증 불가)",
-  "competing_hypothesis_check": "FAIL (실제 동시채점 출력 없음)",
+  "tautology_check": "N/A (scoring itself cannot be verified due to provenance violation)",
+  "competing_hypothesis_check": "FAIL (no actual co-scoring output)",
   "evidence_for": [
-    { "claim": "처리군이 더 높다 (수치 서술)", "source": "narrative — 추적 불가, 증거로 불인정" }
+    { "claim": "the treatment group is higher (numbers narrated)", "source": "narrative — not traceable, not admitted as evidence" }
   ],
   "evidence_against": [],
   "engineering_status": "PASS",
-  "engineering_status_detail": "코드는 lint/test 통과 — 파이프라인 작동만 보증. 그러나 결과 수치가 코드 산출물이 아님.",
-  "scientific_interpretation": "해석 보류 — 연구자/감사자 책임. 추적 불가 수치는 과학적 판정 근거가 될 수 없음.",
+  "engineering_status_detail": "Code passes lint/test — only guarantees the pipeline works. But the result figures are not code outputs.",
+  "scientific_interpretation": "Interpretation withheld — responsibility of the researcher/auditor. Untraceable figures cannot be grounds for a scientific verdict.",
   "verdict": "insufficient",
-  "verdict_reason": "provenance 위반: 서술 생성 숫자(narrative_numbers=3), 출력 파일·시드·입력해시 부재. 엔진 PASS여도 합격조건 §1.5(전구간 추적성) 미충족 → insufficient.",
+  "verdict_reason": "Provenance violation: narratively generated numbers (narrative_numbers=3), no output file/seed/input hash. Even with engine PASS, pass condition §1.5 (end-to-end traceability) is unmet → insufficient.",
   "proven_label_emitted": false,
-  "forbidden_labels_check": "PASS (입증됨/STRONG+ 표기 없음)",
+  "forbidden_labels_check": "PASS (no proven/STRONG+ labels)",
   "confidence": "low",
   "limitations": [
-    "엔진 통과가 결과의 신뢰성을 보증하지 않음 — 추적성이 전제조건",
-    "서술 숫자는 재현·감사 불가"
+    "Engine pass does not guarantee result reliability — traceability is a prerequisite",
+    "Narrative numbers are not reproducible/auditable"
   ],
-  "next": "모든 수치를 data→code→output로 재산출(시드·입력해시·출력파일 기록) 후 재검증"
+  "next": "Recompute all figures via data→code→output (record seed, input hash, output file), then re-verify"
 }

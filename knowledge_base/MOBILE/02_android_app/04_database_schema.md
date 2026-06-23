@@ -1,15 +1,15 @@
-# Android 앱 데이터 모델 (Database Schema)
+# Android App Data Model (Database Schema)
 
-## Room Database 구조
+## Room Database Structure
 
 ```
-Room 스택:
-@Database → AppDatabase (RoomDatabase 상속)
-  ├─ @Entity → 테이블 정의 (data class)
-  ├─ @Dao    → 쿼리 인터페이스
-  └─ TypeConverter → 커스텀 타입 변환 (Date, List 등)
+Room stack:
+@Database → AppDatabase (extends RoomDatabase)
+  ├─ @Entity → table definition (data class)
+  ├─ @Dao    → query interface
+  └─ TypeConverter → custom type conversion (Date, List, etc.)
 
-싱글톤 패턴:
+Singleton pattern:
 companion object {
     @Volatile private var INSTANCE: AppDatabase? = null
     fun getInstance(context: Context): AppDatabase =
@@ -24,14 +24,14 @@ companion object {
 
 ---
 
-## 표준 엔티티 정의
+## Standard Entity Definitions
 
-### User (사용자)
+### User
 ```kotlin
 @Entity(tableName = "users",
     indices = [Index(value = ["email"], unique = true)])
 data class UserEntity(
-    @PrimaryKey val id: String,          // UUID 문자열
+    @PrimaryKey val id: String,          // UUID string
     val email: String,
     val display_name: String,
     val avatar_url: String?,
@@ -55,7 +55,7 @@ interface UserDao {
 }
 ```
 
-### Product (상품)
+### Product
 ```kotlin
 @Entity(tableName = "products",
     indices = [Index("category"), Index("is_available")])
@@ -89,7 +89,7 @@ interface ProductDao {
 }
 ```
 
-### Order (주문)
+### Order
 ```kotlin
 @Entity(tableName = "orders",
     foreignKeys = [ForeignKey(
@@ -120,13 +120,13 @@ data class OrderEntity(
 data class OrderItemEntity(
     @PrimaryKey val id: String,
     val order_id: String,
-    val product_title: String,         // 주문 시점 스냅샷
+    val product_title: String,         // snapshot at order time
     val unit_price: Double,
     val quantity: Int,
     val subtotal: Double
 )
 
-// 관계 조회용 데이터 클래스
+// Data class for relational queries
 data class OrderWithItems(
     @Embedded val order: OrderEntity,
     @Relation(parentColumn = "id", entityColumn = "order_id")
@@ -156,12 +156,12 @@ interface OrderDao {
 }
 ```
 
-### CachedResponse (API 응답 캐시)
+### CachedResponse (API Response Cache)
 ```kotlin
 @Entity(tableName = "cached_responses",
     indices = [Index(value = ["cache_key"], unique = true)])
 data class CachedResponseEntity(
-    @PrimaryKey val cache_key: String,  // URL + 파라미터 해시
+    @PrimaryKey val cache_key: String,  // hash of URL + parameters
     val data: ByteArray,                // JSON bytes
     val etag: String?,
     val expires_at: Long,               // Unix ms
@@ -183,7 +183,7 @@ interface CachedResponseDao {
 
 ---
 
-## TypeConverter (커스텀 타입 변환)
+## TypeConverter (Custom Type Conversion)
 
 ```kotlin
 class Converters {
@@ -201,7 +201,7 @@ class Converters {
     fun toStringList(list: List<String>?): String? = list?.let { Gson().toJson(it) }
 }
 
-// Database에 TypeConverter 등록
+// Register TypeConverter with the Database
 @Database(entities = [...], version = 1)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase()
@@ -209,10 +209,10 @@ abstract class AppDatabase : RoomDatabase()
 
 ---
 
-## EncryptedSharedPreferences (보안 저장소)
+## EncryptedSharedPreferences (Secure Storage)
 
 ```kotlin
-// Android Keystore 기반 암호화 (민감 데이터)
+// Android Keystore-based encryption (sensitive data)
 object SecurePrefs {
     private const val FILE_NAME = "secure_prefs"
 
@@ -228,14 +228,14 @@ object SecurePrefs {
     }
 }
 
-// 키 상수
+// Key constants
 object SecureKey {
     const val AUTH_TOKEN = "auth_token"
     const val REFRESH_TOKEN = "refresh_token"
     const val USER_ID = "user_id"
 }
 
-// 사용
+// Usage
 val prefs = SecurePrefs.get(context)
 prefs.edit().putString(SecureKey.AUTH_TOKEN, token).apply()
 val token = prefs.getString(SecureKey.AUTH_TOKEN, null)
@@ -243,10 +243,10 @@ val token = prefs.getString(SecureKey.AUTH_TOKEN, null)
 
 ---
 
-## DataStore (일반 설정)
+## DataStore (General Settings)
 
 ```kotlin
-// 키 정의
+// Key definitions
 object PreferencesKeys {
     val HAS_ONBOARDED = booleanPreferencesKey("has_onboarded")
     val SELECTED_LANGUAGE = stringPreferencesKey("selected_language")
@@ -254,14 +254,14 @@ object PreferencesKeys {
     val LAST_SYNC_TIMESTAMP = longPreferencesKey("last_sync_timestamp")
 }
 
-// DataStore 인스턴스 (Application 또는 DI)
+// DataStore instance (Application or DI)
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "app_settings")
 
-// 읽기 (Flow)
+// Read (Flow)
 val hasOnboarded: Flow<Boolean> = context.dataStore.data
     .map { prefs -> prefs[PreferencesKeys.HAS_ONBOARDED] ?: false }
 
-// 쓰기 (suspend)
+// Write (suspend)
 suspend fun setOnboarded(context: Context) {
     context.dataStore.edit { prefs ->
         prefs[PreferencesKeys.HAS_ONBOARDED] = true
@@ -271,17 +271,17 @@ suspend fun setOnboarded(context: Context) {
 
 ---
 
-## 마이그레이션 전략
+## Migration Strategy
 
 ```kotlin
-// 버전 1 → 2: 컬럼 추가
+// Version 1 → 2: add column
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE users ADD COLUMN phone_number TEXT")
     }
 }
 
-// 버전 2 → 3: 테이블 추가
+// Version 2 → 3: add table
 val MIGRATION_2_3 = object : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("""
@@ -297,15 +297,15 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
     }
 }
 
-// Database에 등록
+// Register with the Database
 Room.databaseBuilder(context, AppDatabase::class.java, "app_database")
     .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
     .build()
 
-// 주의: 파괴적 마이그레이션은 사용자 데이터 손실 → 절대 금지
-// .fallbackToDestructiveMigration() → 프로덕션 사용 금지
+// Caution: destructive migration causes user data loss → strictly forbidden
+// .fallbackToDestructiveMigration() → do not use in production
 ```
 
 ---
 
-**문서 버전:** 1.0.0 | **작성일:** 2026-06-13 | **대상 OS:** Android 8.0(API 26)+
+**Document version:** 1.0.0 | **Date:** 2026-06-13 | **Target OS:** Android 8.0 (API 26)+

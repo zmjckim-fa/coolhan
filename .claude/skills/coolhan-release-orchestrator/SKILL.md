@@ -2,273 +2,273 @@
 name: coolhan-release-orchestrator
 description: "CoolHan Specification-Driven Framework를 GitHub에 배포하고 npm 패키지로 배포하며, 사용자 확산과 품질 관리를 자동화합니다. '배포해줘', '릴리스 준비해줘', '사용자 문서 만들어줘', '품질 테스트해줘', '배포 후 모니터링' 등 CoolHan 릴리스 관련 요청 시 반드시 이 스킬을 사용할 것. 5명의 전문가 팀(기획/개발/DevOps/마케팅/QA)이 협력하여 완전한 릴리스 프로세스를 관리합니다."
 working-mode: |
-  **Token Efficiency Mode (작동 원칙)**
-  - 결과만 보고: 배포완료/실패 형식으로만 보고
-  - 과정 설명 금지: 생각, 판단 과정 미표시
-  - 소스 화면 미표시: 코드나 내용 스크린샷 제외
-  - 토큰 최소화: 필수 정보만 간결하게 전달
+  **Token Efficiency Mode (operating principles)**
+  - Report results only: report in deploy-complete/failed format only
+  - No process explanation: do not show thinking or judgment process
+  - No source display: exclude code or content screenshots
+  - Minimize tokens: convey only essential information concisely
 compatibility: Claude Code + Agent Team system
 ---
 
 # 🚀 CoolHan Release Orchestrator
 
-CoolHan Specification-Driven Framework를 **GitHub에서 npm까지**, 그리고 **사용자에게까지** 성공적으로 배포하고 관리하는 통합 시스템입니다.
+An integrated system that successfully deploys and manages the CoolHan Specification-Driven Framework **from GitHub to npm**, and **all the way to users**.
 
 ---
 
-## 핵심 목표
+## Core Goals
 
-| 단계 | 담당 리드 | 산출물 |
+| Stage | Lead in Charge | Deliverable |
 |------|---------|--------|
-| 📋 **배포 전략** | 기획 리드 | GitHub 전략, npm 전략, 로드맵 |
-| 💻 **패키지 준비** | 개발 리드 | package.json, 설치 스크립트 |
-| 🔧 **CI/CD 구축** | DevOps 리드 | GitHub Actions, 자동 배포 |
-| 📚 **사용자 문서** | 마케팅 리드 | README, 튜토리얼, 예제 |
-| ✅ **품질 검증** | QA 리드 | 테스트 리포트, 배포 승인 |
+| 📋 **Deployment Strategy** | Planning Lead | GitHub strategy, npm strategy, roadmap |
+| 💻 **Package Preparation** | Development Lead | package.json, install scripts |
+| 🔧 **CI/CD Setup** | DevOps Lead | GitHub Actions, automated deployment |
+| 📚 **User Documentation** | Marketing Lead | README, tutorials, examples |
+| ✅ **Quality Verification** | QA Lead | Test reports, deployment approval |
 
 ---
 
-## 실행 구조
+## Execution Structure
 
 ```
-[오케스트레이터 - CoolHan Release Orchestrator]
-  ├─ Task 1: 배포 전략 수립 (기획 리드)
-  ├─ Task 2: npm 패키지 준비 (개발 리드)
-  ├─ Task 3: GitHub & CI/CD 구축 (DevOps 리드)
-  ├─ Task 4: 사용자 문서 작성 (마케팅 리드)
-  └─ Task 5: Pre-Deploy QA (QA 리드)
+[Orchestrator - CoolHan Release Orchestrator]
+  ├─ Task 1: Establish deployment strategy (Planning Lead)
+  ├─ Task 2: Prepare npm package (Development Lead)
+  ├─ Task 3: Build GitHub & CI/CD (DevOps Lead)
+  ├─ Task 4: Write user documentation (Marketing Lead)
+  └─ Task 5: Pre-Deploy QA (QA Lead)
          ↓
-  [배포 승인]
+  [Deployment Approval]
          ↓
-  └─ Task 6: npm 배포 실행 (DevOps 리드)
-  └─ Task 7: Post-Deploy 모니터링 (QA 리드)
+  └─ Task 6: Execute npm deployment (DevOps Lead)
+  └─ Task 7: Post-Deploy monitoring (QA Lead)
 ```
 
-**실행 모드:** 🔄 **에이전트 팀** (5명이 협력)
+**Execution Mode:** 🔄 **Agent Team** (5 members collaborating)
 
 ---
 
-## 워크플로우
+## Workflow
 
-### Phase 1: 팀 구성 및 작업 할당
+### Phase 1: Team Formation and Task Assignment
 
 ```
-1. TeamCreate로 5명 팀 구성:
-   - 기획 리드 (planning-lead.md)
-   - 개발 리드 (development-lead.md)
-   - DevOps 리드 (devops-lead.md)
-   - 마케팅 리드 (marketing-lead.md)
-   - QA 리드 (qa-lead.md)
+1. Form 5-member team with TeamCreate:
+   - Planning Lead (planning-lead.md)
+   - Development Lead (development-lead.md)
+   - DevOps Lead (devops-lead.md)
+   - Marketing Lead (marketing-lead.md)
+   - QA Lead (qa-lead.md)
 
-2. TaskCreate로 7개 작업 생성:
-   - Task 1: 배포 전략 (기획 리드)
-   - Task 2: npm 패키지 (개발 리드)
-   - Task 3: CI/CD (DevOps 리드)
-   - Task 4: 문서 (마케팅 리드)
-   - Task 5: Pre-Deploy QA (QA 리드, Task 1-4 블로킹)
-   - Task 6: npm 배포 (DevOps 리드, Task 5 블로킹)
-   - Task 7: Post-Deploy 모니터링 (QA 리드, Task 6 블로킹)
+2. Create 7 tasks with TaskCreate:
+   - Task 1: Deployment strategy (Planning Lead)
+   - Task 2: npm package (Development Lead)
+   - Task 3: CI/CD (DevOps Lead)
+   - Task 4: Documentation (Marketing Lead)
+   - Task 5: Pre-Deploy QA (QA Lead, blocking Task 1-4)
+   - Task 6: npm deployment (DevOps Lead, blocking Task 5)
+   - Task 7: Post-Deploy monitoring (QA Lead, blocking Task 6)
 
-3. 팀원들이 자체 조율 (SendMessage):
-   - 정보 교환, 피드백, 협의
-   - 오케스트레이터는 진행 상황 모니터링
+3. Team members self-coordinate (SendMessage):
+   - Information exchange, feedback, consultation
+   - Orchestrator monitors progress
 ```
 
-### Phase 2: 병렬 준비 (Task 1-4)
+### Phase 2: Parallel Preparation (Task 1-4)
 
-각 리드가 자신의 영역을 담당:
+Each lead handles their own area:
 
-**기획 리드:**
-- GitHub 배포 전략 (저장소명, 라이선스, 메타데이터)
-- npm 배포 전략 (패키지명, 버전, 배포 시기)
-- 사용자 온보딩 경로 설계
+**Planning Lead:**
+- GitHub deployment strategy (repository name, license, metadata)
+- npm deployment strategy (package name, version, release timing)
+- User onboarding path design
 
-**개발 리드:**
-- package.json 작성
-- bin/setup.js (설치 스크립트)
-- npm 배포 스크립트
+**Development Lead:**
+- Write package.json
+- bin/setup.js (install script)
+- npm deployment scripts
 
-**DevOps 리드:**
-- GitHub 저장소 생성 및 설정
-- GitHub Actions CI/CD 파이프라인
-- npm 인증 토큰 관리
+**DevOps Lead:**
+- Create and configure GitHub repository
+- GitHub Actions CI/CD pipeline
+- npm authentication token management
 
-**마케팅 리드:**
-- GitHub README 최적화
+**Marketing Lead:**
+- GitHub README optimization
 - CONTRIBUTING.md, CODE_OF_CONDUCT.md
-- docs/ 사용자 가이드
-- examples/ 튜토리얼
+- docs/ user guide
+- examples/ tutorials
 
 ### Phase 3: Pre-Deploy QA (Task 5)
 
-QA 리드가 모든 준비 사항을 검증:
+The QA Lead verifies all preparations:
 
 ```
-✅ Windows/Mac/Linux에서 npm 설치 테스트
-✅ 기능 검증 (19개 파일 생성, 작동)
-✅ 문서 정확성 검증
-✅ npm 패키지 구조 검증
+✅ npm install test on Windows/Mac/Linux
+✅ Functional verification (19 files generated, working)
+✅ Documentation accuracy verification
+✅ npm package structure verification
 
-결과:
-  PASS → Task 6 진행
-  FAIL → 해당 리드에 반려, 수정 후 재테스트
+Result:
+  PASS → Proceed to Task 6
+  FAIL → Return to the relevant lead, retest after fixes
 ```
 
-### Phase 4: npm 배포 (Task 6)
+### Phase 4: npm Deployment (Task 6)
 
-DevOps 리드가 npm에 자동 배포:
+The DevOps Lead deploys automatically to npm:
 
 ```
-GitHub tag v1.0.0 생성
+Create GitHub tag v1.0.0
   ↓
-GitHub Actions 자동 실행
+GitHub Actions runs automatically
   ↓
-npm publish 자동 실행
+npm publish runs automatically
   ↓
-npm 레지스트리 업데이트
+npm registry updated
 ```
 
-### Phase 5: Post-Deploy 모니터링 (Task 7)
+### Phase 5: Post-Deploy Monitoring (Task 7)
 
-QA 리드가 배포 후 안정성 확인:
+The QA Lead confirms post-deployment stability:
 
 ```
-✅ npm 레지스트리에서 설치 가능한가?
-✅ 초기 사용자 피드백 모니터링
-✅ 문제 발생 시 → GitHub Issues 신고
+✅ Is it installable from the npm registry?
+✅ Monitor early user feedback
+✅ On problems → file GitHub Issues
 
-모니터링 기간: 배포 후 24시간
+Monitoring period: 24 hours after deployment
 ```
 
 ---
 
-## 팀 통신 프로토콜
+## Team Communication Protocol
 
-### 기획 리드 → 개발 리드
+### Planning Lead → Development Lead
 ```
-"GitHub 저장소명은 'coolhan-spec-driven-framework'로 정했습니다.
-npm 패키지명은 '@coolhan/spec-driven-framework'로 가시겠어요?"
-```
-
-### 개발 리드 → DevOps 리드
-```
-"package.json과 설치 스크립트 준비됐습니다.
-CI/CD에 'npm run build' 단계 추가할 수 있나요?"
+"The GitHub repository name has been set to 'coolhan-spec-driven-framework'.
+Shall we go with '@coolhan/spec-driven-framework' for the npm package name?"
 ```
 
-### 마케팅 리드 → 기획 리드
+### Development Lead → DevOps Lead
 ```
-"사용자 가이드 작성 중입니다.
-온보딩 경로(초보자/고급)를 따라 3개 예제를 만들었습니다."
+"package.json and install scripts are ready.
+Can you add an 'npm run build' step to CI/CD?"
 ```
 
-### QA 리드 → 전체
+### Marketing Lead → Planning Lead
 ```
-"Pre-Deploy QA 통과했습니다! 모든 OS에서 설치 성공.
-DevOps 리드, npm 배포 진행하셔도 됩니다."
+"Writing the user guide now.
+I created 3 examples following the onboarding paths (beginner/advanced)."
+```
+
+### QA Lead → Everyone
+```
+"Pre-Deploy QA passed! Installation succeeded on all OSes.
+DevOps Lead, you may proceed with the npm deployment."
 ```
 
 ---
 
-## 데이터 흐름
+## Data Flow
 
-### 파일 기반 전달 (_workspace/)
+### File-Based Handoff (_workspace/)
 
 ```
 _workspace/
-├── 01_planning_strategy.md (기획 리드 산출물)
-├── 02_npm_package_config.md (개발 리드 산출물)
-├── 03_cicd_setup.md (DevOps 리드 산출물)
-├── 04_marketing_materials.md (마케팅 리드 산출물)
-├── 05_pre_deploy_qa.md (QA 리드 검증 결과)
-├── 06_deploy_log.md (배포 실행 결과)
-└── 07_post_deploy_report.md (Post-Deploy 모니터링)
+├── 01_planning_strategy.md (Planning Lead deliverable)
+├── 02_npm_package_config.md (Development Lead deliverable)
+├── 03_cicd_setup.md (DevOps Lead deliverable)
+├── 04_marketing_materials.md (Marketing Lead deliverable)
+├── 05_pre_deploy_qa.md (QA Lead verification result)
+├── 06_deploy_log.md (deployment execution result)
+└── 07_post_deploy_report.md (Post-Deploy monitoring)
 ```
 
 ---
 
-## 에러 핸들링
+## Error Handling
 
-| 상황 | 대응 |
+| Situation | Response |
 |------|------|
-| **개발 리드 작업 지연** | 기획 리드 대기, 원인 확인, 일정 조정 |
-| **DevOps 인프라 문제** | 기획 리드에 보고, 대체 방안 검토 |
-| **QA 실패 (Blocker)** | 해당 리드에 반려, 수정 후 재테스트 |
-| **npm 배포 실패** | 즉시 DevOps 리드 개입, 로그 분석, 롤백 검토 |
-| **배포 후 사용자 문제** | QA 리드가 GitHub Issues로 신고, 우선순위 결정 |
+| **Development Lead task delay** | Planning Lead waits, identifies cause, adjusts schedule |
+| **DevOps infrastructure problem** | Report to Planning Lead, review alternatives |
+| **QA failure (Blocker)** | Return to the relevant lead, retest after fixes |
+| **npm deployment failure** | Immediate DevOps Lead intervention, log analysis, rollback review |
+| **Post-deployment user problem** | QA Lead files GitHub Issues, prioritizes |
 
 ---
 
-## 성공 기준
+## Success Criteria
 
-배포 완료 후 다음을 확인합니다:
+After deployment is complete, confirm the following:
 
-- ✅ npm에서 설치 가능 (`npm install @coolhan/spec-driven-framework`)
-- ✅ GitHub에 공개 저장소 존재 (별 수 상관없음)
-- ✅ 초기 사용자 피드백 수집 완료
-- ✅ 모든 도움말 문서 준비됨
-- ✅ 배포 후 24시간 모니터링 완료
-
----
-
-## 후속 작업
-
-배포 후:
-
-1. **사용자 피드백 수집** (1주)
-   - GitHub Discussions 활성화
-   - 초기 사용자 인터뷰
-
-2. **v1.0.1 준비** (2주)
-   - 사용자 피드백 반영
-   - 버그 수정
-
-3. **장기 로드맵**
-   - 월별 기능 추가
-   - 커뮤니티 확대
+- ✅ Installable from npm (`npm install @coolhan/spec-driven-framework`)
+- ✅ Public repository exists on GitHub (star count irrelevant)
+- ✅ Early user feedback collection complete
+- ✅ All help documentation prepared
+- ✅ 24-hour post-deployment monitoring complete
 
 ---
 
-## 사용 예시
+## Follow-up Work
 
-### 초기 배포
-```
-사용자: "CoolHan 배포해줘"
-↓
-오케스트레이터: (팀 구성, Task 할당)
-기획 리드: (전략 수립)
-개발 리드: (패키지 준비)
-DevOps 리드: (인프라 구축)
-마케팅 리드: (문서 작성)
-QA 리드: (검증)
-↓
-배포 완료!
-```
+After deployment:
 
-### 후속 배포 (v1.0.1)
+1. **Collect user feedback** (1 week)
+   - Activate GitHub Discussions
+   - Interview early users
+
+2. **Prepare v1.0.1** (2 weeks)
+   - Incorporate user feedback
+   - Bug fixes
+
+3. **Long-term roadmap**
+   - Monthly feature additions
+   - Community expansion
+
+---
+
+## Usage Examples
+
+### Initial Deployment
 ```
-사용자: "버그 수정해서 v1.0.1 배포해줘"
+User: "CoolHan 배포해줘"
 ↓
-오케스트레이터: (v1.0.1 태그 생성)
-개발 리드: (버그 수정, package.json 버전 업데이트)
-QA 리드: (재검증)
+Orchestrator: (form team, assign tasks)
+Planning Lead: (establish strategy)
+Development Lead: (prepare package)
+DevOps Lead: (build infrastructure)
+Marketing Lead: (write documentation)
+QA Lead: (verify)
 ↓
-자동 npm 배포 완료!
+Deployment complete!
 ```
 
+### Follow-up Deployment (v1.0.1)
+```
+User: "버그 수정해서 v1.0.1 배포해줘"
+↓
+Orchestrator: (create v1.0.1 tag)
+Development Lead: (fix bugs, update package.json version)
+QA Lead: (re-verify)
+↓
+Automatic npm deployment complete!
+```
+
 ---
 
-## 주요 파일
+## Key Files
 
-- `.claude/agents/planning-lead.md` — 기획 리드 정의
-- `.claude/agents/development-lead.md` — 개발 리드 정의
-- `.claude/agents/devops-lead.md` — DevOps 리드 정의
-- `.claude/agents/marketing-lead.md` — 마케팅 리드 정의
-- `.claude/agents/qa-lead.md` — QA 리드 정의
+- `.claude/agents/planning-lead.md` — Planning Lead definition
+- `.claude/agents/development-lead.md` — Development Lead definition
+- `.claude/agents/devops-lead.md` — DevOps Lead definition
+- `.claude/agents/marketing-lead.md` — Marketing Lead definition
+- `.claude/agents/qa-lead.md` — QA Lead definition
 
 ---
 
-**마지막 업데이트:** 2026-05-27  
-**버전:** 1.0.0  
-**팀원:** 5명 (기획/개발/DevOps/마케팅/QA)  
-**예상 완료:** 5-7일
+**Last Updated:** 2026-05-27  
+**Version:** 1.0.0  
+**Team Members:** 5 (Planning/Development/DevOps/Marketing/QA)  
+**Estimated Completion:** 5-7 days

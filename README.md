@@ -10,39 +10,39 @@
 [![Languages](https://img.shields.io/badge/Languages-50%2B-green)](MULTILINGUAL_SUPPORT.md)
 [![Node.js](https://img.shields.io/badge/Node.js-14%2B-brightgreen)](https://nodejs.org)
 
-> **한 줄의 모국어 명령어로 기획부터 배포까지 — One natural-language command, from planning to deployment.**
+> **One natural-language command, from planning to deployment.**
 
-[🇰🇷 한국어](#한국어) · [🇺🇸 English](#english) · [Quick Start](#-quick-start) · [Docs](#-documentation)
+[🇰🇷 한국어](#korean) · [🇺🇸 English](#english) · [Quick Start](#-quick-start) · [Docs](#-documentation)
 
 </div>
 
 ---
 
-## 한국어
+## Korean
 
-### 무엇인가?
+### What is it?
 
-**CoolHan**은 사용자의 자연스러운 모국어 명령어 한 줄을 6명의 AI 전문가 팀이 받아 기획 → 규격 → 코드 → 검증 → 테스트 → 배포의 전체 프로세스를 자동화하는 **Specification-Driven Development Framework**입니다.
+**CoolHan** is a **Specification-Driven Development Framework** in which a team of 6 AI specialists takes a single natural-language command in the user's own language and automates the entire process: planning → specification → code → validation → testing → deployment.
 
 ```
-쿨한으로 사용자 로그인 기능 추가해
+CoolHan add user login feature (in Korean)
          ↓
 [Intent Analyzer] → [Spec Writer] → [Developer] → [Validator] → [QA Tester] → [DevOps]
          ↓                                              ↓
-   기획자 의도 명시                              10단계 자동 검증
-   무단 기능 추가 차단                           기획 의도 강제 메커니즘
+   Planner intent documented                    10-stage auto validation
+   Unauthorized feature additions blocked        Planning intent enforcement mechanism
 ```
 
-### 핵심 특징
+### Key Features
 
-| 특징 | 설명 |
+| Feature | Description |
 |------|------|
-| 🌍 **50+ 언어 지원** | 한국어, 영어, 일본어, 중국어 등 자동 감지 |
-| 🤖 **AI 6인 팀** | 의도분석 → 스펙 → 개발 → 검증 → QA → 배포 자동 협력 |
-| 🛡️ **기획자 의도 강제** | AI의 자의적 기능 추가 원천 차단 (Phase D-4 검증 완료) |
-| 📏 **10단계 검증** | Stage 0 기획 의도 검증 포함, 증거 기반 |
-| 🔒 **안전 배포** | 배포 락, 검증 게이트, 자동 롤백 |
-| 📚 **10개 도메인 모듈** | 회원·쇼핑·결제·배송·관리·알림·리뷰·재고·주문·개인정보 |
+| 🌍 **50+ language support** | Auto-detects Korean, English, Japanese, Chinese, and more |
+| 🤖 **6-member AI team** | Intent analysis → spec → development → validation → QA → deployment, auto-collaborating |
+| 🛡️ **Planner intent enforcement** | Blocks arbitrary AI feature additions at the source (Phase D-4 verified) |
+| 📏 **10-stage validation** | Includes Stage 0 planning intent check, evidence-based |
+| 🔒 **Safe deployment** | Deploy locks, validation gates, automatic rollback |
+| 📚 **10 domain modules** | Member, Shopping, Payment, Shipping, Admin, Notification, Review, Inventory, Order, Privacy |
 
 ---
 
@@ -76,7 +76,7 @@ CoolHan solves this with the **Planner Intent Enforcement Mechanism**:
 
 ```
 Task 1 → Documents explicit planner intent in requirements-{id}.md
-         [기능명 / 신규_또는_기존 / 기획자_승인 / 무단추가_금지]
+         [feature_name / new_or_existing / planner_approval / no_unauthorized_additions]
          ↓
 Task 1→2 Gate → Auto-proceeds (no interruption) based on documented intent
          ↓

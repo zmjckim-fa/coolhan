@@ -151,21 +151,21 @@ jobs:
             exit 1
           fi
 
-          # Check for Task 1-2 gate
+          # Check for Task 1-2 gate (grep pattern matches Korean content in SKILL.md)
           if grep -q "기획자 승인" "$SKILL"; then
             echo "OK Planner approval gate present"
           else
             echo "WARNING: Planner approval gate not found in SKILL.md"
           fi
 
-          # Check for Stage 0 validation
+          # Check for Stage 0 validation (grep pattern matches Korean content in SKILL.md)
           if grep -q "Stage 0\|기획 의도 검증\|planning_intent" "$SKILL"; then
             echo "OK Stage 0 planning intent validation present"
           else
             echo "WARNING: Stage 0 planning intent validation not found"
           fi
 
-          # Check validator
+          # Check validator (grep pattern matches Korean content in validator.md)
           VALIDATOR=".claude/agents/validator.md"
           if [ -f "$VALIDATOR" ]; then
             if grep -q "기획 의도\|planning_intent\|Stage 0" "$VALIDATOR"; then

@@ -1,60 +1,60 @@
-## 설명 (Description)
+## Description
 
-이 PR의 목적과 변경 사항을 간단히 설명해주세요.
+Briefly describe the purpose of this PR and its changes.
 
-## 변경 사항 (Changes)
+## Changes
 
-- [ ] 새로운 기능 (New Feature)
-- [ ] 버그 수정 (Bug Fix)
-- [ ] 문서 업데이트 (Documentation Update)
-- [ ] 리팩토링 (Refactoring)
-- [ ] 성능 개선 (Performance Improvement)
-- [ ] 기타 (Other): ___________
+- [ ] New Feature
+- [ ] Bug Fix
+- [ ] Documentation Update
+- [ ] Refactoring
+- [ ] Performance Improvement
+- [ ] Other: ___________
 
-## 세부 사항 (Details)
+## Details
 
-이 PR에서 변경된 내용을 자세히 설명해주세요:
+Describe the changes in this PR in detail:
 
-1. **주요 변경 사항:**
+1. **Main changes:**
    - 
 
-2. **관련된 이슈:**
+2. **Related issues:**
    - Closes #(issue number)
    - Related to #(issue number)
 
-3. **테스트 방법:**
+3. **How to test:**
    ```bash
-   # 테스트 방법을 설명해주세요
+   # Describe how to test
    ```
 
-## 체크리스트 (Checklist)
+## Checklist
 
-- [ ] 코드 리뷰를 위한 준비가 완료되었습니다
-- [ ] 관련 문서를 업데이트했습니다
-- [ ] 새로운 기능에 대한 설명을 추가했습니다
-- [ ] 모든 테스트를 통과했습니다
-- [ ] 커밋 메시지가 명확하고 일관성이 있습니다
-- [ ] 파일 이름 변경이 없습니다 (FILE_MANIFEST.md 준수)
+- [ ] Ready for code review
+- [ ] Updated the related documentation
+- [ ] Added a description for the new feature
+- [ ] All tests pass
+- [ ] Commit messages are clear and consistent
+- [ ] No file renames (compliant with FILE_MANIFEST.md)
 
-## 영향 범위 (Impact)
+## Impact
 
-이 변경 사항이 영향을 미치는 부분:
+The areas affected by this change:
 
-- [ ] .claude 설정
-- [ ] 설치 스크립트
-- [ ] knowledge_base 문서
-- [ ] GitHub Actions 워크플로우
-- [ ] npm 패키지 메타데이터
-- [ ] 기타: ___________
+- [ ] .claude configuration
+- [ ] Installation scripts
+- [ ] knowledge_base documents
+- [ ] GitHub Actions workflows
+- [ ] npm package metadata
+- [ ] Other: ___________
 
-## 스크린샷 (Screenshots)
+## Screenshots
 
-UI 변경이 있는 경우 스크린샷을 첨부해주세요. (해당 사항 없으면 삭제)
+If there are UI changes, attach screenshots. (Delete if not applicable)
 
-## 추가 정보 (Additional Information)
+## Additional Information
 
-PR을 검토할 때 알아두면 좋은 추가 정보가 있으면 작성해주세요.
+If there is any additional information that would help when reviewing this PR, please write it here.
 
 ---
 
-**리뷰어에게:** 이 PR을 검토할 때 특별히 주의깊게 봐야 할 부분이 있으면 위에 명시해주세요.
+**To reviewers:** If there is anything that needs special attention when reviewing this PR, please note it above.

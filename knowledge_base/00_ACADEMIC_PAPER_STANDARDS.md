@@ -1,43 +1,43 @@
-# 학술 논문 작성 표준: IMRAD 방식
+# Academic Paper Writing Standard: IMRAD Format
 
-## 목적
-AI 연구 프로젝트의 결과를 국제 학술지 수준의 논문으로 구조화하기 위한 표준 양식.
+## Purpose
+A standard format for structuring the results of AI research projects into papers at the level of international academic journals.
 
 ---
 
-## 1. IMRAD 구조 (International Standard)
+## 1. IMRAD Structure (International Standard)
 
-### 1.1 **I: Introduction (소개)** — 6~8페이지
-논문의 배경과 필요성을 설정합니다.
+### 1.1 **I: Introduction** — 6–8 pages
+Establishes the background and motivation of the paper.
 
-#### 1.1.1 Background (배경)
-- 연구 주제의 역사적/학술적 배경
-- 기존 연구의 상태
-- 왜 이 주제가 중요한가?
+#### 1.1.1 Background
+- Historical/academic background of the research topic
+- State of prior research
+- Why is this topic important?
 
-**예시:**
+**Example:**
 ```
-[Your research subject]의 배경과 기존 연구 상황을 설명합니다.
-기존 연구는 A/B/C 가설을 제시했으나,
-D 가설은 아직 체계적으로 검증되지 않았다.
-```
-
-#### 1.1.2 Research Gap (연구 공백)
-- 기존 연구의 한계
-- 우리가 할 일
-
-**예시:**
-```
-기존 연구는 [Subject]의 구조적 제약을 발견했지만,
-그 기능이 [Alternative Hypothesis]와 양립 가능한지는 검토하지 않았다.
+Describe the background of [Your research subject] and the state of prior research.
+Prior research proposed hypotheses A/B/C,
+but hypothesis D has not yet been systematically validated.
 ```
 
-#### 1.1.3 Research Questions (연구 질문)
-- RQ1: [Your data unit]이 [Feature A]처럼 행동하는가, 아니면 [Feature B]처럼 행동하는가?
-- RQ2: [Dimension 1]별 분포가 우연보다 강한가?
-- RQ3: [Item]들이 계열적으로 반복되는가?
+#### 1.1.2 Research Gap
+- Limitations of prior research
+- What we will do
 
-#### 1.1.4 Hypothesis (가설)
+**Example:**
+```
+Prior research discovered structural constraints on [Subject],
+but did not examine whether its function is compatible with [Alternative Hypothesis].
+```
+
+#### 1.1.3 Research Questions
+- RQ1: Does [Your data unit] behave like [Feature A], or like [Feature B]?
+- RQ2: Is the distribution by [Dimension 1] stronger than chance?
+- RQ3: Do [Item]s recur serially?
+
+#### 1.1.4 Hypothesis
 **Primary Hypothesis:**
 ```
 [Your subject] may exhibit structural patterns consistent with 
@@ -49,10 +49,10 @@ D 가설은 아직 체계적으로 검증되지 않았다.
 
 ---
 
-### 1.2 **M: Methods (방법론)** — 8~10페이지
-**누구든 따라할 수 있도록** 상세하게 작성합니다.
+### 1.2 **M: Methods** — 8–10 pages
+Write in enough detail that **anyone can follow along**.
 
-#### 1.2.1 Data Source (데이터 출처)
+#### 1.2.1 Data Source
 ```
 Source:          [Your primary data source and version]
 Collection:      [Your collection/archive name]
@@ -62,7 +62,7 @@ Total Characters: [~Your total character/feature count]
 Encoding:        [Your encoding standard]
 ```
 
-#### 1.2.2 Parsing Method (파싱 방법)
+#### 1.2.2 Parsing Method
 ```
 Step 1: Raw data format
 [Your raw data example line]
@@ -83,7 +83,7 @@ Important:
 - Maintain traceable IDs throughout the hierarchy
 ```
 
-#### 1.2.3 Analysis Methods (분석 방법)
+#### 1.2.3 Analysis Methods
 
 **A. Token Frequency Analysis**
 ```
@@ -146,7 +146,7 @@ Example:
 Output: [Your clustering analysis file]
 ```
 
-#### 1.2.4 Validation Criteria (검증 기준)
+#### 1.2.4 Validation Criteria
 ```
 Hypothesis is SUPPORTED if:
 ✓ Multiple structural patterns hold consistently
@@ -165,7 +165,7 @@ Hypothesis is REJECTED if:
 ✗ Alternative hypothesis explains data better with fewer assumptions
 ```
 
-#### 1.2.5 Comparison Corpora (비교 자료)
+#### 1.2.5 Comparison Corpora
 ```
 For each of the following corpora, calculate identical metrics:
 
@@ -190,7 +190,7 @@ Corpus E: [Reference 5 - description]
   Sample: [Sample size]
 ```
 
-#### 1.2.6 Metadata & Image Mapping (메타데이터)
+#### 1.2.6 Metadata & Image Mapping
 ```
 Critical: Ensure complete metadata correspondence for all data units
 
@@ -207,7 +207,7 @@ Mapping details:
 All IDs and references must be verified before analysis begins.
 ```
 
-#### 1.2.7 Limitations of Method (방법론 한계)
+#### 1.2.7 Limitations of Method
 ```
 ⚠ Limitation 1: [Your data source limitation]
   [Description]
@@ -232,12 +232,12 @@ All IDs and references must be verified before analysis begins.
 
 ---
 
-### 1.3 **R: Results (결과)** — 10~12페이지
-**객관적 사실만**. 해석 없이.
+### 1.3 **R: Results** — 10–12 pages
+**Objective facts only**. Without interpretation.
 
-#### 1.3.1 Descriptive Statistics (기술 통계)
+#### 1.3.1 Descriptive Statistics
 ```
-# 데이터셋 개요
+# Dataset Overview
 Total units analyzed:      [Your total count]
 Total measurements:        [Your total measurement count]
 Unique units:              [Your unique unit count]
@@ -249,7 +249,7 @@ Average per category:      [Your mean] (SD=[Your SD])
 Unit length mean:          [Your mean] (SD=[Your SD], range=[Your range])
 ```
 
-#### 1.3.2 Key Findings Tables (주요 발견 표)
+#### 1.3.2 Key Findings Tables
 
 **Table 1: Feature Distribution**
 ```
@@ -304,8 +304,8 @@ Metric 3                  | [Value]   | [Value]     | [Value]     | [Value]    |
 
 ---
 
-### 1.4 **A: Analysis (분석)** — 8~10페이지
-**해석과 의미 파악**. 하지만 "증명했다"는 표현 금지.
+### 1.4 **A: Analysis** — 8–10 pages
+**Interpretation and meaning-making**. But the phrase "proven" is forbidden.
 
 #### 1.4.1 Interpretation of Results
 ```
@@ -341,8 +341,8 @@ Pattern 3 holds in: [List which comparisons] (yes/partial/no)
 
 ---
 
-### 1.5 **D: Discussion (토의)** — 10~12페이지
-**기존 연구와 대조, 한계 인정, 다음 연구 제시**.
+### 1.5 **D: Discussion** — 10–12 pages
+**Contrast with prior research, acknowledge limitations, propose next research**.
 
 #### 1.5.1 Hypothesis Validation Status
 ```
@@ -434,7 +434,7 @@ If hypothesis is rejected:
 
 ---
 
-### 1.6 **C: Conclusion (결론)** — 2~3페이지
+### 1.6 **C: Conclusion** — 2–3 pages
 
 ```
 ## Summary
@@ -495,9 +495,9 @@ To reproduce results:
 
 ---
 
-## 2. 핵심 원칙 (Golden Rules)
+## 2. Golden Rules
 
-### 2.1 절대 금지 표현
+### 2.1 Absolutely Forbidden Expressions
 ```
 ❌ "[Subject] has been completely solved/decoded"
 ❌ "This element definitively means..."
@@ -506,7 +506,7 @@ To reproduce results:
 ❌ "[Subject] must be [specific interpretation]..."
 ```
 
-### 2.2 권장 표현
+### 2.2 Recommended Expressions
 ```
 ✅ "The analysis reveals structural patterns consistent with..."
 ✅ "Token distribution suggests possible..."
@@ -516,7 +516,7 @@ To reproduce results:
 ✅ "This finding is compatible with but does not prove..."
 ```
 
-### 2.3 데이터 인용 규칙
+### 2.3 Data Citation Rules
 ```
 Good: "In 33 folios (29.5% of manuscript), the token 'daiin' 
        appears with 8.2% frequency in [Your Category 1] section, 
@@ -532,29 +532,29 @@ Better: "The token 'daiin' shows statistically significant
 
 ---
 
-## 3. 논문 체크리스트
+## 3. Paper Checklist
 
-- [ ] 모든 수치는 표와 그래프로 제시
-- [ ] 모든 주장은 증거 근거 제시 (수치/인용 포함)
-- [ ] 한계/제약사항 명시
-- [ ] 기존 연구와 비교 분석
-- [ ] 대안적 해석 제시
-- [ ] "번역했다/증명했다" 표현 제거
-- [ ] 재현 가능성 보장 (코드 공개)
-- [ ] 이미지-folio-token 역추적 가능성 보장
-- [ ] 비교 코퍼스 메서드 동일 적용
-- [ ] 결론은 "candidate" 수준에서 마무리
+- [ ] All figures presented as tables and graphs
+- [ ] All claims backed by evidence (including numbers/citations)
+- [ ] Limitations/constraints stated explicitly
+- [ ] Comparative analysis against prior research
+- [ ] Alternative interpretations presented
+- [ ] "Translated/Proven" expressions removed
+- [ ] Reproducibility ensured (code published)
+- [ ] Image-folio-token back-traceability ensured
+- [ ] Same method applied to comparison corpora
+- [ ] Conclusion wrapped up at the "candidate" level
 
 ---
 
-**마지막 체크:**
+**Final check:**
 ```
-논문이 완성되었을 때, 다른 연구팀이
-1. 데이터 다운로드 가능한가? ✓
-2. 코드 실행 가능한가? ✓
-3. 같은 결과 재현 가능한가? ✓
-4. 가설 검증/기각 가능한가? ✓
-5. 코드 수정해서 다른 가설 테스트 가능한가? ✓
+When the paper is complete, can another research team:
+1. Download the data? ✓
+2. Run the code? ✓
+3. Reproduce the same results? ✓
+4. Validate/reject the hypothesis? ✓
+5. Modify the code to test other hypotheses? ✓
 
-모두 YES면 학술지 투고 준비 완료.
+If all are YES, it is ready for journal submission.
 ```

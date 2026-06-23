@@ -1,234 +1,236 @@
-# 증명 목적 프레임워크 (Proof Goal Framework)
+# Proof Goal Framework
 
-## 핵심 원칙
+## Core Principle
 
-> **증명 과정 중에 증명의 목적을 잊으면 안 된다.**
+> **You must not forget the purpose of a proof while in the middle of proving it.**
 >
-> 가설 검증을 시작하기 전에 반드시 증명 목적을 명시적으로 선언해야 한다.
-> 이후 모든 분석 단계는 이 목적에 비추어 타당성을 검증받아야 한다.
+> Before beginning hypothesis validation, the proof goal must be explicitly declared.
+> Every subsequent analysis step must be validated for soundness against this goal.
 
 ---
 
-## Phase 0: 증명 목적 선언 (Proof Goal Declaration)
+## Phase 0: Proof Goal Declaration
 
-**이 단계 없이는 어떤 분석도 시작할 수 없다.**
+**No analysis may begin without this step.**
 
-### 0.1 증명 목적 4요소 (Mandatory — All 4 Required)
+### 0.1 The 4 Elements of a Proof Goal (Mandatory — All 4 Required)
 
 ```
 PROOF GOAL DECLARATION
 ══════════════════════════════════════════════════════════
 
-[1] 증명하려는 것 (What to Prove):
-    → 한 문장으로, 구체적으로, 측정 가능하게
+[1] What to Prove:
+    → In one sentence, specific and measurable
 
-[2] 증명 성공 기준 (Acceptance Criteria):
-    → 어떤 수치/패턴이 나오면 증명된 것인가?
-    → 기준은 분석 전에 반드시 정해야 한다 (사후 설정 금지)
+[2] Acceptance Criteria:
+    → What value/pattern counts as proven?
+    → Criteria MUST be set before analysis (no post-hoc setting)
 
-[3] 증명 실패 기준 (Rejection Criteria):
-    → 어떤 결과가 나오면 가설이 기각되는가?
-    → 반드시 반증 가능해야 한다
+[3] Rejection Criteria:
+    → What result causes the hypothesis to be rejected?
+    → Must be falsifiable
 
-[4] 증명과 무관한 것 (Out of Scope):
-    → 분석하다가 우연히 발견한 흥미로운 것이라도
-      이 목적과 무관하면 → 별도 연구로 분리
+[4] Out of Scope:
+    → Even an interesting thing discovered by chance during analysis,
+      if unrelated to this goal → split off into a separate study
 
 ══════════════════════════════════════════════════════════
 ```
 
-### 0.2 작성 예시
+### 0.2 Worked Example
 
 ```
 PROOF GOAL: PG-001
-선언 일자: 2026-06-01
-선언자: 연구팀
+Declaration Date: 2026-06-01
+Declared by: Research Team
 
-[1] 증명하려는 것:
-    "보이니치 원고의 토큰 통계 지표(TTR, 엔트로피, word-final 패턴)가
-    자연어 산문보다 분류형 참조 코퍼스(카탈로그, 분류 체계)에
-    더 가깝다는 것을 5개 이상의 독립적 지표로 입증한다."
+[1] What to Prove:
+    "The token statistics of the Voynich Manuscript (TTR, entropy, word-final
+    patterns) are closer to a classificatory reference corpus (catalogs,
+    taxonomies) than to natural-language prose, demonstrated by 5 or more
+    independent metrics."
 
-[2] 증명 성공 기준 (MUST meet ALL):
-    □ TTR: 보이니치 > 자연어, 보이니치 ≤ 카탈로그
-    □ 엔트로피(H2): 보이니치가 카탈로그와 0.5비트 이내
-    □ word-final 비율: >90% (자연어는 ~31%)
-    □ 섹션 어휘 분기: 20% 이상 (자연어는 단일 도메인)
-    □ 토큰 가족 클러스터링: >7% (단순 암호문은 ~0%)
-    → 5개 모두 충족 시: "PARTIALLY SUPPORTED"
-    → 추가 2개 이상 충족 시: "SUPPORTED"
+[2] Acceptance Criteria (MUST meet ALL):
+    □ TTR: Voynich > natural language, Voynich ≤ catalogs
+    □ Entropy (H2): Voynich within 0.5 bits of catalogs
+    □ word-final ratio: >90% (natural language is ~31%)
+    □ Section vocabulary divergence: ≥20% (natural language is single-domain)
+    □ Token family clustering: >7% (a simple cipher is ~0%)
+    → All 5 met: "PARTIALLY SUPPORTED"
+    → 2 or more additional met: "SUPPORTED"
 
-[3] 증명 실패 기준 (ANY ONE triggers rejection):
-    □ 보이니치 TTR이 자연어와 통계적으로 동일 (p > 0.05)
-    □ 엔트로피가 무작위 생성 텍스트와 구분 불가
-    □ 섹션 간 어휘 분기가 10% 미만
-    → 위 중 하나라도 발생 시: 가설 수정 또는 기각
+[3] Rejection Criteria (ANY ONE triggers rejection):
+    □ Voynich TTR statistically identical to natural language (p > 0.05)
+    □ Entropy indistinguishable from randomly generated text
+    □ Cross-section vocabulary divergence below 10%
+    → If any one occurs: revise or reject the hypothesis
 
-[4] 범위 외 (Out of Scope — 별도 연구로 분리):
-    ✗ 보이니치 텍스트의 '의미' 해석
-    ✗ 특정 언어 동일시 (아랍어, 라틴어 등)
-    ✗ 필사자의 의도 추론
-    ✗ 삽화와 텍스트의 의미적 연결
-    ✗ 제작 연대 추정 (기존 연구에 의존)
+[4] Out of Scope (split off into separate studies):
+    ✗ Interpreting the 'meaning' of the Voynich text
+    ✗ Identifying it with a specific language (Arabic, Latin, etc.)
+    ✗ Inferring the scribe's intent
+    ✗ Semantic links between illustrations and text
+    ✗ Estimating the date of production (rely on existing research)
 ```
 
 ---
 
-## Phase 0.5: 목적 유지 게이트 (Goal Persistence Gate)
+## Phase 0.5: Goal Persistence Gate
 
-**매 분석 단계 시작 전에 반드시 실행한다.**
+**Must run before the start of every analysis step.**
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  PROOF GOAL CHECK (매 분석 단계 시작 시 필수)        │
+│  PROOF GOAL CHECK (mandatory at start of each step)  │
 ├─────────────────────────────────────────────────────┤
 │                                                     │
-│  Q1: 이 분석이 증명 목적에 기여하는가?              │
-│      YES → 계속 진행                                │
-│      NO  → STOP. 아래로 이동.                       │
+│  Q1: Does this analysis contribute to the goal?     │
+│      YES → continue                                 │
+│      NO  → STOP. Go below.                           │
 │                                                     │
-│  Q2 (NO인 경우): 이 분석이 왜 필요한가?             │
-│      a) 목적 달성을 위한 전제 데이터 → 허용          │
-│      b) 우연히 발견한 흥미로운 것 → 별도 파일로 분리  │
-│      c) 외부 연구자 결론을 따르는 것 → 금지          │
+│  Q2 (if NO): Why is this analysis needed?           │
+│      a) Premise data for reaching the goal → allow  │
+│      b) Interesting incidental find → split to file │
+│      c) Following an external researcher's           │
+│         conclusion → forbidden                       │
 │                                                     │
-│  Q3: 현재 증명 목적이 바뀌었는가?                   │
-│      YES → Phase 0으로 돌아가 새로 선언             │
-│             (기존 분석 결과는 유지, 목적만 재설정)    │
-│      NO  → 원래 목적으로 복귀                       │
+│  Q3: Has the current proof goal changed?            │
+│      YES → return to Phase 0 and re-declare         │
+│             (keep prior results, reset goal only)    │
+│      NO  → return to the original goal              │
 │                                                     │
 └─────────────────────────────────────────────────────┘
 ```
 
-### 드리프트 감지 신호 (Drift Warning Signs)
+### Drift Warning Signs
 
-다음 중 하나라도 발생하면 **즉시 Proof Goal Check 실행**:
+If any of the following occurs, **immediately run the Proof Goal Check**:
 
-| 신호 | 설명 |
+| Sign | Description |
 |------|------|
-| 🔴 목적 언급 없는 분석 3회 연속 | 목적과 분리된 분석이 누적 중 |
-| 🔴 "이것도 흥미롭다" 발생 | 범위 확장 시작 신호 |
-| 🔴 외부 연구자 결론을 "사실"로 인용 | 가설 오염 시작 |
-| 🔴 "어쩌면 이 텍스트는 X일 수도" | 증명 대상이 바뀌는 신호 |
-| 🟡 새 비교 코퍼스 추가 시 | 정당성 확인 필요 |
-| 🟡 분석 범위가 원래보다 넓어질 때 | 재검토 필요 |
+| 🔴 3 analyses in a row with no mention of the goal | Goal-detached analysis is accumulating |
+| 🔴 "This is interesting too" appears | Signal that scope expansion is starting |
+| 🔴 Citing an external researcher's conclusion as "fact" | Hypothesis contamination is starting |
+| 🔴 "Maybe this text is actually X" | Signal that the proof target is changing |
+| 🟡 Adding a new comparison corpus | Justification check needed |
+| 🟡 When analysis scope grows beyond the original | Re-review needed |
 
 ---
 
-## Phase 1-5 통합: 목적 참조 의무화
+## Phases 1–5 Integration: Mandatory Goal Reference
 
-기존 Phase 1-5 분석에서 **각 단계마다 다음을 명시적으로 기록**해야 한다:
+In the existing Phase 1–5 analysis, **each step must explicitly record** the following:
 
 ```
 [PROOF GOAL REFERENCE: PG-001]
-이 분석의 증명 목적 기여도: 높음 / 중간 / 낮음 / 범위 외
-기여 방식: 성공 기준 [2번] 검증을 위한 TTR 측정
-결과가 성공 기준에 미치는 영향: □ 충족 / □ 미충족 / □ 부분 충족
+This analysis's contribution to the proof goal: High / Medium / Low / Out of Scope
+Mode of contribution: TTR measurement to verify acceptance criterion [2]
+Effect of result on acceptance criteria: □ Met / □ Not met / □ Partially met
 ```
 
 ---
 
-## 목적 이탈 방지 규칙 (Drift Prevention Rules)
+## Drift Prevention Rules
 
-### 규칙 1: 목적 선언 우선
-어떤 분석도 Proof Goal Declaration(PG) 없이 시작할 수 없다.
+### Rule 1: Goal Declaration First
+No analysis may begin without a Proof Goal Declaration (PG).
 
-### 규칙 2: 단계별 참조 의무
-모든 분석 결과 문서에는 `PROOF GOAL REFERENCE`가 포함되어야 한다.
+### Rule 2: Per-Step Reference Obligation
+Every analysis result document must include a `PROOF GOAL REFERENCE`.
 
-### 규칙 3: 범위 외 분리
-범위 외 발견은 삭제하지 않고 **별도 파일(side-findings.md)에 보존**한다.
-이 발견들은 다음 연구의 Proof Goal이 될 수 있다.
+### Rule 3: Out-of-Scope Separation
+Out-of-scope findings are not deleted; they are **preserved in a separate file (side-findings.md)**.
+These findings may become the Proof Goal of the next study.
 
-### 규칙 4: 목적 변경 프로토콜
-목적이 바뀌어야 할 상황이 발생하면:
-1. 기존 목적 하에서의 분석을 **완결 처리** (결론을 내림)
-2. 새로운 Proof Goal을 새 ID로 선언 (PG-002, PG-003...)
-3. 기존 분석 결과는 새 PG에서 **데이터로 활용** 가능
+### Rule 4: Goal-Change Protocol
+When a situation arises requiring the goal to change:
+1. **Finalize** the analysis under the existing goal (reach a conclusion)
+2. Declare a new Proof Goal with a new ID (PG-002, PG-003...)
+3. Existing analysis results may be **used as data** in the new PG
 
-### 규칙 5: 외부 연구 처리
-외부 연구자의 결론이 우리 Proof Goal을 바꾸도록 허용하지 않는다.
-→ 외부 연구는 **비교 기준, 반례 탐색, 방법론 참고**로만 사용한다.
-
----
-
-## 목적 유지 체크리스트 (Mandatory at Each Analysis Stage)
-
-```
-분석 시작 전 체크:
-  □ 현재 Proof Goal ID가 문서에 명시되어 있는가?
-  □ 이 분석이 성공/실패 기준 중 하나를 직접 검증하는가?
-  □ 범위 외 항목을 침범하지 않는가?
-  □ 외부 연구자 결론을 전제로 삼고 있지 않은가?
-
-분석 완료 후 체크:
-  □ 결과가 증명 목적에 어떻게 기여했는가? (명시적 기록)
-  □ 성공 기준 중 몇 개가 충족/미충족 상태인가?
-  □ 다음 분석 단계가 동일한 목적에 기여하는가?
-  □ Drift 신호가 발생했는가?
-```
+### Rule 5: Handling External Research
+Do not allow an external researcher's conclusions to change our Proof Goal.
+→ External research is used only as a **comparison baseline, counterexample search, or methodology reference**.
 
 ---
 
-## 증명 목적 상태 대시보드
+## Goal Persistence Checklist (Mandatory at Each Analysis Stage)
 
-매 분석 사이클 완료 후 갱신:
+```
+Before starting analysis:
+  □ Is the current Proof Goal ID stated in the document?
+  □ Does this analysis directly verify one of the acceptance/rejection criteria?
+  □ Does it avoid encroaching on out-of-scope items?
+  □ Is it not taking an external researcher's conclusion as a premise?
+
+After completing analysis:
+  □ How did the result contribute to the proof goal? (explicit record)
+  □ How many acceptance criteria are met/unmet?
+  □ Does the next analysis step contribute to the same goal?
+  □ Did any drift signals occur?
+```
+
+---
+
+## Proof Goal Status Dashboard
+
+Update after each analysis cycle completes:
 
 ```
 PROOF GOAL STATUS: PG-001
 ══════════════════════════════════
 
-목적: 보이니치 구조가 참조형 코퍼스에 더 유사함을 5개+ 지표로 입증
-현재 상태: CANDIDATE → PARTIALLY SUPPORTED → SUPPORTED → REJECTED
+Goal: Demonstrate via 5+ metrics that the Voynich structure is more similar to a reference corpus
+Current state: CANDIDATE → PARTIALLY SUPPORTED → SUPPORTED → REJECTED
 
-성공 기준 달성 현황:
-  □ TTR 비교:              [미완료]
-  □ 엔트로피(H2) 비교:    [미완료]
-  □ word-final 비율:       ✅ PASS (96.6%)
-  □ 섹션 어휘 분기:        ✅ PASS (23%)
-  □ 토큰 가족 클러스터링:  [미완료]
+Acceptance criteria progress:
+  □ TTR comparison:            [incomplete]
+  □ Entropy (H2) comparison:   [incomplete]
+  □ word-final ratio:          ✅ PASS (96.6%)
+  □ Section vocabulary divergence: ✅ PASS (23%)
+  □ Token family clustering:   [incomplete]
 
-실패 기준 발동 여부:
-  → 없음 (계속 진행 가능)
+Rejection criteria triggered:
+  → None (may continue)
 
-목적 이탈 경고:
-  → 없음
+Goal-drift warnings:
+  → None
 
-다음 필수 분석:
-  → TTR 측정 및 코퍼스 비교 (성공 기준 1번)
-  → 엔트로피 측정 및 코퍼스 비교 (성공 기준 2번)
+Next required analyses:
+  → TTR measurement and corpus comparison (acceptance criterion 1)
+  → Entropy measurement and corpus comparison (acceptance criterion 2)
 
 ══════════════════════════════════
 ```
 
 ---
 
-## 이 프레임워크의 위치
+## Where This Framework Fits
 
 ```
-분석 프로세스 전체 흐름:
+Full analysis process flow:
 
-Phase 0:  증명 목적 선언 (Proof Goal Declaration)  ← 이 문서
-          ↓ [목적 없으면 진행 불가]
-Phase 0.5: 목적 유지 게이트 (매 단계 반복)         ← 이 문서
-          ↓ [매 단계 체크]
-Phase 1:  가설 명확화 → 00_HYPOTHESIS_VALIDATION_PROCEDURE.md
-Phase 2:  증거 수집  → 00_HYPOTHESIS_VALIDATION_PROCEDURE.md
-Phase 3:  통계 검증  → 00_HYPOTHESIS_VALIDATION_PROCEDURE.md
-Phase 4:  증거 평가  → 00_HYPOTHESIS_VALIDATION_PROCEDURE.md
-Phase 5:  결론       → 00_HYPOTHESIS_VALIDATION_PROCEDURE.md
+Phase 0:   Proof Goal Declaration                  ← this document
+           ↓ [cannot proceed without a goal]
+Phase 0.5: Goal Persistence Gate (repeat each step) ← this document
+           ↓ [check every step]
+Phase 1:   Hypothesis clarification → 00_HYPOTHESIS_VALIDATION_PROCEDURE.md
+Phase 2:   Evidence collection      → 00_HYPOTHESIS_VALIDATION_PROCEDURE.md
+Phase 3:   Statistical validation   → 00_HYPOTHESIS_VALIDATION_PROCEDURE.md
+Phase 4:   Evidence evaluation      → 00_HYPOTHESIS_VALIDATION_PROCEDURE.md
+Phase 5:   Conclusion               → 00_HYPOTHESIS_VALIDATION_PROCEDURE.md
 ```
 
-**이 프레임워크는 Phase 1-5 이전에 실행되며, Phase 1-5 전체를 감시한다.**
+**This framework runs before Phases 1–5 and oversees all of Phases 1–5.**
 
 ---
 
-## 요약: 증명의 목적을 잊지 않는 방법
+## Summary: How Not to Forget the Purpose of a Proof
 
-1. **처음에 목적을 4요소로 쓴다** — 무엇을, 언제 성공인지, 언제 실패인지, 무엇은 하지 않는지
-2. **매 분석 단계마다 목적을 참조한다** — "이게 목적에 기여하는가?"
-3. **드리프트 신호를 인식한다** — 흥미로운 발견, 외부 연구 결론, 범위 확장
-4. **범위 외 발견은 삭제하지 않고 분리한다** — 다음 연구의 씨앗
-5. **목적이 바뀌어야 하면 새 PG를 선언한다** — 기존 결과는 유지
+1. **Write the goal as 4 elements up front** — what, when it succeeds, when it fails, what you will not do
+2. **Reference the goal at every analysis step** — "Does this contribute to the goal?"
+3. **Recognize drift signals** — interesting finds, external research conclusions, scope expansion
+4. **Don't delete out-of-scope findings; separate them** — seeds for the next study
+5. **If the goal must change, declare a new PG** — keep existing results
 
-> **원칙: 증명의 목적이 분석을 이끈다. 분석이 목적을 바꾸면 안 된다.**
+> **Principle: The proof goal drives the analysis. The analysis must not change the goal.**

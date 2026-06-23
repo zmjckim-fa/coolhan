@@ -1,16 +1,16 @@
-# POS 시스템 - 데이터베이스 설계 (POS System - Database Schema)
+# POS System - Database Schema
 
-## 개요
+## Overview
 
-POS 시스템의 데이터베이스 스키마는 거래, 상품, 재고, 결제, 반품을 중심으로 설계됩니다.
+The POS system database schema is designed around transactions, products, inventory, payments, and returns.
 
 ---
 
-## 1. ER 다이어그램 (Entity Relationship Diagram)
+## 1. Entity Relationship Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                         주요 엔티티                          │
+│                       Main Entities                          │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  ┌──────────┐      ┌───────────┐       ┌────────────┐      │
@@ -20,7 +20,7 @@ POS 시스템의 데이터베이스 스키마는 거래, 상품, 재고, 결제,
 │       │                  │                     │            │
 │       │N                 │N                    │N           │
 │  ┌─────────────────────────────────────────────────┐       │
-│  │           TRANSACTIONS (거래)                   │       │
+│  │           TRANSACTIONS (transaction)            │       │
 │  │  - transaction_id (PK)                         │       │
 │  │  - terminal_id (FK)                            │       │
 │  │  - store_id (FK)                               │       │
@@ -75,9 +75,9 @@ POS 시스템의 데이터베이스 스키마는 거래, 상품, 재고, 결제,
 
 ---
 
-## 2. 테이블 정의
+## 2. Table Definitions
 
-### 2.1 STORES (점포)
+### 2.1 STORES (store)
 
 ```sql
 CREATE TABLE STORES (
@@ -98,7 +98,7 @@ CREATE TABLE STORES (
 );
 ```
 
-### 2.2 TERMINALS (계산대)
+### 2.2 TERMINALS (register)
 
 ```sql
 CREATE TABLE TERMINALS (
@@ -117,7 +117,7 @@ CREATE TABLE TERMINALS (
 );
 ```
 
-### 2.3 USERS (판매원/사용자)
+### 2.3 USERS (cashier/user)
 
 ```sql
 CREATE TABLE USERS (
@@ -140,7 +140,7 @@ CREATE TABLE USERS (
 );
 ```
 
-### 2.4 CATEGORIES (상품 카테고리)
+### 2.4 CATEGORIES (product category)
 
 ```sql
 CREATE TABLE CATEGORIES (
@@ -158,7 +158,7 @@ CREATE TABLE CATEGORIES (
 );
 ```
 
-### 2.5 PRODUCTS (상품)
+### 2.5 PRODUCTS (product)
 
 ```sql
 CREATE TABLE PRODUCTS (
@@ -184,7 +184,7 @@ CREATE TABLE PRODUCTS (
 );
 ```
 
-### 2.6 INVENTORY (재고)
+### 2.6 INVENTORY (inventory)
 
 ```sql
 CREATE TABLE INVENTORY (
@@ -208,7 +208,7 @@ CREATE TABLE INVENTORY (
 );
 ```
 
-### 2.7 INVENTORY_MOVEMENTS (재고 변동 로그)
+### 2.7 INVENTORY_MOVEMENTS (inventory movement log)
 
 ```sql
 CREATE TABLE INVENTORY_MOVEMENTS (
@@ -233,7 +233,7 @@ CREATE TABLE INVENTORY_MOVEMENTS (
 );
 ```
 
-### 2.8 TRANSACTIONS (거래)
+### 2.8 TRANSACTIONS (transaction)
 
 ```sql
 CREATE TABLE TRANSACTIONS (
@@ -266,7 +266,7 @@ CREATE TABLE TRANSACTIONS (
 );
 ```
 
-### 2.9 TRANSACTION_ITEMS (거래 항목)
+### 2.9 TRANSACTION_ITEMS (transaction item)
 
 ```sql
 CREATE TABLE TRANSACTION_ITEMS (
@@ -289,7 +289,7 @@ CREATE TABLE TRANSACTION_ITEMS (
 );
 ```
 
-### 2.10 PAYMENTS (결제)
+### 2.10 PAYMENTS (payment)
 
 ```sql
 CREATE TABLE PAYMENTS (
@@ -313,7 +313,7 @@ CREATE TABLE PAYMENTS (
 );
 ```
 
-### 2.11 RETURNS (반품)
+### 2.11 RETURNS (return)
 
 ```sql
 CREATE TABLE RETURNS (
@@ -340,7 +340,7 @@ CREATE TABLE RETURNS (
 );
 ```
 
-### 2.12 RETURN_ITEMS (반품 항목)
+### 2.12 RETURN_ITEMS (return item)
 
 ```sql
 CREATE TABLE RETURN_ITEMS (
@@ -360,7 +360,7 @@ CREATE TABLE RETURN_ITEMS (
 );
 ```
 
-### 2.13 MEMBER_DISCOUNTS (회원 할인)
+### 2.13 MEMBER_DISCOUNTS (member discount)
 
 ```sql
 CREATE TABLE MEMBER_DISCOUNTS (
@@ -383,7 +383,7 @@ CREATE TABLE MEMBER_DISCOUNTS (
 );
 ```
 
-### 2.14 DAILY_SETTLEMENTS (일일 정산)
+### 2.14 DAILY_SETTLEMENTS (daily settlement)
 
 ```sql
 CREATE TABLE DAILY_SETTLEMENTS (
@@ -419,127 +419,127 @@ CREATE TABLE DAILY_SETTLEMENTS (
 
 ---
 
-## 3. 인덱싱 전략
+## 3. Indexing Strategy
 
-### 3.1 성능 최적화 인덱스
-
-```
-TRANSACTIONS 테이블:
-- (store_id, transaction_date): 일일 정산 쿼리
-- (terminal_id, transaction_date): 계산대별 정산
-- (user_id, transaction_date): 판매원별 성과
-- transaction_time: 시간대별 조회
-
-TRANSACTION_ITEMS 테이블:
-- (transaction_id): 거래 항목 조회 (PK와 동일)
-- (product_id): 상품별 판매량 조회
-
-INVENTORY 테이블:
-- (store_id, product_id): 특정 점포의 상품 재고
-- status: 부족 상품 조회
-
-PRODUCTS 테이블:
-- barcode: 바코드 스캔 검색
-- sku: SKU 검색
-- category_id: 카테고리별 조회
-```
-
-### 3.2 검색 인덱스
+### 3.1 Performance Optimization Indexes
 
 ```
-상품 검색:
-- PRODUCTS(barcode): 바코드 스캔
-- PRODUCTS(sku): 상품코드 검색
-- PRODUCTS(product_name): 상품명 검색 (Full-text 인덱스 권장)
+TRANSACTIONS table:
+- (store_id, transaction_date): daily reconciliation query
+- (terminal_id, transaction_date): reconciliation per register
+- (user_id, transaction_date): performance per cashier
+- transaction_time: lookup by time of day
 
-거래 검색:
-- TRANSACTIONS(store_id, transaction_date): 일자별 거래
-- TRANSACTIONS(terminal_id): 계산대별
-- TRANSACTIONS(user_id): 판매원별
+TRANSACTION_ITEMS table:
+- (transaction_id): transaction item lookup (same as PK)
+- (product_id): sales volume lookup by product
 
-재고 검색:
-- INVENTORY(store_id, status): 부족 상품
-- INVENTORY_MOVEMENTS(created_at): 최근 변동
+INVENTORY table:
+- (store_id, product_id): product stock for a specific store
+- status: low-stock product lookup
+
+PRODUCTS table:
+- barcode: barcode scan search
+- sku: SKU search
+- category_id: lookup by category
+```
+
+### 3.2 Search Indexes
+
+```
+Product search:
+- PRODUCTS(barcode): barcode scan
+- PRODUCTS(sku): product code search
+- PRODUCTS(product_name): product name search (full-text index recommended)
+
+Transaction search:
+- TRANSACTIONS(store_id, transaction_date): transactions by date
+- TRANSACTIONS(terminal_id): by register
+- TRANSACTIONS(user_id): by cashier
+
+Inventory search:
+- INVENTORY(store_id, status): low-stock products
+- INVENTORY_MOVEMENTS(created_at): recent changes
 ```
 
 ---
 
-## 4. 정규화 (Normalization)
+## 4. Normalization
 
 ### 4.1 1NF (First Normal Form)
-✓ 모든 속성이 원자 값으로 구성
-✓ 반복되는 그룹 없음
+✓ All attributes consist of atomic values
+✓ No repeating groups
 
 ### 4.2 2NF (Second Normal Form)
-✓ 1NF 만족
-✓ 모든 non-key 속성이 primary key에 완전히 함수 종속
+✓ Satisfies 1NF
+✓ All non-key attributes are fully functionally dependent on the primary key
 
 ### 4.3 3NF (Third Normal Form)
-✓ 2NF 만족
-✓ non-key 속성 간에 이행 함수 종속 없음
+✓ Satisfies 2NF
+✓ No transitive functional dependency between non-key attributes
 
-예:
+Example:
 ```
-- PRODUCTS 테이블: product_name, selling_price, cost_price만 저장
-  (category_id는 FK만 포함, 카테고리 정보는 별도 테이블)
-- TRANSACTION_ITEMS: 거래 항목 정보만 포함
-  (상품 상세정보는 PRODUCTS 테이블 참조)
+- PRODUCTS table: stores only product_name, selling_price, cost_price
+  (category_id is an FK only; category info is in a separate table)
+- TRANSACTION_ITEMS: contains only transaction item info
+  (product details reference the PRODUCTS table)
 ```
 
 ---
 
-## 5. ACID 트랜잭션
+## 5. ACID Transactions
 
-### 5.1 거래 생성 트랜잭션
+### 5.1 Transaction Creation Transaction
 
 ```sql
 START TRANSACTION;
 
--- 1. 거래 생성
+-- 1. Create transaction
 INSERT INTO TRANSACTIONS (...) 
 VALUES (...)
 SET @trans_id = LAST_INSERT_ID();
 
--- 2. 거래 항목 추가 (반복)
+-- 2. Add transaction items (repeat)
 INSERT INTO TRANSACTION_ITEMS (...) 
 VALUES (@trans_id, ...);
 
--- 3. 재고 감소
+-- 3. Decrease inventory
 UPDATE INVENTORY SET quantity_on_hand = quantity_on_hand - @qty
 WHERE product_id = @prod_id AND store_id = @store_id;
 
--- 4. 재고 로그 기록
+-- 4. Record inventory log
 INSERT INTO INVENTORY_MOVEMENTS (...)
 VALUES (@store_id, @prod_id, 'SALE', -@qty, @trans_id, ...);
 
 COMMIT;
 ```
 
-### 5.2 환불 트랜잭션
+### 5.2 Refund Transaction
 
 ```sql
 START TRANSACTION;
 
--- 1. 반품 기록
+-- 1. Record return
 INSERT INTO RETURNS (...) VALUES (...)
 SET @return_id = LAST_INSERT_ID();
 
--- 2. 반품 항목 추가
+-- 2. Add return items
 INSERT INTO RETURN_ITEMS (...) VALUES (@return_id, ...);
 
--- 3. 재고 복구
+-- 3. Restore inventory
 UPDATE INVENTORY SET quantity_on_hand = quantity_on_hand + @qty
 WHERE product_id = @prod_id;
 
--- 4. 재고 로그
+-- 4. Inventory log
 INSERT INTO INVENTORY_MOVEMENTS (...)
 VALUES (..., 'RETURN', @qty, ...);
 
--- 5. 원본 거래 상태 업데이트
+-- 5. Update original transaction status
 UPDATE TRANSACTIONS SET status = 'PARTIALLY_RETURNED'
 WHERE transaction_id = @orig_trans_id;
 
--- 6. 결제 환불 기록
+-- 6. Record payment refund
 INSERT INTO PAYMENTS (...) 
 VALUES (@orig_trans_id, ..., 'REFUNDED');
 
@@ -548,60 +548,60 @@ COMMIT;
 
 ---
 
-## 6. 데이터 보존 정책
+## 6. Data Retention Policy
 
-### 6.1 보관 기간
-
-```
-- TRANSACTIONS: 영구 보관 (감사 추적)
-- TRANSACTION_ITEMS: 영구 보관
-- RETURNS: 영구 보관
-- PAYMENTS: 영구 보관
-- DAILY_SETTLEMENTS: 영구 보관
-- INVENTORY_MOVEMENTS: 영구 보관
-- 임시 로그: 90일 후 삭제
-```
-
-### 6.2 백업 전략
+### 6.1 Retention Period
 
 ```
-- 일일 증분 백업 (매일 자정)
-- 주간 전체 백업 (매주 일요일)
-- 월간 장기 보관 백업 (매월 첫 날)
-- 재해 복구 백본 (별도 지역)
+- TRANSACTIONS: permanent retention (audit trail)
+- TRANSACTION_ITEMS: permanent retention
+- RETURNS: permanent retention
+- PAYMENTS: permanent retention
+- DAILY_SETTLEMENTS: permanent retention
+- INVENTORY_MOVEMENTS: permanent retention
+- Temporary logs: deleted after 90 days
 ```
 
----
-
-## 7. 확장성 고려사항
-
-### 7.1 파티셔닝
-
-대규모 시스템에서:
-```
-TRANSACTIONS: transaction_date 기준 월별 파티셔닝
-TRANSACTION_ITEMS: 부모 테이블(TRANSACTIONS)과 동일
-INVENTORY_MOVEMENTS: created_at 기준 월별 파티셔닝
-DAILY_SETTLEMENTS: settlement_date 기준 월별 파티셔닝
-```
-
-### 7.2 캐싱
+### 6.2 Backup Strategy
 
 ```
-PRODUCTS: 제품 정보 캐시 (1시간)
-INVENTORY: 재고 정보 캐시 (실시간 동기화)
-CATEGORIES: 카테고리 캐시 (1일)
-MEMBER_DISCOUNTS: 회원 할인 캐시 (1시간)
+- Daily incremental backup (every midnight)
+- Weekly full backup (every Sunday)
+- Monthly long-term retention backup (first day of each month)
+- Disaster recovery backbone (separate region)
 ```
 
 ---
 
-## 8. SQL 예시 쿼리
+## 7. Scalability Considerations
 
-### 8.1 거래 조회
+### 7.1 Partitioning
+
+In large-scale systems:
+```
+TRANSACTIONS: monthly partitioning by transaction_date
+TRANSACTION_ITEMS: same as parent table (TRANSACTIONS)
+INVENTORY_MOVEMENTS: monthly partitioning by created_at
+DAILY_SETTLEMENTS: monthly partitioning by settlement_date
+```
+
+### 7.2 Caching
+
+```
+PRODUCTS: product info cache (1 hour)
+INVENTORY: inventory info cache (real-time sync)
+CATEGORIES: category cache (1 day)
+MEMBER_DISCOUNTS: member discount cache (1 hour)
+```
+
+---
+
+## 8. Example SQL Queries
+
+### 8.1 Transaction Lookup
 
 ```sql
--- 일일 판매액
+-- Daily sales
 SELECT 
     SUM(total_amount) as daily_sales,
     COUNT(*) as transaction_count,
@@ -609,7 +609,7 @@ SELECT
 FROM TRANSACTIONS
 WHERE store_id = 1 AND transaction_date = '2026-05-27';
 
--- 상품별 판매량
+-- Sales volume by product
 SELECT 
     p.product_name,
     SUM(ti.quantity) as total_qty,
@@ -624,10 +624,10 @@ GROUP BY p.product_id
 ORDER BY total_sales DESC;
 ```
 
-### 8.2 재고 조회
+### 8.2 Inventory Lookup
 
 ```sql
--- 부족한 상품
+-- Low-stock products
 SELECT 
     p.product_name,
     i.quantity_on_hand,
@@ -639,14 +639,14 @@ WHERE i.store_id = 1
 ORDER BY i.quantity_on_hand ASC;
 ```
 
-### 8.3 정산 조회
+### 8.3 Settlement Lookup
 
 ```sql
--- 일일 정산
+-- Daily settlement
 SELECT * FROM DAILY_SETTLEMENTS
 WHERE store_id = 1 AND settlement_date = '2026-05-27';
 
--- 결제 수단별 합계
+-- Totals by payment method
 SELECT 
     pm.payment_method,
     COUNT(*) as count,
@@ -659,4 +659,4 @@ GROUP BY pm.payment_method;
 
 ---
 
-이 데이터베이스 설계는 POS 시스템의 모든 핵심 기능을 지원하며, 확장 가능하고 감시 추적이 가능한 구조입니다.
+This database design supports all core features of the POS system and provides a scalable, audit-traceable structure.

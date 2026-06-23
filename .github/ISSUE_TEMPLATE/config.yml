@@ -2,10 +2,10 @@ blank_issues_enabled: true
 contact_links:
   - name: GitHub Discussions
     url: https://github.com/zmjckim-fa/coolhan/discussions
-    about: 질문이나 아이디어 공유는 Discussions에서 해주세요
+    about: Please share questions or ideas in Discussions
   - name: Documentation
     url: https://github.com/zmjckim-fa/coolhan/blob/main/README.md
-    about: 문서를 먼저 확인해주세요
+    about: Please check the documentation first
   - name: Installation Guide
     url: https://github.com/zmjckim-fa/coolhan/blob/main/INSTALLATION_GUIDE.md
-    about: 설치 관련 문제는 설치 가이드를 참고해주세요
+    about: For installation issues, please refer to the installation guide

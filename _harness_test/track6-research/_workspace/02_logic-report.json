@@ -4,12 +4,12 @@
   "cases": [
     {
       "argument_id": "B1",
-      "input": "모든 사람은 죽는다. 소크라테스는 사람이다. 따라서 소크라테스는 죽는다.",
+      "input": "All men are mortal. Socrates is a man. Therefore Socrates is mortal.",
       "entry_gate": { "premises_and_conclusion_identifiable": true, "is_argument": true, "passed": true },
-      "conclusion": "소크라테스는 죽는다",
+      "conclusion": "Socrates is mortal",
       "premises": [
-        { "text": "모든 사람은 죽는다", "implicit": false, "truth": "true", "basis": "empirical generalization, universally accepted" },
-        { "text": "소크라테스는 사람이다", "implicit": false, "truth": "true", "basis": "historical fact" }
+        { "text": "All men are mortal", "implicit": false, "truth": "true", "basis": "empirical generalization, universally accepted" },
+        { "text": "Socrates is a man", "implicit": false, "truth": "true", "basis": "historical fact" }
       ],
       "inference_type": "deductive",
       "form": "Barbara syllogism: All M are P; S is M; therefore S is P",
@@ -24,19 +24,19 @@
     },
     {
       "argument_id": "B2",
-      "input": "모든 새는 난다. 펭귄은 새다. 따라서 펭귄은 난다.",
+      "input": "All birds fly. A penguin is a bird. Therefore a penguin flies.",
       "entry_gate": { "premises_and_conclusion_identifiable": true, "is_argument": true, "passed": true },
-      "conclusion": "펭귄은 난다",
+      "conclusion": "a penguin flies",
       "premises": [
-        { "text": "모든 새는 난다", "implicit": false, "truth": "false", "basis": "counterexamples exist: penguins, ostriches, kiwis are flightless birds" },
-        { "text": "펭귄은 새다", "implicit": false, "truth": "true", "basis": "biological classification" }
+        { "text": "All birds fly", "implicit": false, "truth": "false", "basis": "counterexamples exist: penguins, ostriches, kiwis are flightless birds" },
+        { "text": "A penguin is a bird", "implicit": false, "truth": "true", "basis": "biological classification" }
       ],
       "inference_type": "deductive",
       "form": "All M are P; S is M; therefore S is P (same valid form as B1)",
       "validity": "valid",
       "soundness": "unsound",
       "fallacies": [
-        { "type": "false_premise", "location": "premise 1 (모든 새는 난다)", "why": "Premise is empirically false; the form is valid so the conclusion follows from premises, but a false premise makes the argument unsound." }
+        { "type": "false_premise", "location": "premise 1 (All birds fly)", "why": "Premise is empirically false; the form is valid so the conclusion follows from premises, but a false premise makes the argument unsound." }
       ],
       "expected": { "validity": "valid", "soundness": "unsound", "fallacy": "false_premise" },
       "match": true,
@@ -46,12 +46,12 @@
     },
     {
       "argument_id": "B3",
-      "input": "비가 오면 땅이 젖는다. 땅이 젖었다. 따라서 비가 왔다.",
+      "input": "If it rains, the ground gets wet. The ground is wet. Therefore it rained.",
       "entry_gate": { "premises_and_conclusion_identifiable": true, "is_argument": true, "passed": true },
-      "conclusion": "비가 왔다",
+      "conclusion": "it rained",
       "premises": [
-        { "text": "비가 오면 땅이 젖는다 (P -> Q)", "implicit": false, "truth": "true", "basis": "given conditional" },
-        { "text": "땅이 젖었다 (Q)", "implicit": false, "truth": "unknown", "basis": "asserted observation" }
+        { "text": "If it rains, the ground gets wet (P -> Q)", "implicit": false, "truth": "true", "basis": "given conditional" },
+        { "text": "The ground is wet (Q)", "implicit": false, "truth": "unknown", "basis": "asserted observation" }
       ],
       "inference_type": "deductive",
       "form": "P -> Q; Q; therefore P  (INVALID conditional form)",

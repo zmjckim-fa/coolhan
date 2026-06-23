@@ -1,43 +1,43 @@
-# Android 앱 핵심 기능 (Core Features)
+# Android App Core Features
 
-## 섹션 1: 앱 생명주기 (App Lifecycle)
+## Section 1: App Lifecycle
 
 ```
-Activity 상태 전이:
-Created → Started → Resumed (포그라운드, 사용자 상호작용)
-  → Paused (부분 가림) → Stopped (완전 배경) → Destroyed
+Activity state transitions:
+Created → Started → Resumed (foreground, user interaction)
+  → Paused (partially obscured) → Stopped (fully backgrounded) → Destroyed
 
-Activity 콜백:
-  onCreate()       → 초기화, View 바인딩
-  onStart()        → 화면 진입
-  onResume()       → 포그라운드 (입력 포커스)
-  onPause()        → 미저장 데이터 저장, 애니메이션 중지
-  onStop()         → 리소스 해제
-  onDestroy()      → 정리
-  onSaveInstanceState() → 상태 저장 (번들)
+Activity callbacks:
+  onCreate()       → initialization, View binding
+  onStart()        → screen entry
+  onResume()       → foreground (input focus)
+  onPause()        → save unsaved data, stop animations
+  onStop()         → release resources
+  onDestroy()      → cleanup
+  onSaveInstanceState() → save state (Bundle)
 
-Fragment 생명주기:
+Fragment lifecycle:
   onCreateView() / onViewCreated() / onDestroyView()
-  (Activity 생명주기 내 중첩)
+  (nested within the Activity lifecycle)
 
 Jetpack Compose:
-  Composable은 Activity/Fragment를 컨테이너로 사용
-  LaunchedEffect, DisposableEffect로 생명주기 연동
+  Composables use Activity/Fragment as a container
+  Integrate with the lifecycle via LaunchedEffect, DisposableEffect
 ```
 
-**CoolHan 규칙:**
-- `onPause()`에서 미저장 상태 flush (네트워크 요청 중 화면 나갈 수 있음)
-- ViewModel은 화면 회전에도 유지됨 (`onDestroy → onCreate` 사이클 무관)
-- WorkManager로 백그라운드 작업 스케줄링 (백그라운드 실행 제한 준수)
+**CoolHan rules:**
+- Flush unsaved state in `onPause()` (the screen may be left during a network request)
+- ViewModel is retained across screen rotation (independent of the `onDestroy → onCreate` cycle)
+- Schedule background tasks with WorkManager (comply with background execution limits)
 
 ---
 
-## 섹션 2: 네비게이션 & 라우팅
+## Section 2: Navigation & Routing
 
 ```
-Jetpack Navigation Component (권장):
-  NavGraph (.xml 또는 Kotlin DSL)
-    ├─ NavHostFragment (컨테이너)
+Jetpack Navigation Component (recommended):
+  NavGraph (.xml or Kotlin DSL)
+    ├─ NavHostFragment (container)
     └─ NavController.navigate(R.id.action_A_to_B)
 
 Compose Navigation:
@@ -50,57 +50,57 @@ Compose Navigation:
   }
   navController.navigate("detail/$productId")
 
-딥링크:
-  AndroidManifest.xml의 <intent-filter>:
+Deep links:
+  <intent-filter> in AndroidManifest.xml:
     <action android:name="android.intent.action.VIEW" />
     <data android:scheme="myapp" android:host="product" />
-  또는 App Link (https, 도메인 소유 검증 필요)
+  or App Link (https, requires domain ownership verification)
 ```
 
-**CoolHan 규칙:**
-- Back Stack 관리: `navigate()` 옵션으로 `popUpTo` 설정하여 불필요한 스택 제거
-- 화면 결과 전달: `setFragmentResult` / Compose의 `NavController.previousBackStackEntry?.savedStateHandle`
+**CoolHan rules:**
+- Back Stack management: set `popUpTo` via `navigate()` options to remove unnecessary stack entries
+- Passing screen results: `setFragmentResult` / Compose's `NavController.previousBackStackEntry?.savedStateHandle`
 
 ---
 
-## 섹션 3: 데이터 저장
+## Section 3: Data Storage
 
 ```
-계층별 저장 전략:
+Storage strategy by tier:
 ┌────────────────────────────┬──────────────────────────────┐
-│ 데이터 유형                │ 저장소                       │
+│ Data type                  │ Storage                      │
 ├────────────────────────────┼──────────────────────────────┤
-│ 민감 데이터 (토큰/패스워드)│ Android Keystore + EncryptedSharedPreferences │
-│ 사용자 설정 (소량)         │ DataStore (Preferences)      │
-│ 구조화 데이터 (엔티티)     │ Room Database (SQLite)        │
-│ 파일 (이미지/문서)         │ Internal Storage / MediaStore │
-│ 앱 간 공유 데이터          │ ContentProvider              │
+│ Sensitive data (token/pwd) │ Android Keystore + EncryptedSharedPreferences │
+│ User settings (small)      │ DataStore (Preferences)      │
+│ Structured data (entities) │ Room Database (SQLite)        │
+│ Files (images/documents)   │ Internal Storage / MediaStore │
+│ Cross-app shared data      │ ContentProvider              │
 └────────────────────────────┴──────────────────────────────┘
 
-Room Database 구조:
+Room Database structure:
 @Database(entities = [User::class, Product::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun productDao(): ProductDao
 }
-// 싱글톤으로 관리, Room.databaseBuilder 사용
+// Manage as a singleton, use Room.databaseBuilder
 
-DataStore (SharedPreferences 대체):
+DataStore (replacement for SharedPreferences):
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 val HAS_ONBOARDED = booleanPreferencesKey("has_onboarded")
 ```
 
-**CoolHan 규칙:**
-- Room은 Main Thread에서 직접 호출 금지 → Coroutine Dispatcher.IO 사용
-- EncryptedSharedPreferences로 토큰 저장 (Android Keystore 기반)
-- 이미지 캐싱: Coil 또는 Glide 라이브러리 사용 (직접 구현 금지)
+**CoolHan rules:**
+- Do not call Room directly on the Main Thread → use Coroutine Dispatcher.IO
+- Store tokens with EncryptedSharedPreferences (Android Keystore based)
+- Image caching: use the Coil or Glide library (do not implement it yourself)
 
 ---
 
-## 섹션 4: 네트워킹 (Retrofit + OkHttp)
+## Section 4: Networking (Retrofit + OkHttp)
 
 ```kotlin
-// Retrofit 클라이언트 설정
+// Retrofit client configuration
 val okHttpClient = OkHttpClient.Builder()
     .addInterceptor(AuthInterceptor(tokenManager))
     .addInterceptor(HttpLoggingInterceptor().apply {
@@ -118,7 +118,7 @@ val retrofit = Retrofit.Builder()
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 
-// API 인터페이스
+// API interface
 interface ApiService {
     @GET("products")
     suspend fun getProducts(
@@ -134,7 +134,7 @@ interface ApiService {
     suspend fun uploadImage(@Part image: MultipartBody.Part): Response<ApiResponse<ImageResponse>>
 }
 
-// AuthInterceptor (토큰 자동 주입 + 갱신)
+// AuthInterceptor (automatic token injection + refresh)
 class AuthInterceptor(private val tokenManager: TokenManager) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val token = runBlocking { tokenManager.validToken() }
@@ -155,10 +155,10 @@ class AuthInterceptor(private val tokenManager: TokenManager) : Interceptor {
 
 ---
 
-## 섹션 5: 카메라 & 미디어
+## Section 5: Camera & Media
 
 ```kotlin
-// CameraX (권장, Jetpack)
+// CameraX (recommended, Jetpack)
 val imageCapture = ImageCapture.Builder()
     .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
     .build()
@@ -167,29 +167,29 @@ val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 val cameraProvider = ProcessCameraProvider.getInstance(this).get()
 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
 
-// 사진 촬영
+// Take a photo
 imageCapture.takePicture(outputOptions, executor, object : ImageCapture.OnImageSavedCallback {
-    override fun onImageSaved(output: ImageCapture.OutputFileResults) { /* 완료 */ }
-    override fun onError(exc: ImageCaptureException) { /* 처리 */ }
+    override fun onImageSaved(output: ImageCapture.OutputFileResults) { /* done */ }
+    override fun onError(exc: ImageCaptureException) { /* handle */ }
 })
 
-// PhotoPicker (Android 13+ 권장, 권한 불필요)
+// PhotoPicker (recommended for Android 13+, no permission required)
 val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-    if (uri != null) { /* 이미지 처리 */ }
+    if (uri != null) { /* process image */ }
 }
 pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
 
-// Manifest 권한:
+// Manifest permissions:
 // <uses-permission android:name="android.permission.CAMERA" />
-// Android 13 미만: READ_EXTERNAL_STORAGE
+// Below Android 13: READ_EXTERNAL_STORAGE
 ```
 
 ---
 
-## 섹션 6: 위치 서비스
+## Section 6: Location Services
 
 ```kotlin
-// Fused Location Provider (권장)
+// Fused Location Provider (recommended)
 val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000L)
     .setMinUpdateIntervalMillis(5000L)
@@ -203,21 +203,21 @@ val locationCallback = object : LocationCallback() {
 }
 fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
 
-// Manifest 권한:
+// Manifest permissions:
 // <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 // <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-// 백그라운드: ACCESS_BACKGROUND_LOCATION (별도 심사, 엄격한 정책)
+// Background: ACCESS_BACKGROUND_LOCATION (separate review, strict policy)
 ```
 
 ---
 
-## 섹션 7: 푸시 알림 (FCM)
+## Section 7: Push Notifications (FCM)
 
 ```kotlin
-// FirebaseMessagingService 구현
+// FirebaseMessagingService implementation
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
-        // 서버에 FCM 토큰 전송
+        // Send the FCM token to the server
         sendTokenToServer(token)
     }
 
@@ -226,16 +226,16 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             showNotification(notification.title, notification.body)
         }
         remoteMessage.data.isNotEmpty().let {
-            // 데이터 페이로드 처리
+            // Handle the data payload
         }
     }
 }
 
-// 알림 채널 생성 (Android 8.0+, 필수)
-val channel = NotificationChannel(CHANNEL_ID, "주문 알림", NotificationManager.IMPORTANCE_DEFAULT)
+// Create a notification channel (Android 8.0+, required)
+val channel = NotificationChannel(CHANNEL_ID, "Order notifications", NotificationManager.IMPORTANCE_DEFAULT)
 notificationManager.createNotificationChannel(channel)
 
-// 알림 표시
+// Show the notification
 val notification = NotificationCompat.Builder(this, CHANNEL_ID)
     .setSmallIcon(R.drawable.ic_notification)
     .setContentTitle(title)
@@ -247,25 +247,25 @@ val notification = NotificationCompat.Builder(this, CHANNEL_ID)
 
 ---
 
-## 섹션 8: 생체 인증 (BiometricPrompt)
+## Section 8: Biometric Authentication (BiometricPrompt)
 
 ```kotlin
 val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-        // 인증 성공
+        // Authentication succeeded
     }
     override fun onAuthenticationFailed() {
-        // 실패 (지문 불일치 등, 잠금은 아님)
+        // Failed (e.g. fingerprint mismatch, not a lockout)
     }
     override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-        // 취소(errorCode=10), 잠금(errorCode=7)
+        // Cancel (errorCode=10), lockout (errorCode=7)
     }
 })
 
 val promptInfo = BiometricPrompt.PromptInfo.Builder()
-    .setTitle("앱 잠금 해제")
-    .setSubtitle("등록된 지문을 사용하세요")
-    .setNegativeButtonText("취소")
+    .setTitle("Unlock app")
+    .setSubtitle("Use your registered fingerprint")
+    .setNegativeButtonText("Cancel")
     .setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
     .build()
 
@@ -274,30 +274,30 @@ biometricPrompt.authenticate(promptInfo)
 
 ---
 
-## 섹션 9: 구글 플레이 배포
+## Section 9: Google Play Distribution
 
 ```
-배포 단계:
-개발(Debug) → Internal Testing → Closed Testing(Alpha) → Open Testing(Beta) → Production
+Distribution stages:
+Development (Debug) → Internal Testing → Closed Testing (Alpha) → Open Testing (Beta) → Production
 
-필수 사전 준비:
-- Google Play Developer 계정 ($25 등록비, 1회)
-- 앱 서명 키스토어 (keystore.jks, 절대 분실 금지)
-- 개인정보처리방침 URL
-- 콘텐츠 등급 설문 완료
+Required prerequisites:
+- Google Play Developer account ($25 registration fee, one-time)
+- App signing keystore (keystore.jks, never lose it)
+- Privacy policy URL
+- Completed content rating questionnaire
 
-빌드 종류:
-- Debug: 서명 없음, 테스트용
-- Release: 서명 있음, 배포용
+Build types:
+- Debug: unsigned, for testing
+- Release: signed, for distribution
 
-aab(Android App Bundle) 사용 권장 (apk보다 크기 최적화):
+Using an aab (Android App Bundle) is recommended (smaller size than apk):
 ./gradlew bundleRelease
 
-Google Play App Signing 사용 권장:
-- 키 분실 시 복구 가능
-- Google이 서명 키 관리
+Using Google Play App Signing is recommended:
+- Recoverable if the key is lost
+- Google manages the signing key
 ```
 
 ---
 
-**문서 버전:** 1.0.0 | **작성일:** 2026-06-13 | **대상 OS:** Android 8.0(API 26)+
+**Document version:** 1.0.0 | **Date:** 2026-06-13 | **Target OS:** Android 8.0 (API 26)+

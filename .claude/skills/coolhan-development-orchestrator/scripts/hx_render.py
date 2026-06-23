@@ -1,32 +1,33 @@
 #!/usr/bin/env python3
-"""HX Renderer — 화면을 실제 디바이스에 가깝게 렌더하여 스크린샷 생성.
+"""HX Renderer — renders the screen close to a real device and captures screenshots.
 
-비전 크리틱(hx-vision-critic)의 입력을 만든다. "코드만 읽고 판정"(체크리스트 연극)을
-막기 위해 실제 렌더 결과를 증거로 남긴다. 사람 클릭 없이 무인 실행됨.
+Produces the input for the vision critic (hx-vision-critic). To prevent "judging by
+reading code only" (checklist theater), it leaves the actual render result as evidence.
+Runs unattended without human clicks.
 
-★ 왜 단순 "창 줄이기"가 아니라 디바이스 에뮬레이션인가:
-  PC 브라우저 창을 360px로 줄여도 실제 모바일과 다르게 보인다. 이유 —
-  엔진(iOS=WebKit, 데스크톱=Blink)·DPR(고해상도)·UA·터치/호버·스크롤바 폭 차이.
-  그래서 모바일은 WebKit+iPhone 디바이스, 태블릿/안드로이드는 Chromium+디바이스 프로필로
-  실 UA/DPR/터치/isMobile 을 적용해 실제에 최대한 근접시킨다.
-  ※ 그래도 '에뮬레이션'이며 실기기 100%는 아니다 — 진짜 확신은 실기기/클라우드 디바이스팜.
+★ Why device emulation rather than simply "shrinking the window":
+  Even shrinking a PC browser window to 360px looks different from a real mobile device. Reasons —
+  differences in engine (iOS=WebKit, desktop=Blink)·DPR (high resolution)·UA·touch/hover·scrollbar width.
+  So for mobile we use WebKit+iPhone device, and for tablet/Android Chromium+device profile,
+  applying real UA/DPR/touch/isMobile to approximate reality as closely as possible.
+  Note: it is still 'emulation' and not 100% a real device — true confidence comes from a real device/cloud device farm.
 
-사용:
+Usage:
   python hx_render.py <url-or-file> <out-dir> [--id ID]
 
-의존: playwright (pip install playwright && playwright install chromium webkit).
-미설치/엔진없음 시 안내 출력 + 종료코드 3 → 오케스트레이터가 NOT_RUN 처리.
+Depends on: playwright (pip install playwright && playwright install chromium webkit).
+If not installed/no engine, prints guidance + exit code 3 → orchestrator handles it as NOT_RUN.
 """
 import sys
 import os
 import pathlib
 
-# (라벨, 엔진, 디바이스 프로필명 | None=데스크톱 뷰포트, 폭, 높이)
+# (label, engine, device profile name | None=desktop viewport, width, height)
 TARGETS = [
-    ("mobile-ios", "webkit", "iPhone 13", None, None),       # iOS Safari 엔진
-    ("mobile-android", "chromium", "Pixel 7", None, None),   # Android Chrome 엔진
+    ("mobile-ios", "webkit", "iPhone 13", None, None),       # iOS Safari engine
+    ("mobile-android", "chromium", "Pixel 7", None, None),   # Android Chrome engine
     ("tablet-ipad", "webkit", "iPad (gen 7)", None, None),
-    ("desktop", "chromium", None, 1280, 900),                # 데스크톱 뷰포트
+    ("desktop", "chromium", None, 1280, 900),                # desktop viewport
 ]
 
 
@@ -60,13 +61,13 @@ def main():
                     try:
                         engines[engine] = getattr(p, engine).launch()
                     except Exception as e:
-                        errors.append(f"{engine} 미설치/실행불가: {e}")
+                        errors.append(f"{engine} not installed/cannot run: {e}")
                         continue
                 browser = engines.get(engine)
                 if not browser:
                     continue
                 if device:
-                    ctx = browser.new_context(**p.devices[device])  # 실 UA/DPR/터치/isMobile
+                    ctx = browser.new_context(**p.devices[device])  # real UA/DPR/touch/isMobile
                 else:
                     ctx = browser.new_context(viewport={"width": w, "height": h})
                 page = ctx.new_page()
@@ -84,9 +85,9 @@ def main():
     for e in errors:
         print(f"WARN: {e}")
     if not shots:
-        print("NO_SHOTS: 엔진 설치 필요 → playwright install chromium webkit")
+        print("NO_SHOTS: engine installation required → playwright install chromium webkit")
         return 3
-    print(f"OK: {len(shots)} screenshots (device-emulated; 실기기 100%는 클라우드 디바이스팜 필요)")
+    print(f"OK: {len(shots)} screenshots (device-emulated; a 100% real device requires a cloud device farm)")
     return 0
 
 

@@ -1,82 +1,82 @@
-# 국제 수준 학술논문 작성 표준
+# International-Level Academic Paper Writing Standards
 ## International Journal Standards (Nature, Science, PNAS Level)
 
-**목적:** AI 연구를 Nature/Science/PNAS/eLife 수준의 국제 일급 저널에 투고 가능한 수준으로 작성
+**Purpose:** Write AI research at a level suitable for submission to top-tier international journals such as Nature/Science/PNAS/eLife
 
-**적용 대상:** [당신의 주제] 필사본, 분자생물학, 데이터 과학, 인공지능 분야
+**Applies to:** [Your Subject] manuscript, molecular biology, data science, and artificial intelligence fields
 
 ---
 
-## 📋 Part 1: 국제 일급 저널의 기준
+## 📋 Part 1: Standards of Top-Tier International Journals
 
-### 1.1 저널별 특성 (Impact Factor 순)
+### 1.1 Journal Characteristics (by Impact Factor)
 
-| 저널 | IF | 특징 | 재현성 요구도 | 난이도 |
+| Journal | IF | Characteristics | Reproducibility demand | Difficulty |
 |------|----|----|-----------|--------|
-| **Nature** | 64+ | 혁신성, 영향력 극대 | 매우 높음 | ⭐⭐⭐⭐⭐ |
-| **Science** | 41+ | 일반적 관심, 높은 표준 | 매우 높음 | ⭐⭐⭐⭐⭐ |
-| **PNAS** | 11+ | 엄격한 과학, 미국 아카데미 | 높음 | ⭐⭐⭐⭐ |
-| **eLife** | 8.5+ | Open science, 투명성 | 매우 높음 | ⭐⭐⭐⭐ |
-| **PLOS ONE** | 3.5+ | 엄격하지만 포용적 | 높음 | ⭐⭐⭐ |
-| **Nature Communications** | 16+ | 고품질, 더 접근성 | 높음 | ⭐⭐⭐⭐ |
+| **Nature** | 64+ | innovation, maximum impact | very high | ⭐⭐⭐⭐⭐ |
+| **Science** | 41+ | general interest, high standards | very high | ⭐⭐⭐⭐⭐ |
+| **PNAS** | 11+ | rigorous science, US Academy | high | ⭐⭐⭐⭐ |
+| **eLife** | 8.5+ | Open science, transparency | very high | ⭐⭐⭐⭐ |
+| **PLOS ONE** | 3.5+ | rigorous but inclusive | high | ⭐⭐⭐ |
+| **Nature Communications** | 16+ | high quality, more accessible | high | ⭐⭐⭐⭐ |
 
-### 1.2 Nature/Science 투고 논문의 공통 특징
+### 1.2 Common Features of Nature/Science Submissions
 
 ```
-1. NOVELTY (신규성)
-   ✓ 기존 연구와 명확히 다른 관점
-   ✓ 새로운 데이터 또는 분석 방법
-   ✓ 기존 설명으로 불가능한 발견
-   ✗ 기존 연구의 사소한 확장
+1. NOVELTY
+   ✓ a perspective clearly different from prior work
+   ✓ new data or analysis methods
+   ✓ findings impossible to explain with existing accounts
+   ✗ a trivial extension of prior work
 
-2. RIGOR (엄격성)
-   ✓ 통계적 검증 필수
-   ✓ Effect size + p-value 동시 제시
-   ✓ 모든 가정 명시
-   ✓ 한계 명확히 인정
-   ✗ 단순 p-value만으로 결론
+2. RIGOR
+   ✓ statistical validation required
+   ✓ effect size + p-value presented together
+   ✓ all assumptions stated
+   ✓ limitations clearly acknowledged
+   ✗ conclusions from p-value alone
 
-3. SIGNIFICANCE (중요성)
-   ✓ 광범위한 분야에 영향
-   ✓ 이론적/실용적 함의
-   ✓ 추후 연구 방향 제시
-   ✗ 특정 경우에만 중요
+3. SIGNIFICANCE
+   ✓ impact across a broad field
+   ✓ theoretical/practical implications
+   ✓ suggests future research directions
+   ✗ important only in specific cases
 
-4. CLARITY (명확성)
-   ✓ 5세 아이도 이해할 주요 발견
-   ✓ 그래프/표가 말을 함
-   ✓ 기술 용어 최소화
-   ✗ 전문가만 이해할 글쓰기
+4. CLARITY
+   ✓ main finding understandable even by a 5-year-old
+   ✓ graphs/tables speak for themselves
+   ✓ technical jargon minimized
+   ✗ writing only experts can understand
 
-5. REPRODUCIBILITY (재현성)
-   ✓ 코드/데이터 공개
-   ✓ 모든 파라미터 명시
-   ✓ 독립적 재현 가능
-   ✗ "우리만 알 수 있음"
+5. REPRODUCIBILITY
+   ✓ code/data published
+   ✓ all parameters stated
+   ✓ independently reproducible
+   ✗ "only we can know"
 ```
 
 ---
 
-## 📄 Part 2: 국제 수준 논문 구조 (Enhanced IMRAD)
+## 📄 Part 2: International-Level Paper Structure (Enhanced IMRAD)
 
-### 2.1 Title (제목) - 정확성과 임팩트
+### 2.1 Title - Accuracy and Impact
 
-#### ❌ 나쁜 제목
+#### ❌ Bad title
 ```
 "Analysis of [Your Subject] Manuscript Structure"
-(너무 일반적, 무엇을 발견했는지 불명확)
+(too general; unclear what was found)
 ```
 
-#### ✅ 좋은 제목
+#### ✅ Good title
 ```
 "Structural Evidence for Taxonomic Organization in the [Your Subject] Manuscript:
 A Quantitative Corpus Analysis Comparing Pre-Modern Reference Systems"
-(연구 대상, 주요 발견, 방법론을 한눈에 명시)
+(states the subject, main finding, and methodology at a glance)
 ```
 
-### 2.2 Abstract (초록) - 60-250단어 (저널별 상이)
+### 2.2 Abstract - 60-250 words (varies by journal)
 
-#### 구조: Problem → Approach → Results → Significance
+#### Structure: Problem → Approach → Results → Significance
 
 ```markdown
 **Background:**
@@ -113,7 +113,7 @@ technologies.
 systems, manuscript analysis, quantitative methods
 ```
 
-### 2.3 Introduction (도입부) - 3-4 페이지
+### 2.3 Introduction - 3-4 pages
 
 ```markdown
 ## Introduction
@@ -166,7 +166,7 @@ a manuscript studies problem, inviting collaboration from historians,
 paleographers, and information scientists.
 ```
 
-### 2.4 Methods (방법) - 매우 상세
+### 2.4 Methods - highly detailed
 
 #### Rule: "Someone reading only Methods should be able to replicate the study"
 
@@ -516,26 +516,26 @@ Entropy         | 6.14    | 10.5
 
 ---
 
-## 🌍 Part 4: 다국어 요약문 (Multilingual Abstracts)
+## 🌍 Part 4: Multilingual Abstracts
 
-### 국제 저널 요구사항
+### International Journal Requirements
 ```
-Nature/Science 투고 시:
-  ✓ 영어 (Primary)
-  ✓ 저자의 모국어 (옵션)
-  ✓ 2-3개 추가 언어 (저널에 따라)
+For Nature/Science submission:
+  ✓ English (Primary)
+  ✓ Author's native language (optional)
+  ✓ 2-3 additional languages (depending on the journal)
 
 eLife/PLOS ONE:
-  ✓ 영어 + 저자 선택 언어
+  ✓ English + author's chosen language
 
-최고 표준 (MLM - Multilingual Manuscript):
-  ✓ 6개 언어 (EN, ZH, JA, KO, ES, DE)
-  ✓ 각 언어 동일 정보량
-  ✓ 전문 번역자 (원어민)
-  ✓ 문화적 적응 (단순 번역 아님)
+Highest standard (MLM - Multilingual Manuscript):
+  ✓ 6 languages (EN, ZH, JA, KO, ES, DE)
+  ✓ Equal information content in each language
+  ✓ Professional translators (native speakers)
+  ✓ Cultural adaptation (not mere translation)
 ```
 
-#### 예: 영문 초록
+#### Example: English abstract
 ```markdown
 **Background:**
 The [Your Subject] Manuscript, a 15th-century undeciphered manuscript,
@@ -557,30 +557,32 @@ rather than decipherable text. This reframes the problem from
 "What language/cipher?" to "What information system?"
 ```
 
-#### 예: 한국어 초록
+#### Example: Korean abstract (Korean-language slot)
 ```markdown
-**배경:**
-[당신의 주제] 필사본은 15세기의 미해독 필사본으로, 500년 이상 암호학적·언어학적 
-수수께끼로 남아 있다.
+**Background:**
+The [Your Subject] manuscript is a 15th-century undeciphered manuscript that has remained
+a cryptological and linguistic puzzle for over 500 years.
 
-**방법:**
-112개 folio의 7,063개 token에 대한 정량적 코퍼스 분석을 5개 비교 코퍼스와 비교했다.
+**Methods:**
+We performed a quantitative corpus analysis of 7,063 tokens across 112 folios,
+compared against 5 comparison corpora.
 
-**결과:**
-단어 종료 문자 제약(96.3%), token family clustering(9%), 섹션별 어휘 차이(23%)는 
-형식적 분류 시스템과 일치하지만 자연어(75%)와는 불일치한다.
+**Results:**
+Word-final character constraints (96.3%), token family clustering (9%), and
+section-level vocabulary divergence (23%) are consistent with formal classification
+systems but inconsistent with natural language (75%).
 
-**결론:**
-증거는 [당신의 주제]가 해독 가능한 텍스트가 아닌 참조/분류 시스템을 암호화하고 있음을 
-시사한다. 이는 문제를 "어떤 언어/암호인가?"에서 "어떤 정보 시스템인가?"로 
-재구성한다.
+**Conclusion:**
+The evidence suggests that [Your Subject] encodes a reference/classification system
+rather than decipherable text. This reframes the problem from "What language/cipher?"
+to "What information system?"
 ```
 
 ---
 
 ## ✅ Part 5: Peer Review Readiness Checklist
 
-### Reviewer 1이 물을 25가지 질문
+### 25 Questions Reviewer 1 Will Ask
 
 ```markdown
 ## Anticipated Reviewer Questions
@@ -761,9 +763,9 @@ PRE-SUBMISSION REVIEW
 
 ---
 
-## 📜 Part 7: 다국어 버전 (6 Languages)
+## 📜 Part 7: Multilingual Versions (6 Languages)
 
-### 각 언어별 Abstract Template
+### Abstract Template per Language
 
 ```markdown
 ## English (Primary)
@@ -804,7 +806,7 @@ Schlussfolgerungen：...
 
 ## 🏆 Part 8: Publication Tier Strategy
 
-### Where to Submit (순서대로)
+### Where to Submit (in order)
 
 ```
 TIER 1 (Impact > 15) - Reach for the stars
@@ -831,24 +833,24 @@ BACKUP (Impact < 3) - Always an option
   Success rate: 100%
 ```
 
-### 선택 기준
+### Selection Criteria
 ```
-선택 Nature/Science?
+Choose Nature/Science?
   ✓ YES if: Truly novel, significant, broadly interesting, perfect methods
   ✗ NO if: Incremental, narrow, preliminary, methodological concerns
 
-선택 eLife/Nature Comms?
+Choose eLife/Nature Comms?
   ✓ YES if: Solid research, clear findings, some novelty
   ✗ NO if: Not publication-ready, needs major revisions
 
-선택 PLOS ONE?
+Choose PLOS ONE?
   ✓ YES if: Methodologically sound, but not trendy/novel enough for tier 2
   ✗ NO if: Fundamental flaws that should be fixed first
 ```
 
 ---
 
-**최종 체크리스트:**
+**Final checklist:**
 
 ```
 ✅ BEFORE SUBMISSION:
@@ -864,4 +866,4 @@ BACKUP (Impact < 3) - Always an option
   [ ] Effect sizes reported for all main findings?
 ```
 
-이 체크리스트를 통과하면 Nature/Science 수준의 투고 준비가 완료됩니다.
+Passing this checklist means your submission is ready at the Nature/Science level.

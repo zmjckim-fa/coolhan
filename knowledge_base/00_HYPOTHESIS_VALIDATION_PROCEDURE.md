@@ -1,50 +1,50 @@
-# 가설 검증 절차 (Hypothesis Validation Framework)
+# Hypothesis Validation Framework
 
-## 개요
-AI 기반 데이터 분석에서 가설을 체계적으로 검증하기 위한 **6단계 프레임워크**.
+## Overview
+A **6-phase framework** for systematically validating hypotheses in AI-based data analysis.
 
-> ⚠️ **필수 선행 조건**: Phase 1 시작 전에 반드시
-> [`00_PROOF_GOAL_FRAMEWORK.md`](00_PROOF_GOAL_FRAMEWORK.md)의
-> **Phase 0: 증명 목적 선언**을 완료해야 한다.
+> ⚠️ **Mandatory prerequisite**: Before starting Phase 1, you must complete
+> **Phase 0: Proof Goal Declaration** in
+> [`00_PROOF_GOAL_FRAMEWORK.md`](00_PROOF_GOAL_FRAMEWORK.md).
 >
-> 증명 목적(Proof Goal)이 선언되지 않은 상태에서는
-> 어떤 분석도 시작할 수 없다.
+> No analysis may begin while the Proof Goal
+> remains undeclared.
 >
-> **매 단계 시작 시**: "이 분석이 선언된 증명 목적(PG-XXX)에 기여하는가?" 확인 필수.
+> **At the start of every phase**: confirm "Does this analysis contribute to the declared Proof Goal (PG-XXX)?"
 
 ---
 
-## Phase 0 선행: 증명 목적 선언 → [`00_PROOF_GOAL_FRAMEWORK.md`](00_PROOF_GOAL_FRAMEWORK.md)
+## Phase 0 prerequisite: Proof Goal Declaration → [`00_PROOF_GOAL_FRAMEWORK.md`](00_PROOF_GOAL_FRAMEWORK.md)
 
 ```
-완료 체크리스트:
-  □ Proof Goal ID 발급 (예: PG-001)
-  □ 증명하려는 것 (한 문장, 측정 가능)
-  □ 성공 기준 (분석 전에 확정, 사후 수정 금지)
-  □ 실패 기준 (반드시 정의)
-  □ 범위 외 항목 (Out of Scope 목록)
+Completion checklist:
+  □ Proof Goal ID issued (e.g., PG-001)
+  □ What you are trying to prove (one sentence, measurable)
+  □ Success criteria (fixed before analysis, no post-hoc modification)
+  □ Failure criteria (must be defined)
+  □ Out-of-Scope items (Out of Scope list)
 ```
 
-**이 체크리스트 완료 후 Phase 1로 진행한다.**
+**Proceed to Phase 1 after completing this checklist.**
 
 ---
 
-## Phase 1: 가설 명확화 (Hypothesis Specification)
+## Phase 1: Hypothesis Specification
 
-### 1.1 명시적 가설 진술
-가설은 다음을 만족해야 함:
-1. **검증 가능성** (Testability): 거짓일 수 있어야 함
-2. **명확성** (Clarity): 용어가 정의되어야 함  
-3. **측정 가능성** (Measurability): 수치로 표현 가능해야 함
+### 1.1 Explicit Hypothesis Statement
+A hypothesis must satisfy:
+1. **Testability**: it must be able to be false
+2. **Clarity**: terms must be defined  
+3. **Measurability**: it must be expressible numerically
 
-**나쁜 예:**
+**Bad examples:**
 ```
 ❌ "[Your Subject] is mysterious"
 ❌ "The text is meaningful"
 ❌ "The manuscript is organized"
 ```
 
-**좋은 예:**
+**Good examples:**
 ```
 ✅ "[Your Subject] token word-final characters are constrained to {y,r,l,n,s,o,m,k}
     with >95% consistency across folios"
@@ -56,8 +56,8 @@ AI 기반 데이터 분석에서 가설을 체계적으로 검증하기 위한 *
     repeated tokens"
 ```
 
-### 1.2 예측 가능한 결과 정의
-각 가설에 대해 다음을 정의:
+### 1.2 Defining Predictable Outcomes
+For each hypothesis, define the following:
 
 ```
 HYPOTHESIS: H1
@@ -80,20 +80,20 @@ Prediction 4: Comparison with catalogs should show similarity
   If FALSE: [Your Subject] closer to natural language
 ```
 
-### 1.3 검증 불가능성 확인
-다음은 **검증 불가능**하므로 제거:
+### 1.3 Checking for Untestability
+The following are **untestable** and should be removed:
 ```
-❌ "The author intended X"           → 의도는 검증 불가능
-❌ "This means Y"                    → 의미는 추가 증거 필요
-❌ "It could be Z"                   → "could" = 말그대로 추측일 뿐
-❌ "Someone knows the answer"        → 외부 지식에 의존
+❌ "The author intended X"           → intent cannot be tested
+❌ "This means Y"                    → meaning requires additional evidence
+❌ "It could be Z"                   → "could" = literally just a guess
+❌ "Someone knows the answer"        → relies on external knowledge
 ```
 
 ---
 
-## Phase 2: 증거 수집 (Evidence Collection)
+## Phase 2: Evidence Collection
 
-### 2.1 데이터 획득
+### 2.1 Data Acquisition
 ```
 Required Data:
   □ EVA transcription (from authoritative source)
@@ -109,7 +109,7 @@ Source Quality:
   ⭐⭐    Quaternary: Blog posts, unpublished notes
 ```
 
-### 2.2 표본 크기 및 신뢰도
+### 2.2 Sample Size and Confidence
 ```
 For [Your Subject] corpus:
   Sample: 112 folios (f1r-f112v) ~ all known surviving folios
@@ -131,7 +131,7 @@ Power analysis:
   Power: 0.80 (80% probability of detecting effect if real)
 ```
 
-### 2.3 방법론 투명성
+### 2.3 Methodological Transparency
 ```
 Document everything:
   ☐ Data source (URL, date accessed, version)
@@ -145,9 +145,9 @@ Document everything:
 
 ---
 
-## Phase 3: 통계적 검증 (Statistical Validation)
+## Phase 3: Statistical Validation
 
-### 3.1 기술 통계 (Descriptive Statistics)
+### 3.1 Descriptive Statistics
 
 ```
 REQUIRED FOR EVERY ANALYSIS:
@@ -171,9 +171,9 @@ REQUIRED FOR EVERY ANALYSIS:
    Fit test: Does Zipfian fit apply?
 ```
 
-### 3.2 가설 검정 (Hypothesis Testing)
+### 3.2 Hypothesis Testing
 
-**Critical Rule:** 선택 방식을 명시해야 함.
+**Critical Rule:** the selection method must be stated explicitly.
 
 ```
 Choosing Statistical Test:
@@ -205,7 +205,7 @@ Interpretation: "Statistically significant differences exist (p<0.001)
                 but effect size is small (V=0.18)"
 ```
 
-### 3.3 신뢰도 평가 (Confidence Assessment)
+### 3.3 Confidence Assessment
 
 ```
 For each finding, assign:
@@ -247,11 +247,11 @@ Example:
 
 ---
 
-## Phase 4: 증거 평가 (Evidence Assessment)
+## Phase 4: Evidence Assessment
 
-### 4.1 지지 증거 목록화 (Supporting Evidence)
+### 4.1 Listing Supporting Evidence
 
-**구조:** 증거 → 해석 → 한계
+**Structure:** evidence → interpretation → limitations
 
 ```
 EVIDENCE SET 1: Word-Final Character Constraint
@@ -285,7 +285,7 @@ Confidence: ⭐⭐⭐⭐ (High)
   But: Alternative explanations not ruled out
 ```
 
-### 4.2 반박 증거 목록화 (Contradictory Evidence)
+### 4.2 Listing Contradictory Evidence
 
 ```
 EVIDENCE SET 2: Type-Token Ratio (TTR)
@@ -316,7 +316,7 @@ Confidence: ⭐⭐⭐ (Medium)
   Clear evidence but compatible with multiple hypotheses
 ```
 
-### 4.3 증거 통합 (Evidence Integration)
+### 4.3 Evidence Integration
 
 ```
 OVERALL HYPOTHESIS STATUS:
@@ -348,9 +348,9 @@ Status: CANDIDATE HYPOTHESIS (not confirmed)
 
 ---
 
-## Phase 5: 결론 및 한계 (Conclusion & Limitations)
+## Phase 5: Conclusion & Limitations
 
-### 5.1 가설 수용/기각/수정
+### 5.1 Hypothesis Acceptance/Rejection/Modification
 
 ```
 DECISION TREE:
@@ -385,7 +385,7 @@ Q4: Confounding variables? YES (EVA segmentation ambiguity)
   Next step: Resolve EVA segmentation ambiguity
 ```
 
-### 5.2 방법론적 한계 (Methodological Limitations)
+### 5.2 Methodological Limitations
 
 ```
 For each limitation, specify:
@@ -429,7 +429,7 @@ Future Research:
   4. Create transcription confidence map
 ```
 
-### 5.3 대안적 해석 (Alternative Interpretations)
+### 5.3 Alternative Interpretations
 
 ```
 Finding: "Token 'daiin' appears 8.2% in Botanical section"
@@ -468,23 +468,23 @@ Which is most likely?
 
 ## Validation Checklist
 
-### Phase 0 선행 체크 (분석 시작 전 — 없으면 진행 불가):
+### Phase 0 prerequisite check (before starting analysis — cannot proceed without it):
 ```
-☐ Proof Goal ID 선언됨 (PG-XXX)
-☐ 증명 목적이 한 문장으로 명시됨 (측정 가능)
-☐ 성공 기준이 분석 전에 확정됨 (사후 수정 금지)
-☐ 실패 기준이 정의됨 (반증 가능)
-☐ 범위 외 항목 목록이 작성됨
-☐ 이 분석이 Proof Goal에 기여함이 확인됨
+☐ Proof Goal ID declared (PG-XXX)
+☐ Proof goal stated in one sentence (measurable)
+☐ Success criteria fixed before analysis (no post-hoc modification)
+☐ Failure criteria defined (falsifiable)
+☐ Out-of-Scope item list written
+☐ Confirmed that this analysis contributes to the Proof Goal
 ```
 
-### Phase 0.5 단계별 목적 유지 체크 (매 분석 단계마다):
+### Phase 0.5 per-step goal-maintenance check (at every analysis step):
 ```
-☐ 현재 Proof Goal ID가 문서에 명시됨
-☐ 이 분석이 성공/실패 기준 중 하나를 직접 검증함
-☐ 범위 외 항목을 침범하지 않음
-☐ 외부 연구자 결론을 전제로 삼고 있지 않음
-☐ Drift 신호 없음 (또는 Drift 발생 시 Goal Check 완료)
+☐ The current Proof Goal ID is stated in the document
+☐ This analysis directly tests one of the success/failure criteria
+☐ It does not encroach on Out-of-Scope items
+☐ It is not assuming an external researcher's conclusion as a premise
+☐ No drift signal (or, if drift occurs, Goal Check completed)
 ```
 
 ### Before Publication:

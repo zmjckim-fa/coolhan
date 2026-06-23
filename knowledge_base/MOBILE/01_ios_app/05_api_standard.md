@@ -1,10 +1,10 @@
-# iOS 앱 API 표준 (API Standard)
+# iOS App API Standard
 
-## 1. REST API 호출 표준
+## 1. REST API Call Standard
 
-### 기본 아키텍처
+### Basic Architecture
 ```swift
-// 프로토콜 기반 APIClient (테스트 가능)
+// Protocol-based APIClient (testable)
 protocol APIClientProtocol {
     func request<T: Decodable>(_ endpoint: Endpoint) async throws -> T
 }
@@ -22,7 +22,7 @@ enum HTTPMethod: String {
 }
 ```
 
-### 표준 요청 구조
+### Standard Request Structure
 ```swift
 struct APIClient: APIClientProtocol {
     let baseURL: URL
@@ -73,9 +73,9 @@ struct APIClient: APIClientProtocol {
 
 ---
 
-## 2. 표준 응답 형식
+## 2. Standard Response Format
 
-### 성공 응답
+### Success Response
 ```json
 {
   "success": true,
@@ -88,19 +88,19 @@ struct APIClient: APIClientProtocol {
 }
 ```
 
-### 오류 응답
+### Error Response
 ```json
 {
   "success": false,
   "error": {
     "code": "VALIDATION_ERROR",
-    "message": "이메일 형식이 올바르지 않습니다",
+    "message": "The email format is invalid",
     "field": "email"
   }
 }
 ```
 
-### iOS 디코딩 모델
+### iOS Decoding Models
 ```swift
 struct APIResponse<T: Decodable>: Decodable {
     let success: Bool
@@ -127,12 +127,12 @@ struct APIErrorResponse: Decodable {
 
 ---
 
-## 3. 날짜/시간 형식
+## 3. Date/Time Format
 
 ```swift
-// 표준: ISO 8601 UTC
-// 서버: "2026-06-13T10:30:00Z"
-// 표시: 로컬 시간대로 변환
+// Standard: ISO 8601 UTC
+// Server: "2026-06-13T10:30:00Z"
+// Display: convert to local time zone
 
 extension JSONDecoder {
     static var standard: JSONDecoder {
@@ -152,7 +152,7 @@ extension JSONEncoder {
     }
 }
 
-// 표시용 포맷터 (재사용 가능)
+// Display formatter (reusable)
 extension DateFormatter {
     static let displayShort: DateFormatter = {
         let f = DateFormatter()
@@ -166,10 +166,10 @@ extension DateFormatter {
 
 ---
 
-## 4. 인증 & 토큰 갱신
+## 4. Authentication & Token Refresh
 
 ```swift
-// 토큰 자동 갱신 (401 수신 시)
+// Automatic token refresh (on 401 received)
 protocol TokenProviding {
     func validToken() async throws -> String
 }
@@ -185,7 +185,7 @@ actor TokenManager: TokenProviding {
     }
 
     private func refreshAccessToken() async throws -> String {
-        guard !isRefreshing else { /* 대기 */ fatalError() }
+        guard !isRefreshing else { /* wait */ fatalError() }
         isRefreshing = true
         defer { isRefreshing = false }
 
@@ -196,7 +196,7 @@ actor TokenManager: TokenProviding {
         )
         accessToken = response.accessToken
         self.refreshToken = response.refreshToken
-        // Keychain 업데이트
+        // Update Keychain
         return response.accessToken
     }
 }
@@ -204,26 +204,26 @@ actor TokenManager: TokenProviding {
 
 ---
 
-## 5. 오프라인 & 캐싱 전략
+## 5. Offline & Caching Strategy
 
 ```swift
-// 캐시 우선, 네트워크 갱신 (Cache-then-Network)
+// Cache-then-Network
 func fetchProducts() -> AsyncStream<[Product]> {
     AsyncStream { continuation in
         Task {
-            // 1단계: 캐시에서 즉시 방출
+            // Step 1: emit immediately from cache
             if let cached = await cache.fetch([Product].self, key: "products") {
                 continuation.yield(cached)
             }
-            // 2단계: 네트워크 갱신
+            // Step 2: refresh from network
             do {
                 let fresh: [Product] = try await apiClient.request(
                     Endpoint(path: "/products", method: .GET, requiresAuth: false)
                 )
-                await cache.store(fresh, key: "products", ttl: 300) // 5분
+                await cache.store(fresh, key: "products", ttl: 300) // 5 minutes
                 continuation.yield(fresh)
             } catch {
-                // 캐시 데이터가 있으면 오류 숨김
+                // Hide the error if cached data exists
                 if cache.fetch([Product].self, key: "products") == nil {
                     continuation.finish(throwing: error)
                 }
@@ -236,10 +236,10 @@ func fetchProducts() -> AsyncStream<[Product]> {
 
 ---
 
-## 6. 파일 업로드 (Multipart)
+## 6. File Upload (Multipart)
 
 ```swift
-// 이미지 업로드 표준
+// Standard image upload
 func uploadImage(_ imageData: Data, to path: String) async throws -> ImageUploadResponse {
     let boundary = UUID().uuidString
     var request = URLRequest(url: baseURL.appendingPathComponent(path))
@@ -260,7 +260,7 @@ func uploadImage(_ imageData: Data, to path: String) async throws -> ImageUpload
     return try JSONDecoder.standard.decode(ImageUploadResponse.self, from: data)
 }
 
-// 업로드 전 전처리 (필수)
+// Pre-upload processing (required)
 func prepareImage(_ image: UIImage) -> Data? {
     let maxDimension: CGFloat = 1080
     let scale = min(maxDimension / image.size.width, maxDimension / image.size.height, 1.0)
@@ -273,28 +273,28 @@ func prepareImage(_ image: UIImage) -> Data? {
 
 ---
 
-## 7. 에러 타입 표준
+## 7. Error Type Standard
 
 ```swift
 enum APIError: LocalizedError {
     case invalidResponse
-    case unauthorized           // 401 → 로그인 화면으로
-    case forbidden              // 403 → 권한 없음 알림
-    case notFound               // 404 → 데이터 없음 처리
-    case validationError(String)// 422 → 필드 오류 표시
-    case rateLimited            // 429 → "잠시 후 다시 시도" 알림
-    case serverError(Int)       // 5xx → "서버 오류" 알림
-    case httpError(Int)         // 기타 HTTP 오류
-    case networkUnavailable     // 인터넷 연결 없음
-    case decodingError(Error)   // JSON 파싱 실패 (로깅)
+    case unauthorized           // 401 → go to login screen
+    case forbidden              // 403 → "no permission" alert
+    case notFound               // 404 → handle as no data
+    case validationError(String)// 422 → display field errors
+    case rateLimited            // 429 → "try again shortly" alert
+    case serverError(Int)       // 5xx → "server error" alert
+    case httpError(Int)         // other HTTP errors
+    case networkUnavailable     // no internet connection
+    case decodingError(Error)   // JSON parsing failure (logged)
 
     var errorDescription: String? {
         switch self {
-        case .unauthorized: return "로그인이 필요합니다"
-        case .networkUnavailable: return "인터넷 연결을 확인해 주세요"
-        case .serverError: return "일시적인 서버 오류가 발생했습니다"
+        case .unauthorized: return "Login required"
+        case .networkUnavailable: return "Please check your internet connection"
+        case .serverError: return "A temporary server error occurred"
         case .validationError(let msg): return msg
-        default: return "오류가 발생했습니다. 다시 시도해 주세요"
+        default: return "An error occurred. Please try again"
         }
     }
 }
@@ -302,4 +302,4 @@ enum APIError: LocalizedError {
 
 ---
 
-**문서 버전:** 1.0.0 | **작성일:** 2026-06-13 | **대상 OS:** iOS 15+
+**Document version:** 1.0.0 | **Date:** 2026-06-13 | **Target OS:** iOS 15+

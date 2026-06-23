@@ -1,879 +1,879 @@
-# POS 시스템 - 보안 요구사항 (POS System - Security Requirements)
+# POS System - Security Requirements
 
-## 개요 (Overview)
+## Overview
 
-POS 시스템은 현금, 카드, 고객 정보를 다루므로 높은 보안 수준을 요구합니다. 결제 카드 산업 표준(PCI DSS), 개인정보 보호법, 소비자 보호법을 준수하며, 모든 거래를 감시하고 부정 행위를 탐지해야 합니다.
-
----
-
-## 1. 보안 도메인
-
-### 1.1 결제 보안 (Payment Security)
-
-```
-카드 결제 보안:
-- PCI DSS Level 1 준수 (신용카드 번호 취급)
-- 결제 게이트웨이 공인 업체만 사용
-- 암호화된 결제 채널 (SSL/TLS 1.2 이상)
-- 3D Secure 또는 토큰화 (카드 정보 저장 금지)
-- 결제 승인 실시간 검증
-- 카드 정보 메모리에 저장 금지
-- 모든 결제 거래 암호화 기록
-
-현금 거래 보안:
-- 거스름돈 정확성 검증
-- 부정 거래 탐지 (과도한 현금 거래)
-- 현금함 접근 로그
-- 시간대별 현금 보관량 한계 설정
-```
-
-### 1.2 데이터 보호 (Data Protection)
-
-```
-전송 중 데이터:
-- 모든 네트워크 통신 암호화 (TLS 1.2+)
-- 공개 Wi-Fi 연결 금지 (모바일 POS)
-- VPN 또는 전용선 사용
-- 중간자 공격(MITM) 방어
-
-저장된 데이터:
-- 데이터베이스 암호화 (AES-256)
-- 개인정보 암호화 저장
-  ├─ 고객 전화번호
-  ├─ 고객 이메일
-  ├─ 고객 주소
-  └─ 회원번호
-- 민감한 거래 데이터 암호화
-- 백업 데이터 암호화
-- 암호 해시 (SHA-256 이상)
-```
-
-### 1.3 접근 제어 (Access Control)
-
-```
-사용자 역할 기반 접근 (RBAC):
-
-1. 판매원 (Cashier)
-   - 권한: 상품 판매, 결제 처리, 환불 승인 불가
-   - 제한: 마스터 데이터 수정 불가, 일일 마감 불가
-   - 로그인: 직원 ID + 암호
-
-2. 계산대 관리자 (Manager)
-   - 권한: 판매원 권한 + 일일 마감, 권한 설정, 거래 취소 승인
-   - 제한: 시스템 설정 수정 불가
-   - 로그인: 관리자 ID + 암호 + 2FA (필수)
-
-3. 본사 관리자 (Admin)
-   - 권한: 모든 권한 + 사용자 관리, 상품 마스터, 시스템 설정
-   - 제한: 거래 삭제 (수정만 가능, 감사 기록 남김)
-   - 로그인: 관리자 ID + 암호 + 2FA (필수)
-
-4. 감시자 (Auditor) - 읽기 전용
-   - 권한: 모든 거래 조회, 로그 조회, 보고서 조회
-   - 제한: 데이터 수정 불가
-   - 로그인: 감시자 ID + 암호
-```
-
-### 1.4 인증 보안 (Authentication Security)
-
-```
-로그인 정책:
-- 비밀번호 최소 길이: 8자
-- 복잡성: 대소문자 + 숫자 + 특수문자
-- 만료: 90일마다 변경 강제
-- 재사용 방지: 최근 5개 비밀번호와 다름
-- 틀린 시도: 5회 이상 시 계정 잠금 (30분)
-- 기본 비밀번호 변경 강제
-
-로그인 시도 기록:
-- 성공한 로그인 시간/IP
-- 실패한 시도 기록
-- 로그인 위치 변경 감시
-- 보안 위협 시 자동 알림
-```
-
-### 1.5 거래 보안 (Transaction Security)
-
-```
-거래 무결성:
-- 모든 거래에 디지털 서명
-- 거래 기록 변조 방지
-  ├─ 해시 체인 (각 거래가 이전 거래의 해시 포함)
-  ├─ 타임스탬프 서버 이용 (제3자 확인)
-  └─ 읽기 전용 로그 (WORM: Write Once Read Many)
-- 거래 취소 시 원본 유지 (새로운 거래로 기록)
-- 환불/환전 승인 프로세스 (2인 이상)
-
-거래 유효성:
-- 거래 완료 후 수정 불가 (감사 기록 유지)
-- 거래 취소: 원본 + 취소 거래 모두 기록
-- 거래 조작 탐지 (금액, 날짜, 항목 변경 감시)
-```
-
-### 1.6 사용자 세션 보안 (Session Security)
-
-```
-세션 관리:
-- 세션 타임아웃: 30분 유휴 시 강제 로그아웃
-- 세션 토큰 암호화
-- 토큰 만료: 8시간 (1 업무일)
-- 세션 하이재킹 방지
-  ├─ IP 주소 검증
-  ├─ User-Agent 검증
-  └─ 브라우저 핑거프린팅
-
-다중 세션 관리:
-- 같은 사용자 동시 로그인 불가
-- 새 로그인 시 이전 세션 강제 종료
-- 로그아웃 시 명시적 세션 무효화
-```
+Because the POS system handles cash, cards, and customer information, it requires a high level of security. It must comply with the Payment Card Industry standard (PCI DSS), privacy law, and consumer protection law, monitor all transactions, and detect fraud.
 
 ---
 
-## 2. 암호화 표준
+## 1. Security Domains
 
-### 2.1 전송 계층 보안 (TLS)
+### 1.1 Payment Security
 
 ```
-요구사항:
-- 최소 TLS 1.2 (권장: TLS 1.3)
-- 강력한 암호화 스위트만 사용
+Card payment security:
+- PCI DSS Level 1 compliance (handling credit card numbers)
+- Use only certified payment gateway providers
+- Encrypted payment channel (SSL/TLS 1.2 or higher)
+- 3D Secure or tokenization (storing card info prohibited)
+- Real-time payment approval verification
+- Prohibit storing card info in memory
+- Encrypted records of all payment transactions
+
+Cash transaction security:
+- Verify change accuracy
+- Detect fraudulent transactions (excessive cash transactions)
+- Cash drawer access logs
+- Set cash-on-hand limits by time of day
+```
+
+### 1.2 Data Protection
+
+```
+Data in transit:
+- Encrypt all network communication (TLS 1.2+)
+- Prohibit public Wi-Fi connections (mobile POS)
+- Use VPN or dedicated lines
+- Defend against man-in-the-middle (MITM) attacks
+
+Data at rest:
+- Database encryption (AES-256)
+- Store personal data encrypted
+  ├─ Customer phone number
+  ├─ Customer email
+  ├─ Customer address
+  └─ Member number
+- Encrypt sensitive transaction data
+- Encrypt backup data
+- Password hashing (SHA-256 or higher)
+```
+
+### 1.3 Access Control
+
+```
+Role-Based Access Control (RBAC):
+
+1. Cashier
+   - Permissions: product sales, payment processing; cannot approve refunds
+   - Restrictions: cannot edit master data, cannot do end-of-day
+   - Login: employee ID + password
+
+2. Register Manager
+   - Permissions: cashier permissions + end-of-day, permission settings, transaction cancellation approval
+   - Restrictions: cannot edit system settings
+   - Login: manager ID + password + 2FA (required)
+
+3. Headquarters Admin
+   - Permissions: all permissions + user management, product master, system settings
+   - Restrictions: transaction deletion (edit only, leaves audit record)
+   - Login: admin ID + password + 2FA (required)
+
+4. Auditor - read-only
+   - Permissions: view all transactions, view logs, view reports
+   - Restrictions: cannot modify data
+   - Login: auditor ID + password
+```
+
+### 1.4 Authentication Security
+
+```
+Login policy:
+- Minimum password length: 8 characters
+- Complexity: uppercase/lowercase + number + special character
+- Expiry: forced change every 90 days
+- Reuse prevention: different from the last 5 passwords
+- Failed attempts: lock account after 5 or more (30 minutes)
+- Force change of default passwords
+
+Login attempt records:
+- Successful login time/IP
+- Record of failed attempts
+- Monitor login location changes
+- Automatic alert on security threats
+```
+
+### 1.5 Transaction Security
+
+```
+Transaction integrity:
+- Digital signature on every transaction
+- Prevent tampering of transaction records
+  ├─ Hash chain (each transaction includes the hash of the previous transaction)
+  ├─ Use a timestamp server (third-party verification)
+  └─ Read-only logs (WORM: Write Once Read Many)
+- Preserve original on transaction cancellation (recorded as a new transaction)
+- Refund/exchange approval process (2 or more people)
+
+Transaction validity:
+- No modification after transaction completion (audit record retained)
+- Transaction cancellation: record both original + cancellation transaction
+- Detect transaction manipulation (monitor changes in amount, date, items)
+```
+
+### 1.6 Session Security
+
+```
+Session management:
+- Session timeout: forced logout after 30 minutes of inactivity
+- Session token encryption
+- Token expiry: 8 hours (1 business day)
+- Prevent session hijacking
+  ├─ IP address verification
+  ├─ User-Agent verification
+  └─ Browser fingerprinting
+
+Multiple session management:
+- The same user cannot log in concurrently
+- Force-terminate the previous session on new login
+- Explicit session invalidation on logout
+```
+
+---
+
+## 2. Encryption Standards
+
+### 2.1 Transport Layer Security (TLS)
+
+```
+Requirements:
+- Minimum TLS 1.2 (recommended: TLS 1.3)
+- Use only strong cipher suites
   ├─ TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
   ├─ TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-  └─ 약한 암호화 스위트 비활성화
+  └─ Disable weak cipher suites
 
-인증서:
-- CA 서명 인증서 (자가 서명 불가)
-- 최소 2048비트 RSA 또는 EC P-256
-- 예상 만료 30일 전 갱신 알림
-- 도메인 검증 (DV) 이상 (조직 검증 권장)
+Certificates:
+- CA-signed certificate (self-signed not allowed)
+- Minimum 2048-bit RSA or EC P-256
+- Renewal alert 30 days before expected expiry
+- Domain Validation (DV) or higher (Organization Validation recommended)
 
 HSTS (HTTP Strict Transport Security):
-- max-age: 최소 31536000초 (1년)
-- 모든 서브도메인 포함
-- preload 헤더 포함
+- max-age: minimum 31536000 seconds (1 year)
+- Include all subdomains
+- Include preload header
 ```
 
-### 2.2 저장 데이터 암호화 (Data at Rest)
+### 2.2 Data at Rest Encryption
 
 ```
-데이터베이스:
-- 데이터베이스 레벨 암호화 (TDE: Transparent Data Encryption)
-- 암호화 알고리즘: AES-256
-- 키 관리: 외부 키 관리 서비스 (AWS KMS, Azure Key Vault 등)
-- 키 로테이션: 90일마다
+Database:
+- Database-level encryption (TDE: Transparent Data Encryption)
+- Encryption algorithm: AES-256
+- Key management: external key management service (AWS KMS, Azure Key Vault, etc.)
+- Key rotation: every 90 days
 
-개인정보:
-- 고객 정보 필드 암호화 (필드 레벨)
-- 비밀번호 해싱: bcrypt 또는 Argon2
-- 쿠키 암호화 (HttpOnly, Secure, SameSite)
+Personal data:
+- Field-level encryption of customer info fields
+- Password hashing: bcrypt or Argon2
+- Cookie encryption (HttpOnly, Secure, SameSite)
 
-백업:
-- 백업 데이터 암호화
-- 백업 키 별도 관리
-- 테스트 환경: 마스킹된 데이터만 사용
+Backup:
+- Encrypt backup data
+- Manage backup keys separately
+- Test environment: use only masked data
 ```
 
-### 2.3 암호화 키 관리 (Key Management)
+### 2.3 Key Management
 
 ```
-키 생성:
-- 암호로 안전한 난수 생성기 사용
-- 최소 키 길이: 256비트
+Key generation:
+- Use a cryptographically secure random number generator
+- Minimum key length: 256 bits
 
-키 저장:
-- 하드코딩 금지 (환경변수, 키 서비스 사용)
-- 물리적 보안 (HSM: Hardware Security Module 권장)
-- 접근 제한 (최소 권한 원칙)
+Key storage:
+- No hardcoding (use environment variables, key service)
+- Physical security (HSM: Hardware Security Module recommended)
+- Restricted access (least privilege principle)
 
-키 로테이션:
-- 일정 로테이션: 90일마다
-- 긴급 로테이션: 보안 침해 시 즉시
-- 이전 키 아카이빙 (복호화용)
+Key rotation:
+- Scheduled rotation: every 90 days
+- Emergency rotation: immediately on security breach
+- Archive previous keys (for decryption)
 
-키 폐기:
-- 사용 종료 키 안전하게 삭제
-- 폐기 기록 유지
-```
-
----
-
-## 3. 인증 및 권한 관리
-
-### 3.1 사용자 인증 (User Authentication)
-
-```
-다단계 인증 (MFA):
-- 관리자 필수 (관리자만)
-- 일반 직원 선택
-- 방식: OTP, SMS, 생체인식
-  ├─ 시간 기반 OTP (TOTP): 30초 유효
-  ├─ SMS OTP: 사용 불가능 (권장하지 않음, 보안 취약)
-  ├─ 생체인식: 지문 인식기 (POS 터미널)
-  └─ 하드웨어 토큰 (U2F/FIDO2)
-
-생체인식 인증:
-- 지문 인식: POS 터미널 지문 리더기 사용
-- 얼굴 인식: 마스크 착용 상태 고려
-- 첫 사용 시 등록 (최소 2개 지문)
-- 정기 재등록: 1년마다
-
-암호 정책:
-- 변경: 90일마다
-- 첫 로그인 시 변경 강제
-- 3회 연속 실패 후 계정 잠금
-- 계정 잠금 해제: 관리자 승인 필요
-```
-
-### 3.2 권한 관리 (Authorization)
-
-```
-기본 원칙:
-- 최소 권한 원칙 (Least Privilege)
-- 역할 기반 접근 제어 (RBAC)
-- 정기 권한 검토 (분기별)
-
-권한 할당:
-- 신입 직원: 판매원 역할만 (최소 권한)
-- 경력 직원: 역할 전환 시 승인 필요
-- 퇴직: 즉시 모든 접근 차단
-- 휴직: 자동 정지 (복직 시 재활성화)
-
-권한 위임:
-- 임시 권한: 최대 7일 (명시적 승인 필수)
-- 권한 위임 기록: 언제, 누가, 누구에게, 언제까지
-- 위임 자동 만료: 종료 날짜 도래 시
-- 예외 권한: 관리자만 승인
-
-접근 권한 감사:
-- 월 1회 권한 검토
-- 불필요한 권한 제거
-- 권한 이상 감시 (예: 판매원이 급여 조회)
-```
-
-### 3.3 세션 및 로그아웃
-
-```
-로그인 후:
-- 세션 생성
-- 세션 ID 암호화하여 쿠키에 저장
-- 세션 시간: 실시간 트래픽 시 연장 (최대 8시간)
-
-로그아웃:
-- 세션 즉시 무효화
-- 토큰 삭제
-- 로그아웃 시간 기록
-- 캐시 초기화
-
-자동 로그아웃:
-- 30분 유휴 시 강제 로그아웃
-- 로그아웃 전 경고 메시지 (1분)
-- 귀중 거래 중 유휴 타임아웃 연장 (현금 거래 중)
+Key disposal:
+- Securely delete retired keys
+- Maintain disposal records
 ```
 
 ---
 
-## 4. 준수 요구사항
+## 3. Authentication and Authorization Management
+
+### 3.1 User Authentication
+
+```
+Multi-Factor Authentication (MFA):
+- Required for admins (admins only)
+- Optional for regular staff
+- Methods: OTP, SMS, biometrics
+  ├─ Time-based OTP (TOTP): valid for 30 seconds
+  ├─ SMS OTP: not usable (not recommended, security weakness)
+  ├─ Biometrics: fingerprint reader (POS terminal)
+  └─ Hardware token (U2F/FIDO2)
+
+Biometric authentication:
+- Fingerprint recognition: use POS terminal fingerprint reader
+- Facial recognition: consider mask-wearing state
+- Enroll on first use (at least 2 fingerprints)
+- Periodic re-enrollment: yearly
+
+Password policy:
+- Change: every 90 days
+- Force change on first login
+- Lock account after 3 consecutive failures
+- Account unlock: requires admin approval
+```
+
+### 3.2 Authorization
+
+```
+Basic principles:
+- Least Privilege principle
+- Role-Based Access Control (RBAC)
+- Periodic permission review (quarterly)
+
+Permission assignment:
+- New employees: cashier role only (least privilege)
+- Experienced employees: role change requires approval
+- Departure: immediately block all access
+- Leave of absence: automatic suspension (reactivate on return)
+
+Permission delegation:
+- Temporary permission: maximum 7 days (explicit approval required)
+- Delegation record: when, who, to whom, until when
+- Automatic delegation expiry: upon reaching the end date
+- Exceptional permissions: approved by admin only
+
+Access permission audit:
+- Permission review once a month
+- Remove unnecessary permissions
+- Monitor permission anomalies (e.g., cashier viewing payroll)
+```
+
+### 3.3 Sessions and Logout
+
+```
+After login:
+- Create session
+- Encrypt session ID and store in cookie
+- Session duration: extend during real-time traffic (max 8 hours)
+
+Logout:
+- Invalidate session immediately
+- Delete token
+- Record logout time
+- Clear cache
+
+Automatic logout:
+- Forced logout after 30 minutes of inactivity
+- Warning message before logout (1 minute)
+- Extend idle timeout during important transactions (during cash transactions)
+```
+
+---
+
+## 4. Compliance Requirements
 
 ### 4.1 PCI DSS (Payment Card Industry Data Security Standard)
 
 ```
-PCI DSS Level 기준 (카드 거래 연 거래량 기준):
+PCI DSS Level criteria (based on annual card transaction volume):
 
-Level 1 (고위험):
-- 연 6백만 건 이상 Visa 거래
-- 모든 Amex 판매자
-- 요구사항: 분기별 보안 감사, 침입탐지, 최고 보안
+Level 1 (high risk):
+- 6 million or more Visa transactions per year
+- All Amex merchants
+- Requirements: quarterly security audit, intrusion detection, highest security
 
-Level 2 (중위험):
-- 연 1-6백만 건 Visa 거래
-- 기타 카드 고거래량
-- 요구사항: 연 1회 보안 감사 또는 자체 평가
+Level 2 (medium risk):
+- 1-6 million Visa transactions per year
+- High transaction volume for other cards
+- Requirements: annual security audit or self-assessment
 
-Level 3 (저위험):
-- 연 20,000-1백만 건 카드 거래
-- 요구사항: 자체 평가 (SAQ)
+Level 3 (low risk):
+- 20,000-1 million card transactions per year
+- Requirements: self-assessment (SAQ)
 
-Level 4 (최저위험):
-- 연 20,000 건 미만 카드 거래
-- 요구사항: 자체 평가 또는 증명서
+Level 4 (lowest risk):
+- Fewer than 20,000 card transactions per year
+- Requirements: self-assessment or attestation
 
-준수 항목:
-1. 카드 데이터 저장 금지 (카드번호 뒤 4자리 제외)
-2. 네트워크 암호화 (TLS)
-3. 방화벽 설치
-4. 기본 암호 변경
-5. 카드 데이터 암호화
-6. 보안 패치 관리
-7. 접근 제어 (로그인 필수)
-8. 네트워크 활동 추적
-9. 보안 정책 수립
-10. 직원 교육
-11. 정기 보안 감사
-12. 정보 보안 정책 수립
+Compliance items:
+1. Prohibit storing card data (except last 4 digits of card number)
+2. Network encryption (TLS)
+3. Install firewall
+4. Change default passwords
+5. Encrypt card data
+6. Security patch management
+7. Access control (login required)
+8. Track network activity
+9. Establish security policy
+10. Employee training
+11. Regular security audits
+12. Establish information security policy
 
-한국 추가 요구사항:
-- 여신금융협회 카드 결제 표준 준수
-- 신용카드 가맹점 보안 기준 준수
+Korea additional requirements:
+- Comply with Korea Credit Finance Association card payment standards
+- Comply with credit card merchant security standards
 ```
 
-### 4.2 개인정보 보호
+### 4.2 Privacy Protection
 
 ```
-GDPR (유럽):
-- 개인정보 수집 동의
-- 개인정보 접근 권리 (SAR)
-- 개인정보 삭제 권리 (RTBF)
-- 데이터 이동권 (Data Portability)
-- 침해 72시간 내 신고
-- DPA 임명 (대규모 처리 시)
+GDPR (Europe):
+- Consent for personal data collection
+- Right of access to personal data (SAR)
+- Right to erasure of personal data (RTBF)
+- Data Portability
+- Breach notification within 72 hours
+- Appoint a DPA (for large-scale processing)
 
-한국 개인정보보호법 (PIPA):
-- 개인정보 수집 동의 (개선된 동의)
-- 개인정보 처리 방침 공개
-- 개인정보 보유 기간 명시
-- 정보 주체 열람 요청 시 10일 내 응답
-- 침해 신고: 1만 명 이상 시 즉시, 미만 시 지체없이
-- 개인정보 관리책임자 지정
+Korea Personal Information Protection Act (PIPA):
+- Consent for personal data collection (improved consent)
+- Disclose privacy policy
+- State personal data retention period
+- Respond within 10 days to a data subject's access request
+- Breach reporting: immediately for 10,000 or more people, without delay otherwise
+- Designate a personal data manager
 
-일본 개인정보보호법 (APPI):
-- 개인정보 정의 변경
-- 국외 이전 규제 강화
-- 본인 동의 없는 제3자 제공 금지
+Japan Act on the Protection of Personal Information (APPI):
+- Changes to the definition of personal data
+- Strengthened regulation of cross-border transfers
+- Prohibit third-party provision without consent
 ```
 
-### 4.3 세금 및 재무 규정
+### 4.3 Tax and Financial Regulations
 
 ```
-매출세 (부가세):
-- 거래별 세금액 기록
-- 월별 세금 정산
-- 분기별 신고
-- 세금 계산 감사 추적
+Sales tax (VAT):
+- Record tax amount per transaction
+- Monthly tax reconciliation
+- Quarterly filing
+- Tax calculation audit trail
 
-영수증 보관:
-- 모든 거래 영수증 보관
-- 최소 5년 보관 (한국: 통상 5년)
-- 디지털 영수증 인정 (암호화 저장)
-- 위조 방지 (디지털 서명, 바코드)
+Receipt retention:
+- Retain all transaction receipts
+- Retain for at least 5 years (Korea: typically 5 years)
+- Digital receipts accepted (encrypted storage)
+- Tamper prevention (digital signature, barcode)
 
-거래 기록:
-- 거래ID 고유성 (중복 없음)
-- 타임스탐프 정확성 (서버 시간 기준)
-- 수정 추적 (수정 금지, 취소만 허용)
-- 감사 추적 (누가, 언제, 무엇을)
+Transaction records:
+- Transaction ID uniqueness (no duplicates)
+- Timestamp accuracy (based on server time)
+- Modification tracking (no modification, only cancellation allowed)
+- Audit trail (who, when, what)
 ```
 
-### 4.4 소비자 보호
+### 4.4 Consumer Protection
 
 ```
-환불 정책:
-- 명확한 환불 조건 공시
-- 수량 제한 명시 (예: 30일 내, 수령 증명)
-- 환불 기한: 신청일로부터 7-30일 (법규 준수)
-- 환불 방법: 원래 결제 수단으로 반환
+Refund policy:
+- Disclose clear refund conditions
+- State quantity limits (e.g., within 30 days, proof of receipt)
+- Refund deadline: 7-30 days from request date (compliant with law)
+- Refund method: return to the original payment method
 
-거래 명세:
-- 명확한 가격 표시 (세금 포함 여부)
-- 부가 수수료 명시
-- 할인 적용 내역 표시
-- 최종 금액 명확
+Transaction details:
+- Clear price display (whether tax is included)
+- State additional fees
+- Display discount application details
+- Clear final amount
 
-고객 정보 보호:
-- 고객 정보 제3자 제공 금지 (동의 없이)
-- 정보 열람 요청 10일 내 응답
-- 정보 삭제 요청 처리
-- 마케팅 정보 발송 동의 관리
+Customer information protection:
+- Prohibit third-party provision of customer info (without consent)
+- Respond within 10 days to information access requests
+- Process information deletion requests
+- Manage consent for sending marketing information
 ```
 
 ---
 
-## 5. 감시 및 감사
+## 5. Monitoring and Auditing
 
-### 5.1 감시 로그 (Audit Logs)
-
-```
-기록 대상:
-
-1. 로그인/로그아웃:
-   - 사용자 ID
-   - 로그인 시간
-   - 로그인 IP 주소
-   - 로그인 성공/실패
-   - 로그아웃 시간
-   - 실패 시 실패 이유
-
-2. 거래 활동:
-   - 거래 생성/수정/취소
-   - 거래 금액
-   - 결제 수단
-   - 환불 처리
-   - 거래 승인자
-   - 타임스탐프
-
-3. 권한 변경:
-   - 변경 사용자
-   - 대상 사용자
-   - 이전 권한
-   - 새로운 권한
-   - 변경 시간
-   - 승인자
-
-4. 시스템 설정 변경:
-   - 변경 항목
-   - 이전 값
-   - 새로운 값
-   - 변경자
-   - 변경 시간
-   - 승인자
-
-5. 데이터 접근:
-   - 접근 사용자
-   - 접근 시간
-   - 접근 데이터 범위
-   - 액션 (조회/수정/삭제)
-   - IP 주소
-
-로그 특성:
-- 읽기 전용 (WORM)
-- 암호화 저장
-- 중앙 집중식 저장 (로컬 저장소 + 클라우드 백업)
-- 최소 1년 보관
-- 암호화 키로 무결성 검증
-```
-
-### 5.2 감시 시스템 (Monitoring)
+### 5.1 Audit Logs
 
 ```
-실시간 감시:
+What to record:
 
-1. 부정 거래 탐지:
-   - 비정상 금액 거래 (평균의 3배 이상)
-   - 동일 고객 반복 반품 (1주일 5회 이상)
-   - 환불율 이상 (일일 10% 이상)
-   - 시간대 이상 거래 (야간 대금액 거래)
+1. Login/logout:
+   - User ID
+   - Login time
+   - Login IP address
+   - Login success/failure
+   - Logout time
+   - Reason on failure
 
-2. 보안 위협:
-   - 로그인 실패 반복 (5회 이상)
-   - 비정상 시간 대량 접근
-   - 권한 없는 접근 시도
-   - 비정상 네트워크 활동
+2. Transaction activity:
+   - Transaction creation/modification/cancellation
+   - Transaction amount
+   - Payment method
+   - Refund processing
+   - Transaction approver
+   - Timestamp
 
-3. 시스템 이상:
-   - 응답 시간 지연 (> 5초)
-   - API 응답률 저하 (< 95%)
-   - 데이터베이스 연결 실패
-   - 백업 실패
+3. Permission changes:
+   - Changing user
+   - Target user
+   - Previous permissions
+   - New permissions
+   - Change time
+   - Approver
 
-4. 모니터링 도구:
+4. System setting changes:
+   - Changed item
+   - Previous value
+   - New value
+   - Changer
+   - Change time
+   - Approver
+
+5. Data access:
+   - Accessing user
+   - Access time
+   - Range of data accessed
+   - Action (view/modify/delete)
+   - IP address
+
+Log characteristics:
+- Read-only (WORM)
+- Encrypted storage
+- Centralized storage (local storage + cloud backup)
+- Retain for at least 1 year
+- Integrity verification with encryption key
+```
+
+### 5.2 Monitoring
+
+```
+Real-time monitoring:
+
+1. Fraudulent transaction detection:
+   - Abnormal-amount transactions (3 or more times the average)
+   - Repeated returns by the same customer (5 or more in a week)
+   - Refund rate anomaly (10% or more per day)
+   - Time-of-day anomalous transactions (large nighttime transactions)
+
+2. Security threats:
+   - Repeated login failures (5 or more)
+   - Bulk access at abnormal times
+   - Unauthorized access attempts
+   - Abnormal network activity
+
+3. System anomalies:
+   - Response time delays (> 5 seconds)
+   - API response rate decline (< 95%)
+   - Database connection failures
+   - Backup failures
+
+4. Monitoring tools:
    - SIEM (Security Information Event Management)
-   - IDS/IPS (침입 탐지/방지 시스템)
-   - 로그 분석 플랫폼
-   - 실시간 알림 (Slack, 이메일)
+   - IDS/IPS (intrusion detection/prevention system)
+   - Log analysis platform
+   - Real-time alerts (Slack, email)
 ```
 
-### 5.3 정기 감사 (Regular Audits)
+### 5.3 Regular Audits
 
 ```
-월 1회:
-- 로그인 실패 패턴 검토
-- 권한 이상 검토
-- 거래 샘플링 검증 (무작위 100건)
-- 재고 정확성 점검
+Monthly:
+- Review login failure patterns
+- Review permission anomalies
+- Verify transaction sampling (100 random)
+- Check inventory accuracy
 
-분기별 (3개월):
-- 전체 권한 검토
-- 보안 패치 적용 확인
-- 암호화 키 로테이션 확인
-- 보안 인사 교육 확인
-- 시스템 로그 분석
+Quarterly (every 3 months):
+- Review all permissions
+- Confirm security patch application
+- Confirm encryption key rotation
+- Confirm security personnel training
+- Analyze system logs
 
-연 1회:
-- 외부 보안 감사
-- 침투 테스트 (Penetration Testing)
-- PCI DSS 준수 확인
-- 법규 준수 검토
-- 보안 정책 검토 및 갱신
+Annually:
+- External security audit
+- Penetration Testing
+- PCI DSS compliance check
+- Legal compliance review
+- Review and update security policy
 
-감사 보고서:
-- 발견 사항 분류 (높음/중간/낮음)
-- 시정 조치 계획
-- 시정 기한
-- 책임자 지정
-- 진행 현황 추적
-```
-
----
-
-## 6. 부정 행위 탐지 및 방지
-
-### 6.1 부정 거래 패턴
-
-```
-단일 거래 부정:
-- 거래액 '0' 이상 확인
-- 바코드 조작 (불가능한 할인율)
-- 기한 만료 상품 판매
-- 재고 없는 상품 판매
-- 환율 오류 거래
-
-누적 패턴 부정:
-- 동일 고객 반복 반품 (7일 내 5회 이상)
-- 매장 시간 외 거래 (로그인 기록 없음)
-- 판매원별 환불율 이상 (20% 이상)
-- 야간 시간에 대금액 거래만 반복
-- 거짓 영수증 발급 시도
-
-환불 부정:
-- 환불 없는 거래 기록
-- 원본 거래 없는 환불
-- 과다 환불 (원거래 금액 초과)
-- 매장 시간 외 환불
-- 타 직원 거래 환불 (관리자 승인 필수)
-```
-
-### 6.2 방지 조치
-
-```
-기술적 방지:
-- 자동 거래 검증 (금액, 세금 계산 정확성)
-- 바코드 체크디지트 검증
-- 중복 거래 감지 (동일 거래 30초 내 중복)
-- 재고 체크 (판매 전 재고 확인)
-- 가격 상한선 (매장 관리자 승인 거래)
-
-운영적 방지:
-- 2인 검증 (환불, 할인 20% 이상)
-- 계산대 별도 직원 (판매/결제 다른 사람)
-- 일일 정산 비교 (예상 vs 실제)
-- 거래 기록 검토 (비정상 거래 조사)
-- 직원 순환 (매주 배치 변경)
-
-조직적 방지:
-- 정기 교육 (분기별 보안 교육)
-- 고충 처리 (직원 불만 신고 채널)
-- 동기 부여 (실적 압박 줄임)
-- 감시 통지 (CCTV 표시, 감사 공표)
-```
-
-### 6.3 적발 후 조치
-
-```
-의심 거래 발견:
-1. 즉시 거래 중지
-2. 거래 기록 수집
-3. 관련 인원 조사
-4. 원인 규명
-
-부정 적발 시:
-1. 증거 수집 (로그, 동영상, 증인)
-2. 임시 조치 (계정 정지, 권한 박탈)
-3. 조사 보고서 작성
-4. 경영진 보고
-5. 법적 조치 (경찰 신고, 민사 소송)
-6. 직원 조치 (경고, 징계, 해고)
-
-보고:
-- 부정 거래 월 보고서
-- 손실액 추적
-- 재발 방지 대책
-- 정책 개선사항
+Audit report:
+- Classify findings (high/medium/low)
+- Remediation plan
+- Remediation deadline
+- Assign owner
+- Track progress
 ```
 
 ---
 
-## 7. 인시던트 대응
+## 6. Fraud Detection and Prevention
 
-### 7.1 보안 사건 분류
-
-```
-심각도 레벨:
-
-Critical (긴급):
-- 데이터 유출 (고객 정보)
-- 시스템 완전 마비 (전점포)
-- 대량 부정 거래 (100만원 이상)
-- 카드 결제 시스템 침해
-→ 즉시 대응, 고위직 보고
-
-High (높음):
-- 부분 시스템 장애 (1시간 이상)
-- 소규모 데이터 유출 (100건 미만)
-- 부정 거래 (100-1백만 원)
-- 개인정보 접근 이상
-→ 1시간 내 대응
-
-Medium (중간):
-- 30분-1시간 시스템 장애
-- 개인 정보 접근 위반 (권한 없는 조회)
-- 로그인 실패 반복
-→ 4시간 내 대응
-
-Low (낮음):
-- 비정상 데이터 (콘솔 오류, 느린 성능)
-- 경미한 권한 이상
-→ 영업일 24시간 내 대응
-```
-
-### 7.2 대응 절차
+### 6.1 Fraudulent Transaction Patterns
 
 ```
-발견 단계:
-1. 이상 징후 감지 (모니터링 또는 보고)
-2. 심각도 판단
-3. 대응팀 소집
-4. 임시 조치 (접근 차단 등)
+Single-transaction fraud:
+- Confirm transaction amount is '0' or more
+- Barcode manipulation (impossible discount rate)
+- Selling expired products
+- Selling out-of-stock products
+- Exchange rate error transactions
 
-조사 단계:
-1. 사건 범위 파악 (영향 시스템, 영향 데이터)
-2. 근본 원인 분석
-3. 증거 수집 (로그, 메모리, 디스크)
-4. 타임라인 재구성
+Cumulative pattern fraud:
+- Repeated returns by the same customer (5 or more within 7 days)
+- Transactions outside store hours (no login record)
+- Refund rate anomaly per cashier (20% or more)
+- Repeated large transactions only at night
+- Attempts to issue false receipts
 
-해결 단계:
-1. 시스템 격리 (감염 확산 방지)
-2. 악성코드 제거/백업 복구
-3. 취약점 패치
-4. 시스템 복구 및 테스트
-5. 정상 운영 재개
-
-보고 단계:
-1. 경영진 보고 (심각도에 따라)
-2. 법적 신고 (필요 시, 경찰 등)
-3. 고객 공지 (데이터 유출 시)
-4. 언론 대응
-5. 사후 분석 (Post-Incident Review)
-
-예상 대응 시간:
-- 발견: 5분
-- 초기 대응: 15분
-- 근본원인 분석: 1시간
-- 복구: 2-4시간
-- 완전 정상화: 24시간
+Refund fraud:
+- Refund records without a transaction
+- Refunds without an original transaction
+- Excessive refunds (exceeding the original transaction amount)
+- Refunds outside store hours
+- Refunding another employee's transaction (admin approval required)
 ```
 
-### 7.3 보고 및 통지
+### 6.2 Preventive Measures
 
 ```
-내부 보고:
-- 즉시: CEO, CTO, 법무
-- 1시간 내: 전 부서장
-- 일일: 전 직원 (비상 공지)
+Technical prevention:
+- Automatic transaction verification (amount, tax calculation accuracy)
+- Barcode check-digit verification
+- Duplicate transaction detection (same transaction duplicated within 30 seconds)
+- Stock check (confirm stock before sale)
+- Price ceiling (transactions requiring store manager approval)
 
-외부 보고:
-- 데이터 유출 72시간 내 개인정보보호위원회에 신고 (GDPR 기준, 한국도 준용)
-- 금감위 신고 (결제 시스템 침해 시)
-- 경찰 신고 (명백한 범죄 시)
-- 언론 대응 (대규모 유출 시)
+Operational prevention:
+- Two-person verification (refunds, discounts of 20% or more)
+- Separate register staff (different people for sales/payment)
+- Daily reconciliation comparison (expected vs actual)
+- Transaction record review (investigate abnormal transactions)
+- Staff rotation (change placements weekly)
 
-고객 통지:
-- 영향받은 고객 식별
-- 통지 채널 (이메일, 문자, 우편)
-- 통지 내용: 사건 설명, 영향, 대처 방법, 보상
-- 핫라인 운영 (문의 대응)
-- 신용 모니터링 서비스 제공 (신용카드 유출 시)
+Organizational prevention:
+- Regular training (quarterly security training)
+- Grievance handling (channel for employee complaints)
+- Motivation (reduce performance pressure)
+- Monitoring notice (CCTV signage, audit disclosure)
+```
+
+### 6.3 Post-Detection Measures
+
+```
+Suspicious transaction found:
+1. Immediately stop the transaction
+2. Collect transaction records
+3. Investigate involved personnel
+4. Determine the cause
+
+When fraud is detected:
+1. Collect evidence (logs, video, witnesses)
+2. Temporary measures (suspend account, revoke permissions)
+3. Write investigation report
+4. Report to management
+5. Legal action (police report, civil lawsuit)
+6. Employee action (warning, discipline, dismissal)
+
+Reporting:
+- Monthly fraudulent transaction report
+- Track loss amount
+- Recurrence prevention measures
+- Policy improvements
 ```
 
 ---
 
-## 8. 보안 테스트
+## 7. Incident Response
 
-### 8.1 테스트 종류
+### 7.1 Security Incident Classification
 
 ```
-정적 분석 (Static Analysis):
-- 코드 보안 취약점 스캔
-- 의존성 라이브러리 취약점
-- 빌드 시마다 자동 실행
-- OWASP Top 10 확인
+Severity levels:
 
-동적 분석 (Dynamic Analysis):
-- 실행 중 보안 취약점 테스트
-- 입력값 검증 테스트
-- 메모리 누수 감지
-- 성능 병목 확인
+Critical:
+- Data breach (customer information)
+- Complete system paralysis (all stores)
+- Mass fraudulent transactions (1,000,000 KRW or more)
+- Card payment system breach
+→ Immediate response, report to senior management
 
-침투 테스트 (Penetration Testing):
-- 검증된 외부 보안회사 수행
-- 분기별 (또는 연 2회)
-- 범위: 전체 시스템
-- 보고서 작성 및 시정
+High:
+- Partial system outage (1 hour or more)
+- Small-scale data breach (fewer than 100 records)
+- Fraudulent transactions (100,000-1,000,000 KRW)
+- Personal data access anomaly
+→ Respond within 1 hour
 
-OWASP Top 10 테스트:
-1. 인증 우회
-2. 세션 토큰 탈취
-3. SQL 인젝션
+Medium:
+- 30-minute to 1-hour system outage
+- Personal data access violation (unauthorized lookup)
+- Repeated login failures
+→ Respond within 4 hours
+
+Low:
+- Abnormal data (console errors, slow performance)
+- Minor permission anomalies
+→ Respond within 24 business hours
+```
+
+### 7.2 Response Procedure
+
+```
+Detection stage:
+1. Detect anomalies (monitoring or report)
+2. Determine severity
+3. Convene response team
+4. Temporary measures (block access, etc.)
+
+Investigation stage:
+1. Identify incident scope (affected systems, affected data)
+2. Root cause analysis
+3. Collect evidence (logs, memory, disk)
+4. Reconstruct timeline
+
+Resolution stage:
+1. Isolate system (prevent spread of infection)
+2. Remove malware / restore from backup
+3. Patch vulnerability
+4. Restore and test system
+5. Resume normal operation
+
+Reporting stage:
+1. Report to management (according to severity)
+2. Legal reporting (if needed, to police, etc.)
+3. Customer notification (on data breach)
+4. Media response
+5. Post-Incident Review
+
+Expected response times:
+- Detection: 5 minutes
+- Initial response: 15 minutes
+- Root cause analysis: 1 hour
+- Recovery: 2-4 hours
+- Full normalization: 24 hours
+```
+
+### 7.3 Reporting and Notification
+
+```
+Internal reporting:
+- Immediately: CEO, CTO, Legal
+- Within 1 hour: all department heads
+- Daily: all staff (emergency notice)
+
+External reporting:
+- Report data breaches to the Personal Information Protection Commission within 72 hours (GDPR standard, also applied in Korea)
+- Report to the financial regulator (on payment system breach)
+- Report to police (on clear crime)
+- Media response (on large-scale breach)
+
+Customer notification:
+- Identify affected customers
+- Notification channels (email, SMS, mail)
+- Notification content: incident description, impact, mitigation, compensation
+- Operate a hotline (handle inquiries)
+- Provide credit monitoring service (on credit card breach)
+```
+
+---
+
+## 8. Security Testing
+
+### 8.1 Test Types
+
+```
+Static Analysis:
+- Scan code for security vulnerabilities
+- Dependency library vulnerabilities
+- Run automatically on every build
+- Check OWASP Top 10
+
+Dynamic Analysis:
+- Test security vulnerabilities during execution
+- Input validation testing
+- Memory leak detection
+- Identify performance bottlenecks
+
+Penetration Testing:
+- Performed by a verified external security firm
+- Quarterly (or twice a year)
+- Scope: entire system
+- Write report and remediate
+
+OWASP Top 10 testing:
+1. Authentication bypass
+2. Session token theft
+3. SQL injection
 4. XSS (Cross-Site Scripting)
 5. CSRF (Cross-Site Request Forgery)
-6. 인증되지 않은 접근
-7. 불충분한 로깅
-8. 보안 설정 오류
-9. 민감 데이터 노출
-10. XML 외부 엔티티 공격
+6. Unauthenticated access
+7. Insufficient logging
+8. Security misconfiguration
+9. Sensitive data exposure
+10. XML External Entity attack
 ```
 
-### 8.2 테스트 환경
+### 8.2 Test Environment
 
 ```
-테스트 환경 구성:
-- 프로덕션과 동일한 구조
-- 프로덕션 데이터의 마스킹된 복사본 사용
-- 테스트 계정만 사용 (실제 고객 계정 금지)
-- 독립적인 인프라 (프로덕션과 분리)
+Test environment setup:
+- Same structure as production
+- Use a masked copy of production data
+- Use only test accounts (real customer accounts prohibited)
+- Independent infrastructure (separated from production)
 
-테스트 데이터:
-- 고객 실명 제거 (hash 또는 마스킹)
-- 신용카드 번호 마스킹 (뒤 4자리만)
-- 지역/통신사 정보만 유지 (통계용)
-- 테스트용 계정 별도 생성
+Test data:
+- Remove customer real names (hash or masking)
+- Mask credit card numbers (last 4 digits only)
+- Keep only region/carrier info (for statistics)
+- Create separate test accounts
 
-테스트 결과:
-- 취약점 등급 (Critical, High, Medium, Low)
-- 재현 가능 여부
-- 영향도 분석
-- 시정 기한 설정
-- 정기 재테스트 (패치 후)
-```
-
----
-
-## 9. 보안 교육 및 정책
-
-### 9.1 직원 교육
-
-```
-신입 교육 (입사 1주일):
-- POS 시스템 보안 개요
-- 비밀번호 정책
-- 접근 제어 규칙
-- 데이터 보호 의무
-- 부정 행위 탐지
-- 인시던트 보고 절차
-
-정기 교육 (분기별 1시간):
-- 신규 보안 위협
-- 업데이트된 정책
-- 실제 사건 사례 분석
-- 보안 베스트 프랙티스
-
-관리자 교육 (분기별 2시간):
-- 권한 관리 심화
-- 감시 및 모니터링
-- 인시던트 대응
-- PCI DSS 준수
-
-교육 기록:
-- 참석 명부 유지
-- 이해도 테스트 (80% 이상 필수)
-- 미이수자 추적 및 재교육
-- 연간 교육 시간 증명 (규정 요구)
-```
-
-### 9.2 정책 문서
-
-```
-필수 보안 정책:
-
-1. 접근 제어 정책
-   - 사용자 관리
-   - 권한 할당 규칙
-   - 권한 검토 주기
-
-2. 데이터 보호 정책
-   - 개인정보 취급
-   - 암호화 표준
-   - 백업 및 복구
-
-3. 비밀번호 정책
-   - 복잡성 요구사항
-   - 만료 및 변경 주기
-   - 재사용 제한
-
-4. 인시던트 대응 정책
-   - 보안 사건 분류
-   - 보고 절차
-   - 대응 구성원
-
-5. 감시 및 로깅 정책
-   - 기록 대상
-   - 보관 기간
-   - 접근 권한
-
-6. 제3자 관리 정책
-   - 벤더 보안 요구사항
-   - 데이터 공유 계약
-   - 정기 감사
-
-모든 정책:
-- 연 1회 검토 및 갱신
-- 변경 이력 기록
-- 서명된 동의 (직원)
-- 위반 시 징계 규정 명시
+Test results:
+- Vulnerability grade (Critical, High, Medium, Low)
+- Reproducibility
+- Impact analysis
+- Set remediation deadline
+- Periodic retesting (after patching)
 ```
 
 ---
 
-## 10. 보안 체크리스트
+## 9. Security Training and Policy
 
-### 10.1 배포 전 체크리스트
-
-```
-[ ] 데이터베이스 암호화 활성화 (AES-256)
-[ ] TLS 1.2 이상 설정 (TLS 1.3 권장)
-[ ] SSL 인증서 설치 및 검증
-[ ] HSTS 헤더 설정
-[ ] 기본 계정 변경 (admin/admin 제거)
-[ ] 방화벽 설정 (필요한 포트만 개방)
-[ ] 로깅 시스템 구성 (중앙 집중식)
-[ ] 백업 자동화 및 테스트
-[ ] 침입 탐지 시스템 설치
-[ ] SIEM 설정
-[ ] 외부 보안 감사 완료
-[ ] PCI DSS 준수 확인
-[ ] 개인정보보호법 준수 확인
-[ ] 보안 테스트 완료 (정적, 동적)
-[ ] 침투 테스트 완료
-[ ] 직원 보안 교육 완료
-[ ] 보안 정책 발행
-[ ] 인시던트 대응팀 구성
-[ ] 24/7 모니터링 준비
-[ ] 긴급 연락처 등록
-```
-
-### 10.2 운영 중 정기 체크리스트
+### 9.1 Employee Training
 
 ```
-일일:
-[ ] 로그 검토 (의심 활동)
-[ ] 시스템 정상 작동 확인
-[ ] 백업 완료 확인
+New-hire training (first week of employment):
+- POS system security overview
+- Password policy
+- Access control rules
+- Data protection obligations
+- Fraud detection
+- Incident reporting procedure
 
-주 1회:
-[ ] 부정 거래 패턴 검토
-[ ] 보안 알림 확인 및 조사
-[ ] 권한 이상 검토
+Regular training (quarterly, 1 hour):
+- New security threats
+- Updated policies
+- Analysis of actual incident cases
+- Security best practices
 
-월 1회:
-[ ] 감사 로그 분석
-[ ] 권한 검토
-[ ] 거래 샘플 검증 (100건)
-[ ] 암호화 키 상태 확인
+Manager training (quarterly, 2 hours):
+- Advanced permission management
+- Monitoring and observation
+- Incident response
+- PCI DSS compliance
 
-분기별:
-[ ] 보안 패치 적용
-[ ] 암호화 키 로테이션
-[ ] 외부 감시 시스템 점검
-[ ] 백업 복구 테스트
-[ ] 보안 교육 실시
+Training records:
+- Maintain attendance roster
+- Comprehension test (80% or higher required)
+- Track and re-train non-completers
+- Annual training hours attestation (required by regulation)
+```
 
-연 1회:
-[ ] 외부 보안 감사
-[ ] 침투 테스트
-[ ] PCI DSS 준수 확인
-[ ] 정책 검토 및 갱신
-[ ] 보안 정책 서명 갱신 (직원)
+### 9.2 Policy Documents
+
+```
+Required security policies:
+
+1. Access control policy
+   - User management
+   - Permission assignment rules
+   - Permission review cycle
+
+2. Data protection policy
+   - Personal data handling
+   - Encryption standards
+   - Backup and recovery
+
+3. Password policy
+   - Complexity requirements
+   - Expiry and change cycle
+   - Reuse restrictions
+
+4. Incident response policy
+   - Security incident classification
+   - Reporting procedure
+   - Response members
+
+5. Monitoring and logging policy
+   - What to record
+   - Retention period
+   - Access permissions
+
+6. Third-party management policy
+   - Vendor security requirements
+   - Data sharing agreements
+   - Regular audits
+
+All policies:
+- Review and update once a year
+- Record change history
+- Signed consent (employees)
+- State disciplinary rules for violations
 ```
 
 ---
 
-이 보안 요구사항은 모든 POS 시스템이 준수해야 하는 최소 기준입니다. 현지 법규 및 산업 기준에 따라 추가 요구사항이 있을 수 있습니다.
+## 10. Security Checklists
+
+### 10.1 Pre-Deployment Checklist
+
+```
+[ ] Enable database encryption (AES-256)
+[ ] Set TLS 1.2 or higher (TLS 1.3 recommended)
+[ ] Install and verify SSL certificate
+[ ] Set HSTS header
+[ ] Change default accounts (remove admin/admin)
+[ ] Configure firewall (open only necessary ports)
+[ ] Configure logging system (centralized)
+[ ] Automate and test backups
+[ ] Install intrusion detection system
+[ ] Configure SIEM
+[ ] Complete external security audit
+[ ] Confirm PCI DSS compliance
+[ ] Confirm privacy law compliance
+[ ] Complete security testing (static, dynamic)
+[ ] Complete penetration testing
+[ ] Complete employee security training
+[ ] Publish security policy
+[ ] Form incident response team
+[ ] Prepare 24/7 monitoring
+[ ] Register emergency contacts
+```
+
+### 10.2 Operational Regular Checklist
+
+```
+Daily:
+[ ] Review logs (suspicious activity)
+[ ] Confirm system is operating normally
+[ ] Confirm backup completion
+
+Weekly:
+[ ] Review fraudulent transaction patterns
+[ ] Check and investigate security alerts
+[ ] Review permission anomalies
+
+Monthly:
+[ ] Analyze audit logs
+[ ] Review permissions
+[ ] Verify transaction samples (100)
+[ ] Check encryption key status
+
+Quarterly:
+[ ] Apply security patches
+[ ] Rotate encryption keys
+[ ] Inspect external monitoring system
+[ ] Test backup recovery
+[ ] Conduct security training
+
+Annually:
+[ ] External security audit
+[ ] Penetration testing
+[ ] PCI DSS compliance check
+[ ] Review and update policies
+[ ] Renew security policy signatures (employees)
+```
+
+---
+
+These security requirements are the minimum standard that all POS systems must comply with. Additional requirements may apply according to local laws and industry standards.

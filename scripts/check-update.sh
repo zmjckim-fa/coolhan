@@ -16,7 +16,7 @@ CYAN='\033[0;36m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-echo -e "\n${BLUE}🔍 CoolHan 업데이트 확인 중... (Checking for updates...)${NC}"
+echo -e "\n${BLUE}🔍 Checking for updates...${NC}"
 
 # Read installed version
 INSTALLED_VERSION=""
@@ -27,12 +27,12 @@ if [ -f "$VERSION_FILE" ]; then
 fi
 
 if [ -z "$INSTALLED_VERSION" ]; then
-    echo -e "${YELLOW}⚠️  설치 정보를 찾을 수 없습니다.${NC}"
-    echo -e "${CYAN}   재설치: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash${NC}"
+    echo -e "${YELLOW}⚠️  Install info not found.${NC}"
+    echo -e "${CYAN}   Reinstall: curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash${NC}"
     exit 0
 fi
 
-echo -e "${BLUE}   설치된 버전: $INSTALLED_VERSION${NC}"
+echo -e "${BLUE}   Installed version: $INSTALLED_VERSION${NC}"
 
 # Fetch latest release from GitHub API
 LATEST=$(curl -sf "https://api.github.com/repos/${REPO}/releases/latest" \
@@ -43,7 +43,7 @@ LATEST=$(curl -sf "https://api.github.com/repos/${REPO}/releases/latest" \
           grep -o '"tag_name":"[^"]*"' | head -1 | cut -d'"' -f4)) || LATEST=""
 
 if [ -z "$LATEST" ]; then
-    echo -e "${YELLOW}⚠️  업데이트 확인 실패. 수동 확인: https://github.com/${REPO}/releases${NC}"
+    echo -e "${YELLOW}⚠️  Update check failed. Check manually: https://github.com/${REPO}/releases${NC}"
     exit 0
 fi
 
@@ -52,7 +52,7 @@ INST_CLEAN="${INSTALLED_VERSION#v}"
 LATEST_CLEAN="${LATEST#v}"
 
 if [ "$INST_CLEAN" = "$LATEST_CLEAN" ]; then
-    echo -e "${GREEN}✅ CoolHan ${INSTALLED_VERSION} — 최신 버전입니다. (Up to date)${NC}"
+    echo -e "${GREEN}✅ CoolHan ${INSTALLED_VERSION} — Up to date.${NC}"
 else
     # Simple version comparison
     NEEDS_UPDATE=false
@@ -73,9 +73,9 @@ else
     if $NEEDS_UPDATE; then
         echo ""
         echo -e "${YELLOW}╔══════════════════════════════════════════════════════════════╗${NC}"
-        echo -e "${YELLOW}║${BOLD}  🚀 CoolHan 업데이트 알림 / Update Available!              ${NC}${YELLOW}║${NC}"
+        echo -e "${YELLOW}║${BOLD}  🚀 CoolHan Update Available!                              ${NC}${YELLOW}║${NC}"
         echo -e "${YELLOW}╠══════════════════════════════════════════════════════════════╣${NC}"
-        echo -e "${YELLOW}║${NC}  현재: ${RED}${INSTALLED_VERSION}${NC}  →  최신: ${GREEN}${LATEST}${NC}  ✨ NEW              ${YELLOW}║${NC}"
+        echo -e "${YELLOW}║${NC}  Current: ${RED}${INSTALLED_VERSION}${NC}  →  Latest: ${GREEN}${LATEST}${NC}  ✨ NEW        ${YELLOW}║${NC}"
         echo -e "${YELLOW}╠══════════════════════════════════════════════════════════════╣${NC}"
         echo -e "${YELLOW}║${NC}  ${CYAN}# Linux/macOS:${NC}                                             ${YELLOW}║${NC}"
         echo -e "${YELLOW}║${NC}  ${CYAN}curl -fsSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash${NC}${YELLOW}║${NC}"
@@ -84,6 +84,6 @@ else
         echo -e "${YELLOW}╚══════════════════════════════════════════════════════════════╝${NC}"
         echo ""
     else
-        echo -e "${GREEN}✅ CoolHan ${INSTALLED_VERSION} — 최신 버전입니다.${NC}"
+        echo -e "${GREEN}✅ CoolHan ${INSTALLED_VERSION} — Up to date.${NC}"
     fi
 fi

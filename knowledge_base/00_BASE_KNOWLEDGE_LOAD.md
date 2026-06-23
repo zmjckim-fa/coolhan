@@ -5,102 +5,102 @@
 
 ---
 
-## 핵심 원칙
+## Core Principle
 
-### 문제: AI가 일반 인터넷 평균 패턴을 따르는 이유
+### Problem: Why AI Follows Generic Internet-Average Patterns
 
-인간이 "쇼핑몰 만들어줘"라고 할 때:
-- 인간 머릿속: 회원가입, 장바구니, 주문, 결제, 배송, 관리자, 재고, 환불, 세금 = 자동 포함
-- AI 동작: 학습 데이터 전체 평균 패턴 → 일반적 쇼핑몰 구조 생성
+When a human says "build me a shopping mall":
+- In the human's head: signup, cart, order, payment, shipping, admin, inventory, refund, tax = automatically included
+- AI behavior: average pattern over all training data → generates a generic shopping mall structure
 
-**결과**: 회사 정의 vs 인터넷 평균이 충돌 → Spec drift 시작
+**Result**: company definition vs internet average conflict → Spec drift begins
 
-### 해결책: Base Knowledge Core 선 로드
+### Solution: Pre-load the Base Knowledge Core
 
-프로젝트 시작 BEFORE 개발:
+BEFORE development at project start:
 ```
-1. Base Knowledge Core 선택 (어떤 시스템? 쇼핑몰 vs 구매대행 vs 마켓플레이스)
-2. Industry Template 선택 (산업 표준 정의)
-3. Company Rules Load (회사 내부 표준)
-4. Project Spec Load (프로젝트 특화 규칙)
-5. Current Sprint Load (현재 작업 세부사항)
-6. Spec Lock 선언 (절대 변경 금지 항목 명시)
+1. Select Base Knowledge Core (which system? shopping mall vs purchase agency vs marketplace)
+2. Select Industry Template (industry standard definition)
+3. Load Company Rules (internal company standards)
+4. Load Project Spec (project-specific rules)
+5. Load Current Sprint (current task details)
+6. Declare Spec Lock (state items absolutely forbidden to change)
 7. Development Start
 ```
 
 ---
 
-## Base Knowledge Core 구조
+## Base Knowledge Core Structure
 
-### 각 Core의 구성 (필수 섹션)
+### Composition of Each Core (Required Sections)
 
 ```markdown
 # [System]_core.md
 
-## 1. 기본 포함 기능 (Non-Negotiable)
-- 반드시 포함되는 기능들
-- 선택 불가능한 핵심 요구사항
+## 1. Default Included Features (Non-Negotiable)
+- Features that are always included
+- Non-optional core requirements
 
-## 2. 기본 DB 구조
-- 필수 테이블
+## 2. Default DB Structure
+- Required tables
 - Primary domain entities
 
-## 3. 기본 상태값 (Status Value Registry)
-- 모든 가능한 상태 정의
-- 상태 전이 규칙
+## 3. Default Status Values (Status Value Registry)
+- Definition of all possible states
+- Status transition rules
 
-## 4. 기본 API 엔드포인트
-- 핵심 API 패턴
-- 인증/권한 표준
+## 4. Default API Endpoints
+- Core API patterns
+- Authentication/authorization standards
 
-## 5. 금지사항 (Prohibitions)
-- MUST NOT 변경하는 항목
-- 절대 추가 금지 기능
+## 5. Prohibitions
+- Items that MUST NOT change
+- Features absolutely forbidden to add
 
-## 6. 산업 표준 시나리오
-- Happy path (정상 흐름)
-- Error scenarios (오류 처리)
+## 6. Industry Standard Scenarios
+- Happy path (normal flow)
+- Error scenarios (error handling)
 
-## 7. 제약사항 (Constraints)
-- 이 시스템은 X를 지원하지 않음
-- Y는 반드시 이렇게만 구현
+## 7. Constraints
+- This system does not support X
+- Y must be implemented only in this way
 ```
 
 ---
 
-## Base Knowledge Core 목록
+## Base Knowledge Core List
 
-### 즉시 작성 필요 (높은 우선순위)
+### Need to Write Immediately (High Priority)
 
 1. **shopping_mall_core.md**
-   - 일반 B2C 이커머스
-   - 회원, 상품, 장바구니, 주문, 결제, 배송, 관리자
+   - General B2C e-commerce
+   - Member, product, cart, order, payment, shipping, admin
 
 2. **marketplace_core.md**
-   - 다중 판매자 (Multi-vendor)
+   - Multi-vendor
    - Seller onboarding, commission, dispute resolution
 
 3. **purchase_agency_core.md**
-   - 해외 구매대행
-   - 환율, 관세, 배송 분리
+   - Overseas purchase agency
+   - Exchange rate, customs, separated shipping
 
 4. **logistics_core.md**
-   - 배송 최적화 시스템
+   - Shipping optimization system
    - Warehouse, route, tracking
 
 5. **member_system_core.md**
-   - 사용자 관리 기초
+   - User management foundation
    - Auth, profile, consent
 
 6. **admin_system_core.md**
-   - 관리자 기능 표준
+   - Admin feature standards
    - Roles, audit, moderation
 
 ---
 
-## Project 시작 시 Base Knowledge Load 프로세스
+## Base Knowledge Load Process at Project Start
 
-### Step 1: 프로젝트 정의 선언
+### Step 1: Declare Project Definition
 
 ```markdown
 [PROJECT INITIALIZATION]
@@ -120,14 +120,14 @@ Load Sequence:
 Locked Until: All bases loaded
 ```
 
-### Step 2: 각 Core 문서 검토
+### Step 2: Review Each Core Document
 
-- [ ] 인간이 선택한 Core들 읽음
-- [ ] 포함된 기능 목록 숙지
-- [ ] 금지사항 명시
-- [ ] 상태값 레지스트리 확인
+- [ ] Read the Cores the human selected
+- [ ] Master the included feature list
+- [ ] State the prohibitions
+- [ ] Check the status value registry
 
-### Step 3: Spec Lock 선언
+### Step 3: Declare Spec Lock
 
 ```markdown
 [SPEC LOCK: ACTIVE]
@@ -149,7 +149,7 @@ ABSOLUTELY CANNOT ADD:
 - B2B wholesale (not in core)
 ```
 
-### Step 4: 작업 범위 좁히기
+### Step 4: Narrow the Task Scope
 
 ```markdown
 [CURRENT SPRINT WORK]
@@ -175,32 +175,32 @@ Acceptance Criteria:
 
 ---
 
-## 문제: AI Spec Drift 메커니즘
+## Problem: The AI Spec Drift Mechanism
 
-### 왜 발생하는가
+### Why It Happens
 
-AI는 본질적으로:
-- **현재 문맥 기반 생성 엔진** (장기 일관성 유지 엔진이 아님)
-- 초기 핵심 제약이 점차 컨텍스트 뒤로 밀림
-- 새로운 추론/패턴이 기존 spec을 덮음
-- Dynamic completion 성향이 spec lock보다 강함
+AI is inherently:
+- **A context-based generation engine** (not a long-term consistency engine)
+- Initial core constraints gradually get pushed to the back of the context
+- New inferences/patterns overwrite the existing spec
+- The dynamic completion tendency is stronger than spec lock
 
-**결과**:
+**Result**:
 ```
-작업 초기: "Order 30일 환불 정책 유지"
+Early task: "Keep the Order 30-day refund policy"
 ↓
-작업 중간: "배송" 키워드 등장
+Mid task: the keyword "shipping" appears
 ↓
-작업 후기: "배송 로직도 확인해야 하니까 배송 연동을..."
+Late task: "Since I need to check the shipping logic, let me integrate shipping..."
 ↓
-결과: 원래 spec과 다른 것 구현
+Result: implements something different from the original spec
 ↓
-인간: "왜 하던 걸 잊고 딴짓하냐"
+Human: "Why did you forget what you were doing and go off-task?"
 ```
 
-### 해결책 4가지
+### Four Solutions
 
-#### 1. 현재 작업 고정 (Scope Fixing)
+#### 1. Scope Fixing
 
 ```markdown
 CURRENT WORK:
@@ -216,7 +216,7 @@ DO NOT:
 - Refactor inventory logic
 ```
 
-#### 2. 절대 변경 금지 목록 (Immutable Spec)
+#### 2. Immutable Spec
 
 ```markdown
 [DO NOT MODIFY THESE - VIOLATION = WORK STOPPED]
@@ -233,7 +233,7 @@ CANNOT ADD:
 If you want to add: STOP → Ask approval → Update core.md → Continue
 ```
 
-#### 3. 단계 단위 작업 (Step Decomposition)
+#### 3. Step Decomposition
 
 ```markdown
 ❌ WRONG:
@@ -247,7 +247,7 @@ Week 3: Shopping cart only
 Week 4: Order creation only
 ```
 
-#### 4. 완료 조건 고정 (Definition of Done)
+#### 4. Definition of Done
 
 ```markdown
 DONE DEFINITION:
@@ -263,103 +263,103 @@ DONE DEFINITION:
 
 ---
 
-## AI의 "완료 불가" 문제
+## The AI "Cannot Complete" Problem
 
-### 문제: AI가 "못한다" 선언을 못함
+### Problem: AI Cannot Declare "I Cannot Do This"
 
-AI 특성:
-- 유용해 보이려는 욕망
-- 다음 시도를 계속 생성
-- 빈칸을 메우려는 성향
-- 대화를 끊지 않으려 함
+AI characteristics:
+- Desire to appear useful
+- Keeps generating the next attempt
+- Tendency to fill in blanks
+- Tries not to cut off the conversation
 
-**결과**: 성공 가능성 낮음 + 계속 진행 + 사용자 대기 + 토큰 소모
+**Result**: low chance of success + keeps going + user waits + token consumption
 
-### 해결책: 강제 Pause Point
+### Solution: Forced Pause Point
 
 ```markdown
 BLOCKING RULE:
 
-시도 1회 실패 → 로그 분석
-시도 2회 실패 → 현재 코드 전체 읽기 + spec 재확인
-시도 3회 이상 → 즉시 WORK PAUSED 선언
+1st attempt failed → analyze logs
+2nd attempt failed → read the entire current code + recheck spec
+3rd attempt or more → immediately declare WORK PAUSED
 
 [WORK PAUSED - CANNOT CONTINUE]
-Attempted: [2가지 시도 명시]
-Reason: [정확한 실패 이유]
-Error: [에러 메시지]
-Need: [필요한 것]
-  - 추가 정보? spec 업데이트? 아키텍처 검토? 
+Attempted: [state the 2 attempts]
+Reason: [exact failure reason]
+Error: [error message]
+Need: [what is needed]
+  - Additional info? spec update? architecture review? 
 
 Waiting for: User decision
 Cannot proceed without: Approval/clarification
 ```
 
-**중요**: 이건 실패가 아니라 정상 동작입니다.
-- 숙련된 엔지니어는 로그 3줄로 "지금 정보로 못 푼다" 판단
-- AI도 같아야 함
-- "계속 시도"는 실제로는 리소스 낭비
+**Important**: This is not a failure but normal operation.
+- A skilled engineer judges from 3 lines of logs that "this can't be solved with the current info"
+- The AI should be the same
+- "Keep trying" is actually a waste of resources
 
 ---
 
-## Base Knowledge Load 실행 체크리스트
+## Base Knowledge Load Execution Checklist
 
-### 각 Project 시작 시
+### At the Start of Each Project
 
-- [ ] 프로젝트에 필요한 Base Knowledge Core들 식별
-- [ ] 각 Core의 "기본 포함 기능" 섹션 읽음
-- [ ] 각 Core의 "금지사항" 섹션 읽음
-- [ ] 각 Core의 "기본 상태값" 섹션 숙지
-- [ ] 프로젝트 특화 규칙 문서들 로드
-- [ ] Spec Lock 선언 작성
-- [ ] 현재 Sprint 범위 좁히기
-- [ ] 완료 조건 명시
-- [ ] Development Locked Mode 다시 읽음
-- [ ] Project State 문서 생성 + 로드된 Core들 기록
+- [ ] Identify the Base Knowledge Cores needed for the project
+- [ ] Read the "default included features" section of each Core
+- [ ] Read the "prohibitions" section of each Core
+- [ ] Master the "default status values" section of each Core
+- [ ] Load the project-specific rule documents
+- [ ] Write the Spec Lock declaration
+- [ ] Narrow the current Sprint scope
+- [ ] State the completion conditions
+- [ ] Re-read the Development Locked Mode
+- [ ] Create the Project State document + record the loaded Cores
 
-### 각 작업 시작 전
+### Before the Start of Each Task
 
-- [ ] 로드된 Core의 해당 섹션 읽음
-- [ ] 현재 작업 범위 확인 (Spec Lock 내인가?)
-- [ ] 변경 금지 항목 목록 재확인
-- [ ] 완료 조건 명확히 함
-- [ ] Scope creep 방지 선언
+- [ ] Read the relevant section of the loaded Core
+- [ ] Confirm the current task scope (is it within the Spec Lock?)
+- [ ] Recheck the list of change-forbidden items
+- [ ] Clarify the completion conditions
+- [ ] Declare Scope creep prevention
 
-### 작업 중 막힐 때
+### When Stuck During a Task
 
-- [ ] 로그/에러 읽기
-- [ ] 현재 코드 전체 읽기
-- [ ] Base Knowledge Core의 해당 부분 다시 읽기
-- [ ] 2회 이상 실패 시: [WORK PAUSED] 선언 (강제)
+- [ ] Read the logs/errors
+- [ ] Read the entire current code
+- [ ] Re-read the relevant part of the Base Knowledge Core
+- [ ] On 2+ failures: declare [WORK PAUSED] (forced)
 
 ---
 
 ## Base Knowledge Load vs Traditional Prompting
 
-| 항목 | Traditional | Base Knowledge Load |
+| Item | Traditional | Base Knowledge Load |
 |------|-----------|-------------------|
-| AI에 주는 것 | 프로젝트 설명 | 표준 시스템 정의 + 프로젝트 특화 규칙 |
-| "쇼핑몰"의 의미 | 학습 데이터 평균 | 회사의 공식 정의 |
-| Spec 변경 | 매 대화마다 가능 | Spec Lock 필요 |
-| AI의 해석 우선순위 | 현재 문맥이 제1 | Core 정의가 제1 |
-| 결과 | Spec drift 많음 | Spec lock으로 제어됨 |
+| What is given to the AI | Project description | Standard system definition + project-specific rules |
+| Meaning of "shopping mall" | Training data average | The company's official definition |
+| Spec changes | Possible every conversation | Spec Lock required |
+| AI's interpretation priority | Current context is #1 | Core definition is #1 |
+| Result | Much spec drift | Controlled by spec lock |
 
 ---
 
-## Next: Base Knowledge Core 작성 순서
+## Next: Base Knowledge Core Writing Order
 
-### Tier 1 (이번 주)
-1. ✅ 10개 도메인 모듈 (01-10) - 이미 완성
+### Tier 1 (this week)
+1. ✅ 10 domain modules (01-10) - already complete
 2. 🔄 shopping_mall_core.md
 3. 🔄 marketplace_core.md
 4. 🔄 purchase_agency_core.md
 
-### Tier 2 (다음 주)
+### Tier 2 (next week)
 5. logistics_core.md
 6. member_system_core.md
 7. admin_system_core.md
 
-### Tier 3 (추가 필요 시)
+### Tier 3 (when additionally needed)
 8. crm_core.md
 9. erp_core.md
 10. point_loyalty_core.md
@@ -374,14 +374,14 @@ Cannot proceed without: Approval/clarification
 **Authority:** Design Architecture  
 **Status:** 🟢 **ACTIVE - Ready to implement**
 
-**핵심 메시지:**
-> "프로젝트마다 매번 설명하지 말고, 회사 내부 표준 시스템 정의를 로드하라."
-> "AI는 일반 인터넷 패턴이 아니라 명확한 산업 표준이 필요하다."
-> "Spec Lock이 없으면 drift는 필연이다."
+**Core message:**
+> "Don't explain it every time per project; load the company's internal standard system definition."
+> "AI needs clear industry standards, not generic internet patterns."
+> "Without Spec Lock, drift is inevitable."
 
-**AI 체크:**
-- [ ] Base Knowledge Load의 개념을 이해했는가? YES
-- [ ] Core 문서와 도메인 모듈의 차이를 알겠는가? YES
-- [ ] Spec Lock의 중요성을 알겠는가? YES
-- [ ] 막힐 때 강제 Pause Point를 지킬 것인가? YES
-- [ ] "못한다" 선언을 할 것인가? YES
+**AI check:**
+- [ ] Did you understand the concept of Base Knowledge Load? YES
+- [ ] Do you understand the difference between Core documents and domain modules? YES
+- [ ] Do you understand the importance of Spec Lock? YES
+- [ ] Will you keep the forced Pause Point when stuck? YES
+- [ ] Will you declare "I cannot do this"? YES

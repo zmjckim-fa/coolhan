@@ -1,553 +1,553 @@
-# POS 시스템 - 기본 논리 (POS System - Basic Logic)
+# POS System - Basic Logic
 
-## 개요 (Overview)
+## Overview
 
-POS (Point of Sale) 시스템은 소매점에서 고객 거래를 처리하는 핵심 운영 시스템입니다. 판매 기록, 재고 관리, 결제 처리, 보고를 통합적으로 관리합니다.
-
----
-
-## 1. 핵심 개념
-
-### 1.1 거래 (Transaction)
-```
-거래 = 고객이 상품을 구매하는 전체 과정
-
-구성:
-- 거래ID: 각 거래의 고유 번호
-- 거래일시: 거래가 발생한 시간
-- 판매점: 어느 점포에서 발생했는지
-- 계산대: 어느 계산대에서 발생했는지
-- 판매원: 누가 처리했는지
-- 거래항목: 구매한 상품들의 목록
-- 총액: 지불해야 할 금액
-- 결제수단: 현금, 카드, 기타
-- 거래상태: 완료, 취소, 반품 등
-```
-
-### 1.2 상품 (Product)
-```
-상품 = 판매점에서 판매하는 개별 상품
-
-속성:
-- 상품코드: 상품의 고유 번호 (바코드)
-- 상품명: 판매할 때 표시되는 이름
-- 판매가: 고객이 지불하는 가격
-- 원가: 상품을 구매한 비용
-- 분류: 카테고리 (의류, 식품 등)
-- 재고: 현재 보유 수량
-- 세율: 적용할 세금 비율
-```
-
-### 1.3 재고 (Inventory)
-```
-재고 = 판매점에 보유한 상품의 수량
-
-상태 변화:
-입고 (In) → 판매 (Sale) → 재고 (Current) → 반품 (Return)
-
-주요 계산:
-- 초기 재고
-- + 입고
-- - 판매
-- - 손실/폐기
-- + 반품
-= 현재 재고
-```
-
-### 1.4 판매원 (Cashier)
-```
-판매원 = 거래를 처리하는 직원
-
-역할:
-- 상품 스캔
-- 가격 확인
-- 결제 처리
-- 거스름돈 계산
-- 영수증 발급
-- 거래 기록
-```
+A POS (Point of Sale) system is the core operational system that processes customer transactions at retail stores. It manages sales records, inventory, payment processing, and reporting in an integrated manner.
 
 ---
 
-## 2. 주요 프로세스
+## 1. Core Concepts
 
-### 2.1 판매 거래 프로세스
-
+### 1.1 Transaction
 ```
-1단계: 거래 시작
-  ├─ 거래ID 생성
-  ├─ 판매원 ID 기록
-  └─ 거래 시작 시간 기록
+Transaction = the entire process of a customer purchasing products
 
-2단계: 상품 입력
-  ├─ 바코드 스캔 (또는 수동 입력)
-  ├─ 상품 정보 조회
-  │  ├─ 상품명
-  │  ├─ 단가
-  │  ├─ 세율
-  │  └─ 현재 가격 (할인 적용 여부)
-  ├─ 수량 입력
-  ├─ 재고 확인
-  │  ├─ 재고 충분? → 진행
-  │  └─ 재고 부족? → 경고 표시
-  └─ 항목 추가
-
-3단계: 할인/프로모션 적용 (선택)
-  ├─ 회원 할인
-  ├─ 상품 할인
-  ├─ 쿠폰 할인
-  └─ 수량 할인
-
-4단계: 결제 처리
-  ├─ 소계 계산
-  │  └─ 모든 항목의 가격 합
-  ├─ 세금 계산
-  │  └─ 상품별 세금 합산
-  ├─ 최종 금액 계산
-  │  └─ 소계 + 세금 - 할인
-  ├─ 결제수단 선택
-  │  ├─ 현금
-  │  ├─ 카드 (신용/체크)
-  │  ├─ 기타 (수표, 기프트 카드 등)
-  │  └─ 복합결제 (현금+카드)
-  └─ 결제 완료 확인
-
-5단계: 거스름돈/영수증
-  ├─ 현금 결제 시:
-  │  ├─ 거스름돈 계산
-  │  └─ 거스름돈 출력
-  ├─ 영수증 생성
-  │  ├─ 거래번호
-  │  ├─ 날짜/시간
-  │  ├─ 항목 목록
-  │  ├─ 총액
-  │  ├─ 결제수단
-  │  └─ 판매원 서명 (선택)
-  └─ 영수증 출력
-
-6단계: 재고 업데이트
-  ├─ 판매된 각 상품의 재고 감소
-  ├─ 재고 임계값 확인
-  │  └─ 재고 부족 시 발주 알림
-  └─ 재고 로그 기록
-
-7단계: 거래 종료
-  ├─ 거래 상태: "완료"로 변경
-  ├─ 거래 기록 저장
-  └─ 다음 거래 준비
+Components:
+- Transaction ID: the unique number of each transaction
+- Transaction date/time: the time the transaction occurred
+- Store: which store it occurred at
+- Register: which register it occurred at
+- Cashier: who processed it
+- Transaction items: the list of purchased products
+- Total amount: the amount to be paid
+- Payment method: cash, card, other
+- Transaction status: completed, cancelled, returned, etc.
 ```
 
-### 2.2 반품/환불 프로세스
-
+### 1.2 Product
 ```
-반품 신청
-├─ 반품 영수증 선택
-├─ 반품할 항목 선택
-├─ 반품 사유 입력
-├─ 반품 승인
-│  ├─ 환불액 계산
-│  └─ 환불 방법 결정 (현금/카드)
-└─ 환불 처리
-   ├─ 현금 반환
-   ├─ 카드 환불 요청
-   └─ 재고 복구
-      └─ 반품한 상품 수량 증가
+Product = an individual item sold at the store
+
+Attributes:
+- Product code: the unique number of the product (barcode)
+- Product name: the name shown when selling
+- Selling price: the price the customer pays
+- Cost price: the cost of purchasing the product
+- Classification: category (apparel, food, etc.)
+- Stock: the current quantity on hand
+- Tax rate: the tax rate to apply
 ```
 
-### 2.3 일일 마감 (End of Day Reconciliation)
-
+### 1.3 Inventory
 ```
-1. 거래 합계 계산
-   ├─ 총 판매액
-   ├─ 총 환불액
-   ├─ 순 판매액
-   └─ 거래 건수
+Inventory = the quantity of products on hand at the store
 
-2. 결제 수단별 합계
-   ├─ 현금 판매액
-   ├─ 카드 판매액
-   ├─ 기타 판매액
-   └─ 각각의 거래 건수
+State changes:
+In → Sale → Current → Return
 
-3. 세금 정산
-   ├─ 세금별 판매액
-   ├─ 세금액 합계
-   └─ 세금 신고용 데이터
+Key calculation:
+- Beginning inventory
+- + Inbound
+- - Sales
+- - Loss/disposal
+- + Returns
+= Current inventory
+```
 
-4. 재고 확인
-   ├─ 시작 재고
-   ├─ + 입고
-   ├─ - 판매
-   ├─ + 반품
-   └─ = 마감 재고
+### 1.4 Cashier
+```
+Cashier = the staff member who processes transactions
 
-5. 금전 거래 정산
-   ├─ 초기 자금 (계산대 시작 금액)
-   ├─ + 판매 대금
-   ├─ - 환불액
-   ├─ - 비용 (바우처, 기타)
-   └─ = 예상 최종 금액
-   
-   비교: 실제 금전 vs 예상 금액
-   → 불일치 시 조사
-
-6. 보고서 생성
-   ├─ 일일 판매 보고서
-   ├─ 판매원별 실적
-   ├─ 상품별 판매량
-   ├─ 부문별 판매액
-   └─ 금전 거래 보고
+Roles:
+- Scan products
+- Verify prices
+- Process payment
+- Calculate change
+- Issue receipt
+- Record transaction
 ```
 
 ---
 
-## 3. 핵심 데이터 흐름
+## 2. Key Processes
 
-### 3.1 가격 결정 로직
-
-```
-기본 판매가 → 할인 적용 → 세금 적용 → 최종 가격
-
-세부:
-1. 상품의 기본 판매가 확인
-2. 할인 적용 (우선순위)
-   ├─ 회원 할인 (5-20%)
-   ├─ 상품 할인 (정해진 할인가)
-   ├─ 프로모션 할인 (기간 한정)
-   ├─ 쿠폰 할인 (금액 또는 비율)
-   └─ 수량 할인 (3개 이상 구매 등)
-3. 할인 후 가격 = 기본가 - 할인액
-4. 세금 계산 = 할인 후 가격 × 세율
-5. 최종 가격 = 할인 후 가격 + 세금
-```
-
-### 3.2 재고 추적 로직
+### 2.1 Sales Transaction Process
 
 ```
-매 거래마다:
-1. 상품 스캔
-2. 현재 재고 확인 (실시간)
-3. 요청 수량 <= 현재 재고?
-   └─ YES: 계속 진행
-   └─ NO: 경고 표시
-4. 거래 완료 후
-   └─ 재고 = 재고 - 판매량
+Step 1: Start transaction
+  ├─ Generate transaction ID
+  ├─ Record cashier ID
+  └─ Record transaction start time
 
-반품 시:
-1. 반품 수량 입력
-2. 재고 = 재고 + 반품량
+Step 2: Enter products
+  ├─ Scan barcode (or manual entry)
+  ├─ Look up product info
+  │  ├─ Product name
+  │  ├─ Unit price
+  │  ├─ Tax rate
+  │  └─ Current price (whether a discount applies)
+  ├─ Enter quantity
+  ├─ Check stock
+  │  ├─ Sufficient stock? → proceed
+  │  └─ Insufficient stock? → show warning
+  └─ Add item
 
-재고 경고:
-- 최소 재고 수량 이하 → 발주 필요 알림
-- 0이 될 예정 → "품절" 표시
+Step 3: Apply discounts/promotions (optional)
+  ├─ Member discount
+  ├─ Product discount
+  ├─ Coupon discount
+  └─ Volume discount
+
+Step 4: Process payment
+  ├─ Calculate subtotal
+  │  └─ Sum of all item prices
+  ├─ Calculate tax
+  │  └─ Sum of tax per product
+  ├─ Calculate final amount
+  │  └─ Subtotal + tax - discount
+  ├─ Select payment method
+  │  ├─ Cash
+  │  ├─ Card (credit/debit)
+  │  ├─ Other (check, gift card, etc.)
+  │  └─ Split payment (cash + card)
+  └─ Confirm payment completion
+
+Step 5: Change/receipt
+  ├─ For cash payment:
+  │  ├─ Calculate change
+  │  └─ Dispense change
+  ├─ Generate receipt
+  │  ├─ Transaction number
+  │  ├─ Date/time
+  │  ├─ Item list
+  │  ├─ Total amount
+  │  ├─ Payment method
+  │  └─ Cashier signature (optional)
+  └─ Print receipt
+
+Step 6: Update inventory
+  ├─ Decrease stock for each sold product
+  ├─ Check stock threshold
+  │  └─ Notify reorder when stock is low
+  └─ Record inventory log
+
+Step 7: Close transaction
+  ├─ Transaction status: change to "completed"
+  ├─ Save transaction record
+  └─ Prepare for next transaction
 ```
 
-### 3.3 결제 검증 로직
+### 2.2 Return/Refund Process
 
 ```
-결제 전 검증:
-1. 거래액 > 0인가?
-   └─ NO: 거래 불가
-2. 모든 항목의 가격이 유효한가?
-   └─ NO: 가격 확인 필요
-3. 고객이 회원인가?
-   └─ YES: 회원 혜택 적용
-4. 쿠폰/할인 코드 유효한가?
-   └─ NO: 할인 제거
+Return request
+├─ Select return receipt
+├─ Select items to return
+├─ Enter return reason
+├─ Approve return
+│  ├─ Calculate refund amount
+│  └─ Determine refund method (cash/card)
+└─ Process refund
+   ├─ Cash return
+   ├─ Card refund request
+   └─ Inventory restoration
+      └─ Increase quantity of returned product
+```
 
-결제 후 검증:
-1. 지불액 >= 거래액?
-   └─ NO: 금액 부족
-   └─ YES: 진행
-2. 결제 승인됐는가?
-   └─ 카드: PG 승인 확인
-   └─ 현금: 거스름돈 확인
+### 2.3 End of Day Reconciliation
+
+```
+1. Calculate transaction totals
+   ├─ Total sales
+   ├─ Total refunds
+   ├─ Net sales
+   └─ Transaction count
+
+2. Totals by payment method
+   ├─ Cash sales
+   ├─ Card sales
+   ├─ Other sales
+   └─ Transaction count for each
+
+3. Tax reconciliation
+   ├─ Sales by tax
+   ├─ Total tax
+   └─ Data for tax filing
+
+4. Inventory check
+   ├─ Beginning inventory
+   ├─ + Inbound
+   ├─ - Sales
+   ├─ + Returns
+   └─ = Ending inventory
+
+5. Cash reconciliation
+   ├─ Float (register starting amount)
+   ├─ + Sales proceeds
+   ├─ - Refunds
+   ├─ - Expenses (vouchers, other)
+   └─ = Expected final amount
+
+   Compare: actual cash vs expected amount
+   → Investigate if there is a discrepancy
+
+6. Generate reports
+   ├─ Daily sales report
+   ├─ Performance by cashier
+   ├─ Sales volume by product
+   ├─ Sales by department
+   └─ Cash transaction report
 ```
 
 ---
 
-## 4. 시스템 상태
+## 3. Core Data Flows
 
-### 4.1 점포 상태
-
-```
-영업 준비 (Open Preparation)
-  ├─ 계산대 초기화
-  ├─ 시작 금액(Float) 설정
-  └─ 상품 마스터 로드
-
-영업 중 (Operating)
-  ├─ 거래 처리 중
-  ├─ 실시간 재고 관리
-  └─ 지속적 모니터링
-
-영업 종료 (Closing)
-  ├─ 마지막 거래 처리
-  ├─ 일일 마감 실행
-  └─ 데이터 정산
-
-폐쇄 (Closed)
-  ├─ 접근 제한
-  ├─ 수정 불가
-  └─ 다음날 오픈 준비
-```
-
-### 4.2 거래 상태
+### 3.1 Price Determination Logic
 
 ```
-생성 (Created)
+Base selling price → apply discount → apply tax → final price
+
+Details:
+1. Check the product's base selling price
+2. Apply discounts (priority)
+   ├─ Member discount (5-20%)
+   ├─ Product discount (set discounted price)
+   ├─ Promotional discount (time-limited)
+   ├─ Coupon discount (amount or percentage)
+   └─ Volume discount (3 or more purchased, etc.)
+3. Price after discount = base price - discount amount
+4. Tax calculation = price after discount × tax rate
+5. Final price = price after discount + tax
+```
+
+### 3.2 Inventory Tracking Logic
+
+```
+For every transaction:
+1. Scan product
+2. Check current stock (real-time)
+3. Requested quantity <= current stock?
+   └─ YES: continue
+   └─ NO: show warning
+4. After transaction completes
+   └─ Stock = stock - quantity sold
+
+On return:
+1. Enter return quantity
+2. Stock = stock + return quantity
+
+Stock warnings:
+- Below minimum stock quantity → reorder needed notification
+- About to reach 0 → show "out of stock"
+```
+
+### 3.3 Payment Validation Logic
+
+```
+Pre-payment validation:
+1. Is transaction amount > 0?
+   └─ NO: transaction not allowed
+2. Are all item prices valid?
+   └─ NO: price check needed
+3. Is the customer a member?
+   └─ YES: apply member benefits
+4. Is the coupon/discount code valid?
+   └─ NO: remove discount
+
+Post-payment validation:
+1. Payment amount >= transaction amount?
+   └─ NO: insufficient amount
+   └─ YES: proceed
+2. Is the payment approved?
+   └─ Card: confirm PG approval
+   └─ Cash: confirm change
+```
+
+---
+
+## 4. System States
+
+### 4.1 Store States
+
+```
+Open Preparation
+  ├─ Initialize register
+  ├─ Set starting amount (Float)
+  └─ Load product master
+
+Operating
+  ├─ Processing transactions
+  ├─ Real-time inventory management
+  └─ Continuous monitoring
+
+Closing
+  ├─ Process last transaction
+  ├─ Run end-of-day reconciliation
+  └─ Reconcile data
+
+Closed
+  ├─ Restricted access
+  ├─ No modifications
+  └─ Prepare for next day's opening
+```
+
+### 4.2 Transaction States
+
+```
+Created
   ↓
-활성 (Active) - 상품 추가 가능
+Active - products can be added
   ↓
-결제 중 (Processing Payment)
+Processing Payment
   ↓
-완료 (Completed) - 기록 보관
+Completed - record retained
   ↑
-취소 (Cancelled) - 반품의 경우
+Cancelled - in case of return
 
-또는
+or
 
-완료 (Completed)
+Completed
   ↓
-부분 반품 (Partial Return)
+Partial Return
   ↓
-반품 처리됨 (Return Processed)
+Return Processed
 
-또는
+or
 
-완료 (Completed)
+Completed
   ↓
-전체 반품 (Full Return)
+Full Return
   ↓
-반품 처리됨 (Return Processed) - 거래 무효화
+Return Processed - transaction voided
 ```
 
 ---
 
-## 5. 보안 및 규정
+## 5. Security and Compliance
 
-### 5.1 감시 (Audit)
+### 5.1 Audit
 ```
-모든 거래는:
-- 거래ID로 추적 가능
-- 판매원 기록
-- 타임스탐프 포함
-- 수정 불가능한 로그
-- 일일 정산 기록
-```
-
-### 5.2 재고 정확성
-```
-- 시스템 재고 vs 실제 재고 일치 확인 (월 1회)
-- 불일치 원인 조사
-- 손실/도용 예방
-- 정기적 재고 실사
+Every transaction is:
+- Traceable by transaction ID
+- Recorded with cashier
+- Timestamped
+- An immutable log
+- Recorded in daily reconciliation
 ```
 
-### 5.3 현금 관리
+### 5.2 Inventory Accuracy
 ```
-- 모든 현금 거래 기록
-- 일일 금전 정산
-- 부정 거래 감지
-- 최소 2인 승인 (환불 등)
-```
-
----
-
-## 6. 주요 지표
-
-### 6.1 판매 지표
-
-```
-- 일일 판매액: 하루 총 판매액
-- 거래 건수: 하루 거래 횟수
-- 평균 거래액 (ATV): 거래 1건당 평균 금액
-- 판매원별 실적: 판매원별 판매액/건수
+- Verify system inventory vs actual inventory match (monthly)
+- Investigate causes of discrepancies
+- Prevent loss/theft
+- Periodic physical inventory count
 ```
 
-### 6.2 상품 지표
-
+### 5.3 Cash Management
 ```
-- 상품별 판매량: 상품별 판매 수량
-- 상품별 판매액: 상품별 판매 금액
-- 회전율: 재고가 팔리는 속도
-- 마진율: (판매가 - 원가) / 판매가
-```
-
-### 6.3 효율성 지표
-
-```
-- 거래 처리 시간: 거래 1건당 소요 시간
-- 계산대 처리량: 계산대당 거래 건수
-- 환불율: 환불된 거래 / 전체 거래 비율
-- 재고 오류율: 시스템 vs 실제 차이율
+- Record all cash transactions
+- Daily cash reconciliation
+- Detect fraudulent transactions
+- At least two-person approval (refunds, etc.)
 ```
 
 ---
 
-## 7. 고객 경험
+## 6. Key Metrics
 
-### 7.1 거래 과정 (고객 관점)
-
-```
-1. 상품 가져오기 (또는 선택)
-2. 계산대로 이동
-3. 판매원이 상품 스캔
-4. 가격 확인
-5. 가능 시 할인 적용
-6. 총액 제시
-7. 결제 수단 선택
-   └─ 현금: 거스름돈 거래
-   └─ 카드: 카드 삽입/터치
-   └─ 기타: 스캔 또는 입력
-8. 거래 완료
-9. 영수증 수령
-10. 상품 받기 및 떠나기
-```
-
-### 7.2 영수증 정보
+### 6.1 Sales Metrics
 
 ```
-- 점포명 및 위치
-- 거래 날짜 및 시간
-- 거래번호
-- 판매원 이름
-- 상품별 가격 명세
-  ├─ 상품명
-  ├─ 수량
-  ├─ 단가
-  └─ 소계
-- 세금별 세금액
-- 할인액
-- 최종 결제액
-- 결제 수단
-- 거스름돈 (현금 거래 시)
-- 반품 정책
-- 고객 만족도 조사 정보 (선택)
+- Daily sales: total sales for the day
+- Transaction count: number of transactions per day
+- Average Transaction Value (ATV): average amount per transaction
+- Performance by cashier: sales/count per cashier
+```
+
+### 6.2 Product Metrics
+
+```
+- Sales volume by product: quantity sold per product
+- Sales by product: sales amount per product
+- Turnover rate: how fast inventory sells
+- Margin rate: (selling price - cost) / selling price
+```
+
+### 6.3 Efficiency Metrics
+
+```
+- Transaction processing time: time taken per transaction
+- Register throughput: transactions per register
+- Refund rate: refunded transactions / total transactions ratio
+- Inventory error rate: system vs actual difference rate
 ```
 
 ---
 
-## 8. 통합 시스템
+## 7. Customer Experience
 
-### 8.1 데이터 흐름
-
-```
-POS ─→ 재고 관리
-  ├─ 실시간 재고 감소
-  └─ 재고 부족 알림
-
-POS ─→ 회계/결산
-  ├─ 판매액 기록
-  ├─ 세금 계산
-  └─ 매출 보고
-
-POS ─→ 고객 관리
-  ├─ 회원 할인 적용
-  ├─ 구매 이력 저장
-  └─ 충성도 포인트
-
-POS ─→ 리포팅/분석
-  ├─ 판매 현황
-  ├─ 상품 분석
-  └─ 판매원 성과
-```
-
----
-
-## 9. 오류 처리
-
-### 9.1 일반적인 문제
+### 7.1 Transaction Process (customer perspective)
 
 ```
-바코드 스캔 실패
-├─ 수동 상품 코드 입력
-├─ 상품명으로 검색
-└─ 판매원 입력
+1. Pick up product (or select)
+2. Move to register
+3. Cashier scans product
+4. Verify price
+5. Apply discount if possible
+6. Present total
+7. Choose payment method
+   └─ Cash: change transaction
+   └─ Card: insert/tap card
+   └─ Other: scan or enter
+8. Complete transaction
+9. Receive receipt
+10. Take products and leave
+```
 
-가격 확인 불가
-├─ 마스터 데이터 조회
-├─ 이전 거래 참조
-└─ 관리자 승인
+### 7.2 Receipt Information
 
-결제 실패
-├─ 재시도
-├─ 다른 결제 수단 시도
-└─ 거래 취소
-
-재고 부족
-├─ 고객 대기 제안
-├─ 다른 점포 확인
-└─ 주문 가능 여부 확인
+```
+- Store name and location
+- Transaction date and time
+- Transaction number
+- Cashier name
+- Price breakdown per product
+  ├─ Product name
+  ├─ Quantity
+  ├─ Unit price
+  └─ Subtotal
+- Tax amount per tax
+- Discount amount
+- Final payment amount
+- Payment method
+- Change (for cash transactions)
+- Return policy
+- Customer satisfaction survey info (optional)
 ```
 
 ---
 
-## 10. 정산 예시
+## 8. Integrated Systems
 
-### 10.1 하루의 예시 시나리오
+### 8.1 Data Flow
 
 ```
-날짜: 2026-05-27
-점포: 강남점
-계산대: #1
+POS ─→ Inventory management
+  ├─ Real-time stock decrease
+  └─ Low-stock notification
 
-시작:
-- 시작 금액(Float): 100,000원
+POS ─→ Accounting/settlement
+  ├─ Record sales
+  ├─ Calculate tax
+  └─ Sales reporting
 
-거래:
-- 거래 1: 15,000원 (카드) → 재고 -5
-- 거래 2: 45,000원 (현금) → 재고 -12
-- 거래 3: 22,000원 (카드) → 재고 -8
-- 거래 4: 8,000원 (반품) (현금 환불) → 재고 +2
+POS ─→ Customer management
+  ├─ Apply member discount
+  ├─ Save purchase history
+  └─ Loyalty points
 
-합계:
-- 판매액: 82,000원
-- 환불액: 8,000원
-- 순 판매액: 74,000원
-- 카드 거래: 60,000원
-- 현금 거래: 22,000원
-
-최종 금액:
-- 시작: 100,000원
-- + 현금 판매: 45,000원
-- - 현금 환불: 8,000원
-- = 예상 금액: 137,000원
-- 실제 거래 확인 후 일치 여부 확인
+POS ─→ Reporting/analytics
+  ├─ Sales status
+  ├─ Product analysis
+  └─ Cashier performance
 ```
 
 ---
 
-## 11. 기술 요구사항
+## 9. Error Handling
 
-### 11.1 시스템 아키텍처
-
-```
-POS 터미널
-├─ 바코드 스캐너 (또는 카메라)
-├─ 터치스크린 또는 키보드
-├─ 카드 리더기
-├─ 현금 인출기 (선택)
-├─ 영수증 프린터
-└─ 로컬 저장소 + 네트워크 연결
-
-백엔드 서버
-├─ 상품 정보 (마스터 데이터)
-├─ 재고 관리 (실시간 동기화)
-├─ 거래 기록 저장소
-├─ 보고/분석 엔진
-└─ 사용자/권한 관리
-```
-
-### 11.2 데이터 정확성
+### 9.1 Common Problems
 
 ```
-- 거래 기록: 100% 정확 (감사 추적)
-- 재고 동기화: 실시간 (레이턴시 < 1초)
-- 가격 정보: 항상 최신 (캐싱 가능)
-- 세금 계산: 정확한 반올림 규칙 적용
+Barcode scan failure
+├─ Manually enter product code
+├─ Search by product name
+└─ Cashier entry
+
+Price cannot be confirmed
+├─ Look up master data
+├─ Reference previous transactions
+└─ Manager approval
+
+Payment failure
+├─ Retry
+├─ Try a different payment method
+└─ Cancel transaction
+
+Insufficient stock
+├─ Offer customer to wait
+├─ Check another store
+└─ Confirm whether ordering is possible
 ```
 
 ---
 
-이 기본 논리는 모든 POS 시스템이 따르는 핵심 프로세스를 설명합니다.
+## 10. Reconciliation Example
+
+### 10.1 Example Scenario for a Day
+
+```
+Date: 2026-05-27
+Store: Gangnam branch
+Register: #1
+
+Start:
+- Starting amount (Float): 100,000 KRW
+
+Transactions:
+- Transaction 1: 15,000 KRW (card) → stock -5
+- Transaction 2: 45,000 KRW (cash) → stock -12
+- Transaction 3: 22,000 KRW (card) → stock -8
+- Transaction 4: 8,000 KRW (return) (cash refund) → stock +2
+
+Totals:
+- Sales: 82,000 KRW
+- Refunds: 8,000 KRW
+- Net sales: 74,000 KRW
+- Card transactions: 60,000 KRW
+- Cash transactions: 22,000 KRW
+
+Final amount:
+- Start: 100,000 KRW
+- + Cash sales: 45,000 KRW
+- - Cash refunds: 8,000 KRW
+- = Expected amount: 137,000 KRW
+- Verify match after confirming actual transactions
+```
+
+---
+
+## 11. Technical Requirements
+
+### 11.1 System Architecture
+
+```
+POS terminal
+├─ Barcode scanner (or camera)
+├─ Touchscreen or keyboard
+├─ Card reader
+├─ Cash drawer (optional)
+├─ Receipt printer
+└─ Local storage + network connection
+
+Backend server
+├─ Product information (master data)
+├─ Inventory management (real-time sync)
+├─ Transaction record store
+├─ Reporting/analytics engine
+└─ User/permission management
+```
+
+### 11.2 Data Accuracy
+
+```
+- Transaction records: 100% accurate (audit trail)
+- Inventory sync: real-time (latency < 1 second)
+- Price information: always current (caching allowed)
+- Tax calculation: apply accurate rounding rules
+```
+
+---
+
+This basic logic describes the core processes that all POS systems follow.

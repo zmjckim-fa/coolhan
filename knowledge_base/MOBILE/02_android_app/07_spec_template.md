@@ -1,104 +1,104 @@
-# Android 앱 규격 템플릿 (Specification Template)
+# Android App Specification Template
 
-## 프로젝트 기본 정보
+## Project Basic Information
 
 ```yaml
-project_name: "{앱 이름}"
+project_name: "{App name}"
 application_id: "com.{company}.{appname}"
 version_name: "1.0.0"
 version_code: 1
 min_sdk: 26                          # Android 8.0
-target_sdk: 35                       # 최신 API (Google Play 정책)
+target_sdk: 35                       # Latest API (Google Play policy)
 compile_sdk: 35
 language: "Kotlin"
-ui_framework: "Jetpack Compose"      # Compose | XML | 혼합
+ui_framework: "Jetpack Compose"      # Compose | XML | Hybrid
 architecture: "MVVM + Clean"         # MVVM | MVI | Clean Architecture
-di_framework: "Hilt"                 # Hilt | Koin | 없음
+di_framework: "Hilt"                 # Hilt | Koin | None
 ```
 
 ---
 
-## 섹션 1: 앱 개요
+## Section 1: App Overview
 
-| 항목 | 내용 |
+| Item | Content |
 |------|------|
-| **앱 이름** | |
-| **Play Store 짧은 설명** | (80자 이하) |
-| **앱 카테고리** | |
-| **타겟 사용자** | |
-| **핵심 가치 제안** | |
-| **수익 모델** | 무료 | 유료 | Freemium | 구독 | 인앱결제 |
+| **App name** | |
+| **Play Store short description** | (80 characters or fewer) |
+| **App category** | |
+| **Target users** | |
+| **Core value proposition** | |
+| **Revenue model** | Free | Paid | Freemium | Subscription | In-app purchase |
 
 ---
 
-## 섹션 2: 화면 목록 (Screens)
+## Section 2: Screen List (Screens)
 
-| # | 화면 이름 | 역할 | 접근 권한 | 진입 경로 |
+| # | Screen name | Role | Access | Entry path |
 |---|----------|------|---------|---------|
-| S01 | 스플래시 | 초기 로딩 + 자동 로그인 | 모두 | 앱 시작 |
-| S02 | 온보딩 | 첫 실행 가이드 | 비로그인 | 최초 설치 |
-| S03 | 로그인 | 이메일/소셜 인증 | 비로그인 | 온보딩 완료 |
-| S04 | 메인(BottomNavigation) | 탭 기반 탐색 | 로그인 | 로그인 성공 |
-| S05 | {기능} 목록 | | | 탭 |
-| S06 | {기능} 상세 | | | 목록 항목 탭 |
-| S07 | 프로필 / 마이페이지 | | 로그인 | 탭 |
-| S08 | 설정 | | 로그인 | 프로필 |
+| S01 | Splash | Initial loading + auto-login | Everyone | App start |
+| S02 | Onboarding | First-run guide | Logged out | First install |
+| S03 | Login | Email/social authentication | Logged out | Onboarding complete |
+| S04 | Main (BottomNavigation) | Tab-based navigation | Logged in | Login success |
+| S05 | {Feature} list | | | Tab |
+| S06 | {Feature} detail | | | Tap a list item |
+| S07 | Profile / My Page | | Logged in | Tab |
+| S08 | Settings | | Logged in | Profile |
 
 ---
 
-## 섹션 3: 기능 명세 (Feature Specifications)
+## Section 3: Feature Specifications
 
-### F001: 인증 (Authentication)
+### F001: Authentication
 ```
-지원 방식:
-  [ ] 이메일/패스워드
+Supported methods:
+  [ ] Email/password
   [ ] Google Sign-In
   [ ] Kakao Login
   [ ] Naver Login
-  [ ] 전화번호 (Firebase Auth)
+  [ ] Phone number (Firebase Auth)
 
-이메일 유효성: RFC 5322
-패스워드 정책: 최소 8자, 대소문자+숫자 조합
-토큰 저장: EncryptedSharedPreferences (Android Keystore)
-자동 로그인: 토큰 유효 시 스플래시에서 자동 처리
+Email validation: RFC 5322
+Password policy: minimum 8 characters, mix of upper/lowercase + digits
+Token storage: EncryptedSharedPreferences (Android Keystore)
+Auto-login: handled automatically on the splash screen when the token is valid
 
-에러 처리:
-- 잘못된 자격증명 (401): "이메일 또는 패스워드가 올바르지 않습니다"
-- 5회 실패: "잠시 후 다시 시도해 주세요 (30분)"
-- 네트워크 없음: "인터넷 연결을 확인해 주세요"
-- Google/소셜 실패: "로그인에 실패했습니다. 다시 시도해 주세요"
+Error handling:
+- Invalid credentials (401): "Email or password is incorrect"
+- 5 failures: "Please try again later (30 minutes)"
+- No network: "Please check your internet connection"
+- Google/social failure: "Login failed. Please try again"
 ```
 
-### F002: {핵심 기능 1}
+### F002: {Core Feature 1}
 ```
-기능 설명:
-입력:
-출력:
-비즈니스 규칙:
-예외 처리:
+Feature description:
+Input:
+Output:
+Business rules:
+Exception handling:
 ```
 
-### F003: {핵심 기능 2}
+### F003: {Core Feature 2}
 ```
-[동일 구조]
+[Same structure]
 ```
 
 ---
 
-## 섹션 4: 데이터 모델
+## Section 4: Data Model
 
-### 4.1 Room 엔티티 목록
+### 4.1 Room Entity List
 ```
-참고: 04_database_schema.md의 표준 엔티티 사용
+Note: use the standard entities in 04_database_schema.md
 
-사용 엔티티:
+Entities used:
 - [ ] UserEntity
 - [ ] ProductEntity
 - [ ] OrderEntity / OrderItemEntity
 - [ ] CachedResponseEntity
 - [ ] {CustomEntity}
 
-커스텀 엔티티 추가:
+Adding a custom entity:
 @Entity(tableName = "{table_name}")
 data class {Name}Entity(
     @PrimaryKey val id: String,
@@ -108,139 +108,139 @@ data class {Name}Entity(
 )
 ```
 
-### 4.2 EncryptedSharedPreferences 키 목록
-| 키 | 타입 | 설명 |
+### 4.2 EncryptedSharedPreferences Key List
+| Key | Type | Description |
 |----|------|------|
-| auth_token | String | 액세스 토큰 |
-| refresh_token | String | 리프레시 토큰 |
-| user_id | String | 로그인 사용자 ID |
+| auth_token | String | Access token |
+| refresh_token | String | Refresh token |
+| user_id | String | Logged-in user ID |
 
-### 4.3 DataStore 키 목록
-| 키 | 타입 | 기본값 | 설명 |
+### 4.3 DataStore Key List
+| Key | Type | Default | Description |
 |----|------|--------|------|
-| has_onboarded | Boolean | false | 온보딩 완료 여부 |
-| selected_language | String | "" | 선택 언어 |
-| notifications_enabled | Boolean | true | 알림 활성화 |
+| has_onboarded | Boolean | false | Whether onboarding is complete |
+| selected_language | String | "" | Selected language |
+| notifications_enabled | Boolean | true | Notifications enabled |
 
 ---
 
-## 섹션 5: API 연동
+## Section 5: API Integration
 
-### 5.1 기본 설정
+### 5.1 Basic Configuration
 ```yaml
 base_url:
   production: "https://api.{domain}.com/v1"
   staging: "https://api-staging.{domain}.com/v1"
-  development: "http://10.0.2.2:3000/v1"   # 에뮬레이터 → 로컬호스트
+  development: "http://10.0.2.2:3000/v1"   # emulator → localhost
 
-auth: Bearer Token (Authorization 헤더)
-timeout_connect: 30초
-timeout_read: 30초
-timeout_write: 60초
-retry: 3회 (지수 백오프, IO 오류만)
+auth: Bearer Token (Authorization header)
+timeout_connect: 30s
+timeout_read: 30s
+timeout_write: 60s
+retry: 3 times (exponential backoff, IO errors only)
 ```
 
-### 5.2 사용 엔드포인트
-| 메서드 | 경로 | 기능 | 인증 필요 |
+### 5.2 Endpoints Used
+| Method | Path | Function | Auth required |
 |--------|------|------|---------|
-| POST | /auth/login | 로그인 | 불필요 |
-| POST | /auth/refresh | 토큰 갱신 | 불필요 |
-| DELETE | /auth/logout | 로그아웃 | 필요 |
-| GET | /users/me | 내 정보 | 필요 |
+| POST | /auth/login | Login | Not required |
+| POST | /auth/refresh | Token refresh | Not required |
+| DELETE | /auth/logout | Logout | Required |
+| GET | /users/me | My information | Required |
 | {method} | {path} | {description} | {yes/no} |
 
 ---
 
-## 섹션 6: 권한 (Permissions)
+## Section 6: Permissions
 
-| 권한 | 유형 | 요청 사유 | 요청 시점 |
+| Permission | Type | Reason for request | Timing of request |
 |------|------|---------|---------|
-| [ ] INTERNET | Normal | 네트워크 통신 | 자동 부여 |
-| [ ] ACCESS_NETWORK_STATE | Normal | 네트워크 상태 확인 | 자동 부여 |
-| [ ] CAMERA | Dangerous | "프로필 사진 촬영" | 카메라 버튼 탭 |
-| [ ] READ_MEDIA_IMAGES | Dangerous (API 33+) | "갤러리 사진 선택" | 사진 선택 버튼 탭 |
-| [ ] ACCESS_FINE_LOCATION | Dangerous | "정확한 위치 확인" | 위치 기능 사용 시 |
-| [ ] POST_NOTIFICATIONS | Dangerous (API 33+) | "주문 알림 수신" | 첫 주문 완료 시 |
+| [ ] INTERNET | Normal | Network communication | Auto-granted |
+| [ ] ACCESS_NETWORK_STATE | Normal | Check network state | Auto-granted |
+| [ ] CAMERA | Dangerous | "Take a profile photo" | Tap the camera button |
+| [ ] READ_MEDIA_IMAGES | Dangerous (API 33+) | "Select a gallery photo" | Tap the photo-select button |
+| [ ] ACCESS_FINE_LOCATION | Dangerous | "Get precise location" | When using a location feature |
+| [ ] POST_NOTIFICATIONS | Dangerous (API 33+) | "Receive order notifications" | On completing the first order |
 | [ ] {permission} | {type} | {reason} | {timing} |
 
 ---
 
-## 섹션 7: 알림 명세
+## Section 7: Notification Specification
 
-| # | 채널 ID | 채널명 | 중요도 | 알림 트리거 | 타입 |
+| # | Channel ID | Channel name | Importance | Notification trigger | Type |
 |---|---------|--------|--------|-----------|------|
-| N01 | order_updates | 주문 알림 | DEFAULT | 주문 상태 변경 | FCM |
-| N02 | promotions | 혜택/이벤트 | LOW | 마케팅 발송 | FCM |
+| N01 | order_updates | Order notifications | DEFAULT | Order status change | FCM |
+| N02 | promotions | Benefits/events | LOW | Marketing send | FCM |
 | N03 | {channel_id} | | | | FCM | Local |
 
 ---
 
-## 섹션 8: 오류 시나리오
+## Section 8: Error Scenarios
 
-| # | 시나리오 | 코드 | 표시 방법 | 메시지 |
+| # | Scenario | Code | Display method | Message |
 |---|---------|------|---------|--------|
-| E01 | 로그인 실패 | 401 | Snackbar | "이메일 또는 패스워드가 올바르지 않습니다" |
-| E02 | 네트워크 없음 | - | 배너 | "인터넷 연결을 확인해 주세요" |
-| E03 | 서버 오류 | 5xx | Dialog | "일시적인 오류입니다. 잠시 후 다시 시도해 주세요" |
-| E04 | 세션 만료 | 401 | 로그인 화면 이동 | "로그인이 만료되었습니다" |
+| E01 | Login failure | 401 | Snackbar | "Email or password is incorrect" |
+| E02 | No network | - | Banner | "Please check your internet connection" |
+| E03 | Server error | 5xx | Dialog | "A temporary error occurred. Please try again later" |
+| E04 | Session expired | 401 | Navigate to login screen | "Your login has expired" |
 
 ---
 
-## 섹션 9: 테스트 요구사항
+## Section 9: Testing Requirements
 
-### 9.1 단위 테스트
+### 9.1 Unit Tests
 ```
-프레임워크: JUnit4 + Mockk + Turbine (Flow 테스트)
-목표 커버리지: ViewModel, Repository, UseCase ≥ 80%
+Framework: JUnit4 + Mockk + Turbine (Flow testing)
+Target coverage: ViewModel, Repository, UseCase ≥ 80%
 
-필수 테스트:
-- [ ] 로그인 성공/실패 (ViewModel)
-- [ ] 토큰 갱신 로직 (TokenManager)
-- [ ] API 응답 파싱 (Repository)
-- [ ] Room DAO CRUD (인메모리 DB)
-- [ ] Flow 데이터 흐름 (Turbine)
-```
-
-### 9.2 UI 테스트
-```
-프레임워크: Espresso (XML) | Compose Test (Compose)
-대상: 핵심 사용자 플로우
-
-- [ ] 온보딩 → 로그인 → 메인
-- [ ] {핵심 플로우}
+Required tests:
+- [ ] Login success/failure (ViewModel)
+- [ ] Token refresh logic (TokenManager)
+- [ ] API response parsing (Repository)
+- [ ] Room DAO CRUD (in-memory DB)
+- [ ] Flow data flow (Turbine)
 ```
 
-### 9.3 실제 기기 테스트
+### 9.2 UI Tests
 ```
-필수 테스트 기기:
+Framework: Espresso (XML) | Compose Test (Compose)
+Scope: core user flows
+
+- [ ] Onboarding → login → main
+- [ ] {Core flow}
+```
+
+### 9.3 Real Device Tests
+```
+Required test devices:
 - Android 8.0 (minSdk, API 26)
-- 최신 Android (targetSdk)
-- 저사양 기기 (RAM 2GB 이하)
-- 다양한 화면 크기 (소형/표준/대형)
+- Latest Android (targetSdk)
+- Low-end device (2GB RAM or less)
+- Various screen sizes (small/standard/large)
 ```
 
 ---
 
-## 섹션 10: 배포 계획
+## Section 10: Deployment Plan
 
-| 단계 | 내용 | 기간 |
+| Stage | Content | Duration |
 |------|------|------|
-| Internal Testing | 개발팀 100명 이내 | |
-| Closed Testing (Alpha) | 특정 그룹 초대 | |
-| Open Testing (Beta) | 공개 신청 | |
-| Production | 단계적 출시 권장 | |
+| Internal Testing | Within 100 dev team members | |
+| Closed Testing (Alpha) | Invite a specific group | |
+| Open Testing (Beta) | Public sign-up | |
+| Production | Staged rollout recommended | |
 
 ```
-단계적 출시 (Staged Rollout):
-Play Console → 출시 비율 설정
-1% → 5% → 10% → 25% → 50% → 100% (각 단계 24~48시간 모니터링)
-비정상 종료율 >1.09% 또는 ANR율 >0.47% → 즉시 중단
+Staged Rollout:
+Play Console → set release percentage
+1% → 5% → 10% → 25% → 50% → 100% (monitor each stage for 24-48 hours)
+Crash rate >1.09% or ANR rate >0.47% → halt immediately
 
-서명 (APK/AAB):
-- keystore.jks: 절대 분실 금지, 버전 관리 제외
-- Google Play App Signing 활성화 권장 (키 분실 복구 가능)
+Signing (APK/AAB):
+- keystore.jks: never lose it, exclude from version control
+- Enabling Google Play App Signing is recommended (key loss recoverable)
 ```
 
 ---
 
-**규격 ID:** {id} | **작성일:** {YYYY-MM-DD} | **승인:** {기획자명}
+**Spec ID:** {id} | **Date:** {YYYY-MM-DD} | **Approval:** {Planner name}

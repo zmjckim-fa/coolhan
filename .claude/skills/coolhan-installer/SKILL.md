@@ -24,11 +24,11 @@ description: |
   3. 다음 단계 안내
 
 working-mode: |
-  **Token Efficiency Mode (작동 원칙)**
-  - 결과만 보고: 설치완료/실패 형식으로만 보고
-  - 과정 설명 금지: 생각, 판단 과정 미표시
-  - 소스 화면 미표시: 코드나 내용 스크린샷 제외
-  - 토큰 최소화: 필수 정보만 간결하게 전달
+  **Token Efficiency Mode (Operating Principles)**
+  - Report results only: report only in installed/failed format
+  - No process explanation: do not show thinking or judgment process
+  - No source display: exclude code or content screenshots
+  - Minimize tokens: convey only essential information concisely
 
 compatibility: |
   - Node.js 14.0.0+
@@ -37,58 +37,58 @@ compatibility: |
   - Git 2.30+
 ---
 
-# CoolHan Framework 자동 설치
+# CoolHan Framework Automatic Installation
 
-이 스킬은 Claude Code에서 "쿨한을 설치해줘"라고 입력하면 자동으로 CoolHan을 설치합니다.
+This skill automatically installs CoolHan when you type "쿨한을 설치해줘" in Claude Code.
 
-## 🚀 설치 방법
+## 🚀 Installation Methods
 
-### 방법 1: 자연스러운 입력
-Claude Code의 메시지 입력창에서:
+### Method 1: Natural language input
+In the Claude Code message input box:
 ```
 쿨한을 설치해줘
 ```
 
-### 방법 2: 명령어 형식
+### Method 2: Command form
 ```
 /coolhan-installer
 ```
 
-### 방법 3: 영어
+### Method 3: English
 ```
 Install CoolHan Framework
 ```
 
 ---
 
-## ⚙️ 설치 프로세스
+## ⚙️ Installation Process
 
-자동으로 다음을 실행합니다:
+The following are executed automatically:
 
-### 1단계: 필수 요구사항 확인
+### Step 1: Check prerequisites
 ```bash
-node --version    # 14.0.0 이상?
-npm --version     # 7.0.0 이상?
-git --version     # 2.30.0 이상?
+node --version    # 14.0.0 or higher?
+npm --version     # 7.0.0 or higher?
+git --version     # 2.30.0 or higher?
 ```
 
-### 2단계: CoolHan 설치
+### Step 2: Install CoolHan
 ```bash
 npx coolhan-builder
 ```
 
-또는 (글로벌 설치)
+Or (global installation)
 ```bash
 npm install -g coolhan-builder
 coolhan-install
 ```
 
-### 3단계: 환경 검증
+### Step 3: Environment validation
 ```bash
 npm run env:validate
 ```
 
-### 4단계: 설치 확인
+### Step 4: Verify installation
 ```bash
 ls -la .claude/
 npm run spec:validate
@@ -96,78 +96,78 @@ npm run spec:validate
 
 ---
 
-## ✅ 설치 완료 후
+## ✅ After Installation Completes
 
-자동으로 다음이 설정됩니다:
+The following are configured automatically:
 
-- ✅ `.claude/` 디렉토리 생성
-- ✅ 검증 훅(8개) 설치
-- ✅ 에이전트 정의(5개) 복사
-- ✅ 지식 기반(30+개 문서) 복사
-- ✅ Git 설정 (`.gitignore` 생성)
-- ✅ npm scripts 추가
-
----
-
-## 📚 설치 후 문서 읽기
-
-1. **README.md** - 프로젝트 개요
-2. **QUICK_START.md** - 5분 빠른 시작
-3. **INSTALLATION_GUIDE.md** - 상세 설치
-4. **CLAUDE.md** - 운영 가이드
+- ✅ `.claude/` directory created
+- ✅ Validation hooks (8) installed
+- ✅ Agent definitions (5) copied
+- ✅ Knowledge base (30+ documents) copied
+- ✅ Git configuration (`.gitignore` created)
+- ✅ npm scripts added
 
 ---
 
-## 🆘 문제 해결
+## 📚 Documents to Read After Installation
 
-### npm을 찾을 수 없음
+1. **README.md** - Project overview
+2. **QUICK_START.md** - 5-minute quick start
+3. **INSTALLATION_GUIDE.md** - Detailed installation
+4. **CLAUDE.md** - Operating guide
+
+---
+
+## 🆘 Troubleshooting
+
+### npm not found
 ```bash
-# Node.js 설치 확인
+# Check Node.js installation
 node --version
 
-# npm 재설치
+# Reinstall npm
 npm install -g npm@latest
 ```
 
-### 권한 오류 (Windows)
+### Permission error (Windows)
 ```
-PowerShell을 관리자 권한으로 실행하고 다시 시도하세요.
+Run PowerShell as administrator and try again.
 ```
 
-### 설치가 느림
+### Installation is slow
 ```
-npm 캐시 정리:
+Clean the npm cache:
 npm cache clean --force
 ```
 
 ---
 
-## 🎯 설치 후 다음 단계
+## 🎯 Next Steps After Installation
 
 ```bash
-# 1단계: 환경 확인
+# Step 1: Check environment
 npm run env:validate
 
-# 2단계: 규격 검증
+# Step 2: Validate specifications
 npm run spec:validate
 
-# 3단계: 첫 커밋
+# Step 3: First commit
 git add .
 git commit -m "chore: Initialize CoolHan Framework"
 ```
 
 ---
 
-## 💡 팁
+## 💡 Tips
 
-- **여러 번 설치:** 이미 설치된 프로젝트에서 다시 실행해도 안전합니다.
-- **다른 프로젝트:** 각 프로젝트에 독립적으로 설치 가능합니다.
-- **팀 공유:** 설치 완료 후 Git으로 팀과 공유하세요.
+- **Reinstalling:** Safe to run again on a project that is already installed.
+- **Other projects:** Can be installed independently in each project.
+- **Team sharing:** After installation completes, share with your team via Git.
 
 ---
 
-## 🔗 유용한 링크
+## 🔗 Useful Links
 
 - GitHub: https://github.com/zmjckim-fa/coolhan
 - npm: https://www.npmjs.com/package/coolhan-builder
-- 문서: README.md, QUICK_START.md
+- Documentation: README.md, QUICK_START.md

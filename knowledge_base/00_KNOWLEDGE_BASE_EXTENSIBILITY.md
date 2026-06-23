@@ -1,321 +1,321 @@
-# 지식 라이브러리 확장성 (Knowledge Base Extensibility)
+# Knowledge Base Extensibility
 
-## 개요 (Overview)
+## Overview
 
-기본 지식 라이브러리는 **모든 솔루션 타입의 기초**를 제공한다.
+The base knowledge base provides **the foundation for all solution types**.
 
-나중에 새로운 솔루션 타입이 추가되면, 기본 문서는 그대로 두고 **솔루션 타입별 확장 문서**를 추가하는 방식으로 성장한다.
+Later, when a new solution type is added, the base documents remain untouched and the system grows by adding **solution-type-specific extension documents**.
 
 ---
 
-## 1. 기본 지식 라이브러리 (Base Knowledge Library)
+## 1. Base Knowledge Library
 
-### 1.1 영구 기본 문서 (Permanent Base Documents)
+### 1.1 Permanent Base Documents
 
 ```
 /knowledge_base/
-  ├─ 00_SPECIFICATION_PARAMETERIZATION_SYSTEM.md    [영구]
-  ├─ 00_DESIGN_PARAMETERIZATION_SYSTEM.md           [영구]
-  ├─ 00_CORE_PRINCIPLES_SYSTEM.md                   [영구]
-  └─ 00_KNOWLEDGE_BASE_EXTENSIBILITY.md             [영구]
+  ├─ 00_SPECIFICATION_PARAMETERIZATION_SYSTEM.md    [permanent]
+  ├─ 00_DESIGN_PARAMETERIZATION_SYSTEM.md           [permanent]
+  ├─ 00_CORE_PRINCIPLES_SYSTEM.md                   [permanent]
+  └─ 00_KNOWLEDGE_BASE_EXTENSIBILITY.md             [permanent]
   
-이들은 모든 솔루션에 공통으로 적용되는 시스템 규칙이다.
+These are system rules applied commonly to all solutions.
 ```
 
-### 1.2 솔루션 타입별 기본 문서 (Base Documents Per Solution Type)
+### 1.2 Base Documents Per Solution Type
 
 ```
-모든 솔루션이 가져야 할 기본 문서:
+Base documents every solution must have:
 
   01_basic_logic.md
-    └─ 솔루션의 핵심 비즈니스 로직
-    └─ "이 솔루션이 작동하는 원리"
-    └─ 예: POS의 거래 처리 프로세스
+    └─ The solution's core business logic
+    └─ "How this solution works"
+    └─ e.g., a POS transaction processing flow
   
   02_core_features.md
-    └─ 필수/선택 기능 체크리스트
-    └─ "이 솔루션에 있어야 할 것들"
-    └─ 예: POS의 재고 관리, 세금 계산 등
+    └─ Required/optional feature checklist
+    └─ "What this solution must have"
+    └─ e.g., POS inventory management, tax calculation, etc.
   
   03_terminology.md
-    └─ 솔루션 고유 용어 정의
-    └─ "이 업계에서 사용하는 언어"
-    └─ 예: POS의 거래, 단말기, 계산대 등
+    └─ Solution-specific term definitions
+    └─ "The language used in this industry"
+    └─ e.g., POS transaction, terminal, checkout counter, etc.
   
   04_database_schema.md
-    └─ 데이터 구조
-    └─ "정보가 어떻게 저장되는가"
-    └─ 예: USERS, PRODUCTS, TRANSACTIONS 테이블
+    └─ Data structure
+    └─ "How information is stored"
+    └─ e.g., USERS, PRODUCTS, TRANSACTIONS tables
   
-  05_api_standard.md (웹/모바일 솔루션)
-    └─ API 엔드포인트 정의
-    └─ "외부와 어떻게 통신하는가"
-    └─ 예: GET /api/v1/products
+  05_api_standard.md (web/mobile solutions)
+    └─ API endpoint definitions
+    └─ "How it communicates externally"
+    └─ e.g., GET /api/v1/products
   
   06_security_requirements.md
-    └─ 보안 요구사항
-    └─ "어떻게 보호하는가"
-    └─ 예: 암호화, 인증, 감시
+    └─ Security requirements
+    └─ "How it is protected"
+    └─ e.g., encryption, authentication, monitoring
   
   07_spec_template.md
-    └─ 기획서 템플릿
-    └─ "팀이 따라야 할 양식"
-    └─ 예: 15섹션 기획서 구조
+    └─ Specification template
+    └─ "The format the team must follow"
+    └─ e.g., a 15-section specification structure
 ```
 
 ---
 
-## 2. 솔루션별 확장 문서 (Solution-Specific Extension Documents)
+## 2. Solution-Specific Extension Documents
 
-### 2.1 확장 문서 추가 규칙 (Rules for Adding Extensions)
+### 2.1 Rules for Adding Extensions
 
 ```
-기본 문서 7개는 필수다.
+The 7 base documents are mandatory.
 
-추가 확장 문서는:
-✅ 솔루션 타입의 특수한 요구사항이 있을 때
-✅ 기본 7개 문서로 충분하지 않을 때
-✅ 새로운 팀이 추가로 알아야 할 내용이 있을 때
+Additional extension documents are added when:
+✅ there is a special requirement specific to the solution type
+✅ the 7 base documents are not sufficient
+✅ there is content a new team additionally needs to know
 
-예시:
+Examples:
 
-  E-Commerce Mall (웹)
-    기본: 01~07
-    추가: 08_payment_integration_spec.md (PG 연동 특화)
+  E-Commerce Mall (web)
+    Base: 01~07
+    Add: 08_payment_integration_spec.md (PG integration-specific)
     
-  POS System (오프라인)
-    기본: 01~07
-    추가: 08_terminal_offline_spec.md (오프라인 모드)
-    추가: 09_hardware_integration_spec.md (하드웨어)
+  POS System (offline)
+    Base: 01~07
+    Add: 08_terminal_offline_spec.md (offline mode)
+    Add: 09_hardware_integration_spec.md (hardware)
     
-  iOS App (모바일)
-    기본: 01~02 (다른 것은 불필요)
-    추가: 03_ios_ui_components_spec.md
-    추가: 04_ios_permissions_spec.md
+  iOS App (mobile)
+    Base: 01~02 (others unnecessary)
+    Add: 03_ios_ui_components_spec.md
+    Add: 04_ios_permissions_spec.md
 ```
 
-### 2.2 확장 문서 생성 템플릿 (Extension Document Template)
+### 2.2 Extension Document Template
 
 ```yaml
-확장_문서_추가:
+add_extension_document:
   
-  솔루션: "[솔루션 이름]"
-  문서명: "08_[특화 주제]_spec.md"
+  solution: "[solution name]"
+  document_name: "08_[specialized topic]_spec.md"
   
-  # 왜 필요한가?
-  필요_이유: |
-    기본 문서 07개로는 설명할 수 없는 
-    이 솔루션 고유의 특수 요구사항
+  # Why is it needed?
+  reason_needed: |
+    Special requirements unique to this solution that
+    the 7 base documents cannot explain
   
-  # 누가 사용하는가?
-  사용자: "[개발자 역할, QA, PM 등]"
+  # Who uses it?
+  users: "[developer role, QA, PM, etc.]"
   
-  # 관련 기본 문서
-  관련_기본_문서:
-    - "01_basic_logic.md (섹션 3.2 참조)"
-    - "02_core_features.md (섹션 5 참조)"
+  # Related base documents
+  related_base_documents:
+    - "01_basic_logic.md (see section 3.2)"
+    - "02_core_features.md (see section 5)"
   
-  # 내용 구조
-  구조:
-    1. 개요 (이것이 무엇인가)
-    2. 핵심 개념 (기본 용어)
-    3. 상세 명세 (기술 사항)
-    4. 구현 예시 (코드/다이어그램)
-    5. 체크리스트 (완료 기준)
+  # Content structure
+  structure:
+    1. Overview (what this is)
+    2. Core concepts (basic terms)
+    3. Detailed specification (technical details)
+    4. Implementation examples (code/diagrams)
+    5. Checklist (completion criteria)
 ```
 
-### 2.3 확장 문서 예시 (Extension Document Examples)
+### 2.3 Extension Document Examples
 
-#### 예시 1: E-Commerce Mall의 결제 통합
-
-```
-문서명: 08_payment_integration_spec.md
-
-내용:
-  1. PG 선택 가이드
-     - 국내: KG이니시스, NHN KCP, NICEPAY
-     - 국제: Stripe, PayPal
-  
-  2. PG 연동 프로토콜
-     - Request/Response 형식
-     - 승인번호 관리
-     - 환불 처리
-  
-  3. 보안 요구사항 (PCI-DSS)
-  
-  4. 테스트 환경 설정
-  
-  5. 에러 처리
-```
-
-#### 예시 2: POS System의 하드웨어 연동
+#### Example 1: E-Commerce Mall Payment Integration
 
 ```
-문서명: 09_hardware_integration_spec.md
+Document name: 08_payment_integration_spec.md
 
-내용:
-  1. 지원 하드웨어
-     - 바코드 스캐너: USB, RS-232
-     - 영수증 프린터: Thermal, Inkjet
-     - 돈통: 자동/수동
-     - 신용카드 리더
+Content:
+  1. PG selection guide
+     - Domestic: KG Inicis, NHN KCP, NICEPAY
+     - International: Stripe, PayPal
   
-  2. 드라이버 요구사항
+  2. PG integration protocol
+     - Request/Response format
+     - Approval number management
+     - Refund handling
   
-  3. 하드웨어 초기화 프로세스
+  3. Security requirements (PCI-DSS)
   
-  4. 오류 감지 및 처리
+  4. Test environment setup
   
-  5. 호환성 테스트 체크리스트
+  5. Error handling
 ```
 
-#### 예시 3: iOS App의 권한 관리
+#### Example 2: POS System Hardware Integration
 
 ```
-문서명: 03_ios_permissions_spec.md
+Document name: 09_hardware_integration_spec.md
 
-내용:
-  1. iOS 권한 종류
-     - 카메라
-     - 마이크
-     - 위치
-     - 연락처
-     - 캘린더
+Content:
+  1. Supported hardware
+     - Barcode scanner: USB, RS-232
+     - Receipt printer: Thermal, Inkjet
+     - Cash drawer: automatic/manual
+     - Credit card reader
   
-  2. Info.plist 설정
+  2. Driver requirements
   
-  3. 권한 요청 흐름 (UI/UX)
+  3. Hardware initialization process
   
-  4. 권한 거부 시 대체 기능
+  4. Error detection and handling
   
-  5. 권한 검증 체크리스트
+  5. Compatibility test checklist
 ```
 
----
-
-## 3. 확장 문서 추가 프로세스 (Adding Extension Documents)
-
-### 3.1 단계별 프로세스 (Step-by-Step Process)
+#### Example 3: iOS App Permission Management
 
 ```
-단계 1: 필요성 검증
-  팀: "기본 7개 문서로 부족한가?"
-  확인: 기본 문서를 다시 읽고, 정말로 모자란가?
-  
-단계 2: 문서 작성
-  작성자: 해당 분야 전문가가 작성
-  형식: 확장 문서 템플릿 따름
-  내용: 다른 기본 문서와 충돌 없이
-  
-단계 3: 리뷰
-  리뷰어: 기본 문서 관리자, 팀 리더
-  체크: 
-    ✓ 기본 문서와 일관성
-    ✓ 필요성이 명확한가?
-    ✓ 형식이 표준인가?
-  
-단계 4: 승인 및 추가
-  관리자: 승인 후 해당 솔루션 폴더에 추가
-  버전: 1.0으로 시작
-  
-단계 5: 기본 문서 업데이트 (필요시)
-  관리자: 기본 문서에서 확장 문서 참조 추가
-  예: "상세는 08_payment_integration_spec.md 참조"
-```
+Document name: 03_ios_permissions_spec.md
 
-### 3.2 확장 문서 거버넌스 (Extension Document Governance)
-
-```
-추가 전:
-  ❓ 이 내용이 정말로 필요한가?
-  ❓ 기본 7개로 설명 불가능한가?
-  ❓ 다른 확장 문서와 중복되지 않는가?
-
-추가 후:
-  ✅ 주기적 검토 (분기별)
-  ✅ 기본 문서 변경 시 함께 업데이트
-  ✅ 사용성 피드백 수집
-  ✅ 불필요한 문서 제거 검토
+Content:
+  1. iOS permission types
+     - Camera
+     - Microphone
+     - Location
+     - Contacts
+     - Calendar
+  
+  2. Info.plist configuration
+  
+  3. Permission request flow (UI/UX)
+  
+  4. Fallback features when permission is denied
+  
+  5. Permission verification checklist
 ```
 
 ---
 
-## 4. 현재 지식 라이브러리 상태 (Current Knowledge Base Status)
+## 3. Adding Extension Documents
 
-### 4.1 2026-05-27 기준 현황
-
-```
-기본 시스템 문서 (4개 - 영구)
-├─ 00_SPECIFICATION_PARAMETERIZATION_SYSTEM.md        [완료]
-├─ 00_DESIGN_PARAMETERIZATION_SYSTEM.md              [완료]
-├─ 00_CORE_PRINCIPLES_SYSTEM.md                      [완료]
-└─ 00_KNOWLEDGE_BASE_EXTENSIBILITY.md                [완료]
-
-솔루션 타입별 지식 라이브러리:
-
-WEB / 01_ecommerce_mall (완료)
-├─ 01_basic_logic.md                                 [완료]
-├─ 02_core_features.md                               [완료]
-├─ 03_terminology.md                                 [완료]
-├─ 04_database_schema.md                             [완료]
-├─ 05_api_standard.md                                [완료]
-├─ 06_security_requirements.md                       [완료]
-└─ 07_spec_template.md                               [완료]
-
-SMB / 02_pos_system (완료)
-├─ 01_basic_logic.md                                 [완료]
-├─ 02_core_features.md                               [완료]
-├─ 03_terminology.md                                 [완료]
-├─ 04_database_schema.md                             [완료]
-├─ 05_api_standard.md                                [완료]
-├─ 06_security_requirements.md                       [완료]
-└─ 07_spec_template.md                               [완료]
-
-MOBILE / iOS_app (기초만)
-├─ 01_basic_logic.md                                 [기초 작성만]
-└─ 02_core_features.md                               [기초 작성만]
-
-MOBILE / Android_app (기초만)
-├─ 01_basic_logic.md                                 [기초 작성만]
-└─ 02_core_features.md                               [기초 작성만]
-
-DESKTOP / Windows_app (기초만)
-├─ 01_basic_logic.md                                 [기초 작성만]
-└─ 02_core_features.md                               [기초 작성만]
-
-다른 솔루션 (191개) - 추후 추가
-```
-
-### 4.2 2026-05-27 ~ 2026-06-30 로드맵 (Roadmap)
+### 3.1 Step-by-Step Process
 
 ```
-Phase 1: 기본 시스템 확립 (2026-05-27 완료)
-  └─ 매개변수화 시스템 정의 ✅
-  └─ 디자인 시스템 정의 ✅
-  └─ 핵심 원칙 정의 ✅
-  └─ 확장성 계획 ✅
+Step 1: Verify necessity
+  Team: "Are the 7 base documents insufficient?"
+  Confirm: re-read the base documents — are they truly lacking?
+  
+Step 2: Write the document
+  Author: written by an expert in the relevant field
+  Format: follow the extension document template
+  Content: without conflicting with other base documents
+  
+Step 3: Review
+  Reviewers: base document maintainer, team lead
+  Check: 
+    ✓ consistency with base documents
+    ✓ is the necessity clear?
+    ✓ is the format standard?
+  
+Step 4: Approve and add
+  Maintainer: add to the relevant solution folder after approval
+  Version: start at 1.0
+  
+Step 5: Update base documents (if needed)
+  Maintainer: add a reference to the extension document in the base documents
+  e.g., "See 08_payment_integration_spec.md for details"
+```
 
-Phase 2: 우선순위 솔루션 완료 (2026-06-30)
-  └─ E-Commerce Mall (완료) ✅
-  └─ POS System (완료) ✅
-  └─ 기타 3-5개 솔루션 (기초 완료)
+### 3.2 Extension Document Governance
 
-Phase 3: 확장 (2026-07-31 이후)
-  └─ 안정화된 솔루션의 확장 문서 추가
-  └─ 새로운 솔루션 타입 추가
-  └─ 커뮤니티 피드백 반영
+```
+Before adding:
+  ❓ Is this content really necessary?
+  ❓ Is it impossible to explain with the 7 base documents?
+  ❓ Does it not duplicate another extension document?
+
+After adding:
+  ✅ Periodic review (quarterly)
+  ✅ Update together when base documents change
+  ✅ Collect usability feedback
+  ✅ Review for removal of unnecessary documents
 ```
 
 ---
 
-## 5. 지식 라이브러리 구조 (Knowledge Base Structure)
+## 4. Current Knowledge Base Status
 
-### 5.1 전체 디렉토리 구조
+### 4.1 Status as of 2026-05-27
+
+```
+Base system documents (4 - permanent)
+├─ 00_SPECIFICATION_PARAMETERIZATION_SYSTEM.md        [complete]
+├─ 00_DESIGN_PARAMETERIZATION_SYSTEM.md              [complete]
+├─ 00_CORE_PRINCIPLES_SYSTEM.md                      [complete]
+└─ 00_KNOWLEDGE_BASE_EXTENSIBILITY.md                [complete]
+
+Solution-type knowledge bases:
+
+WEB / 01_ecommerce_mall (complete)
+├─ 01_basic_logic.md                                 [complete]
+├─ 02_core_features.md                               [complete]
+├─ 03_terminology.md                                 [complete]
+├─ 04_database_schema.md                             [complete]
+├─ 05_api_standard.md                                [complete]
+├─ 06_security_requirements.md                       [complete]
+└─ 07_spec_template.md                               [complete]
+
+SMB / 02_pos_system (complete)
+├─ 01_basic_logic.md                                 [complete]
+├─ 02_core_features.md                               [complete]
+├─ 03_terminology.md                                 [complete]
+├─ 04_database_schema.md                             [complete]
+├─ 05_api_standard.md                                [complete]
+├─ 06_security_requirements.md                       [complete]
+└─ 07_spec_template.md                               [complete]
+
+MOBILE / iOS_app (baseline only)
+├─ 01_basic_logic.md                                 [baseline draft only]
+└─ 02_core_features.md                               [baseline draft only]
+
+MOBILE / Android_app (baseline only)
+├─ 01_basic_logic.md                                 [baseline draft only]
+└─ 02_core_features.md                               [baseline draft only]
+
+DESKTOP / Windows_app (baseline only)
+├─ 01_basic_logic.md                                 [baseline draft only]
+└─ 02_core_features.md                               [baseline draft only]
+
+Other solutions (191) - to be added later
+```
+
+### 4.2 Roadmap 2026-05-27 ~ 2026-06-30
+
+```
+Phase 1: Establish the base system (completed 2026-05-27)
+  └─ Define parameterization system ✅
+  └─ Define design system ✅
+  └─ Define core principles ✅
+  └─ Extensibility plan ✅
+
+Phase 2: Complete priority solutions (2026-06-30)
+  └─ E-Commerce Mall (complete) ✅
+  └─ POS System (complete) ✅
+  └─ 3-5 other solutions (baseline complete)
+
+Phase 3: Expansion (after 2026-07-31)
+  └─ Add extension documents for stabilized solutions
+  └─ Add new solution types
+  └─ Incorporate community feedback
+```
+
+---
+
+## 5. Knowledge Base Structure
+
+### 5.1 Full Directory Structure
 
 ```
 /knowledge_base/
 │
-├─ 00_*.md (시스템 문서, 4개 - 모든 솔루션에 공통)
+├─ 00_*.md (system documents, 4 - common to all solutions)
 │
 ├─ WEB/
 │  ├─ 01_ecommerce_mall/
@@ -326,18 +326,18 @@ Phase 3: 확장 (2026-07-31 이후)
 │  │  ├─ 05_api_standard.md
 │  │  ├─ 06_security_requirements.md
 │  │  ├─ 07_spec_template.md
-│  │  └─ 08_payment_integration_spec.md (추후 추가)
+│  │  └─ 08_payment_integration_spec.md (to be added later)
 │  │
 │  ├─ 02_erp_system/
 │  ├─ 03_blog_cms/
-│  └─ ... (다른 웹 솔루션)
+│  └─ ... (other web solutions)
 │
 ├─ MOBILE/
 │  ├─ iOS_app/
 │  │  ├─ 01_basic_logic.md
 │  │  ├─ 02_core_features.md
-│  │  ├─ 03_ios_ui_components_spec.md (추후)
-│  │  └─ 04_ios_permissions_spec.md (추후)
+│  │  ├─ 03_ios_ui_components_spec.md (later)
+│  │  └─ 04_ios_permissions_spec.md (later)
 │  │
 │  ├─ Android_app/
 │  └─ React_Native_app/
@@ -358,152 +358,152 @@ Phase 3: 확장 (2026-07-31 이후)
    └─ ...
 ```
 
-### 5.2 각 솔루션 폴더의 표준 내용
+### 5.2 Standard Contents of Each Solution Folder
 
 ```
 /knowledge_base/[CATEGORY]/[SOLUTION]/
 
-필수 파일:
+Required files:
   README.md
-    └─ 이 솔루션의 개요, 추천 산업, 주요 특징
+    └─ Overview of this solution, recommended industries, key features
   
   01_basic_logic.md
   02_core_features.md
   03_terminology.md
-  04_database_schema.md (DB가 있는 경우)
-  05_api_standard.md (API가 있는 경우)
+  04_database_schema.md (if a DB exists)
+  05_api_standard.md (if an API exists)
   06_security_requirements.md
   07_spec_template.md
   
-선택 파일:
-  08_*.md, 09_*.md, ... (확장 문서)
+Optional files:
+  08_*.md, 09_*.md, ... (extension documents)
   
-메타데이터:
+Metadata:
   _metadata.yaml
-    - 작성일: 2026-05-27
-    - 상태: 완료|진행|계획
-    - 버전: 1.0
-    - 최종 수정자: [이름]
-    - 다음 리뷰: 2026-06-27
-    - 의존도: (다른 솔루션을 기반으로 하는가?)
+    - date: 2026-05-27
+    - status: complete|in-progress|planned
+    - version: 1.0
+    - last modified by: [name]
+    - next review: 2026-06-27
+    - dependency: (is it based on another solution?)
 ```
 
 ---
 
-## 6. 확장 계획 (Expansion Plan)
+## 6. Expansion Plan
 
-### 6.1 단기 (1개월) 확장 목표
+### 6.1 Short-Term (1 month) Expansion Goals
 
 ```
 2026-05-27 ~ 2026-06-27
 
-추가할 솔루션:
+Solutions to add:
   
-  1. ERP System (E-Commerce Mall 기반)
-     └─ 기본 7개 + 확장 1개 (모듈 연동)
+  1. ERP System (based on E-Commerce Mall)
+     └─ 7 base + 1 extension (module integration)
   
   2. Inventory Management System
-     └─ 기본 7개 + 확장 1개 (재고 추적)
+     └─ 7 base + 1 extension (inventory tracking)
   
   3. CRM System
-     └─ 기본 7개 + 확장 1개 (고객 분석)
+     └─ 7 base + 1 extension (customer analytics)
   
-  4. 모바일 앱 완성
-     ├─ iOS: 기본 2개 + 확장 2개
-     ├─ Android: 기본 2개 + 확장 2개
-     └─ React Native: 기본 2개 + 확장 2개
+  4. Complete mobile apps
+     ├─ iOS: 2 base + 2 extensions
+     ├─ Android: 2 base + 2 extensions
+     └─ React Native: 2 base + 2 extensions
 
-진행 중인 것 완료:
+Complete in-progress items:
   └─ POS System (05, 06, 07)
 ```
 
-### 6.2 중기 (6개월) 확장 목표
+### 6.2 Mid-Term (6 months) Expansion Goals
 
 ```
 2026-06-27 ~ 2026-12-27
 
-50개 이상의 솔루션이 기본 7개 문서를 갖춘다.
+50+ solutions will have the 7 base documents.
 
-각 카테고리별 대표 솔루션:
-  - WEB: 10개 (E-commerce, ERP, CRM, HRM, LMS, ...)
-  - MOBILE: 8개 (iOS, Android, React Native, Flutter, ...)
-  - DESKTOP: 5개 (Windows, macOS, Linux, Electron, ...)
-  - SPECIAL: 10개 (IoT, Chatbot, VR, AR, Blockchain, ...)
-  - DATA: 8개 (Analytics, ETL, BI, Data Lake, ...)
+Representative solutions per category:
+  - WEB: 10 (E-commerce, ERP, CRM, HRM, LMS, ...)
+  - MOBILE: 8 (iOS, Android, React Native, Flutter, ...)
+  - DESKTOP: 5 (Windows, macOS, Linux, Electron, ...)
+  - SPECIAL: 10 (IoT, Chatbot, VR, AR, Blockchain, ...)
+  - DATA: 8 (Analytics, ETL, BI, Data Lake, ...)
 ```
 
-### 6.3 장기 (1년) 확장 목표
+### 6.3 Long-Term (1 year) Expansion Goals
 
 ```
 2026-12-27 ~ 2027-12-27
 
-196개 솔루션 모두에 기본 7개 문서 완성
+All 196 solutions complete the 7 base documents
 
-각 솔루션별 평균 3-5개 확장 문서 추가
+Add an average of 3-5 extension documents per solution
 
-커뮤니티 기여 체계 수립:
-  - 개발자가 새로운 확장 문서 제안
-  - 검증 과정을 거쳐 추가
+Establish a community contribution system:
+  - Developers propose new extension documents
+  - Added after a verification process
 ```
 
 ---
 
-## 7. 품질 관리 (Quality Management)
+## 7. Quality Management
 
-### 7.1 문서 리뷰 주기 (Document Review Schedule)
+### 7.1 Document Review Schedule
 
 ```
-모든 문서는 정기적으로 리뷰된다:
+Every document is reviewed regularly:
 
-  초기: 작성 후 1주일 내 (동료 리뷰)
-  정기: 매 분기마다 (팀 전체 리뷰)
-  사용 후: 실제 프로젝트 완료 후 (피드백 수집)
+  Initial: within 1 week of writing (peer review)
+  Regular: every quarter (whole-team review)
+  Post-use: after an actual project completes (feedback collection)
   
-리뷰 체크리스트:
-  ✓ 정보가 정확한가?
-  ✓ 최신 상태인가?
-  ✓ 다른 문서와 충돌하지 않는가?
-  ✓ 예시가 명확한가?
-  ✓ 실제 개발자들이 이해하는가?
+Review checklist:
+  ✓ Is the information accurate?
+  ✓ Is it up to date?
+  ✓ Does it not conflict with other documents?
+  ✓ Are the examples clear?
+  ✓ Do actual developers understand it?
 ```
 
-### 7.2 문서 버전 관리 (Document Versioning)
+### 7.2 Document Versioning
 
 ```
-모든 문서는 의미 있는 버전 관리를 한다:
+Every document uses meaningful version management:
 
-  버전 형식: major.minor
+  Version format: major.minor
   
-  예:
-    1.0: 초기 작성 완료
-    1.1: 오타 수정, 예시 추가 (내용 변경 없음)
-    1.2: 새로운 기능 설명 추가 (부분 변경)
-    2.0: 구조 재설계, 완전 재작성 (주요 변경)
+  e.g.:
+    1.0: initial writing complete
+    1.1: typo fixes, examples added (no content change)
+    1.2: new feature description added (partial change)
+    2.0: structural redesign, full rewrite (major change)
 ```
 
 ---
 
-## 결론 (Conclusion)
+## Conclusion
 
-이 지식 라이브러리 시스템은:
+This knowledge base system is:
 
-1. **확장 가능** (Scalable)
-   └─ 196개 솔루션을 모두 지원할 수 있도록 설계
+1. **Scalable**
+   └─ Designed to support all 196 solutions
 
-2. **유지보수 용이** (Maintainable)
-   └─ 기본 7개 문서가 표준이므로 관리 간단
+2. **Maintainable**
+   └─ The 7 base documents are the standard, so management is simple
 
-3. **재사용 가능** (Reusable)
-   └─ 한 번 작성한 문서를 여러 솔루션이 활용
+3. **Reusable**
+   └─ A document written once is used by multiple solutions
 
-4. **성장 친화적** (Growth-Friendly)
-   └─ 언제든 새로운 문서/솔루션 추가 가능
+4. **Growth-Friendly**
+   └─ New documents/solutions can be added at any time
 
-5. **커뮤니티 중심** (Community-Driven)
-   └─ 앞으로 팀과 커뮤니티가 함께 성장
+5. **Community-Driven**
+   └─ Going forward, the team and community grow together
 
 ---
 
-**버전**: 1.0
-**작성일**: 2026-05-27
-**상태**: 확장 준비 완료
+**Version**: 1.0
+**Date**: 2026-05-27
+**Status**: Ready for expansion

@@ -1,132 +1,132 @@
-# Windows 데스크탑 앱 보안 요구사항 (Security Requirements)
+# Windows Desktop App Security Requirements
 
-## 1. 인증 & 자격증명 관리
+## 1. Authentication & Credential Management
 
-### 1.1 토큰 저장 규칙
+### 1.1 Token Storage Rules
 
 ```
-필수:
-✅ 인증 토큰 → Windows Credential Manager (CredWrite/CredRead Win32 API)
-✅ 파일/레지스트리 평문 저장 금지
-✅ 앱 설정(AppSettings.json) 토큰 저장 금지
-✅ 로그/이벤트 뷰어에 토큰 출력 금지
-✅ 로그아웃 시 Credential Manager 엔트리 삭제 (CredDelete)
-✅ 앱 제거 시 Credential Manager 엔트리 수동 삭제 (제거 스크립트 포함)
+Required:
+✅ Authentication tokens → Windows Credential Manager (CredWrite/CredRead Win32 API)
+✅ No plaintext storage in files/registry
+✅ No token storage in app settings (AppSettings.json)
+✅ No token output to logs/Event Viewer
+✅ Delete the Credential Manager entry on logout (CredDelete)
+✅ Manually delete the Credential Manager entry on app removal (include an uninstall script)
 
-대안 (Credential Manager 불가 시):
-DPAPI (Data Protection API)로 암호화 후 %AppData% 저장:
+Alternative (when the Credential Manager is unavailable):
+Encrypt with DPAPI (Data Protection API), then store under %AppData%:
 var encrypted = ProtectedData.Protect(
     System.Text.Encoding.UTF8.GetBytes(token),
     entropy: null,
-    scope: DataProtectionScope.CurrentUser);  // 현재 Windows 사용자만 복호화 가능
+    scope: DataProtectionScope.CurrentUser);  // only the current Windows user can decrypt
 File.WriteAllBytes(tokenPath, encrypted);
 ```
 
-### 1.2 세션 관리
+### 1.2 Session Management
 
 ```
-세션 만료:
-- 비활성(포커스 없음) 15분 초과 시 재인증 요구
-- 구현: DispatcherTimer + 마지막 활동 타임스탬프 비교
-- MainWindow.Deactivated → 타이머 시작, Activated → 타이머 리셋
+Session expiration:
+- Require re-authentication after more than 15 minutes of inactivity (no focus)
+- Implementation: DispatcherTimer + comparison against the last activity timestamp
+- MainWindow.Deactivated → start the timer, Activated → reset the timer
 
-토큰 만료 처리:
-- 액세스 토큰: 1시간 이하 (401 수신 시 자동 갱신)
-- 리프레시 토큰: 30일 이하 (갱신 실패 시 재로그인)
-- 갱신 중복 방지: SemaphoreSlim(1,1) (TokenStore 참고)
+Token expiration handling:
+- Access token: 1 hour or less (automatically refreshed on receiving 401)
+- Refresh token: 30 days or less (re-login on refresh failure)
+- Prevent duplicate refresh: SemaphoreSlim(1,1) (see TokenStore)
 ```
 
 ---
 
-## 2. 네트워크 보안
+## 2. Network Security
 
-### 2.1 HTTPS 강제
+### 2.1 Enforcing HTTPS
 
 ```csharp
-// HttpClient 설정 (TLS 1.2+ 강제)
+// HttpClient configuration (enforce TLS 1.2+)
 var handler = new HttpClientHandler
 {
     SslProtocols = System.Security.Authentication.SslProtocols.Tls12
                  | System.Security.Authentication.SslProtocols.Tls13,
-    CheckCertificateRevocationList = true  // OCSP/CRL 확인
+    CheckCertificateRevocationList = true  // OCSP/CRL check
 };
 
-// 금지: HTTP 평문 연결 (개발 환경 포함)
-// 허용: localhost 개발 서버만 예외 (DEBUG 빌드에서만)
+// Forbidden: plaintext HTTP connections (including the development environment)
+// Allowed: only the localhost development server is an exception (DEBUG builds only)
 #if DEBUG
 handler.ServerCertificateCustomValidationCallback = (msg, cert, chain, errors) =>
     msg.RequestUri?.Host == "localhost" || errors == System.Net.Security.SslPolicyErrors.None;
 #endif
 ```
 
-### 2.2 인증서 고정 (Certificate Pinning, 선택)
+### 2.2 Certificate Pinning (optional)
 
 ```csharp
-// 고위험 앱(금융/의료)에서 권장
+// Recommended for high-risk apps (finance/healthcare)
 var handler = new HttpClientHandler();
 handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) =>
 {
     if (errors != System.Net.Security.SslPolicyErrors.None) return false;
 
-    // Public Key Hash 고정 (인증서 갱신에 더 유연)
+    // Pin the public key hash (more flexible for certificate renewal)
     var pubKeyHash = Convert.ToBase64String(
         System.Security.Cryptography.SHA256.HashData(cert!.GetPublicKey()));
 
     var pinnedHashes = new[] {
-        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",  // 운영 인증서
-        "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB="   // 백업 핀 (필수 — 갱신 시 앱 업데이트 없이 교체)
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",  // production certificate
+        "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB="   // backup pin (required — swap on renewal without an app update)
     };
     return pinnedHashes.Contains(pubKeyHash);
 };
-// 주의: 백업 핀 없으면 인증서 갱신 시 앱 연결 불가 → 백업 핀 2개 이상 유지
+// Note: without a backup pin, the app cannot connect when the certificate is renewed → keep at least 2 backup pins
 ```
 
-### 2.3 로깅 보안
+### 2.3 Logging Security
 
 ```csharp
-// 릴리스 빌드 로깅 규칙
-// - Serilog/NLog 사용 시 릴리스에서 Debug/Verbose 레벨 제거
-// - 파일 로그: %LocalAppData%\{App}\Logs\ (Sensitive 데이터 제외)
+// Release build logging rules
+// - When using Serilog/NLog, remove Debug/Verbose levels in release
+// - File logs: %LocalAppData%\{App}\Logs\ (exclude sensitive data)
 
-// NLog.config 릴리스 설정 예시:
+// NLog.config release configuration example:
 // <rules>
-//   <logger name="*" minlevel="Warning" writeTo="file"/>  <!-- Debug/Info 제거 -->
+//   <logger name="*" minlevel="Warning" writeTo="file"/>  <!-- remove Debug/Info -->
 // </rules>
 
-// 금지 패턴
-logger.Debug($"Token: {accessToken}");  // ❌ 절대 금지
-logger.Debug($"User: {user.Email}");    // ❌ PII 로그 금지
-logger.Warning("Token refresh failed"); // ✅ 사건만 기록
+// Forbidden patterns
+logger.Debug($"Token: {accessToken}");  // ❌ absolutely forbidden
+logger.Debug($"User: {user.Email}");    // ❌ no PII logging
+logger.Warning("Token refresh failed"); // ✅ record only the event
 ```
 
 ---
 
-## 3. 데이터 보안
+## 3. Data Security
 
-### 3.1 민감 데이터 분류
+### 3.1 Sensitive Data Classification
 
-| 등급 | 데이터 예시 | 저장 위치 | 암호화 |
+| Level | Data examples | Storage location | Encryption |
 |------|-----------|---------|--------|
-| P0 | 인증 토큰, 패스워드 | Windows Credential Manager | OS 키링 |
-| P1 | 주민번호, 카드번호 | DPAPI 암호화 파일 | AES-256 (CurrentUser) |
-| P2 | 이름, 이메일, 전화번호 | SQLite (일반) | 파일 시스템 ACL |
-| P3 | 주문내역, 설정, 캐시 | SQLite / AppData | OS 사용자 격리 |
-| P4 | 익명 분석, 로그 | 로컬 파일 | 불필요 |
+| P0 | Authentication tokens, passwords | Windows Credential Manager | OS keyring |
+| P1 | National ID, card number | DPAPI-encrypted file | AES-256 (CurrentUser) |
+| P2 | Name, email, phone number | SQLite (plain) | File system ACL |
+| P3 | Order history, settings, cache | SQLite / AppData | OS user isolation |
+| P4 | Anonymous analytics, logs | Local file | Not required |
 
-### 3.2 SQLite 파일 보안
+### 3.2 SQLite File Security
 
 ```csharp
-// SQLite 데이터베이스 암호화 (SQLCipher — P1 데이터 포함 시)
+// SQLite database encryption (SQLCipher — when P1 data is included)
 // NuGet: SQLitePCLRaw.bundle_sqlcipher
 var connString = $"Data Source={dbPath};Password={GetDbKey()}";
 
-// DB 키 도출 (DPAPI 기반)
+// DB key derivation (DPAPI-based)
 private static string GetDbKey()
 {
     var keyPath = Path.Combine(AppDataDir, ".dbkey");
     if (!File.Exists(keyPath))
     {
-        // 최초 실행: 랜덤 키 생성 + DPAPI 암호화 저장
+        // First run: generate a random key + store DPAPI-encrypted
         var rawKey = System.Security.Cryptography.RandomNumberGenerator.GetBytes(32);
         var encrypted = ProtectedData.Protect(rawKey, null, DataProtectionScope.CurrentUser);
         File.WriteAllBytes(keyPath, encrypted);
@@ -136,31 +136,31 @@ private static string GetDbKey()
     return Convert.ToHexString(key);
 }
 
-// P0/P1 데이터만 있는 일반 앱: SQLCipher 생략 가능
-// → %LocalAppData% 파일은 현재 Windows 사용자만 접근 가능 (ACL 기본 적용)
+// For a typical app with only P0/P1 data: SQLCipher can be omitted
+// → %LocalAppData% files are accessible only to the current Windows user (default ACL applied)
 ```
 
-### 3.3 메모리 보안
+### 3.3 Memory Security
 
 ```csharp
-// 패스워드 필드: 사용 후 즉시 초기화
-// WPF PasswordBox: SecureString 사용 (평문 string 변환 최소화)
-var securePass = passwordBox.SecurePassword;  // SecureString 직접 사용
+// Password fields: clear immediately after use
+// WPF PasswordBox: use SecureString (minimize conversion to plaintext string)
+var securePass = passwordBox.SecurePassword;  // use SecureString directly
 
-// 부득이하게 string 변환 시:
+// When string conversion is unavoidable:
 var ptr = Marshal.SecureStringToGlobalAllocUnicode(securePass);
-try { var password = Marshal.PtrToStringUni(ptr)!; /* 최단 사용 */ }
-finally { Marshal.ZeroFreeGlobalAllocUnicode(ptr); }  // 메모리 즉시 소거
+try { var password = Marshal.PtrToStringUni(ptr)!; /* shortest possible use */ }
+finally { Marshal.ZeroFreeGlobalAllocUnicode(ptr); }  // wipe memory immediately
 
-// 스크린샷 방지 (금융/의료 앱)
+// Screenshot prevention (finance/healthcare apps)
 // WinUI 3:
 window.ExtendsContentIntoTitleBar = true;
-// ... InputNonClientPointerSource 기반 WDA_MONITOR 설정
+// ... set WDA_MONITOR via InputNonClientPointerSource
 
 // WPF:
 [DllImport("user32.dll", SetLastError = true)]
 static extern uint SetWindowDisplayAffinity(IntPtr hwnd, uint affinity);
-const uint WDA_MONITOR = 0x00000001;  // 화면 캡처 차단
+const uint WDA_MONITOR = 0x00000001;  // block screen capture
 
 var hwnd = new WindowInteropHelper(mainWindow).Handle;
 SetWindowDisplayAffinity(hwnd, WDA_MONITOR);
@@ -168,34 +168,34 @@ SetWindowDisplayAffinity(hwnd, WDA_MONITOR);
 
 ---
 
-## 4. 코드 & 빌드 보안
+## 4. Code & Build Security
 
-### 4.1 API 키 관리
+### 4.1 API Key Management
 
 ```
-금지:
-❌ 소스코드 하드코딩: const string API_KEY = "secret"
-❌ appsettings.json 평문 저장 (Git 커밋 가능)
-❌ .env 파일 커밋
+Forbidden:
+❌ Hardcoding in source: const string API_KEY = "secret"
+❌ Plaintext storage in appsettings.json (can be committed to Git)
+❌ Committing .env files
 
-허용:
-✅ 사용자별 설정: Windows Credential Manager
-✅ 빌드 시 주입: MSBuild 환경변수 → #if RELEASE 조건부 컴파일
-✅ 런타임 서버 요청: Secrets Manager API 경유
+Allowed:
+✅ Per-user settings: Windows Credential Manager
+✅ Injection at build time: MSBuild environment variables → #if RELEASE conditional compilation
+✅ Runtime server request: via a Secrets Manager API
 ```
 
 ```csharp
-// appsettings.Development.json (gitignore 추가) — 개발 환경 API 키
+// appsettings.Development.json (add to gitignore) — development environment API key
 {
     "ApiSettings": { "BaseUrl": "http://localhost:3000/api" }
 }
 
-// .csproj 빌드 시 환경변수 주입 예시
+// Example of injecting environment variables during the .csproj build
 <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DefineConstants>PRODUCTION</DefineConstants>
 </PropertyGroup>
 
-// 코드에서
+// In code
 #if PRODUCTION
     private const string ApiBase = "https://api.production.com";
 #else
@@ -203,52 +203,52 @@ SetWindowDisplayAffinity(hwnd, WDA_MONITOR);
 #endif
 ```
 
-### 4.2 코드 서명 & 무결성
+### 4.2 Code Signing & Integrity
 
 ```
-배포 전 필수:
-☐ 실행 파일(.exe/.dll) 코드 서명 (Authenticode)
-  - EV (Extended Validation) 인증서 권장 (SmartScreen 즉시 신뢰)
-  - Standard OV는 평판 축적까지 경고 표시 가능
+Required before distribution:
+☐ Code-sign the executables (.exe/.dll) (Authenticode)
+  - An EV (Extended Validation) certificate is recommended (immediately trusted by SmartScreen)
+  - A standard OV may show warnings until reputation accrues
 
-서명 명령:
+Signing command:
 signtool sign /fd sha256 /tr http://timestamp.digicert.com /td sha256
               /f certificate.pfx /p {password} MyApp.exe
 
-MSIX 패키지 서명:
+MSIX package signing:
 SignTool sign /fd SHA256 /a /f cert.pfx /p pass MyApp.msix
 
-☐ 패키지 무결성: MSIX 자체 해시 검증 내장
-☐ 체인 신뢰: 인증서 체인 전체가 신뢰할 수 있는 CA까지 연결
+☐ Package integrity: MSIX has built-in hash verification
+☐ Chain trust: the entire certificate chain connects up to a trusted CA
 ```
 
-### 4.3 릴리스 빌드 체크리스트
+### 4.3 Release Build Checklist
 
 ```
-빌드 설정:
-☐ 디버그 심볼(.pdb) 사용자 배포 제외 (별도 Symbol Server 보관)
-☐ RELEASE 빌드 구성 사용 (DEBUG 조건부 코드 제외)
-☐ 불필요한 WinForms Designer DLL 제외
+Build settings:
+☐ Exclude debug symbols (.pdb) from user distribution (keep on a separate Symbol Server)
+☐ Use the RELEASE build configuration (exclude DEBUG conditional code)
+☐ Exclude unnecessary WinForms Designer DLLs
 
-코드:
-☐ Debug.WriteLine / Console.WriteLine 릴리스 미출력 확인
-☐ 개발 API 엔드포인트 → 프로덕션 엔드포인트 확인
-☐ Swagger/개발 도구 UI 비활성화
-☐ 테스트 계정/더미 데이터 없음
+Code:
+☐ Verify Debug.WriteLine / Console.WriteLine produce no output in release
+☐ Verify development API endpoints → production endpoints
+☐ Disable Swagger/dev tool UI
+☐ No test accounts/dummy data
 
-패키지:
-☐ NuGet 패키지 최신 보안 패치 적용
-☐ dotnet list package --vulnerable 실행하여 취약점 확인
+Packages:
+☐ Apply the latest security patches to NuGet packages
+☐ Run dotnet list package --vulnerable to check for vulnerabilities
 ```
 
 ---
 
-## 5. Windows 보안 기능 활용
+## 5. Using Windows Security Features
 
-### 5.1 Windows Hello (생체 인증)
+### 5.1 Windows Hello (biometric authentication)
 
 ```csharp
-// Microsoft.Windows.SDK.Contracts NuGet 필요
+// Requires the Microsoft.Windows.SDK.Contracts NuGet package
 using Windows.Security.Credentials.UI;
 
 public static async Task<bool> VerifyWithWindowsHelloAsync(string message)
@@ -257,63 +257,63 @@ public static async Task<bool> VerifyWithWindowsHelloAsync(string message)
     return result == UserConsentVerificationResult.Verified;
 }
 
-// 사용 예 — 중요 작업 전 재인증
-if (!await VerifyWithWindowsHelloAsync("결제를 진행하려면 인증해 주세요"))
-    return; // 인증 거부 또는 실패
+// Usage example — re-authenticate before a critical operation
+if (!await VerifyWithWindowsHelloAsync("Please authenticate to proceed with the payment"))
+    return; // authentication denied or failed
 
-// 지원 여부 확인 (Windows Hello PIN/지문/얼굴인식 등록 필요)
+// Check availability (requires Windows Hello PIN/fingerprint/face enrollment)
 var availability = await UserConsentVerifier.CheckAvailabilityAsync();
 bool isSupported = availability == UserConsentVerifierAvailability.Available;
 ```
 
-### 5.2 앱 격리 (MSIX 샌드박스)
+### 5.2 App Isolation (MSIX sandbox)
 
 ```
-Microsoft Store / MSIX 패키지 배포 시:
-- 파일 시스템: %AppData%/LocalAppData에만 쓰기 가능 (자동 가상화)
-- 레지스트리: HKCU\Software\{AppName}만 접근 가능
-- 네트워크: 선언된 capabilities만 허용 (Package.appxmanifest)
+When distributing as a Microsoft Store / MSIX package:
+- File system: writable only to %AppData%/LocalAppData (automatic virtualization)
+- Registry: only HKCU\Software\{AppName} is accessible
+- Network: only declared capabilities are allowed (Package.appxmanifest)
 
-package.appxmanifest 필수 선언:
+Required declarations in package.appxmanifest:
 <Capabilities>
-    <Capability Name="internetClient"/>          <!-- 인터넷 접근 -->
-    <DeviceCapability Name="webcam"/>            <!-- 카메라 (필요 시) -->
-    <DeviceCapability Name="location"/>          <!-- 위치 (필요 시) -->
+    <Capability Name="internetClient"/>          <!-- internet access -->
+    <DeviceCapability Name="webcam"/>            <!-- camera (if needed) -->
+    <DeviceCapability Name="location"/>          <!-- location (if needed) -->
 </Capabilities>
 ```
 
 ### 5.3 UAC (User Account Control)
 
 ```xml
-<!-- 관리자 권한 불필요한 앱: asInvoker (기본값, 권장) -->
+<!-- App that does not need admin privileges: asInvoker (default, recommended) -->
 <requestedExecutionLevel level="asInvoker" uiAccess="false"/>
 
-<!-- 관리자 권한 필수인 경우만 (설치 관리자 등) -->
+<!-- Only when admin privileges are required (installers, etc.) -->
 <requestedExecutionLevel level="requireAdministrator" uiAccess="false"/>
 
-<!-- 원칙: 최소 권한. 관리자 권한 요청 = 사용자에게 UAC 프롬프트 → 거부 가능성 높음 -->
+<!-- Principle: least privilege. Requesting admin privileges = a UAC prompt for the user → high chance of refusal -->
 ```
 
 ---
 
-## 6. 개인정보 & 컴플라이언스
+## 6. Privacy & Compliance
 
 ```
-Microsoft Store 앱:
-☐ 개인정보처리방침 URL 필수 (파트너 센터 등록 + 앱 내 링크)
-☐ 수집 데이터 유형 선언
-☐ 아동 앱: COPPA 준수 (12세 이하 대상 시)
+Microsoft Store apps:
+☐ Privacy policy URL required (registered in Partner Center + linked within the app)
+☐ Declare the types of data collected
+☐ Children's apps: COPPA compliance (when targeting those 12 and under)
 
-데이터 삭제 요청 처리:
-- 사용자가 계정 삭제 요청 시 → 로컬 DB + Credential Manager + AppData 데이터 삭제
-- 원격 서버 데이터 삭제는 별도 API 호출
+Handling data deletion requests:
+- When a user requests account deletion → delete local DB + Credential Manager + AppData data
+- Remote server data deletion requires a separate API call
 
-GDPR / 개인정보보호법 (해당 시):
-- 데이터 수출: 사용자 데이터 JSON/CSV 내보내기 기능
-- 데이터 삭제 확인: 삭제 후 30일 보존 없음 확인
-- 로컬 데이터 암호화: P1 등급 이상 DPAPI/SQLCipher 적용
+GDPR / Personal Information Protection Act (where applicable):
+- Data export: a feature to export user data as JSON/CSV
+- Confirm data deletion: confirm there is no 30-day retention after deletion
+- Local data encryption: apply DPAPI/SQLCipher for P1 grade and above
 ```
 
 ---
 
-**문서 버전:** 1.0.0 | **작성일:** 2026-06-13 | **대상 OS:** Windows 10 1809+ | **준거:** OWASP Desktop Security 2024
+**Document version:** 1.0.0 | **Date:** 2026-06-13 | **Target OS:** Windows 10 1809+ | **Compliance:** OWASP Desktop Security 2024

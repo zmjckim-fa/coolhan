@@ -1,70 +1,70 @@
-# 다국어 국제 학술논문 작성 프레임워크
+# Multilingual International Academic Paper Writing Framework
 ## Multilingual International Journal Standards (6 Languages)
 
-**목표:** 같은 연구를 6개 언어로 고품질 학술논문으로 작성 가능하게 하기
+**Goal:** Enable the same research to be written as a high-quality academic paper in 6 languages
 
-**지원 언어:** English (EN), 中文 (ZH), 日本語 (JA), 한국어 (KO), Español (ES), Deutsch (DE)
+**Supported languages:** English (EN), 中文 (ZH), 日本語 (JA), 한국어 (KO), Español (ES), Deutsch (DE)
 
 ---
 
-## Part 1: 다국어 출판 전략
+## Part 1: Multilingual Publication Strategy
 
-### 1.1 어떤 저널이 다국어를 지원하는가?
+### 1.1 Which journals support multiple languages?
 
 ```
-TIER 1: 다국어 초록 필수 (Nature, Science, PNAS)
-  Requirement: 영어 본문 + 모국어 초록
-  Formats: English main, 한글/日本語/中文 abstract (5-10개 저널)
+TIER 1: Multilingual abstract required (Nature, Science, PNAS)
+  Requirement: English main text + native-language abstract
+  Formats: English main, Korean/Japanese/Chinese abstract (5-10 journals)
   
-TIER 2: 다국어 초록 권장 (eLife, PLOS ONE)
-  Format: 영문 + 저자 선택 언어 초록
+TIER 2: Multilingual abstract recommended (eLife, PLOS ONE)
+  Format: English + author-chosen language abstract
   
-TIER 3: 다국어 서포트 (Frontiers in All Series)
-  Format: 영문 본문 + 6개 언어 요약
+TIER 3: Multilingual support (Frontiers in All Series)
+  Format: English main text + 6-language summary
   
 SPECIAL: Open Access Journals
   PLOS Biology, Scientific Reports, Nature Communications
-  다국어 초록 우대 (SEO 위해)
+  Favor multilingual abstracts (for SEO)
 ```
 
-### 1.2 출판 경로 선택
+### 1.2 Choosing a Publication Path
 
 ```
-경로 A: 단일 저널 + 다국어 초록
-  Step 1: 영문 완성 (4000 words)
-  Step 2: 전문 번역자 5명 고용 (각 언어별)
-  Step 3: Nature에 영문+초록 함께 제출
-  Timeline: 3개월
-  Cost: $3,000-5,000 (번역비)
+Path A: Single journal + multilingual abstract
+  Step 1: Complete English text (4000 words)
+  Step 2: Hire 5 professional translators (one per language)
+  Step 3: Submit English + abstract together to Nature
+  Timeline: 3 months
+  Cost: $3,000-5,000 (translation fees)
 
-경로 B: 영문 먼저 + 이후 다국어 버전
-  Step 1: 영문을 Nature/Science에 제출
-  Step 2: Acceptance 후 다국어 버전 발행 (협력 저널)
-  Step 3: 각 언어별로 국내 저널에 동시 발표
-  Timeline: 6-12개월 (peer review 포함)
-  이점: 한 번의 peer review로 6개 버전 얻음
+Path B: English first + multilingual versions afterward
+  Step 1: Submit English to Nature/Science
+  Step 2: After acceptance, publish multilingual versions (partner journals)
+  Step 3: Publish each language version simultaneously in domestic journals
+  Timeline: 6-12 months (including peer review)
+  Benefit: Obtain 6 versions from one peer review
 
-경로 C: 완전 다국어 출판 (권장)
-  Step 1: 6개 언어를 동등하게 작성
-  Step 2: Open access 저널에 투고
-  Step 3: 6개 언어 모두 공개
-  Timeline: 4-6개월
-  이점: 전 세계 접근성, 높은 인용 (multilingual bonus)
+Path C: Fully multilingual publication (recommended)
+  Step 1: Write all 6 languages equally
+  Step 2: Submit to an open access journal
+  Step 3: Publish all 6 languages
+  Timeline: 4-6 months
+  Benefit: Worldwide accessibility, higher citation (multilingual bonus)
 ```
 
 ---
 
-## Part 2: 각 언어별 학술 관례
+## Part 2: Academic Conventions per Language
 
 ### 2.1 English (International Standard)
 
-**특징:**
-- Passive voice 선호 (과학적 객관성)
-- Future perfect tense 많음
-- 짧은 문장 (주어-동사-목적어)
-- Technical terms 명확히 정의
+**Characteristics:**
+- Prefers passive voice (scientific objectivity)
+- Frequent future perfect tense
+- Short sentences (subject-verb-object)
+- Technical terms clearly defined
 
-**예시 (Methods):**
+**Example (Methods):**
 ```
 The tokens were extracted from the manuscript using a parsing protocol
 developed specifically for EVA notation. Character frequencies were computed
@@ -74,70 +74,70 @@ determined using χ² tests with Bonferroni correction for multiple comparisons.
 
 ### 2.2 中文 (Simplified Chinese - Mainland)
 
-**특징:**
-- Subject-verb-object 어순 엄격함
-- 수치와 단위 구분 명확
-- Passive voice 적음 (자동으로 번역 안 됨)
-- 문맥에 따라 주어 생략 가능
+**Characteristics:**
+- Strict subject-verb-object word order
+- Clear distinction of numbers and units
+- Little passive voice (does not translate automatically)
+- Subject can be omitted depending on context
 
-**예시 (Methods):**
+**Example (Methods):**
 ```
 使用专为EVA符号开发的解析协议从手稿中提取token。采用标准语料库语言学方法
 计算字符频率。使用χ²检验和Bonferroni多重比较校正确定统计显著性。
 ```
 
-**주의:** Simplified vs Traditional 선택
-- Mainland 저널 → Simplified only
-- Taiwan 저널 → Traditional only
-- 국제 저널 → Simplified preferred (ISO standard)
+**Note:** Choosing Simplified vs Traditional
+- Mainland journals → Simplified only
+- Taiwan journals → Traditional only
+- International journals → Simplified preferred (ISO standard)
 
 ### 2.3 日本語 (Japanese)
 
-**특징:**
-- Passive form (～られた) 필수 (scientific tone)
-- Polite form (～です) 사용
-- Particles (は, が, を, に) 정확히 사용
-- Kanji/Hiragana/Katakana 혼합
+**Characteristics:**
+- Passive form (～られた) required (scientific tone)
+- Polite form (～です) used
+- Particles (は, が, を, に) used precisely
+- Mix of Kanji/Hiragana/Katakana
 
-**예시 (Methods):**
+**Example (Methods):**
 ```
 EVA表記に特別に開発された解析プロトコルを用いてトークンが手稿から抽出された。
 標準的なコーパス言語学的方法を用いて文字頻度が計算された。χ²検定とBonferroni
 多重比較補正を用いて統計的有意性が決定された。
 ```
 
-**주의:** 
-- Academic Japanese는 formal noun forms (～こと、～の) 많음
-- 漢語 (한자 어휘) 학술용어에 70% 이상
+**Note:** 
+- Academic Japanese uses many formal noun forms (～こと、～の)
+- Sino-Japanese vocabulary (漢語) makes up 70%+ of technical terms
 
 ### 2.4 한국어 (Korean)
 
-**특징:**
-- 의존명사 많음 (것, 수, 방법)
-- Particle 체계 (이/가, 을/를, 에/에서)
-- Honorific 학술 표현 (～되었다, ～보인다)
-- 종결어미 문체에 따라 변화
+**Characteristics:**
+- Many dependent nouns (것, 수, 방법)
+- Particle system (이/가, 을/를, 에/에서)
+- Honorific academic expressions (～되었다, ～보인다)
+- Sentence endings vary by register
 
-**예시 (Methods):**
+**Example (Methods):**
 ```
 EVA 기호에 맞추어 개발된 파싱 프로토콜을 사용하여 필사본에서 토큰이 추출되었다.
 표준적인 코퍼스 언어학 방법을 이용하여 문자 빈도가 계산되었다. χ² 검정과
 Bonferroni 다중비교 수정을 사용하여 통계적 유의성이 결정되었다.
 ```
 
-**주의:**
-- Academic Korean은 ～었다, ～되다 형태 선호
-- 영어 수입어는 한글 표기 (파싱, 토큰, 프로토콜)
+**Note:**
+- Academic Korean prefers ～었다, ～되다 forms
+- English loanwords are written in Hangul (파싱, 토큰, 프로토콜)
 
 ### 2.5 Español (Spanish)
 
-**특징:**
-- Subjunctive mood 학술용으로 사용
-- Reflexive verbs 많음 (se extraen, se calculan)
-- Gender agreement (masculine/feminine) 중요
-- Accent marks 반드시 포함
+**Characteristics:**
+- Subjunctive mood used academically
+- Many reflexive verbs (se extraen, se calculan)
+- Gender agreement (masculine/feminine) is important
+- Accent marks must be included
 
-**예시 (Methods):**
+**Example (Methods):**
 ```
 Se extrajeron tokens del manuscrito utilizando un protocolo de análisis
 desarrollado específicamente para la notación EVA. Se calcularon frecuencias
@@ -146,19 +146,19 @@ Se determinó la significancia estadística utilizando pruebas χ² con
 corrección de Bonferroni para comparaciones múltiples.
 ```
 
-**주의:**
-- Latin American Spanish vs Spain Spanish (어휘 차이)
-- 논문은 Spain Spanish standard 선호
+**Note:**
+- Latin American Spanish vs Spain Spanish (vocabulary differences)
+- Papers prefer the Spain Spanish standard
 
 ### 2.6 Deutsch (German)
 
-**특징:**
-- Compound nouns (단어 조합으로 새 단어 생성)
+**Characteristics:**
+- Compound nouns (new words formed by combining words)
 - Case system (Nominativ, Akkusativ, Dativ, Genitiv)
-- Verb position (subordinate clause에서 마지막)
+- Verb position (last in subordinate clauses)
 - Gender agreement (der/die/das)
 
-**예시 (Methods):**
+**Example (Methods):**
 ```
 Mithilfe eines speziell für die EVA-Notation entwickelten Parsing-Protokolls
 wurden Token aus dem Manuskript extrahiert. Zeichenhäufigkeiten wurden mit
@@ -167,44 +167,44 @@ Signifikanz wurde mithilfe von χ²-Tests mit Bonferroni-Korrektur für
 Mehrfachvergleiche bestimmt.
 ```
 
-**주의:**
-- German compound nouns는 구분할 수 없음 (하나의 단어)
-- Capitalization of nouns 반드시 지킬 것
+**Note:**
+- German compound nouns cannot be split apart (a single word)
+- Always observe capitalization of nouns
 
 ---
 
-## Part 3: 다국어 초록 작성 (Abstracts)
+## Part 3: Writing Multilingual Abstracts
 
-### 3.1 Abstract 길이 기준
+### 3.1 Abstract Length Standards
 
 ```
 English:     150-200 words (Nature), 250-300 words (full abstract)
-中文:        200-300字 (characters)
-日本語:      200-300字 (characters)
-한국어:      200-300자 (characters)
+中文:        200-300 characters
+日本語:      200-300 characters
+한국어:      200-300 characters
 Español:     150-250 palabras
 Deutsch:     150-250 Wörter
 
-핵심: 같은 정보량을 각 언어로 표현
+Key: Express the same information content in each language
 ```
 
-### 3.2 Abstract 구조 (모든 언어 동일)
+### 3.2 Abstract Structure (identical across all languages)
 
 ```
-1. BACKGROUND (배경) - 15-20%
+1. BACKGROUND - 15-20%
    ∟ What is the problem? Why should we care?
    
-2. METHODS (방법) - 20-25%
+2. METHODS - 20-25%
    ∟ What did you do? How did you do it?
    
-3. RESULTS (결과) - 30-35%
+3. RESULTS - 30-35%
    ∟ What did you find? (Main findings only)
    
-4. CONCLUSION (결론) - 15-20%
+4. CONCLUSION - 15-20%
    ∟ What does it mean? Why does it matter?
 ```
 
-### 3.3 실제 예시: 보이니치 논문 추상
+### 3.3 Worked Example: Voynich Paper Abstract
 
 #### English
 ```
@@ -362,86 +362,86 @@ Referenzsystems kompatibel ist. Dies definiert die Forschungsfrage von
 
 ---
 
-## Part 4: 번역 & 검수 프로세스
+## Part 4: Translation & Review Process
 
-### 4.1 다국어 검수 체크리스트
+### 4.1 Multilingual Review Checklist
 
 ```
-각 언어별로:
+For each language:
 
 [ ] Grammar check
-    - Native speaker 검수 (not translator)
-    - Academic database (한국학술정보, CiNii, etc.) 비교
+    - Native speaker review (not translator)
+    - Compare against academic databases (KISS, CiNii, etc.)
     
 [ ] Terminology consistency
-    - 같은 용어가 같은 번역으로 사용되었는가?
-    - 과학 용어의 정의가 모든 언어에서 일치하는가?
+    - Is the same term used with the same translation?
+    - Do scientific term definitions match across all languages?
     
 [ ] Clarity
-    - 원문의 의도가 보존되었는가?
-    - 학술용으로 적절한가?
-    - 문화적 맥락에 맞는가?
+    - Is the intent of the original preserved?
+    - Is it appropriate for academic use?
+    - Does it fit the cultural context?
     
 [ ] Formatting
-    - 수식/참고문헌 형식이 언어별 표준을 따르는가?
-    - Character limit (초록 길이) 만족하는가?
+    - Do equations/references follow each language's standard?
+    - Is the character limit (abstract length) satisfied?
     
 [ ] Cultural Adaptation
-    - 직역 vs 의역 적절히 분배되었는가?
-    - 관례적 표현 사용되었는가?
+    - Are literal vs. free translation appropriately balanced?
+    - Are conventional expressions used?
 ```
 
-### 4.2 번역 품질 평가 (TQA)
+### 4.2 Translation Quality Assessment (TQA)
 
 ```
-점수: 1-5 (5=최고)
+Score: 1-5 (5=best)
 
-Accuracy (정확성):
-  5: 완벽한 의미 이전
-  3: 80% 이상 의미 이전
-  1: 주요 오류 있음
+Accuracy:
+  5: Perfect meaning transfer
+  3: 80%+ meaning transfer
+  1: Major errors present
 
-Terminology (용어 일관성):
-  5: 일관되게 표준 용어 사용
-  3: 90% 일관성
-  1: 불일치 多
+Terminology (consistency):
+  5: Consistently uses standard terms
+  3: 90% consistency
+  1: Many inconsistencies
 
-Clarity (명확성):
-  5: 원문과 동등한 명확성
-  3: 약간의 개선 필요
-  1: 모호함
+Clarity:
+  5: Clarity equivalent to the original
+  3: Slight improvement needed
+  1: Ambiguous
 
-Target Language Appropriateness (언어 적절성):
-  5: 학술용으로 자연스러움
-  3: 약간의 어색함
-  1: 비학술적
+Target Language Appropriateness:
+  5: Natural for academic use
+  3: Slightly awkward
+  1: Non-academic
 
-최종 합격 기준: 평균 ≥ 4.0 / 5.0
+Final passing criterion: average ≥ 4.0 / 5.0
 ```
 
 ---
 
-## Part 5: 출판 후 다국어 관리
+## Part 5: Post-Publication Multilingual Management
 
-### 5.1 각 언어별 투고 전략
+### 5.1 Per-Language Submission Strategy
 
 ```
 Phase 1: Primary (English)
-  저널: Nature / Science / PNAS
+  Journals: Nature / Science / PNAS
   Timeline: Month 0-3
   
-Phase 2: Secondary (추가 5언어)
+Phase 2: Secondary (5 additional languages)
   Month 3-6: 
-    - 각 언어의 국내 Top-tier 저널 선정
-    - 다국어 추상만 변경해서 투고 (본문은 영어 또는 번역)
+    - Select each language's domestic top-tier journal
+    - Submit with only the multilingual abstract changed (main text in English or translated)
   
 Phase 3: Open Access
   Month 6-12:
-    - 모든 언어 버전을 arXiv 등에 공개
-    - Multilingual metadata 최적화 (SEO)
+    - Publish all language versions on arXiv, etc.
+    - Optimize multilingual metadata (SEO)
 ```
 
-### 5.2 다국어 인용 (Citation)
+### 5.2 Multilingual Citation
 
 ```
 APA Format:
@@ -450,69 +450,69 @@ English:
 Author, A. (2026). Title of research. Journal Name, 123(4), 567-589.
 
 한국어:
-저자명 (2026). 연구의 제목 [기울임]. 학술지이름, 123(4), 567-589.
+저자명 (2026). 연구의 제목 [italic]. 학술지이름, 123(4), 567-589.
 
 中文:
 作者名 (2026). 研究标题. 期刊名称, 123(4), 567-589.
 
-각 저널의 인용 형식 따를 것
+Follow each journal's citation format
 ```
 
 ---
 
-## Part 6: 다국어 논문의 이점
+## Part 6: Benefits of a Multilingual Paper
 
 ```
 ✅ BENEFITS:
 
 1. Global Reach
-   - 6개 언어 커버 → ~80% 세계 인구
-   - Citation rate 2-3배 증가 (multilingual bonus)
+   - Covers 6 languages → ~80% of world population
+   - Citation rate increases 2-3x (multilingual bonus)
 
 2. Institutional Support
-   - 많은 대학이 다국어 논문 선호
-   - Impact factor 증가 가능
+   - Many universities prefer multilingual papers
+   - Possible impact factor increase
 
 3. Collaboration Opportunities
-   - 각 언어권 연구자와 협력 가능
-   - International recognition 증가
+   - Can collaborate with researchers in each language area
+   - Increased international recognition
 
 4. Scientific Impact
-   - 지역 정책에 영향 가능
-   - Local application 용이
+   - Can influence regional policy
+   - Easier local application
 
 5. Career Advancement
-   - 특히 East Asian 연구자: 큰 이점
-   - Global + Local presence
+   - Especially for East Asian researchers: a major advantage
+   - Global + local presence
 ```
 
 ---
 
-## 최종 체크리스트
+## Final Checklist
 
 ```
-✅ 6-Language Paper 준비
+✅ 6-Language Paper Preparation
 
 Content:
-[ ] 영문 원본 Nature/Science 수준
-[ ] 각 언어 초록 200-300 words/글자
-[ ] 동등한 정보량 모든 언어에서
+[ ] English original at Nature/Science level
+[ ] Each-language abstract 200-300 words/characters
+[ ] Equivalent information content across all languages
 
 Translation:
-[ ] 각 언어별 전문 번역자 (Native speaker)
-[ ] 학술 용어 일관성 체크
-[ ] Native speaker QA (번역자 아닌 다른 사람)
+[ ] Professional translator per language (native speaker)
+[ ] Academic terminology consistency check
+[ ] Native speaker QA (someone other than the translator)
 
 Formatting:
-[ ] 각 저널의 언어별 포맷 확인
-[ ] Metadata 다국어 최적화
-[ ] Reference 언어별 표준 준수
+[ ] Confirm each journal's per-language format
+[ ] Multilingual metadata optimization
+[ ] Per-language reference standards observed
 
 Submission:
-[ ] 각 언어권 저널 선정
-[ ] Timeline 계획 (Primary first, then secondary)
-[ ] License 명시 (CC-BY, MIT, etc.)
+[ ] Select journals for each language area
+[ ] Timeline plan (Primary first, then secondary)
+[ ] License specified (CC-BY, MIT, etc.)
 ```
 
-이 프레임워크를 따르면 단일 연구를 6개 언어의 국제 수준 논문으로 
-동시에 발표할 수 있습니다.
+By following this framework, a single piece of research can be published 
+simultaneously as international-level papers in 6 languages.

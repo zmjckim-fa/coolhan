@@ -1,62 +1,62 @@
-# CoolHan Builder - 설치 및 사용 가이드
+# CoolHan Builder - Installation and Usage Guide
 
-**버전:** 1.0.0  
-**언어:** Korean (한국어)  
-**마지막 업데이트:** 2026-05-27  
-
----
-
-## 📋 목차
-
-1. [개요](#개요)
-2. [시스템 요구사항](#시스템-요구사항)
-3. [설치 방법](#설치-방법)
-4. [프로젝트 시작](#프로젝트-시작)
-5. [문서 구조](#문서-구조)
-6. [사용 방법](#사용-방법)
-7. [문제 해결](#문제-해결)
-8. [지원 및 피드백](#지원-및-피드백)
+**Version:** 1.0.0  
+**Language:** English  
+**Last Updated:** 2026-05-27  
 
 ---
 
-## 개요
+## 📋 Table of Contents
 
-**CoolHan Builder**는 AI 기반 엔지니어링 프로젝트 관리 시스템입니다.
-
-### 핵심 특징
-
-- ✅ **Base Knowledge Core 시스템**: 10개 산업 표준 정의 (shopping_mall, marketplace, purchase_agency, logistics 등)
-- ✅ **도메인 모듈 시스템**: 10개 재사용 가능한 기능 모듈 (member, shopping, payment, shipping, etc.)
-- ✅ **AI Development Locked Mode**: 규격 기반 AI 실행 (창작이 아닌 명령어 기반)
-- ✅ **아키텍처 충돌 해결**: 모듈 간 데이터, API, 상태값 충돌 완전 해결
-- ✅ **마스터 레퍼런스**: 상태값 레지스트리, 모듈 책임 행렬, 규칙 엔진
-
-### 적용 시나리오
-
-1. **E-Commerce 플랫폼**: shopping_mall_core + marketplace_core 결합
-2. **해외 구매대행**: purchase_agency_core + logistics_core
-3. **마켓플레이스**: marketplace_core + seller_onboarding
-4. **배송 최적화**: logistics_core 단독
-5. **회원 관리**: member_system_core 단독
+1. [Overview](#overview)
+2. [System Requirements](#system-requirements)
+3. [Installation](#installation)
+4. [Starting a Project](#starting-a-project)
+5. [Documentation Structure](#documentation-structure)
+6. [Usage](#usage)
+7. [Troubleshooting](#troubleshooting)
+8. [Support and Feedback](#support-and-feedback)
 
 ---
 
-## 시스템 요구사항
+## Overview
 
-### 최소 요구사항
+**CoolHan Builder** is an AI-based engineering project management system.
+
+### Key Features
+
+- ✅ **Base Knowledge Core system**: 10 industry-standard definitions (shopping_mall, marketplace, purchase_agency, logistics, etc.)
+- ✅ **Domain module system**: 10 reusable feature modules (member, shopping, payment, shipping, etc.)
+- ✅ **AI Development Locked Mode**: Specification-based AI execution (command-based, not creative)
+- ✅ **Architecture conflict resolution**: Fully resolved data, API, and status value conflicts between modules
+- ✅ **Master references**: Status value registry, module responsibility matrix, rule engine
+
+### Application Scenarios
+
+1. **E-Commerce platform**: shopping_mall_core + marketplace_core combined
+2. **Overseas purchase agency**: purchase_agency_core + logistics_core
+3. **Marketplace**: marketplace_core + seller_onboarding
+4. **Delivery optimization**: logistics_core standalone
+5. **Member management**: member_system_core standalone
+
+---
+
+## System Requirements
+
+### Minimum Requirements
 
 - **OS**: Windows 10+, macOS 10.15+, Ubuntu 18.04+
-- **Git**: 2.25 이상
-- **텍스트 에디터**: VS Code, Sublime Text 등 (추천: VS Code)
-- **Markdown 뷰어**: Typora, Obsidian 등 (선택사항)
+- **Git**: 2.25 or later
+- **Text editor**: VS Code, Sublime Text, etc. (recommended: VS Code)
+- **Markdown viewer**: Typora, Obsidian, etc. (optional)
 
-### 개발 환경 (프로젝트 구현 시)
+### Development Environment (when implementing a project)
 
-- **Node.js**: 16.x 이상 (JavaScript/TypeScript 프로젝트)
-- **Python**: 3.8+ (Python 프로젝트)
-- **Docker**: 선택사항 (배포 시)
+- **Node.js**: 16.x or later (JavaScript/TypeScript projects)
+- **Python**: 3.8+ (Python projects)
+- **Docker**: Optional (for deployment)
 
-### 브라우저 (문서 보기)
+### Browsers (for viewing documentation)
 
 - Chrome 90+
 - Firefox 88+
@@ -65,32 +65,32 @@
 
 ---
 
-## 설치 방법
+## Installation
 
-### 1단계: GitHub에서 클론
+### Step 1: Clone from GitHub
 
 ```bash
-# 저장소 클론
+# Clone the repository
 git clone https://github.com/zmjckim-fa/coolhan.git
 cd coolhan
 
-# 또는 HTTPS 대신 SSH 사용
+# Or use SSH instead of HTTPS
 git clone git@github.com:zmjckim-fa/coolhan.git
 cd coolhan
 ```
 
-### 2단계: 디렉토리 구조 확인
+### Step 2: Verify the Directory Structure
 
-설치 후 다음과 같은 구조가 있는지 확인하세요:
+After installation, verify that the following structure exists:
 
 ```
 coolhan/
-├── README.md                          # 프로젝트 개요
-├── INSTALLATION_GUIDE.md              # 이 파일
+├── README.md                          # Project overview
+├── INSTALLATION_GUIDE.md              # This file
 ├── knowledge_base/
-│   ├── 00_AI_MASTER_RULES.md          # AI 실행 규칙
-│   ├── 00_BASE_KNOWLEDGE_LOAD.md      # 기본 지식 로드 프로세스
-│   ├── 00_DEVELOPMENT_LOCKED_MODE.md  # 개발 모드 규칙
+│   ├── 00_AI_MASTER_RULES.md          # AI execution rules
+│   ├── 00_BASE_KNOWLEDGE_LOAD.md      # Base knowledge load process
+│   ├── 00_DEVELOPMENT_LOCKED_MODE.md  # Development mode rules
 │   ├── 00_ARCHITECTURE_CONFLICT_RESOLUTION.md
 │   ├── 00_STATUS_VALUE_REGISTRY.md
 │   ├── 00_MODULE_RESPONSIBILITY_MATRIX.md
@@ -99,24 +99,24 @@ coolhan/
 │   ├── 00_CORE_PRINCIPLES_SYSTEM.md
 │   ├── 00_KNOWLEDGE_BASE_EXTENSIBILITY.md
 │   │
-│   ├── core/                          # Base Knowledge Core들
+│   ├── core/                          # Base Knowledge Cores
 │   │   ├── shopping_mall_core.md
 │   │   ├── marketplace_core.md
 │   │   ├── purchase_agency_core.md
-│   │   └── (logistics_core, member_system_core 등)
+│   │   └── (logistics_core, member_system_core, etc.)
 │   │
-│   └── modules/                       # 도메인 모듈 설명 (선택사항)
+│   └── modules/                       # Domain module descriptions (optional)
 │       ├── 01_member_system.md
 │       ├── 02_shopping_mall.md
 │       └── (03-10 modules)
 │
-└── examples/                          # 예제 프로젝트 (커뮤니티 제공)
-    └── (사용자 프로젝트 추가 예정)
+└── examples/                          # Example projects (community-provided)
+    └── (user projects to be added)
 ```
 
-### 3단계: (선택) VS Code 확장 설치
+### Step 3: (Optional) Install VS Code Extensions
 
-문서를 더 쉽게 보기 위해 다음 확장 설치를 권장합니다:
+To view the documentation more easily, we recommend installing the following extensions:
 
 ```bash
 # Markdown Preview Enhanced
@@ -129,152 +129,152 @@ code --install-extension yzhang.markdown-all-in-one
 code --install-extension mhutchie.git-graph
 ```
 
-VS Code에서 설치:
-1. VS Code 열기
+Installing in VS Code:
+1. Open VS Code
 2. Extensions (Ctrl+Shift+X)
-3. 위 확장명 검색하여 설치
+3. Search for the extension names above and install them
 
-### 4단계: 로컬 문서 서버 실행 (선택)
+### Step 4: Run a Local Documentation Server (Optional)
 
-더 나은 문서 보기 경험을 위해 로컬 HTTP 서버를 실행할 수 있습니다:
+For a better documentation viewing experience, you can run a local HTTP server:
 
 ```bash
-# Python 3 사용
+# Using Python 3
 python -m http.server 8000
 
-# 또는 Python 2
+# Or Python 2
 python -m SimpleHTTPServer 8000
 
-# 또는 Node.js http-server 설치 후
+# Or after installing the Node.js http-server
 npm install -g http-server
 http-server -p 8000
 ```
 
-그 다음 브라우저에서 `http://localhost:8000` 열기
+Then open `http://localhost:8000` in your browser
 
 ---
 
-## 프로젝트 시작
+## Starting a Project
 
-### 새 프로젝트 시작 체크리스트
+### New Project Start Checklist
 
-새로운 프로젝트를 시작할 때는 다음 순서를 따르세요:
+When starting a new project, follow this sequence:
 
 ```
 ┌─────────────────────────────────────────────┐
-│  1단계: Base Knowledge Core 선택            │
-│  어떤 시스템 타입? (shopping_mall 등)      │
+│  Step 1: Select Base Knowledge Core         │
+│  Which system type? (shopping_mall, etc.)   │
 └─────────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────────┐
-│  2단계: 기술 매개변수 정의                  │
-│  - 언어/프레임워크                          │
-│  - 데이터베이스                             │
-│  - 배포 환경                                │
-│  - 런타임 설정                              │
+│  Step 2: Define technical parameters        │
+│  - Language/framework                       │
+│  - Database                                 │
+│  - Deployment environment                   │
+│  - Runtime settings                         │
 └─────────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────────┐
-│  3단계: 중앙 진실 문서 작성                │
-│  - 요구사항 명세서                          │
+│  Step 3: Write central source-of-truth docs │
+│  - Requirements specification               │
 │  - ERD (Entity Relationship Diagram)        │
-│  - API 명세서                               │
-│  - 상태값 정의                              │
-│  - 금지사항 목록                            │
-│  - 권한 설정                                │
-│  - 파일 구조                                │
+│  - API specification                        │
+│  - Status value definitions                 │
+│  - Prohibitions list                        │
+│  - Permission settings                      │
+│  - File structure                           │
 └─────────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────────┐
-│  4단계: 규칙 로드                           │
+│  Step 4: Load rules                         │
 │  - 00_AI_MASTER_RULES.md                    │
 │  - 00_DEVELOPMENT_LOCKED_MODE.md            │
-│  - 모듈 책임 행렬                           │
-│  - 상태값 레지스트리                        │
+│  - Module responsibility matrix             │
+│  - Status value registry                    │
 └─────────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────────┐
-│  5단계: 개발 시작                           │
-│  (규칙 기반 실행 모드)                      │
+│  Step 5: Start development                  │
+│  (rule-based execution mode)                │
 └─────────────────────────────────────────────┘
 ```
 
 ---
 
-## 문서 구조
+## Documentation Structure
 
-### 핵심 문서 (필수)
+### Core Documents (Required)
 
-| 파일 | 용도 | 언제 읽나 |
+| File | Purpose | When to Read |
 |------|------|---------|
-| `00_AI_MASTER_RULES.md` | AI 실행 규칙 11개 | 개발 시작 전 |
-| `00_BASE_KNOWLEDGE_LOAD.md` | 기본 지식 로드 프로세스 | 프로젝트 초기화 시 |
-| `00_DEVELOPMENT_LOCKED_MODE.md` | 규칙 기반 개발 모드 | 매 작업 시작 전 |
-| `00_ARCHITECTURE_CONFLICT_RESOLUTION.md` | 모듈 간 충돌 해결 | 다중 모듈 프로젝트 시 |
-| `00_STATUS_VALUE_REGISTRY.md` | 상태값 통합 정의 | API/DB 설계 시 |
-| `00_MODULE_RESPONSIBILITY_MATRIX.md` | 모듈 책임 행렬 | 권한 설정 시 |
+| `00_AI_MASTER_RULES.md` | 11 AI execution rules | Before starting development |
+| `00_BASE_KNOWLEDGE_LOAD.md` | Base knowledge load process | When initializing a project |
+| `00_DEVELOPMENT_LOCKED_MODE.md` | Rule-based development mode | Before starting each task |
+| `00_ARCHITECTURE_CONFLICT_RESOLUTION.md` | Resolving conflicts between modules | For multi-module projects |
+| `00_STATUS_VALUE_REGISTRY.md` | Unified status value definitions | When designing API/DB |
+| `00_MODULE_RESPONSIBILITY_MATRIX.md` | Module responsibility matrix | When setting permissions |
 
-### Base Knowledge Core (선택)
+### Base Knowledge Core (Optional)
 
-각 프로젝트 타입별로 필요한 Core만 로드:
+Load only the Core needed for each project type:
 
-| Core | 사용 시나리오 |
+| Core | Usage Scenario |
 |------|-------------|
-| `shopping_mall_core.md` | B2C 전자상거래 |
-| `marketplace_core.md` | 다중 판매자 마켓플레이스 |
-| `purchase_agency_core.md` | 해외 구매대행 |
-| `logistics_core.md` | 배송 관리 (대용량) |
-| `member_system_core.md` | 회원 시스템 |
-| `admin_system_core.md` | 관리자 기능 |
+| `shopping_mall_core.md` | B2C e-commerce |
+| `marketplace_core.md` | Multi-seller marketplace |
+| `purchase_agency_core.md` | Overseas purchase agency |
+| `logistics_core.md` | Delivery management (high volume) |
+| `member_system_core.md` | Member system |
+| `admin_system_core.md` | Admin features |
 
-### 도메인 모듈 설명 (참고)
+### Domain Module Descriptions (Reference)
 
-10개 모듈의 기능 설명:
-- 01_member_system: 회원 가입/로그인/프로필
-- 02_shopping_mall: 상품 카탈로그, 장바구니, 구매
+Feature descriptions of the 10 modules:
+- 01_member_system: Sign-up/login/profile
+- 02_shopping_mall: Product catalog, cart, purchase
 - ... (03-10)
 
 ---
 
-## 사용 방법
+## Usage
 
-### 사용 패턴 1: 문서 읽기 (브라우저)
+### Usage Pattern 1: Reading Documentation (Browser)
 
 ```bash
-# 1. 이 저장소를 클론
+# 1. Clone this repository
 git clone https://github.com/zmjckim-fa/coolhan.git
 cd coolhan
 
-# 2. knowledge_base 디렉토리 열기
+# 2. Open the knowledge_base directory
 cd knowledge_base
 
-# 3. 마크다운 파일들 확인
-ls -la *.md           # 핵심 문서
+# 3. Check the markdown files
+ls -la *.md           # Core documents
 ls -la core/          # Base Knowledge Core
 ```
 
-### 사용 패턴 2: 새 프로젝트 초기화
+### Usage Pattern 2: Initializing a New Project
 
 ```bash
-# 1. 프로젝트 디렉토리 생성
+# 1. Create a project directory
 mkdir my_ecommerce_project
 cd my_ecommerce_project
 
-# 2. 필수 문서 복사
+# 2. Copy the required documents
 cp -r ../coolhan/knowledge_base .
 
-# 3. 중앙 진실 문서 작성 시작
-# knowledge_base 폴더에서:
-#   - 01_PROJECT_OVERVIEW.md 작성
-#   - 02_REQUIREMENTS.md 작성
-#   - 03_ERD.md 작성
-#   - 04_API_SPECIFICATION.md 작성
-#   - 05_DATABASE_SCHEMA.md 작성
-#   - 06_STATUS_DEFINITIONS.md 작성
-#   - 07_PERMISSIONS.md 작성
-#   - 08_PROHIBITIONS.md 작성
+# 3. Begin writing central source-of-truth documents
+# In the knowledge_base folder:
+#   - Write 01_PROJECT_OVERVIEW.md
+#   - Write 02_REQUIREMENTS.md
+#   - Write 03_ERD.md
+#   - Write 04_API_SPECIFICATION.md
+#   - Write 05_DATABASE_SCHEMA.md
+#   - Write 06_STATUS_DEFINITIONS.md
+#   - Write 07_PERMISSIONS.md
+#   - Write 08_PROHIBITIONS.md
 
-# 4. 프로젝트 상태 파일 생성
+# 4. Create a project state file
 cat > 00_PROJECT_STATE.md << 'EOF'
 # Project: My E-Commerce Platform
 Created: 2026-05-27
@@ -284,180 +284,180 @@ Phase: Planning Complete, Development Ready
 EOF
 ```
 
-### 사용 패턴 3: AI와 함께 개발
+### Usage Pattern 3: Developing with AI
 
-**전제:** CoolHan Framework를 Claude AI 또는 다른 AI 도구와 함께 사용
+**Prerequisite:** Use the CoolHan Framework together with Claude AI or another AI tool
 
 ```bash
-# 1. AI 도구에 knowledge_base 전체 로드
-# (VS Code, Claude Code, GitHub Copilot 등의 RAG 시스템)
+# 1. Load the entire knowledge_base into the AI tool
+# (RAG systems such as VS Code, Claude Code, GitHub Copilot)
 
-# 2. 프로젝트 초기화 메시지
+# 2. Project initialization message
 """
-이 프로젝트는 CoolHan Framework를 사용합니다.
+This project uses the CoolHan Framework.
 
-필수 규칙:
-- 00_AI_MASTER_RULES.md 준용
-- 00_DEVELOPMENT_LOCKED_MODE.md 준용
-- 00_MODULE_RESPONSIBILITY_MATRIX.md 준용
+Required rules:
+- Comply with 00_AI_MASTER_RULES.md
+- Comply with 00_DEVELOPMENT_LOCKED_MODE.md
+- Comply with 00_MODULE_RESPONSIBILITY_MATRIX.md
 
-이 문서들을 먼저 로드해주세요.
+Please load these documents first.
 """
 
-# 3. 중앙 진실 문서 제시
-# AI에게 위의 8개 문서를 제공
+# 3. Provide the central source-of-truth documents
+# Provide the 8 documents above to the AI
 
-# 4. 개발 진행
-# AI는 문서 기반으로만 실행 (추론/창작 아님)
+# 4. Proceed with development
+# The AI executes based only on the documents (not inference/creation)
 ```
 
 ---
 
-## 자주 묻는 질문 (FAQ)
+## Frequently Asked Questions (FAQ)
 
-### Q1: 어떤 Base Knowledge Core부터 시작해야 하나요?
+### Q1: Which Base Knowledge Core should I start with?
 
-**A:** 프로젝트 타입에 따라:
-- 일반 온라인 쇼핑몰 → `shopping_mall_core.md`
-- 다중 판매자 플랫폼 → `marketplace_core.md`
-- 해외 구매대행 → `purchase_agency_core.md`
-- 배송 최적화 → `logistics_core.md`
+**A:** Depending on the project type:
+- General online shopping mall → `shopping_mall_core.md`
+- Multi-seller platform → `marketplace_core.md`
+- Overseas purchase agency → `purchase_agency_core.md`
+- Delivery optimization → `logistics_core.md`
 
-### Q2: 도메인 모듈(01-10)과 Base Knowledge Core는 어떤 관계인가요?
+### Q2: What is the relationship between domain modules (01-10) and Base Knowledge Core?
 
 **A:** 
-- **Base Knowledge Core**: 산업 표준 정의 (추상)
-- **도메인 모듈 (01-10)**: 구체적 기능 구현 (실제 코드)
-- **관계**: Core는 모듈의 최소 요구사항을 정의하고, 모듈이 Core를 구현/확장
+- **Base Knowledge Core**: Industry-standard definition (abstract)
+- **Domain modules (01-10)**: Concrete feature implementation (actual code)
+- **Relationship**: Core defines the minimum requirements of the modules, and the modules implement/extend the Core
 
-### Q3: 기존 프로젝트에 CoolHan을 적용할 수 있나요?
+### Q3: Can I apply CoolHan to an existing project?
 
-**A:** 가능합니다. 다음 순서로:
-1. 현재 프로젝트의 중앙 진실 문서 8개 작성
-2. 00_MODULE_RESPONSIBILITY_MATRIX와 비교하여 충돌 확인
-3. 충돌 해결 (00_ARCHITECTURE_CONFLICT_RESOLUTION.md 참조)
-4. 상태값 레지스트리 업데이트
-5. 규칙 적용 시작
+**A:** Yes. Follow this sequence:
+1. Write the 8 central source-of-truth documents for the current project
+2. Compare with 00_MODULE_RESPONSIBILITY_MATRIX to check for conflicts
+3. Resolve conflicts (refer to 00_ARCHITECTURE_CONFLICT_RESOLUTION.md)
+4. Update the status value registry
+5. Start applying the rules
 
-### Q4: 한국어가 아닌 다른 언어로 사용할 수 있나요?
+### Q4: Can I use it in a language other than English?
 
-**A:** 네, 가능합니다:
-1. knowledge_base를 다른 언어로 번역
-2. 프로젝트별 문서는 프로젝트 언어로 작성
-3. 핵심 규칙은 동일 (언어 독립적)
+**A:** Yes, you can:
+1. Translate the knowledge_base into another language
+2. Write project-specific documents in the project language
+3. The core rules are the same (language-independent)
 
-### Q5: 아키텍처 충돌이 발견되면 어떻게 하나요?
+### Q5: What do I do if an architecture conflict is found?
 
-**A:** 00_ARCHITECTURE_CONFLICT_RESOLUTION.md에 정의된 11개 충돌 해결 방법을 참조하고:
-1. 해당 충돌 번호 찾기
-2. 해결책의 "Single Source of Truth" 확인
-3. 소유 모듈 명시
-4. 프로젝트의 00_MODULE_RESPONSIBILITY_MATRIX 업데이트
+**A:** Refer to the 11 conflict resolution methods defined in 00_ARCHITECTURE_CONFLICT_RESOLUTION.md, and:
+1. Find the relevant conflict number
+2. Check the solution's "Single Source of Truth"
+3. Specify the owning module
+4. Update the project's 00_MODULE_RESPONSIBILITY_MATRIX
 
 ---
 
-## 문제 해결
+## Troubleshooting
 
-### 문제 1: 마크다운 파일이 보이지 않음
+### Problem 1: Markdown files are not visible
 
-**해결책:**
+**Solution:**
 ```bash
-# 1. 디렉토리 확인
+# 1. Check the directory
 ls -la knowledge_base/
 
-# 2. 파일 인코딩 확인 (UTF-8이어야 함)
+# 2. Check file encoding (must be UTF-8)
 file knowledge_base/00_AI_MASTER_RULES.md
 
-# 3. VS Code에서 열기
+# 3. Open in VS Code
 code knowledge_base/
 ```
 
-### 문제 2: Git 클론 실패
+### Problem 2: Git clone fails
 
-**해결책:**
+**Solution:**
 ```bash
-# SSH 대신 HTTPS 사용
+# Use HTTPS instead of SSH
 git clone https://github.com/zmjckim-fa/coolhan.git
 
-# 또는 깊이 제한으로 빠르게 클론
+# Or clone quickly with a depth limit
 git clone --depth 1 https://github.com/zmjckim-fa/coolhan.git
 ```
 
-### 문제 3: 권한 오류
+### Problem 3: Permission errors
 
-**해결책:**
+**Solution:**
 ```bash
-# 읽기 권한 추가
+# Add read permission
 chmod +r knowledge_base/*.md
 chmod +r knowledge_base/core/*.md
 ```
 
-### 문제 4: 로컬 서버가 포트 충돌
+### Problem 4: Local server port conflict
 
-**해결책:**
+**Solution:**
 ```bash
-# 다른 포트 사용
-python -m http.server 8888  # 8000 대신 8888
+# Use a different port
+python -m http.server 8888  # 8888 instead of 8000
 
-# 또는 사용 중인 포트 확인
+# Or check which ports are in use
 lsof -i :8000
 kill -9 <PID>
 ```
 
 ---
 
-## 지원 및 피드백
+## Support and Feedback
 
-### 피드백 제출
+### Submitting Feedback
 
-개선 사항이나 버그 보고:
+For improvements or bug reports:
 ```bash
-# GitHub Issues에서
+# On GitHub Issues
 https://github.com/zmjckim-fa/coolhan/issues
 
-# 또는 이메일
+# Or by email
 architecture@coolhan.dev
 ```
 
-### 커뮤니티
+### Community
 
-- **GitHub Discussions**: 질문 및 토론
-- **Wiki**: 추가 예제 및 가이드
-- **Issues**: 버그 보고 및 기능 요청
+- **GitHub Discussions**: Questions and discussion
+- **Wiki**: Additional examples and guides
+- **Issues**: Bug reports and feature requests
 
-### 업데이트 확인
+### Checking for Updates
 
 ```bash
-# 최신 버전 받기
+# Get the latest version
 git pull origin main
 
-# 변경사항 확인
+# Check the changes
 git log --oneline -10
 ```
 
 ---
 
-## 라이선스 및 이용약관
+## License and Terms of Use
 
-**CoolHan Framework**는 MIT 라이선스 하에 배포됩니다.
+**CoolHan Framework** is distributed under the MIT License.
 
-자유롭게 사용, 수정, 배포할 수 있습니다.
-자세한 사항은 LICENSE 파일을 참조하세요.
-
----
-
-## 다음 단계
-
-1. ✅ 이 가이드 읽기 (완료)
-2. 📖 `README.md` 읽기 (프로젝트 개요)
-3. 📚 `00_AI_MASTER_RULES.md` 읽기 (핵심 규칙)
-4. 🔍 Base Knowledge Core 선택 (프로젝트 타입)
-5. 🚀 새 프로젝트 시작!
+You are free to use, modify, and distribute it.
+For details, refer to the LICENSE file.
 
 ---
 
-**CoolHan Builder로 시작하세요! 🚀**
+## Next Steps
 
-설치, 문서 읽기, 첫 프로젝트 초기화까지 약 30분이 소요됩니다.
+1. ✅ Read this guide (done)
+2. 📖 Read `README.md` (project overview)
+3. 📚 Read `00_AI_MASTER_RULES.md` (core rules)
+4. 🔍 Select a Base Knowledge Core (project type)
+5. 🚀 Start a new project!
 
-더 자세한 정보는 `README.md`를 참조하세요.
+---
+
+**Get started with CoolHan Builder! 🚀**
+
+It takes about 30 minutes from installation and reading the documentation to initializing your first project.
+
+For more details, refer to `README.md`.

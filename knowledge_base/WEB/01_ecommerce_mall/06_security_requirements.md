@@ -1,539 +1,539 @@
-# 쇼핑몰 - 보안 요구사항 (E-Commerce Mall Security Requirements)
+# E-Commerce Mall - Security Requirements
 
-## 1. 데이터 보안
+## 1. Data Security
 
-### 1.1 개인정보 보호
+### 1.1 Privacy Protection
 ```
-필수 사항:
-- 개인정보처리방침 수립 및 공개
-- 사용자 동의 하에 데이터 수집
-- 데이터 최소화 원칙 (필요한 정보만 수집)
-- 정보의 정확성 유지
-- 정보 이용 제한 (수집 목적 범위 내)
-- 데이터 삭제 권리 제공 (GDPR)
-- 데이터 개인 공개 요청 처리
-```
-
-### 1.2 개인정보 암호화
-```
-저장 시 암호화:
-- 비밀번호: bcrypt, scrypt, PBKDF2 (최소 12만 회 이상 반복)
-- 신용카드 정보: AES-256 (하지만 PG에서 직접 저장하면 안 됨)
-- 주민등록번호: AES-256
-- 전화번호: AES-256 (또는 마스킹: 010-****-5678)
-- 이메일: AES-256
-
-전송 시 암호화:
-- HTTPS/TLS 1.2 이상 (모든 통신)
-- SSL 인증서 유효성 확인
-- HSTS (HTTP Strict-Transport-Security) 활성화
+Requirements:
+- Establish and publish a privacy policy
+- Collect data with user consent
+- Data minimization principle (collect only necessary information)
+- Maintain accuracy of information
+- Restrict use of information (within the scope of the collection purpose)
+- Provide right to data deletion (GDPR)
+- Handle personal data disclosure requests
 ```
 
-### 1.3 데이터 백업
+### 1.2 Personal Data Encryption
 ```
-백업 정책:
-- 일일 자동 백업
-- 주 1회 전체 백업
-- 월 1회 오프사이트 백업
-- 백업 데이터 암호화
-- 복구 테스트 주기적 실행 (월 1회)
+Encryption at rest:
+- Passwords: bcrypt, scrypt, PBKDF2 (at least 120,000 iterations)
+- Credit card info: AES-256 (but should not be stored directly; handled by PG)
+- Resident registration number: AES-256
+- Phone number: AES-256 (or masking: 010-****-5678)
+- Email: AES-256
 
-백업 보관:
-- 최소 3개월 보관
-- 암호화된 형태로 저장
-- 접근 제어 (필요한 사람만)
-- 서로 다른 위치에 보관 (지리적 분산)
-```
-
----
-
-## 2. 결제 보안
-
-### 2.1 PCI DSS 준수
-```
-PCI DSS (Payment Card Industry Data Security Standard) 요구사항:
-
-1. 카드 데이터 직접 저장 금지
-   - PG(Payment Gateway)에서 토큰 발급
-   - 토큰만 저장 및 사용
-   - 카드 정보는 PG 서버에만 보관
-
-2. 통신 암호화
-   - HTTPS/TLS 1.2 이상
-   - 모든 카드 데이터 전송 암호화
-
-3. 액세스 제어
-   - 직원별 권한 분리
-   - 최소 권한 원칙
-   - 접근 로그 기록
-
-4. 정기적 보안 감시
-   - 침입 감지 시스템 (IDS)
-   - 침입 방지 시스템 (IPS)
-   - 방화벽 설정
-
-5. 보안 테스트
-   - 연 1회 이상 침투 테스트
-   - 정기적 취약점 스캔
+Encryption in transit:
+- HTTPS/TLS 1.2 or higher (all communication)
+- Verify SSL certificate validity
+- Enable HSTS (HTTP Strict-Transport-Security)
 ```
 
-### 2.2 결제 검증
+### 1.3 Data Backup
 ```
-결제액 검증:
-- 클라이언트: 주문금액 × 수량 계산
-- 서버: 다시 한 번 검증
-- PG: 최종 검증
-- 세 곳 모두 일치해야만 결제 승인
+Backup policy:
+- Daily automatic backup
+- Weekly full backup
+- Monthly off-site backup
+- Encrypt backup data
+- Periodic recovery testing (monthly)
 
-중복 결제 방지:
-- 결제 ID (Transaction ID) 중복 검사
-- 동일 주문에 대한 중복 결제 차단
-- 결제 상태 확인 후 처리
-
-비정상 거래 감지:
-- 단시간 내 대량 구매 감시
-- 이상 금액 거래 감시
-- 해외 결제 차단 (정책에 따라)
-- 고위험 국가 거래 차단
-- 머신러닝 기반 이상 탐지
-```
-
-### 2.3 환불 보안
-```
-환불 정책:
-- 원래 결제 수단으로 환불
-- 환불 승인 프로세스 (이중 확인)
-- 환불 로그 기록 및 감사
-- 환불 취소 불가 (감시만 가능)
-
-위변조 방지:
-- 환불액 수정 불가
-- 환불 증거 기록 (스크린샷, 로그)
-- 관리자 감시
+Backup retention:
+- Retain for at least 3 months
+- Store in encrypted form
+- Access control (only authorized personnel)
+- Store in different locations (geographic distribution)
 ```
 
 ---
 
-## 3. 계정 보안
+## 2. Payment Security
 
-### 3.1 비밀번호 정책
+### 2.1 PCI DSS Compliance
 ```
-강도 요구사항:
-- 최소 길이: 8자 이상
-- 필수 조합: 대문자 + 소문자 + 숫자 + 특수문자
-- 정책: ~!@#$%^&*()_+-=[]{}|;:",.<>?/
+PCI DSS (Payment Card Industry Data Security Standard) requirements:
 
-비밀번호 관리:
-- 비밀번호 변경 유도 (90일마다)
-- 이전 비밀번호와 중복 방지 (최근 5개)
-- 일시적 비밀번호 자동 만료 (24시간)
-```
+1. Prohibit direct storage of card data
+   - Tokens issued by PG (Payment Gateway)
+   - Store and use only tokens
+   - Card info kept only on PG servers
 
-### 3.2 다중인증 (Multi-Factor Authentication)
-```
-2FA 옵션:
-1. 이메일 인증 (약함)
-2. SMS 인증 (중간)
-3. 앱 인증기 (Google Authenticator, Authy) (강함)
-4. 생체인증 (지문, 얼굴) (가장 강함)
+2. Encrypt communication
+   - HTTPS/TLS 1.2 or higher
+   - Encrypt all card data transmission
 
-2FA 필수 대상:
-- 관리자 계정 (필수)
-- 판매자 계정 (필수)
-- 일반 사용자 (선택, 권장)
-```
+3. Access control
+   - Separate permissions per employee
+   - Least privilege principle
+   - Record access logs
 
-### 3.3 세션 관리
-```
-토큰 발급:
-- JWT (JSON Web Token) 사용
-- 서명 (HS256 또는 RS256)
-- 만료 시간: 1시간
-- Refresh Token: 30일
+4. Regular security monitoring
+   - Intrusion Detection System (IDS)
+   - Intrusion Prevention System (IPS)
+   - Firewall configuration
 
-세션 보안:
-- HttpOnly 쿠키 (JavaScript 접근 불가)
-- Secure 플래그 (HTTPS만)
-- SameSite=Strict (CSRF 방지)
-- 세션 타임아웃 (30분 미활동)
-
-세션 추적:
-- 세션 생성/종료 로그
-- IP 변경 감지 (재인증 요구)
-- 동시 세션 제한 (2개까지)
+5. Security testing
+   - Penetration testing at least once a year
+   - Regular vulnerability scanning
 ```
 
-### 3.4 계정 잠금
+### 2.2 Payment Validation
 ```
-로그인 시도 제한:
-- 5회 실패 후 계정 임시 잠금 (30분)
-- 10회 실패 후 계정 장시간 잠금 (24시간)
-- 관리자 수동 해제 가능
+Payment amount validation:
+- Client: calculate order amount × quantity
+- Server: validate once more
+- PG: final validation
+- Payment is approved only if all three match
 
-의심 활동 감지:
-- 비정상적 로그인 위치 (예: 새로운 국가)
-- 비정상적 로그인 시간대
-- 여러 기기에서의 동시 로그인
+Duplicate payment prevention:
+- Check for duplicate payment ID (Transaction ID)
+- Block duplicate payments for the same order
+- Process after checking payment status
 
-알림:
-- 새로운 기기 로그인 시 이메일 알림
-- 비밀번호 변경 알림
-- 계정 잠금 알림
+Anomalous transaction detection:
+- Monitor bulk purchases within a short time
+- Monitor abnormal-amount transactions
+- Block overseas payments (per policy)
+- Block transactions from high-risk countries
+- Machine-learning-based anomaly detection
+```
+
+### 2.3 Refund Security
+```
+Refund policy:
+- Refund to the original payment method
+- Refund approval process (double confirmation)
+- Record and audit refund logs
+- Refunds cannot be reverted (only monitored)
+
+Tampering prevention:
+- Refund amount cannot be modified
+- Record refund evidence (screenshots, logs)
+- Admin monitoring
 ```
 
 ---
 
-## 4. 네트워크 보안
+## 3. Account Security
+
+### 3.1 Password Policy
+```
+Strength requirements:
+- Minimum length: 8 characters or more
+- Required combination: uppercase + lowercase + number + special character
+- Allowed: ~!@#$%^&*()_+-=[]{}|;:",.<>?/
+
+Password management:
+- Prompt password change (every 90 days)
+- Prevent reuse of previous passwords (last 5)
+- Auto-expire temporary passwords (24 hours)
+```
+
+### 3.2 Multi-Factor Authentication
+```
+2FA options:
+1. Email verification (weak)
+2. SMS verification (medium)
+3. App authenticator (Google Authenticator, Authy) (strong)
+4. Biometric authentication (fingerprint, face) (strongest)
+
+2FA mandatory for:
+- Admin accounts (required)
+- Seller accounts (required)
+- Regular users (optional, recommended)
+```
+
+### 3.3 Session Management
+```
+Token issuance:
+- Use JWT (JSON Web Token)
+- Signing (HS256 or RS256)
+- Expiry time: 1 hour
+- Refresh Token: 30 days
+
+Session security:
+- HttpOnly cookies (no JavaScript access)
+- Secure flag (HTTPS only)
+- SameSite=Strict (CSRF prevention)
+- Session timeout (30 minutes of inactivity)
+
+Session tracking:
+- Log session creation/termination
+- Detect IP changes (require re-authentication)
+- Limit concurrent sessions (up to 2)
+```
+
+### 3.4 Account Lockout
+```
+Login attempt limiting:
+- Temporarily lock account after 5 failures (30 minutes)
+- Long lock account after 10 failures (24 hours)
+- Manual unlock by admin possible
+
+Suspicious activity detection:
+- Unusual login location (e.g., a new country)
+- Unusual login time
+- Simultaneous login from multiple devices
+
+Notifications:
+- Email notification on login from a new device
+- Password change notification
+- Account lockout notification
+```
+
+---
+
+## 4. Network Security
 
 ### 4.1 HTTPS/TLS
 ```
-요구사항:
-- TLS 1.2 이상 (1.3 권장)
-- 인증서: 최소 2048-bit RSA
-- 인증서 갱신: 만료 90일 전 자동 갱신
-- 모든 HTTP 요청은 HTTPS로 리다이렉트
+Requirements:
+- TLS 1.2 or higher (1.3 recommended)
+- Certificate: minimum 2048-bit RSA
+- Certificate renewal: auto-renew 90 days before expiry
+- Redirect all HTTP requests to HTTPS
 
 HSTS (HTTP Strict-Transport-Security):
-- 활성화: 필수
-- max-age: 31536000초 (1년) 이상
-- includeSubDomains: 포함
-- preload: 권장
+- Enable: required
+- max-age: 31536000 seconds (1 year) or more
+- includeSubDomains: included
+- preload: recommended
 
-인증서 검증:
-- 자체 서명 인증서 금지
-- 신뢰된 CA (Certificate Authority)에서 발급
-- OCSP Stapling 사용 (인증서 유효성 검사 고속화)
+Certificate verification:
+- Self-signed certificates prohibited
+- Issued by a trusted CA (Certificate Authority)
+- Use OCSP Stapling (speed up certificate validity checks)
 ```
 
-### 4.2 방화벽
+### 4.2 Firewall
 ```
-설정:
-- DDoS 방어
-- WAF (Web Application Firewall) 활성화
-- 비정상 트래픽 차단
-- 포트 스캔 차단
-- 지역별 IP 화이트리스트/블랙리스트
+Configuration:
+- DDoS defense
+- Enable WAF (Web Application Firewall)
+- Block abnormal traffic
+- Block port scans
+- Regional IP whitelist/blacklist
 
-모니터링:
-- 실시간 트래픽 모니터링
-- 의심 활동 감지
-- 자동 차단 및 알림
+Monitoring:
+- Real-time traffic monitoring
+- Suspicious activity detection
+- Automatic blocking and alerting
 ```
 
-### 4.3 API 보안
+### 4.3 API Security
 ```
-요청 검증:
-- 요청 서명 (HMAC)
-- Rate limiting (API 호출 횟수 제한)
-- IP 화이트리스팅 (선택사항)
+Request validation:
+- Request signing (HMAC)
+- Rate limiting (limit API call count)
+- IP whitelisting (optional)
 
-응답 보안:
-- 민감한 정보 노출 방지
-- 에러 메시지 최소화 (외부 공개 금지)
-- 스택 트레이스 숨기기
+Response security:
+- Prevent exposure of sensitive information
+- Minimize error messages (no external disclosure)
+- Hide stack traces
 
-API 버전 관리:
-- 구버전 지원 기간 명시
-- 사용 중단 알림 (90일 전)
+API version management:
+- Specify support period for old versions
+- Deprecation notice (90 days in advance)
 ```
 
 ---
 
-## 5. 애플리케이션 보안
+## 5. Application Security
 
-### 5.1 코드 보안
+### 5.1 Code Security
 ```
-SQL Injection 방지:
-- 파라미터화된 쿼리 (Prepared Statements)
-- ORM 사용 (Hibernate, SQLAlchemy)
-- 입력값 검증 및 이스케이프
+SQL Injection prevention:
+- Parameterized queries (Prepared Statements)
+- Use ORM (Hibernate, SQLAlchemy)
+- Validate and escape input
 
-XSS (Cross-Site Scripting) 방지:
-- 사용자 입력 sanitization
-- HTML 인코딩
-- Content Security Policy (CSP) 설정
+XSS (Cross-Site Scripting) prevention:
+- Sanitize user input
+- HTML encoding
+- Set Content Security Policy (CSP)
 
-CSRF (Cross-Site Request Forgery) 방지:
-- CSRF 토큰 사용
-- SameSite 쿠키 속성
-- Origin/Referer 검증
+CSRF (Cross-Site Request Forgery) prevention:
+- Use CSRF tokens
+- SameSite cookie attribute
+- Validate Origin/Referer
 
-보안 헤더:
+Security headers:
 - X-Content-Type-Options: nosniff
 - X-Frame-Options: DENY
 - X-XSS-Protection: 1; mode=block
 - Strict-Transport-Security: ...
 ```
 
-### 5.2 입력 검증
+### 5.2 Input Validation
 ```
-클라이언트 검증 (UX):
-- 이메일 형식 검증
-- 전화번호 형식 검증
-- 필수 필드 확인
-- 파일 크기 제한
+Client validation (UX):
+- Email format validation
+- Phone number format validation
+- Required field check
+- File size limit
 
-서버 검증 (필수):
-- 모든 입력값 다시 검증
-- 타입 검증
-- 길이 검증
-- 범위 검증
-- 화이트리스트 검증 (가능한 경우)
+Server validation (required):
+- Re-validate all inputs
+- Type validation
+- Length validation
+- Range validation
+- Whitelist validation (where possible)
 
-파일 업로드:
-- 파일 크기 제한 (최대 5MB)
-- 파일 타입 검증 (화이트리스트)
-- 바이러스 스캔
-- 파일명 변경 (보안)
-- 별도 서버에 저장 (CDN)
-```
-
-### 5.3 로그 및 모니터링
-```
-로깅:
-- 모든 API 호출 기록
-- 인증 시도 (성공/실패)
-- 권한 변경
-- 데이터 접근 (민감 정보)
-- 관리자 작업
-- 에러 및 예외
-
-로그 보안:
-- 민감한 정보 마스킹 (비밀번호, 토큰)
-- 중앙 로깅 시스템
-- 로그 암호화
-- 로그 보관 기간: 최소 1년
-- 로그 위변조 방지
-
-모니터링:
-- 실시간 알림
-- 의심 활동 감지
-- 성능 모니터링
-- 용량 모니터링
+File upload:
+- File size limit (max 5MB)
+- File type validation (whitelist)
+- Virus scan
+- Rename file (security)
+- Store on a separate server (CDN)
 ```
 
----
-
-## 6. 운영 보안
-
-### 6.1 접근 제어 (IAM)
+### 5.3 Logging and Monitoring
 ```
-역할별 권한:
-- 관리자: 모든 권한
-- 판매자: 자신의 상품/주문만
-- 고객 서비스: 고객 정보 조회, 주문 수정
-- 개발자: 로그 조회, 디버깅 (운영 환경 제한)
+Logging:
+- Record all API calls
+- Authentication attempts (success/failure)
+- Permission changes
+- Data access (sensitive info)
+- Admin actions
+- Errors and exceptions
 
-최소 권한 원칙:
-- 필요한 권한만 부여
-- 정기적 권한 검토 (분기마다)
-- 퇴직자 권한 즉시 회수
-- 권한 변경 로그 기록
-```
+Log security:
+- Mask sensitive information (passwords, tokens)
+- Centralized logging system
+- Log encryption
+- Log retention period: at least 1 year
+- Log tamper prevention
 
-### 6.2 보안 업데이트
-```
-패치 관리:
-- 보안 취약점 모니터링 (CVE)
-- 패치 테스트 (테스트 환경)
-- 긴급 패치: 1일 이내 배포
-- 일반 패치: 주 1회 배포
-- 롤백 계획 수립
-
-의존성 관리:
-- 정기적 취약점 스캔 (OWASP Top 10)
-- 오래된 라이브러리 업그레이드
-- 라이선스 검증
-```
-
-### 6.3 개발 환경 보안
-```
-개발자 계정:
-- 강한 비밀번호 정책
-- 2FA 필수
-- SSH 키 기반 인증
-
-코드 리뷰:
-- 모든 코드 리뷰 필수
-- 보안 전문가 참여
-- 정적 분석 도구 (SAST) 사용
-- 동적 분석 도구 (DAST) 사용
-
-버전 관리:
-- 민감한 정보 커밋 금지 (.env, secrets)
-- 커밋 서명 (GPG)
-- 풀 리퀘스트 검증
-```
-
-### 6.4 배포 보안
-```
-배포 프로세스:
-- 변경 추적 (Change Log)
-- 승인 워크플로우 (개발 → 테스트 → 운영)
-- 자동화된 테스트 (CI/CD)
-- 배포 롤백 계획
-
-운영 환경:
-- 프로덕션 데이터베이스 분리
-- 개발자의 프로덕션 접근 제한
-- 모니터링 및 알림
-- 백업 및 복구 계획
+Monitoring:
+- Real-time alerts
+- Suspicious activity detection
+- Performance monitoring
+- Capacity monitoring
 ```
 
 ---
 
-## 7. 컴플라이언스
+## 6. Operational Security
 
-### 7.1 법적 요구사항
+### 6.1 Access Control (IAM)
 ```
-개인정보보호법 (PIPA):
-- 개인정보처리방침 수립
-- 개인정보보호 담당자 지정
-- 데이터 처리 계약서
-- 수탁자 관리
+Permissions by role:
+- Admin: all permissions
+- Seller: only their own products/orders
+- Customer service: view customer info, edit orders
+- Developer: view logs, debug (restricted in production)
 
-전자상거래법:
-- 사업자 정보 공개
-- 상품 정보 정확성
-- 환불 정책 명시
-- 취소 정책 명시
-
-정보보호 관리 체계 (ISMS):
-- 보안 정책 수립
-- 정기적 감시 및 평가
-- 직원 교육
-- 외부 감사
+Least privilege principle:
+- Grant only necessary permissions
+- Periodic permission review (quarterly)
+- Immediately revoke permissions for departed staff
+- Log permission changes
 ```
 
-### 7.2 감사 (Audit)
+### 6.2 Security Updates
 ```
-정기 감사:
-- 분기별 내부 보안 감사
-- 연 1회 외부 보안 감사
-- 침투 테스트 (연 1회 이상)
-- 코드 보안 검사
+Patch management:
+- Monitor security vulnerabilities (CVE)
+- Patch testing (test environment)
+- Emergency patch: deploy within 1 day
+- Regular patch: deploy weekly
+- Establish rollback plan
 
-감사 기록:
-- 감사 계획 및 결과 기록
-- 취약점 관리 (발견 → 해결 → 검증)
-- 개선사항 추적
-```
-
----
-
-## 8. 인사 보안
-
-### 8.1 직원 교육
-```
-보안 교육:
-- 신규 입사자 보안 교육 (필수)
-- 연 2회 이상 보안 교육
-- 피싱 대응 훈련
-- 사례 연구
-
-접근 권한 교육:
-- 비밀번호 관리
-- 정보 취급
-- 사회공학(Social Engineering) 대응
+Dependency management:
+- Regular vulnerability scanning (OWASP Top 10)
+- Upgrade outdated libraries
+- License verification
 ```
 
-### 8.2 배경 조사
+### 6.3 Development Environment Security
 ```
-채용 전 조사:
-- 신원 확인
-- 경력 검증
-- 범죄 경력 조회 (필요 시)
+Developer accounts:
+- Strong password policy
+- 2FA required
+- SSH key-based authentication
 
-퇴직 절차:
-- 모든 접근 권한 회수
-- 데이터 반환 확인
-- 보안 서약 서명
+Code review:
+- All code review required
+- Security expert participation
+- Use static analysis tools (SAST)
+- Use dynamic analysis tools (DAST)
+
+Version control:
+- Prohibit committing sensitive info (.env, secrets)
+- Sign commits (GPG)
+- Validate pull requests
+```
+
+### 6.4 Deployment Security
+```
+Deployment process:
+- Change tracking (Change Log)
+- Approval workflow (development → test → production)
+- Automated testing (CI/CD)
+- Deployment rollback plan
+
+Production environment:
+- Separate production database
+- Restrict developer access to production
+- Monitoring and alerting
+- Backup and recovery plan
 ```
 
 ---
 
-## 9. 사건 대응 (Incident Response)
+## 7. Compliance
 
-### 9.1 사건 분류
+### 7.1 Legal Requirements
 ```
-심각도:
-- Critical: 전체 서비스 중단, 대량 데이터 유출
-- High: 일부 서비스 중단, 민감 데이터 유출
-- Medium: 제한된 서비스 영향, 개인정보 노출
-- Low: 경미한 보안 이슈
+Personal Information Protection Act (PIPA):
+- Establish privacy policy
+- Designate a privacy officer
+- Data processing agreements
+- Manage data processors
 
-응답 시간:
-- Critical: 15분 이내
-- High: 1시간 이내
-- Medium: 4시간 이내
-- Low: 24시간 이내
-```
+E-Commerce Act:
+- Disclose business information
+- Product information accuracy
+- State refund policy
+- State cancellation policy
 
-### 9.2 사건 대응 절차
-```
-1. 탐지 및 보고
-   - 보안팀 알림
-   - 초기 평가
-   - 인시던트 번호 부여
-
-2. 조사
-   - 범위 파악
-   - 영향 범위 판단
-   - 로그 분석
-
-3. 대응
-   - 서비스 격리
-   - 임시 방어 조치
-   - 복구 계획 수립
-
-4. 복구
-   - 영향 범위 해결
-   - 서비스 복구
-   - 모니터링 강화
-
-5. 사후 처리
-   - 근본 원인 분석
-   - 개선사항 적용
-   - 고객 공지
+Information Security Management System (ISMS):
+- Establish security policy
+- Periodic monitoring and assessment
+- Employee training
+- External audit
 ```
 
-### 9.3 공지 및 보상
+### 7.2 Audit
 ```
-고객 공지:
-- 지연: 최대한 빨리 (사건 후 72시간 이내)
-- 내용: 발생 내용, 영향 범위, 대응 조치, 연락처
-- 채널: 이메일, 웹사이트, 뉴스
+Regular audits:
+- Quarterly internal security audit
+- Annual external security audit
+- Penetration testing (at least once a year)
+- Code security review
 
-고객 보상:
-- 신용카드 모니터링 서비스 (무료)
-- 포인트 보상
-- 보험료 지원 (필요 시)
+Audit records:
+- Record audit plans and results
+- Vulnerability management (discovery → resolution → verification)
+- Track improvements
 ```
 
 ---
 
-## 10. 보안 도구 및 서비스
+## 8. Personnel Security
+
+### 8.1 Employee Training
+```
+Security training:
+- New-hire security training (required)
+- Security training at least twice a year
+- Phishing response drills
+- Case studies
+
+Access permission training:
+- Password management
+- Information handling
+- Social Engineering response
+```
+
+### 8.2 Background Checks
+```
+Pre-hire screening:
+- Identity verification
+- Career verification
+- Criminal record check (if needed)
+
+Departure procedure:
+- Revoke all access permissions
+- Confirm data return
+- Sign security pledge
+```
+
+---
+
+## 9. Incident Response
+
+### 9.1 Incident Classification
+```
+Severity:
+- Critical: full service outage, mass data breach
+- High: partial service outage, sensitive data breach
+- Medium: limited service impact, personal data exposure
+- Low: minor security issue
+
+Response time:
+- Critical: within 15 minutes
+- High: within 1 hour
+- Medium: within 4 hours
+- Low: within 24 hours
+```
+
+### 9.2 Incident Response Procedure
+```
+1. Detection and reporting
+   - Notify security team
+   - Initial assessment
+   - Assign incident number
+
+2. Investigation
+   - Identify scope
+   - Determine impact range
+   - Analyze logs
+
+3. Response
+   - Isolate service
+   - Temporary defensive measures
+   - Establish recovery plan
+
+4. Recovery
+   - Resolve impacted areas
+   - Restore service
+   - Strengthen monitoring
+
+5. Post-incident handling
+   - Root cause analysis
+   - Apply improvements
+   - Notify customers
+```
+
+### 9.3 Notification and Compensation
+```
+Customer notification:
+- Timing: as soon as possible (within 72 hours of the incident)
+- Content: what happened, impact range, response measures, contact info
+- Channels: email, website, news
+
+Customer compensation:
+- Credit card monitoring service (free)
+- Points compensation
+- Insurance support (if needed)
+```
+
+---
+
+## 10. Security Tools and Services
 
 ```
-정적 분석 (SAST):
+Static analysis (SAST):
 - SonarQube
 - Checkmarx
 - Fortify
 
-동적 분석 (DAST):
+Dynamic analysis (DAST):
 - Burp Suite
 - OWASP ZAP
 
-종합 관리:
+Comprehensive management:
 - Qualys VMDR
 - Rapid7 Nexpose
 
-로그 관리:
+Log management:
 - ELK (Elasticsearch, Logstash, Kibana)
 - Splunk
 - Datadog
 
-모니터링:
+Monitoring:
 - Datadog
 - New Relic
 - CloudFlare
@@ -541,6 +541,6 @@ CSRF (Cross-Site Request Forgery) 방지:
 
 ---
 
-## 다음 문서로 읽어야 할 것
+## What to Read Next
 
-1. **07_spec_template.md** - 기획서 템플릿
+1. **07_spec_template.md** - Specification template

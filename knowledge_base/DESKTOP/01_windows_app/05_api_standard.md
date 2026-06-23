@@ -1,9 +1,9 @@
-# Windows 데스크탑 앱 API 표준 (API Standard)
+# Windows Desktop App API Standard
 
-## 1. HttpClient 표준 구성
+## 1. Standard HttpClient Configuration
 
 ```csharp
-// DI 등록 (Program.cs / App.xaml.cs)
+// DI registration (Program.cs / App.xaml.cs)
 services.AddHttpClient<ApiClient>(client =>
 {
     client.BaseAddress = new Uri(AppConfig.ApiBaseUrl);
@@ -14,13 +14,13 @@ services.AddHttpClient<ApiClient>(client =>
 .AddHttpMessageHandler<AuthHandler>()
 .AddHttpMessageHandler<RetryHandler>();
 
-// 단일 인스턴스 (IHttpClientFactory 사용 권장 — 소켓 고갈 방지)
-// HttpClient를 직접 new하지 않는다
+// Single instance (using IHttpClientFactory is recommended — prevents socket exhaustion)
+// Do not new up HttpClient directly
 ```
 
 ---
 
-## 2. API 클라이언트 구현
+## 2. API Client Implementation
 
 ```csharp
 public class ApiClient
@@ -34,7 +34,7 @@ public class ApiClient
         _tokens = tokens;
     }
 
-    // 제네릭 요청 메서드
+    // Generic request methods
     public async Task<Result<T>> GetAsync<T>(string path, CancellationToken ct = default)
         => await SendAsync<T>(HttpMethod.Get, path, body: null, ct);
 
@@ -92,14 +92,14 @@ public class ApiClient
     {
         ApiError? apiError = null;
         try { apiError = JsonSerializer.Deserialize<ApiErrorWrapper>(json, JsonOptions)?.Error; }
-        catch { /* JSON 파싱 실패 → 코드 기반 예외 */ }
+        catch { /* JSON parsing failed → code-based exception */ }
 
         return (int)code switch
         {
             401 => new AppException.Unauthorized(),
             403 => new AppException.Forbidden(),
             404 => new AppException.NotFound(),
-            422 => new AppException.Validation(apiError?.Message ?? "유효성 오류", apiError?.Field),
+            422 => new AppException.Validation(apiError?.Message ?? "Validation error", apiError?.Field),
             429 => new AppException.RateLimited(),
             >= 500 => new AppException.Server((int)code),
             _ => new AppException.Unknown($"HTTP {(int)code}")
@@ -110,10 +110,10 @@ public class ApiClient
 
 ---
 
-## 3. 표준 응답 모델
+## 3. Standard Response Model
 
 ```csharp
-// 성공 응답 래퍼
+// Success response wrapper
 public record ApiResponse<T>(
     bool Success,
     T? Data,
@@ -125,7 +125,7 @@ public record ApiError(string Code, string Message, string? Field);
 public record ApiErrorWrapper(ApiError Error);
 public record PaginationMeta(int Total, int Page, int PerPage);
 
-// 결과 타입 (Railway Pattern)
+// Result type (Railway Pattern)
 public abstract record Result<T>
 {
     public abstract bool IsSuccess { get; }
@@ -158,25 +158,25 @@ public static class Result
 
 public record struct Unit { public static readonly Unit Value = default; }
 
-// 예외 계층
+// Exception hierarchy
 public abstract class AppException(string message) : Exception(message)
 {
-    public class Unauthorized() : AppException("인증이 필요합니다") { }
-    public class Forbidden() : AppException("권한이 없습니다") { }
-    public class NotFound() : AppException("데이터를 찾을 수 없습니다") { }
+    public class Unauthorized() : AppException("Authentication is required") { }
+    public class Forbidden() : AppException("You do not have permission") { }
+    public class NotFound() : AppException("The data could not be found") { }
     public class Validation(string msg, string? field) : AppException(msg) { public string? Field => field; }
-    public class RateLimited() : AppException("잠시 후 다시 시도해 주세요") { }
-    public class Server(int code) : AppException($"서버 오류 ({code})") { }
-    public class NetworkUnavailable() : AppException("인터넷 연결을 확인해 주세요") { }
-    public class Timeout() : AppException("요청 시간이 초과되었습니다") { }
-    public class Cancelled() : AppException("요청이 취소되었습니다") { }
+    public class RateLimited() : AppException("Please try again in a moment") { }
+    public class Server(int code) : AppException($"Server error ({code})") { }
+    public class NetworkUnavailable() : AppException("Please check your internet connection") { }
+    public class Timeout() : AppException("The request timed out") { }
+    public class Cancelled() : AppException("The request was canceled") { }
     public class Unknown(string msg) : AppException(msg) { }
 }
 ```
 
 ---
 
-## 4. 인증 핸들러 & 토큰 갱신
+## 4. Authentication Handler & Token Refresh
 
 ```csharp
 public class AuthHandler : DelegatingHandler
@@ -196,16 +196,16 @@ public class AuthHandler : DelegatingHandler
 
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized && token is not null)
         {
-            // 토큰 갱신 시도
+            // Attempt to refresh the token
             var newToken = await _tokens.RefreshAsync(ct);
             if (newToken is not null)
             {
-                // 원본 요청 재시도
+                // Retry the original request
                 using var retryRequest = CloneRequest(request);
                 retryRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", newToken);
                 return await base.SendAsync(retryRequest, ct);
             }
-            // 갱신 실패 → 로그아웃 이벤트
+            // Refresh failed → logout event
             _tokens.OnAuthExpired();
         }
 
@@ -220,7 +220,7 @@ public class AuthHandler : DelegatingHandler
     }
 }
 
-// 지수 백오프 재시도 핸들러
+// Exponential backoff retry handler
 public class RetryHandler : DelegatingHandler
 {
     private const int MaxRetries = 3;
@@ -233,18 +233,18 @@ public class RetryHandler : DelegatingHandler
             try
             {
                 var response = await base.SendAsync(request, ct);
-                if ((int)response.StatusCode < 500) return response;  // 성공 또는 4xx
+                if ((int)response.StatusCode < 500) return response;  // success or 4xx
                 if (attempt == MaxRetries - 1) return response;
             }
             catch (HttpRequestException) when (attempt < MaxRetries - 1) { }
 
             await Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, attempt)), ct);  // 1s, 2s, 4s
         }
-        throw new HttpRequestException("최대 재시도 횟수 초과");
+        throw new HttpRequestException("Maximum retry count exceeded");
     }
 }
 
-// TokenStore (Windows Credential Manager 기반)
+// TokenStore (based on the Windows Credential Manager)
 public class TokenStore
 {
     private readonly SemaphoreSlim _lock = new(1, 1);
@@ -290,20 +290,20 @@ public record TokenResponse(string AccessToken, string RefreshToken);
 
 ---
 
-## 5. 날짜/시간 형식
+## 5. Date/Time Formatting
 
 ```csharp
-// ISO 8601 UTC (서버 ↔ 앱)
-// System.Text.Json의 기본 DateTime 직렬화: "2026-06-13T10:30:00Z"
+// ISO 8601 UTC (server ↔ app)
+// System.Text.Json's default DateTime serialization: "2026-06-13T10:30:00Z"
 
-// JsonSerializerOptions에 ISO 8601 설정 (기본값)
+// ISO 8601 setting in JsonSerializerOptions (default)
 var options = new JsonSerializerOptions
 {
     PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-    // DateTime은 기본적으로 ISO 8601 UTC 직렬화
+    // DateTime serializes as ISO 8601 UTC by default
 };
 
-// 표시용 로컬 시간 변환
+// Convert to local time for display
 public static class DateTimeExtensions
 {
     public static string ToLocalDisplay(this DateTime utcTime)
@@ -319,9 +319,9 @@ public static class DateTimeExtensions
         var diff = DateTime.UtcNow - utcTime;
         return diff.TotalSeconds switch
         {
-            < 60 => "방금 전",
-            < 3600 => $"{(int)diff.TotalMinutes}분 전",
-            < 86400 => $"{(int)diff.TotalHours}시간 전",
+            < 60 => "just now",
+            < 3600 => $"{(int)diff.TotalMinutes} minutes ago",
+            < 86400 => $"{(int)diff.TotalHours} hours ago",
             _ => utcTime.ToLocalTime().ToString("M월 d일", CultureInfo.GetCultureInfo("ko-KR"))
         };
     }
@@ -330,7 +330,7 @@ public static class DateTimeExtensions
 
 ---
 
-## 6. 파일 업로드 표준
+## 6. File Upload Standard
 
 ```csharp
 public async Task<Result<ImageResponse>> UploadImageAsync(
@@ -339,10 +339,10 @@ public async Task<Result<ImageResponse>> UploadImageAsync(
     if (!File.Exists(filePath))
         return Result.Fail<ImageResponse>(new AppException.NotFound());
 
-    // 이미지 압축
+    // Compress the image
     var compressed = CompressImage(filePath);
     if (compressed is null)
-        return Result.Fail<ImageResponse>(new AppException.Unknown("이미지 처리 실패"));
+        return Result.Fail<ImageResponse>(new AppException.Unknown("Image processing failed"));
 
     using var content = new MultipartFormDataContent();
     using var imageContent = new ByteArrayContent(compressed);
@@ -351,10 +351,10 @@ public async Task<Result<ImageResponse>> UploadImageAsync(
     content.Add(new StringContent("profile"), "type");
 
     using var request = new HttpRequestMessage(HttpMethod.Post, "upload/image") { Content = content };
-    // AuthHandler가 자동으로 Authorization 헤더 추가
+    // AuthHandler automatically adds the Authorization header
     using var response = await _http.SendAsync(request, ct);
     var json = await response.Content.ReadAsStringAsync(ct);
-    // ... Result 처리
+    // ... Result handling
 }
 
 private static byte[]? CompressImage(string filePath)
@@ -391,7 +391,7 @@ private static System.Drawing.Imaging.ImageCodecInfo GetJpegEncoder()
 
 ---
 
-## 7. 오프라인 모드 & 캐싱
+## 7. Offline Mode & Caching
 
 ```csharp
 public class CachedApiService
@@ -404,21 +404,21 @@ public class CachedApiService
     {
         var cacheKey = ComputeHash(path);
 
-        // 1. 유효한 캐시 조회
+        // 1. Look up a valid cache entry
         var cached = await _cache.GetValidAsync(cacheKey);
         if (cached is not null)
         {
             try {
                 var data = JsonSerializer.Deserialize<T>(cached.Data, JsonOptions);
                 if (data is not null) return Result.Ok(data);
-            } catch { /* 손상된 캐시 → API 재시도 */ }
+            } catch { /* corrupted cache → retry the API */ }
         }
 
-        // 2. 네트워크 요청
+        // 2. Network request
         var result = await _api.GetAsync<T>(path, ct);
         if (result.IsSuccess)
         {
-            // 3. 캐시 저장
+            // 3. Store the cache
             var json = JsonSerializer.Serialize(((OkResult<T>)result).Value, JsonOptions);
             await _cache.UpsertAsync(new CachedResponse
             {
@@ -430,7 +430,7 @@ public class CachedApiService
         }
         else if (cached is not null)
         {
-            // 4. 네트워크 오류 시 만료 캐시로 폴백 (offline 모드)
+            // 4. On network error, fall back to the expired cache (offline mode)
             var data = JsonSerializer.Deserialize<T>(cached.Data, JsonOptions);
             if (data is not null) return Result.Ok(data);
         }
@@ -449,4 +449,4 @@ public class CachedApiService
 
 ---
 
-**문서 버전:** 1.0.0 | **작성일:** 2026-06-13 | **대상 스택:** C# + .NET 8 + HttpClient + System.Text.Json
+**Document version:** 1.0.0 | **Date:** 2026-06-13 | **Target stack:** C# + .NET 8 + HttpClient + System.Text.Json

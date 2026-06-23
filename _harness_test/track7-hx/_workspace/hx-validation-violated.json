@@ -1,62 +1,62 @@
 {
   "target": "signup-violated.html",
   "logic_works": true,
-  "logic_note": "doSignup()는 빈 값 차단 후 통과 처리 — 로직은 동작함. 그러나 HX 미달로 FAIL.",
+  "logic_note": "doSignup() blocks empty values then passes — the logic works. But it FAILs due to HX deficiency.",
   "hx_check": {
     "form_ux": {
       "pass": false,
-      "evidence": "label 없음 placeholder만(L39,L42), 에러문구 '오류'만 해결방안 없음(L58,L67), 인라인 실시간 검증 없음",
-      "fix": "<label for> 추가, 에러를 '문제+해결안'으로('이메일 형식 오류 → name@example.com'), 인라인 검증 추가"
+      "evidence": "no label, placeholder only (L39,L42), error message says only 'error' with no resolution (L58,L67), no inline real-time validation",
+      "fix": "add <label for>, turn errors into 'problem + resolution' ('email format error → name@example.com'), add inline validation"
     },
     "accessibility": {
       "pass": false,
-      "evidence": "div onclick으로 버튼 대체 시맨틱X·키보드X(L51), label 미연결, 본문 텍스트 #aaa/#fff=2.32:1<4.5, 버튼텍스트 #ddd/#ccc=1.18:1, focus ring 없음",
-      "fix": "<button> 사용, <label for> 연결, 텍스트색 #1a1a1a로 대비≥4.5:1, focus-visible 추가"
+      "evidence": "button replaced by div onclick, not semantic, no keyboard (L51), label not associated, body text #aaa/#fff=2.32:1<4.5, button text #ddd/#ccc=1.18:1, no focus ring",
+      "fix": "use <button>, associate <label for>, text color #1a1a1a for contrast ≥4.5:1, add focus-visible"
     },
     "responsive": {
       "pass": false,
-      "evidence": "viewport meta 없음(head), 고정 width:900px(L13), 미디어쿼리 없음, 터치타깃 height 18px<44px(L25)",
-      "fix": "viewport meta 추가, 고정폭 제거(max-width+%), 브레이크포인트 추가, 컨트롤 min-height 44px"
+      "evidence": "no viewport meta (head), fixed width:900px (L13), no media queries, touch target height 18px<44px (L25)",
+      "fix": "add viewport meta, remove fixed width (max-width+%), add breakpoints, controls min-height 44px"
     },
     "readability": {
       "pass": false,
-      "evidence": "본문 font-size 11px<16px(L9,L24,L33), 저대비로 가독 저하",
-      "fix": "본문 ≥16px, 대비 충족"
+      "evidence": "body font-size 11px<16px (L9,L24,L33), low contrast reduces readability",
+      "fix": "body ≥16px, meet contrast"
     },
     "buttons": {
       "pass": false,
-      "evidence": "div 버튼(affordance 약함), hover/active/disabled/loading 상태 없음, 색만으로 비활성 표현",
-      "fix": "<button>+상태별 스타일"
+      "evidence": "div button (weak affordance), no hover/active/disabled/loading states, disabled expressed by color only",
+      "fix": "<button> + per-state styles"
     },
     "states": {
       "pass": false,
-      "evidence": "로딩 상태 없음, 성공은 alert만(L70), 에러 상태 해결안 없음",
-      "fix": "로딩 스피너/성공 토스트/해결안 포함 에러 상태 구현"
+      "evidence": "no loading state, success is alert only (L70), error state has no resolution",
+      "fix": "implement loading spinner / success toast / error state with resolution"
     },
     "flow": {
       "pass": true,
-      "evidence": "단일 동작 플로우 자체는 존재(빈값 차단)"
+      "evidence": "a single-action flow itself exists (blocks empty values)"
     },
     "security_ux": {
       "pass": false,
-      "evidence": "비밀번호 input type=text로 마스킹 안됨(L42), 강도 안내 없음",
-      "fix": "type=password, autocomplete, 강도 안내"
+      "evidence": "password input type=text not masked (L42), no strength hint",
+      "fix": "type=password, autocomplete, strength hint"
     },
     "modularity": {
       "pass": false,
-      "evidence": "디자인 토큰 없음, 색상 하드코딩 #aaa/#ccc/#ddd 다수(L9,L23,L30,L31), 인라인 style(L37)",
-      "fix": "CSS 변수 토큰화, 하드코딩 제거"
+      "evidence": "no design tokens, many hardcoded colors #aaa/#ccc/#ddd (L9,L23,L30,L31), inline style (L37)",
+      "fix": "tokenize with CSS variables, remove hardcoding"
     },
     "integrity": {
       "pass": false,
-      "evidence": "인라인 스타일 혼재, 위반 주석 다수, 일관성 결여",
-      "fix": "스타일 분리, 일관 네이밍/포맷"
+      "evidence": "inline styles mixed in, many violation comments, lacks consistency",
+      "fix": "separate styles, consistent naming/formatting"
     }
   },
   "p0_items": ["form_ux", "accessibility", "responsive", "modularity"],
   "p0_failed": ["form_ux", "accessibility", "responsive", "modularity"],
   "verdict": "FAIL",
-  "reason": "P0 4항목 전부 미충족 — 로직이 동작해도 FAIL. 비P0(가독성·버튼·상태·보안UX·무결성)도 미달.",
+  "reason": "All 4 P0 items unmet — FAIL even though the logic works. Non-P0 (readability, buttons, states, security UX, integrity) also deficient.",
   "contrast_measurements": {
     "body_text": "#aaaaaa on #ffffff = 2.32:1 (AA FAIL, <4.5)",
     "button_text": "#dddddd on #cccccc = 1.18:1 (AA FAIL)",

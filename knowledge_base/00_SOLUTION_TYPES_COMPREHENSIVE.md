@@ -1,1322 +1,1320 @@
-# 전체 솔루션 타입 카탈로그 (Comprehensive Solution Type Catalog)
+# Comprehensive Solution Type Catalog
 
-## 개요
+## Overview
 
-세상에 존재하는 모든 소프트웨어 솔루션을 **도메인(비즈니스 영역)**별로 분류한 마스터 카탈로그입니다.
+A master catalog classifying every software solution that exists in the world by **domain (business area)**.
 
-각 솔루션은:
-- 기본 논리 (Basic Logic)
-- 핵심 기능 (Core Features)
-- 도메인 용어 (Terminology)
-- 데이터 모델 (Database Schema)
-- API 표준 (API Standard)
-- 기획서 템플릿 (Spec Template)
-
-을 가져야 합니다.
+Each solution must have:
+- Basic Logic
+- Core Features
+- Terminology
+- Database Schema
+- API Standard
+- Spec Template
 
 ---
 
-## 솔루션 분류 체계
+## Solution Classification Scheme
 
-### 계층 1: 대분류 (Major Category)
+### Level 1: Major Category
 ```
-1. 엔터프라이즈 (Enterprise)
-2. 중소기업 (SMB - Small & Medium Business)
-3. 소비자 (Consumer / Personal)
-4. 산업/특수 (Industrial / Specialized)
-5. 개발자/기술 (Developer / Technical)
-6. 미디어/콘텐츠 (Media / Content)
-7. 금융 (Financial)
-8. 의료 (Healthcare)
-9. 교육 (Education)
-10. 공공/정부 (Public / Government)
-```
-
-### 계층 2: 중분류 (Sub Category)
-```
-각 대분류 내의 영역별 분류
+1. Enterprise
+2. SMB (Small & Medium Business)
+3. Consumer / Personal
+4. Industrial / Specialized
+5. Developer / Technical
+6. Media / Content
+7. Financial
+8. Healthcare
+9. Education
+10. Public / Government
 ```
 
-### 계층 3: 솔루션 타입 (Solution Type)
+### Level 2: Sub Category
 ```
-구체적인 솔루션 이름
+Per-area classification within each major category
+```
+
+### Level 3: Solution Type
+```
+The specific solution name
 ```
 
 ---
 
-## 1. 엔터프라이즈 (Enterprise)
+## 1. Enterprise
 
-### 1-1. ERP & SCM (전사 자원 관리)
+### 1-1. ERP & SCM (Enterprise Resource Management)
 ```
-1. ERP (전사적 자원관리)
-   - SAP, Oracle, Infor 같은 대형 ERP
-   - 매출, 구매, 재고, 생산 통합 관리
+1. ERP (Enterprise Resource Planning)
+   - Large ERPs like SAP, Oracle, Infor
+   - Integrated management of sales, purchasing, inventory, production
 
-2. WMS (창고 관리)
-   - 재고 관리
-   - 입출고 관리
-   - 로케이션 관리
+2. WMS (Warehouse Management)
+   - Inventory management
+   - Inbound/outbound management
+   - Location management
 
-3. TMS (운송 관리)
-   - 배송 추적
-   - 운송 최적화
-   - 차량 관리
+3. TMS (Transportation Management)
+   - Delivery tracking
+   - Transport optimization
+   - Fleet management
 
-4. SCM (공급망 관리)
-   - 공급처 관리
-   - 수요 계획
-   - 조달 관리
+4. SCM (Supply Chain Management)
+   - Supplier management
+   - Demand planning
+   - Procurement management
 ```
 
-### 1-2. CRM & Sales (고객 관리)
+### 1-2. CRM & Sales (Customer Management)
 ```
-5. CRM (고객관계관리)
-   - Salesforce 같은 CRM
-   - 고객 정보 관리
-   - 영업 기회 추적
-   - 고객 상호작용 기록
+5. CRM (Customer Relationship Management)
+   - CRMs like Salesforce
+   - Customer information management
+   - Sales opportunity tracking
+   - Customer interaction logging
 
 6. Sales Pipeline Management
-   - 영업 단계별 관리
-   - 예측 분석
-   - 성과 측정
+   - Management by sales stage
+   - Forecast analysis
+   - Performance measurement
 
 7. Marketing Automation
-   - 이메일 마케팅 자동화
-   - 리드 육성
-   - 캠페인 관리
+   - Email marketing automation
+   - Lead nurturing
+   - Campaign management
 ```
 
-### 1-3. HRM & Payroll (인사 관리)
+### 1-3. HRM & Payroll (Human Resources Management)
 ```
-8. HRMS (인사관리시스템)
-   - 직원 정보 관리
-   - 급여 관리
-   - 복리후생 관리
+8. HRMS (Human Resource Management System)
+   - Employee information management
+   - Payroll management
+   - Benefits management
 
 9. Attendance System
-   - 근태 관리
-   - 출퇴근 관리
-   - 근무 시간 추적
+   - Attendance management
+   - Clock in/out management
+   - Working-hours tracking
 
 10. Performance Management
-    - 평가 관리
-    - 목표 관리
-    - 발전 계획
+    - Evaluation management
+    - Goal management
+    - Development planning
 
 11. Recruitment Platform
-    - 채용 관리
-    - 지원자 추적
-    - 면접 일정 관리
+    - Hiring management
+    - Applicant tracking
+    - Interview scheduling
 ```
 
-### 1-4. Finance & Accounting (회계/재무)
+### 1-4. Finance & Accounting
 ```
 12. Accounting System
-    - 분개 기록
-    - 장부 관리
-    - 재무제표 생성
+    - Journal entries
+    - Ledger management
+    - Financial statement generation
 
 13. Financial Planning & Analysis (FP&A)
-    - 예산 계획
-    - 예측 분석
-    - 성과 대비
+    - Budget planning
+    - Forecast analysis
+    - Performance comparison
 
 14. Expense Management
-    - 지출 보고서
-    - 비용 추적
-    - 정산 관리
+    - Expense reports
+    - Cost tracking
+    - Settlement management
 
 15. Invoice & Billing
-    - 청구서 생성
-    - 지불 추적
-    - 수금 관리
+    - Invoice generation
+    - Payment tracking
+    - Collections management
 
 16. Tax Management
-    - 세금 계산
-    - 신고 관리
-    - 규정 준수
+    - Tax calculation
+    - Filing management
+    - Compliance
 ```
 
-### 1-5. BI & Analytics (분석)
+### 1-5. BI & Analytics
 ```
 17. Business Intelligence (BI)
-    - Tableau, PowerBI 같은 BI 도구
-    - 데이터 분석
-    - 대시보드
-    - 리포팅
+    - BI tools like Tableau, PowerBI
+    - Data analysis
+    - Dashboards
+    - Reporting
 
 18. Data Warehouse
-    - 데이터 통합
-    - 데이터 저장소
+    - Data integration
+    - Data repository
 
 19. Predictive Analytics
-    - 예측 모델
-    - 머신러닝 기반 분석
+    - Predictive models
+    - Machine-learning-based analysis
 ```
 
-### 1-6. Project & Operations (프로젝트/운영)
+### 1-6. Project & Operations
 ```
 20. Project Management System (PMS)
-    - 프로젝트 계획
-    - 자원 할당
-    - 일정 관리
-    - 비용 추적
+    - Project planning
+    - Resource allocation
+    - Schedule management
+    - Cost tracking
 
 21. Portfolio Management
-    - 포트폴리오 최적화
-    - 전략 정렬
+    - Portfolio optimization
+    - Strategic alignment
 
 22. Operations Management
-    - 프로세스 관리
-    - 효율성 추적
-    - KPI 모니터링
+    - Process management
+    - Efficiency tracking
+    - KPI monitoring
 
 23. Quality Management System (QMS)
-    - 품질 기준 관리
-    - 부적합사항 추적
-    - 개선 프로세스
+    - Quality standard management
+    - Nonconformance tracking
+    - Improvement processes
 ```
 
-### 1-7. Compliance & Security (규정준수/보안)
+### 1-7. Compliance & Security
 ```
 24. GRC (Governance, Risk, Compliance)
-    - 거버넌스 관리
-    - 위험 평가
-    - 규정준수 관리
+    - Governance management
+    - Risk assessment
+    - Compliance management
 
-25. ISMS (정보보안관리시스템)
-    - 보안 정책 관리
-    - 보안 사건 관리
-    - 감사 기록
+25. ISMS (Information Security Management System)
+    - Security policy management
+    - Security incident management
+    - Audit records
 
 26. Document Management System (DMS)
-    - 문서 저장소
-    - 버전 관리
-    - 접근 제어
+    - Document repository
+    - Version control
+    - Access control
 
 27. Contract Management
-    - 계약 문서 관리
-    - 갱신 일정 추적
-    - 의무사항 모니터링
+    - Contract document management
+    - Renewal schedule tracking
+    - Obligation monitoring
 ```
 
 ---
 
-## 2. 중소기업 (SMB)
+## 2. SMB (Small & Medium Business)
 
-### 2-1. 소매 & 유통 (Retail)
+### 2-1. Retail & Distribution
 ```
-28. POS System (판매관리)
-    - 판매점 관리
-    - 고객 거래
-    - 재고 연동
+28. POS System (Point of Sale)
+    - Store management
+    - Customer transactions
+    - Inventory integration
 
-29. 가맹점 관리 (Franchise Management)
-    - 가맹점 정보 관리
-    - 판매 현황
-    - 본사-가맹점 연동
+29. Franchise Management
+    - Franchise information management
+    - Sales status
+    - HQ-franchise integration
 
-30. 온라인 쇼핑몰 (E-Commerce)
-    - 상품 관리
-    - 장바구니
-    - 주문/배송
+30. E-Commerce (Online Shopping Mall)
+    - Product management
+    - Shopping cart
+    - Order/delivery
 
-31. 컨비니언스스토어 관리
-    - 점포별 관리
-    - 발주 최적화
-    - 상품 회전율 관리
-```
-
-### 2-2. 음식 & 외식 (F&B)
-```
-32. 식당 POS & 관리
-    - 메뉴 관리
-    - 주문 관리
-    - 테이블 관리
-    - 결제 처리
-
-33. 배달 앱 (Food Delivery)
-    - 식당 관리
-    - 주문 관리
-    - 배달원 관리
-    - 고객 관리
-
-34. 카페 관리
-    - 메뉴 구성
-    - 재료 관리
-    - 멤버십 관리
-
-35. 레시피 & 식재 관리
-    - 식재료 정보
-    - 영양 정보
-    - 비용 계산
+31. Convenience Store Management
+    - Per-store management
+    - Order optimization
+    - Product turnover management
 ```
 
-### 2-3. 서비스업 (Service Business)
+### 2-2. Food & Beverage (F&B)
 ```
-36. 미용실 예약 시스템
-    - 스타일리스트 관리
-    - 예약 관리
-    - 고객 관리
-    - 멤버십 관리
+32. Restaurant POS & Management
+    - Menu management
+    - Order management
+    - Table management
+    - Payment processing
 
-37. 병원 진료 시스템 (EMR)
-    - 환자 기록
-    - 진료 기록
-    - 처방 관리
-    - 청구 관리
+33. Food Delivery
+    - Restaurant management
+    - Order management
+    - Delivery rider management
+    - Customer management
 
-38. 치과 관리 시스템
-    - 환자 정보
-    - 치료 기록
-    - 약속 관리
-    - 결과 추적
+34. Cafe Management
+    - Menu composition
+    - Ingredient management
+    - Membership management
 
-39. 피트니스 관리 시스템
-    - 회원 관리
-    - 수강 클래스 관리
-    - PT 예약
-    - 회원비 관리
-
-40. 영어 학원 관리
-    - 학생 관리
-    - 강의실 관리
-    - 강사 관리
-    - 수강료 관리
-
-41. 호텔 예약 시스템
-    - 객실 관리
-    - 예약 관리
-    - 게스트 체크인/체크아웃
-    - 청구서 생성
-
-42. 렌터카 관리
-    - 차량 정보
-    - 예약 관리
-    - 렌탈 거래
-    - 유지보수 추적
-
-43. 부동산 중개 시스템
-    - 매물 관리
-    - 고객 관리
-    - 거래 추적
-    - 계약 관리
-
-44. 컨설팅 회사 관리
-    - 프로젝트 관리
-    - 컨설턴트 관리
-    - 시간 추적
-    - 청구서 생성
-
-45. 여행사 관리
-    - 여행 상품 관리
-    - 예약 관리
-    - 고객 관리
-    - 정산 관리
+35. Recipe & Ingredient Management
+    - Ingredient information
+    - Nutrition information
+    - Cost calculation
 ```
 
-### 2-4. 제조/생산 (Manufacturing)
+### 2-3. Service Business
 ```
-46. 생산 관리 시스템 (MES)
-    - 공정 관리
-    - 작업 지시
-    - 품질 검사
-    - 실적 추적
+36. Hair Salon Booking System
+    - Stylist management
+    - Booking management
+    - Customer management
+    - Membership management
 
-47. 가계부 및 소규모 회계
-    - 수입/지출 관리
-    - 간단한 보고서
+37. Hospital Care System (EMR)
+    - Patient records
+    - Treatment records
+    - Prescription management
+    - Billing management
 
-48. 근태 관리 (Attendance)
-    - 직원 출퇴근
-    - 휴가 관리
-    - 초과근무 추적
+38. Dental Management System
+    - Patient information
+    - Treatment records
+    - Appointment management
+    - Outcome tracking
 
-49. 공정 관리 (Process Management)
-    - 프로세스 맵핑
-    - 단계별 추적
-    - 병목 분석
+39. Fitness Management System
+    - Member management
+    - Class management
+    - PT (personal training) booking
+    - Membership fee management
 
-50. 차계부 (Vehicle Fleet Management)
-    - 차량 정보 관리
-    - 정비 기록
-    - 운전자 관리
-    - 연료 추적
-    - 톨게이트 비용 관리
-```
+40. English Academy Management
+    - Student management
+    - Classroom management
+    - Instructor management
+    - Tuition management
 
----
+41. Hotel Reservation System
+    - Room management
+    - Reservation management
+    - Guest check-in/check-out
+    - Invoice generation
 
-## 3. 소비자/개인용 (Consumer / Personal)
+42. Car Rental Management
+    - Vehicle information
+    - Reservation management
+    - Rental transactions
+    - Maintenance tracking
 
-### 3-1. 금융 (Personal Finance)
-```
-51. 가계부 (Personal Expense Tracker)
-    - 지출 기록
-    - 카테고리 분류
-    - 예산 수립
-    - 분석 및 리포팅
+43. Real Estate Brokerage System
+    - Listing management
+    - Customer management
+    - Transaction tracking
+    - Contract management
 
-52. 재무 계획 앱
-    - 자산 추적
-    - 투자 포트폴리오
-    - 은퇴 계획
-    - 목표 설정
+44. Consulting Firm Management
+    - Project management
+    - Consultant management
+    - Time tracking
+    - Invoice generation
 
-53. 뱅킹 앱
-    - 계좌 조회
-    - 송금
-    - 청구서 결제
-    - 대출 관리
-
-54. 투자/증권 앱
-    - 주식 거래
-    - 포트폴리오 추적
-    - 뉴스 및 분석
-    - 성과 추적
-
-55. 보험 관리 앱
-    - 보험 정책 관리
-    - 청구 추적
-    - 문서 저장
-    - 갱신 리마인더
-
-56. 암호화폐 지갑
-    - 지갑 관리
-    - 거래 기록
-    - 가격 추적
-    - 포트폴리오 분석
-
-57. 결제 앱 (Mobile Payment)
-    - QR 결제
-    - 송금
-    - 청구서 납부
-    - 포인트 관리
+45. Travel Agency Management
+    - Travel product management
+    - Reservation management
+    - Customer management
+    - Settlement management
 ```
 
-### 3-2. 건강/피트니스 (Health & Fitness)
+### 2-4. Manufacturing / Production
 ```
-58. 피트니스 트래킹 앱
-    - 운동 기록
-    - 칼로리 추적
-    - 진행 모니터링
-    - 목표 설정
+46. Manufacturing Execution System (MES)
+    - Process management
+    - Work orders
+    - Quality inspection
+    - Performance tracking
 
-59. 수면 추적 앱
-    - 수면 기록
-    - 수면 패턴 분석
-    - 권장사항 제시
+47. Household Ledger & Small-Scale Accounting
+    - Income/expense management
+    - Simple reports
 
-60. 명상 앱
-    - 명상 프로그램
-    - 진행 추적
-    - 통계
+48. Attendance
+    - Employee clock in/out
+    - Leave management
+    - Overtime tracking
 
-61. 건강 관리 앱
-    - 혈압, 혈당 기록
-    - 의약품 추적
-    - 의료 약속 관리
+49. Process Management
+    - Process mapping
+    - Step-by-step tracking
+    - Bottleneck analysis
 
-62. 영양 추적 앱
-    - 음식 기록
-    - 영양소 분석
-    - 식단 추천
-
-63. 생리 관리 앱
-    - 생리주기 추적
-    - 증상 기록
-    - 임신 추적
-```
-
-### 3-3. 생산성 (Productivity)
-```
-64. 할일 관리 (To-Do List / Task Management)
-    - 작업 생성
-    - 우선순위 설정
-    - 진행 추적
-    - 상기 알림
-
-65. 노트 (Note Taking)
-    - 텍스트 노트
-    - 그림 그리기
-    - 웹 클리핑
-    - 검색
-
-66. 캘린더/일정 관리
-    - 이벤트 관리
-    - 약속 추적
-    - 알림 설정
-    - 공유 기능
-
-67. 메모 (Memo)
-    - 빠른 메모
-    - 음성 메모
-    - 그림 메모
-
-68. 타이머/스톱워치
-    - 시간 추적
-    - 타이머 설정
-    - 중단점 기록
-
-69. 비밀번호 관리자
-    - 비밀번호 저장
-    - 암호화
-    - 접근 제어
-
-70. 가계 수지 기록
-    - 월간 수지
-    - 연간 계획
-    - 목표 추적
-```
-
-### 3-4. 라이프스타일 (Lifestyle)
-```
-71. 여행 계획 앱
-    - 여행 일정 계획
-    - 예산 관리
-    - 명소 정보
-    - 공유 기능
-
-72. 음악 스트리밍
-    - 곡 재생
-    - 재생목록 생성
-    - 가사 표시
-    - 오프라인 다운로드
-
-73. 동영상 스트리밍
-    - 동영상 시청
-    - 추천 알고리즘
-    - 재생목록
-    - 다중 프로필
-
-74. 팟캐스트 앱
-    - 팟캐스트 구독
-    - 에피소드 재생
-    - 자동 다운로드
-    - 진행 추적
-
-75. 사진 관리 앱
-    - 사진 저장소
-    - 정렬 및 태그
-    - 클라우드 백업
-    - 앨범 생성
-
-76. 클라우드 스토리지
-    - 파일 저장
-    - 공유 및 협업
-    - 버전 관리
-    - 동기화
-
-77. 날씨 앱
-    - 기상 데이터
-    - 시간별 예보
-    - 알람 설정
-    - 레이더
+50. Vehicle Fleet Management
+    - Vehicle information management
+    - Maintenance records
+    - Driver management
+    - Fuel tracking
+    - Toll cost management
 ```
 
 ---
 
-## 4. 산업/특수 (Industrial / Specialized)
+## 3. Consumer / Personal
 
-### 4-1. 건설 (Construction)
+### 3-1. Personal Finance
 ```
-78. 건설 프로젝트 관리
-    - 공정 일정
-    - 비용 추적
-    - 자재 관리
-    - 품질 관리
+51. Personal Expense Tracker
+    - Expense logging
+    - Category classification
+    - Budgeting
+    - Analysis and reporting
 
-79. 공정 시공 관리
-    - 시공 단계 추적
-    - 검사 기록
-    - 변경사항 관리
-    - 안전 기록
+52. Financial Planning App
+    - Asset tracking
+    - Investment portfolio
+    - Retirement planning
+    - Goal setting
 
-80. 건설 안전 관리
-    - 안전 교육
-    - 사고 기록
-    - 위험 평가
-    - 규정 준수
-```
+53. Banking App
+    - Account inquiry
+    - Money transfer
+    - Bill payment
+    - Loan management
 
-### 4-2. 제조 (Manufacturing)
-```
-81. IoT 센서 관리
-    - 센서 데이터 수집
-    - 실시간 모니터링
-    - 알람 설정
-    - 데이터 분석
+54. Investment/Securities App
+    - Stock trading
+    - Portfolio tracking
+    - News and analysis
+    - Performance tracking
 
-82. 설비 유지보수
-    - 유지보수 일정
-    - 부품 추적
-    - 다운타임 추적
-    - 예측 유지보수
+55. Insurance Management App
+    - Policy management
+    - Claim tracking
+    - Document storage
+    - Renewal reminders
 
-83. 품질 관리 (QC)
-    - 검사 결과 기록
-    - 불량 추적
-    - SPC (통계적 공정 관리)
-    - 시정 조치
+56. Cryptocurrency Wallet
+    - Wallet management
+    - Transaction records
+    - Price tracking
+    - Portfolio analysis
 
-84. 에너지 관리
-    - 전력 사용 추적
-    - 비용 분석
-    - 절감 목표 설정
+57. Mobile Payment App
+    - QR payment
+    - Money transfer
+    - Bill payment
+    - Points management
 ```
 
-### 4-3. 농업 (Agriculture)
+### 3-2. Health & Fitness
 ```
-85. 농장 관리 시스템
-    - 작물 정보
-    - 토양 관리
-    - 물 관리
-    - 수확 기록
+58. Fitness Tracking App
+    - Workout logging
+    - Calorie tracking
+    - Progress monitoring
+    - Goal setting
 
-86. 가축 관리
-    - 가축 정보
-    - 사료 관리
-    - 건강 기록
-    - 번식 기록
+59. Sleep Tracking App
+    - Sleep logging
+    - Sleep pattern analysis
+    - Recommendations
 
-87. 농산물 거래
-    - 가격 정보
-    - 거래 기록
-    - 배송 추적
-```
+60. Meditation App
+    - Meditation programs
+    - Progress tracking
+    - Statistics
 
-### 4-4. 에너지/유틸리티 (Utilities)
-```
-88. 전력 관리
-    - 사용량 모니터링
-    - 스마트 미터
-    - 요금 계산
-    - 고객 관리
+61. Health Management App
+    - Blood pressure, blood glucose logging
+    - Medication tracking
+    - Medical appointment management
 
-89. 수도 관리
-    - 사용량 추적
-    - 누수 감지
-    - 유지보수
-    - 청구
+62. Nutrition Tracking App
+    - Food logging
+    - Nutrient analysis
+    - Diet recommendations
 
-90. 가스 관리
-    - 공급 관리
-    - 사용량 기록
-    - 안전 모니터링
+63. Menstrual Tracking App
+    - Cycle tracking
+    - Symptom logging
+    - Pregnancy tracking
 ```
 
-### 4-5. 환경/모니터링 (Environmental)
+### 3-3. Productivity
 ```
-91. 공기질 모니터링
-    - 센서 데이터
-    - 실시간 분석
-    - 경보 시스템
+64. To-Do List / Task Management
+    - Task creation
+    - Priority setting
+    - Progress tracking
+    - Reminders
 
-92. 수질 모니터링
-    - 물 샘플 분석
-    - 화학 데이터
-    - 보고서
+65. Note Taking
+    - Text notes
+    - Drawing
+    - Web clipping
+    - Search
 
-93. 폐기물 관리
-    - 폐기물 추적
-    - 처리 기록
-    - 규정 준수
+66. Calendar/Schedule Management
+    - Event management
+    - Appointment tracking
+    - Reminder settings
+    - Sharing features
 
-94. 탄소 배출 추적
-    - 배출 계산
-    - 감소 계획
-    - 보고
+67. Memo
+    - Quick memos
+    - Voice memos
+    - Drawing memos
+
+68. Timer/Stopwatch
+    - Time tracking
+    - Timer settings
+    - Lap recording
+
+69. Password Manager
+    - Password storage
+    - Encryption
+    - Access control
+
+70. Household Balance Tracking
+    - Monthly balance
+    - Annual planning
+    - Goal tracking
+```
+
+### 3-4. Lifestyle
+```
+71. Travel Planning App
+    - Trip itinerary planning
+    - Budget management
+    - Attraction information
+    - Sharing features
+
+72. Music Streaming
+    - Track playback
+    - Playlist creation
+    - Lyrics display
+    - Offline download
+
+73. Video Streaming
+    - Video viewing
+    - Recommendation algorithm
+    - Playlists
+    - Multiple profiles
+
+74. Podcast App
+    - Podcast subscription
+    - Episode playback
+    - Auto download
+    - Progress tracking
+
+75. Photo Management App
+    - Photo storage
+    - Sorting and tagging
+    - Cloud backup
+    - Album creation
+
+76. Cloud Storage
+    - File storage
+    - Sharing and collaboration
+    - Version control
+    - Sync
+
+77. Weather App
+    - Weather data
+    - Hourly forecast
+    - Alarm settings
+    - Radar
 ```
 
 ---
 
-## 5. 개발자/기술 (Developer / Technical)
+## 4. Industrial / Specialized
 
-### 5-1. 소프트웨어 개발 (Software Development)
+### 4-1. Construction
 ```
-95. 소스 코드 관리 (Git/SVN)
-    - 코드 저장소
-    - 버전 관리
-    - 브랜치 관리
-    - 병합 관리
+78. Construction Project Management
+    - Process schedule
+    - Cost tracking
+    - Material management
+    - Quality control
 
-96. CI/CD 파이프라인
-    - 자동 빌드
-    - 자동 테스트
-    - 자동 배포
+79. Construction Process Management
+    - Construction stage tracking
+    - Inspection records
+    - Change management
+    - Safety records
 
-97. 이슈 트래킹 (Bug Tracking)
-    - 버그 보고
-    - 진행 추적
-    - 우선순위 관리
-
-98. 테스트 자동화
-    - 테스트 케이스 작성
-    - 테스트 실행
-    - 결과 보고
-
-99. 코드 리뷰 플랫폼
-    - 코드 검토
-    - 피드백
-    - 승인 프로세스
-
-100. 문서화 도구
-     - 기술 문서
-     - API 문서
-     - 사용자 가이드
-
-101. 협업 개발 플랫폼
-     - 팀 협업
-     - 코드 공유
-     - 실시간 편집
+80. Construction Safety Management
+    - Safety training
+    - Accident records
+    - Risk assessment
+    - Compliance
 ```
 
-### 5-2. 데이터베이스 (Database)
+### 4-2. Manufacturing
 ```
-102. 데이터베이스 관리
-     - 데이터 관리
-     - 백업
-     - 복구
-     - 성능 모니터링
+81. IoT Sensor Management
+    - Sensor data collection
+    - Real-time monitoring
+    - Alarm settings
+    - Data analysis
 
-103. 데이터 마이그레이션 도구
-     - 데이터 이전
-     - 검증
-     - 로깅
+82. Equipment Maintenance
+    - Maintenance scheduling
+    - Parts tracking
+    - Downtime tracking
+    - Predictive maintenance
+
+83. Quality Control (QC)
+    - Inspection result logging
+    - Defect tracking
+    - SPC (Statistical Process Control)
+    - Corrective actions
+
+84. Energy Management
+    - Power usage tracking
+    - Cost analysis
+    - Savings goal setting
 ```
 
-### 5-3. 운영 & 모니터링 (Operations)
+### 4-3. Agriculture
 ```
-104. 시스템 모니터링
-     - 서버 상태
-     - 성능 메트릭
-     - 알림
+85. Farm Management System
+    - Crop information
+    - Soil management
+    - Water management
+    - Harvest records
 
-105. 로그 관리
-     - 로그 수집
-     - 분석
-     - 검색
+86. Livestock Management
+    - Livestock information
+    - Feed management
+    - Health records
+    - Breeding records
+
+87. Agricultural Product Trading
+    - Price information
+    - Transaction records
+    - Delivery tracking
+```
+
+### 4-4. Energy / Utilities
+```
+88. Electricity Management
+    - Usage monitoring
+    - Smart meters
+    - Rate calculation
+    - Customer management
+
+89. Water Management
+    - Usage tracking
+    - Leak detection
+    - Maintenance
+    - Billing
+
+90. Gas Management
+    - Supply management
+    - Usage logging
+    - Safety monitoring
+```
+
+### 4-5. Environmental / Monitoring
+```
+91. Air Quality Monitoring
+    - Sensor data
+    - Real-time analysis
+    - Alert system
+
+92. Water Quality Monitoring
+    - Water sample analysis
+    - Chemical data
+    - Reports
+
+93. Waste Management
+    - Waste tracking
+    - Disposal records
+    - Compliance
+
+94. Carbon Emission Tracking
+    - Emission calculation
+    - Reduction planning
+    - Reporting
+```
+
+---
+
+## 5. Developer / Technical
+
+### 5-1. Software Development
+```
+95. Source Code Management (Git/SVN)
+    - Code repository
+    - Version control
+    - Branch management
+    - Merge management
+
+96. CI/CD Pipeline
+    - Automated build
+    - Automated test
+    - Automated deploy
+
+97. Issue Tracking (Bug Tracking)
+    - Bug reporting
+    - Progress tracking
+    - Priority management
+
+98. Test Automation
+    - Test case authoring
+    - Test execution
+    - Result reporting
+
+99. Code Review Platform
+    - Code review
+    - Feedback
+    - Approval process
+
+100. Documentation Tool
+     - Technical documents
+     - API documentation
+     - User guides
+
+101. Collaborative Development Platform
+     - Team collaboration
+     - Code sharing
+     - Real-time editing
+```
+
+### 5-2. Database
+```
+102. Database Management
+     - Data management
+     - Backup
+     - Recovery
+     - Performance monitoring
+
+103. Data Migration Tool
+     - Data transfer
+     - Validation
+     - Logging
+```
+
+### 5-3. Operations & Monitoring
+```
+104. System Monitoring
+     - Server status
+     - Performance metrics
+     - Notifications
+
+105. Log Management
+     - Log collection
+     - Analysis
+     - Search
 
 106. APM (Application Performance Monitoring)
-     - 애플리케이션 성능
-     - 병목 분석
-     - 성능 추적
+     - Application performance
+     - Bottleneck analysis
+     - Performance tracking
 
-107. 인프라 관리
-     - 서버 관리
-     - 네트워크 관리
-     - 클라우드 관리
+107. Infrastructure Management
+     - Server management
+     - Network management
+     - Cloud management
 ```
 
-### 5-4. 보안 (Security)
+### 5-4. Security
 ```
-108. 침입 탐지 (IDS/IPS)
-     - 위협 감지
-     - 블로킹
-     - 로깅
+108. Intrusion Detection (IDS/IPS)
+     - Threat detection
+     - Blocking
+     - Logging
 
-109. 방화벽 관리
-     - 규칙 관리
-     - 트래픽 제어
-     - 로그 분석
+109. Firewall Management
+     - Rule management
+     - Traffic control
+     - Log analysis
 
-110. 취약점 스캐닝
-     - 보안 검사
-     - 취약점 보고
-     - 수정 추적
+110. Vulnerability Scanning
+     - Security scanning
+     - Vulnerability reporting
+     - Remediation tracking
 
-111. 침투 테스트 도구
-     - 보안 평가
-     - 취약점 발견
-     - 보고서 생성
+111. Penetration Testing Tool
+     - Security assessment
+     - Vulnerability discovery
+     - Report generation
 ```
 
 ---
 
-## 6. 미디어/콘텐츠 (Media / Content)
+## 6. Media / Content
 
-### 6-1. 소셜 미디어 (Social Media)
+### 6-1. Social Media
 ```
 112. SNS (Social Network)
-     - 피드
-     - 친구 연결
-     - 메시지
-     - 알림
+     - Feed
+     - Friend connections
+     - Messages
+     - Notifications
 
-113. 블로그 플랫폼
-     - 포스트 작성
-     - 댓글
-     - 태그
-     - 구독
+113. Blog Platform
+     - Post authoring
+     - Comments
+     - Tags
+     - Subscriptions
 
-114. 포럼 (Forum/Community)
-     - 게시판
-     - 토론 스레드
-     - 유저 평판
-     - 중재
+114. Forum / Community
+     - Boards
+     - Discussion threads
+     - User reputation
+     - Moderation
 
-115. 소셜 커머스
-     - 라이브 커머스
-     - 쇼핑 추천
-     - 친구와 공유
+115. Social Commerce
+     - Live commerce
+     - Shopping recommendations
+     - Sharing with friends
 ```
 
-### 6-2. 콘텐츠 제작 (Content Creation)
+### 6-2. Content Creation
 ```
-116. 이미지 편집 (Photo Editing)
-     - 기본 편집
-     - 필터
-     - 효과
-     - 배치
+116. Photo Editing
+     - Basic editing
+     - Filters
+     - Effects
+     - Layout
 
-117. 동영상 편집 (Video Editing)
-     - 영상 편집
-     - 효과
-     - 음성
-     - 자막
+117. Video Editing
+     - Video editing
+     - Effects
+     - Audio
+     - Subtitles
 
-118. 음성 편집 (Audio Editing)
-     - 오디오 편집
-     - 이펙트
-     - 믹싱
-     - 마스터링
+118. Audio Editing
+     - Audio editing
+     - Effects
+     - Mixing
+     - Mastering
 
-119. 음악 제작 (Music Production)
-     - 악기
-     - 루프
-     - 효과
-     - 믹싱
+119. Music Production
+     - Instruments
+     - Loops
+     - Effects
+     - Mixing
 
-120. 애니메이션 도구
-     - 프레임 제작
-     - 타이밍
-     - 효과
-     - 렌더링
+120. Animation Tool
+     - Frame creation
+     - Timing
+     - Effects
+     - Rendering
 
-121. 그래픽 디자인
-     - 템플릿
-     - 도형 & 텍스트
-     - 레이아웃
-     - 배내
+121. Graphic Design
+     - Templates
+     - Shapes & text
+     - Layout
+     - Distribution
 
-122. 프레젠테이션 (Slides)
-     - 슬라이드 생성
-     - 템플릿
-     - 애니메이션
-     - 발표 모드
-```
-
-### 6-3. 출판 & 인쇄 (Publishing)
-```
-123. 전자책 출판
-     - 원고 관리
-     - 포맷 변환
-     - 배포
-     - 판매
-
-124. 잡지 출판
-     - 레이아웃
-     - 콘텐츠 관리
-     - 배포
-
-125. PDF 편집 (PDF Editing)
-     - PDF 생성
-     - 텍스트 편집
-     - 주석
-     - 서명
+122. Presentation (Slides)
+     - Slide creation
+     - Templates
+     - Animation
+     - Presenter mode
 ```
 
----
-
-## 7. 금융 (Financial)
-
-### 7-1. 뱅킹 (Banking)
+### 6-3. Publishing & Print
 ```
-126. 온라인 뱅킹 플랫폼
-     - 계좌 조회
-     - 송금
-     - 청구서 납부
-     - 신청
+123. E-Book Publishing
+     - Manuscript management
+     - Format conversion
+     - Distribution
+     - Sales
 
-127. 모바일 뱅킹
-     - 모바일 결제
-     - 잔액 조회
-     - 이체
-```
+124. Magazine Publishing
+     - Layout
+     - Content management
+     - Distribution
 
-### 7-2. 투자 (Investment)
-```
-128. 증권 거래 플랫폼
-     - 주식 거래
-     - 기금 투자
-     - 포트폴리오 관리
-
-129. 암호화폐 거래소
-     - 거래
-     - 지갑 관리
-     - 차트 분석
-
-130. 보험 플랫폼
-     - 정책 판매
-     - 청구 처리
-     - 고객 관리
-
-131. P2P 렌딩
-     - 대출 신청
-     - 투자 기회
-     - 상환 추적
-```
-
-### 7-3. 결제 (Payment)
-```
-132. 결제 게이트웨이
-     - 거래 처리
-     - 보안
-     - 정산
-
-133. 계좌 이체
-     - 계좌 이체
-     - 국제 송금
-     - 환율
-
-134. 디지털 지갑
-     - 카드 저장
-     - 결제
-     - 거래 기록
+125. PDF Editing
+     - PDF creation
+     - Text editing
+     - Annotation
+     - Signing
 ```
 
 ---
 
-## 8. 의료 (Healthcare)
+## 7. Financial
 
-### 8-1. 의료 기관 (Medical Facilities)
+### 7-1. Banking
 ```
-135. EMR (전자의무기록)
-     - 환자 기록
-     - 진료 기록
-     - 처방 관리
-     - 청구
+126. Online Banking Platform
+     - Account inquiry
+     - Money transfer
+     - Bill payment
+     - Applications
 
-136. 병원 정보 시스템 (HIS)
-     - 환자 관리
-     - 입원 관리
-     - 운영 관리
-
-137. 약국 관리
-     - 의약품 재고
-     - 조제 관리
-     - 처방 추적
-
-138. 검사실 관리
-     - 검사 의뢰
-     - 결과 관리
-     - 리포팅
-
-139. 방사선 관리 (PACS)
-     - 영상 저장
-     - 검색 및 조회
-     - 분석 도구
+127. Mobile Banking
+     - Mobile payment
+     - Balance inquiry
+     - Transfers
 ```
 
-### 8-2. 원격진료 (Telemedicine)
+### 7-2. Investment
 ```
-140. 원격 진료 플랫폼
-     - 화상 상담
-     - 처방 관리
-     - 결제
+128. Securities Trading Platform
+     - Stock trading
+     - Fund investing
+     - Portfolio management
 
-141. 건강 상담 앱
-     - 증상 조회
-     - 의료진 상담
-     - 진료 예약
-```
+129. Cryptocurrency Exchange
+     - Trading
+     - Wallet management
+     - Chart analysis
 
-### 8-3. 헬스케어 관리 (Healthcare Management)
-```
-142. 헬스 데이터 플랫폼
-     - 건강 데이터 수집
-     - 분석
-     - 인사이트
+130. Insurance Platform
+     - Policy sales
+     - Claim processing
+     - Customer management
 
-143. 의료비 관리
-     - 청구서 관리
-     - 보험 청구
-     - 비용 추적
+131. P2P Lending
+     - Loan applications
+     - Investment opportunities
+     - Repayment tracking
 ```
 
----
-
-## 9. 교육 (Education)
-
-### 9-1. 학교 관리 (School Management)
+### 7-3. Payment
 ```
-144. 학교 관리 시스템
-     - 학생 관리
-     - 교육과정 관리
-     - 성적 관리
-     - 시간표
+132. Payment Gateway
+     - Transaction processing
+     - Security
+     - Settlement
 
-145. 온라인 학습 관리 (LMS)
-     - 강의 제공
-     - 과제 제출
-     - 성적 추적
-     - 토론
+133. Bank Transfer
+     - Account transfer
+     - International remittance
+     - Exchange rates
 
-146. 시험 관리
-     - 시험 생성
-     - 온라인 시험
-     - 자동 채점
-     - 통계
-```
-
-### 9-2. 온라인 교육 (Online Learning)
-```
-147. MOOC 플랫폼
-     - 강의 제공
-     - 수료증
-     - 토론
-     - 평가
-
-148. 튜터링 플랫폼
-     - 튜터 연결
-     - 일정 관리
-     - 결제
-     - 평가
-
-149. 언어 학습 앱
-     - 강의 콘텐츠
-     - 진행 추적
-     - 퀴즈
-     - 발음
-
-150. 코딩 학습 플랫폼
-     - 코딩 강의
-     - 온라인 편집기
-     - 프로젝트
-     - 인증
-```
-
-### 9-3. 학생 관리 (Student Management)
-```
-151. 학생 정보 시스템
-     - 성적 관리
-     - 출석 관리
-     - 진로 관리
-     - 부모 포털
-
-152. 장학금 관리
-     - 신청 관리
-     - 선발 프로세스
-     - 지급 관리
+134. Digital Wallet
+     - Card storage
+     - Payment
+     - Transaction records
 ```
 
 ---
 
-## 10. 공공/정부 (Public / Government)
+## 8. Healthcare
 
-### 10-1. 공공 행정 (Public Administration)
+### 8-1. Medical Facilities
 ```
-153. 전자 정부 포털
-     - 민원 신청
-     - 인증
-     - 신청 추적
-     - 발급
+135. EMR (Electronic Medical Record)
+     - Patient records
+     - Treatment records
+     - Prescription management
+     - Billing
 
-154. 공공 데이터 포털
-     - 데이터 공개
-     - 검색
-     - 다운로드
-     - 사용 통계
+136. Hospital Information System (HIS)
+     - Patient management
+     - Admission management
+     - Operations management
 
-155. 지방자치단체 관리
-     - 예산 관리
-     - 자산 관리
-     - 공고 관리
-```
+137. Pharmacy Management
+     - Drug inventory
+     - Dispensing management
+     - Prescription tracking
 
-### 10-2. 세금/세관 (Tax & Customs)
-```
-156. 세금 신고 시스템
-     - 신고 작성
-     - 제출
-     - 추적
-     - 납부
+138. Laboratory Management
+     - Test ordering
+     - Result management
+     - Reporting
 
-157. 관세 관리
-     - 신고
-     - 분류
-     - 계산
+139. Radiology Management (PACS)
+     - Image storage
+     - Search and retrieval
+     - Analysis tools
 ```
 
-### 10-3. 법률 (Legal)
+### 8-2. Telemedicine
 ```
-158. 판례 검색 시스템
-     - 판례 검색
-     - 분석
-     - 관리
+140. Telemedicine Platform
+     - Video consultation
+     - Prescription management
+     - Payment
 
-159. 법률 문서 관리
-     - 계약 관리
-     - 버전 제어
-     - 검색
-
-160. 법원 관리
-     - 소송 관리
-     - 판사 일정
-     - 판결 관리
+141. Health Consultation App
+     - Symptom lookup
+     - Medical staff consultation
+     - Appointment booking
 ```
 
-### 10-4. 보건 (Public Health)
+### 8-3. Healthcare Management
 ```
-161. 질병 감시 시스템
-     - 발병 보고
-     - 추적
-     - 분석
+142. Health Data Platform
+     - Health data collection
+     - Analysis
+     - Insights
 
-162. 공중보건 관리
-     - 예방접종 관리
-     - 전염병 관리
-     - 데이터 분석
+143. Medical Expense Management
+     - Bill management
+     - Insurance claims
+     - Cost tracking
 ```
 
 ---
 
-## 추가 카테고리 (Additional Categories)
+## 9. Education
 
-### 11. 운송 & 물류 (Transportation & Logistics)
+### 9-1. School Management
 ```
-163. 택시/라이드셰어링 (Ride-sharing)
-     - 드라이버 관리
-     - 승객 요청
-     - 위치 추적
-     - 결제
+144. School Management System
+     - Student management
+     - Curriculum management
+     - Grade management
+     - Timetable
 
-164. 배달 플랫폼 (Delivery Platform)
-     - 주문 관리
-     - 배달원 추적
-     - 고객 통지
-     - 결제
+145. Online Learning Management (LMS)
+     - Course delivery
+     - Assignment submission
+     - Grade tracking
+     - Discussion
 
-165. 버스 운영 관리
-     - 노선 관리
-     - 운전자 관리
-     - 정기권 판매
-     - 위치 추적
-
-166. 항공사 관리
-     - 편 관리
-     - 승객 관리
-     - 티켓 판매
-     - 탑승권
-
-167. 해운 관리
-     - 선박 추적
-     - 화물 관리
-     - 정박 일정
-     - 비용 계산
-
-168. 철도 관리
-     - 열차 운영
-     - 승객 관리
-     - 티켓 판매
-     - 좌석 관리
+146. Exam Management
+     - Exam creation
+     - Online exams
+     - Auto grading
+     - Statistics
 ```
 
-### 12. 숙박 & 여행 (Hospitality & Travel)
+### 9-2. Online Learning
 ```
-169. 호텔 예약 시스템
-     - 객실 관리
-     - 예약 관리
-     - 체크인/체크아웃
-     - 청구
+147. MOOC Platform
+     - Course delivery
+     - Certificates
+     - Discussion
+     - Assessment
 
-170. 에어비앤비 같은 숙박 공유
-     - 숙소 관리
-     - 예약 관리
-     - 메시지
-     - 결제
+148. Tutoring Platform
+     - Tutor matching
+     - Scheduling
+     - Payment
+     - Reviews
 
-171. 항공편 예약 시스템
-     - 항공편 검색
-     - 예약
-     - 결제
-     - 좌석 선택
+149. Language Learning App
+     - Lesson content
+     - Progress tracking
+     - Quizzes
+     - Pronunciation
 
-172. 여행 계획 앱
-     - 일정 계획
-     - 예산 관리
-     - 협업 계획
-     - 공유
-
-173. 투어 가이드 예약
-     - 가이드 관리
-     - 예약
-     - 평가
-     - 결제
-
-174. 게스트하우스 관리
-     - 숙소 정보
-     - 예약
-     - 결제
+150. Coding Learning Platform
+     - Coding lessons
+     - Online editor
+     - Projects
+     - Certification
 ```
 
-### 13. 부동산 (Real Estate)
+### 9-3. Student Management
 ```
-175. 부동산 포털
-     - 매물 등록
-     - 검색 & 필터
-     - 문의
-     - 투어 예약
+151. Student Information System
+     - Grade management
+     - Attendance management
+     - Career management
+     - Parent portal
 
-176. 부동산 중개 시스템
-     - 매물 관리
-     - 고객 추적
-     - 거래 기록
-     - 계약 관리
-
-177. 임대 관리
-     - 세입자 관리
-     - 임대료 추적
-     - 유지보수
-     - 계약 관리
-
-178. 건설 프로젝트 관리
-     - 공사 일정
-     - 예산 관리
-     - 현장 사진
-     - 진행률
-
-179. 부동산 평가
-     - 가격 산정
-     - 비교 분석
-     - 리포팅
-
-180. 주택 구매 상담
-     - 자격 확인
-     - 모기지 계산
-     - 법률 지원
-```
-
-### 14. 자동차 (Automotive)
-```
-181. 자동차 판매
-     - 재고 관리
-     - 고객 추적
-     - 시험 운전
-     - 거래 관리
-
-182. 정비 예약 시스템
-     - 예약 관리
-     - 서비스 추적
-     - 비용 추적
-     - 고객 통지
-
-183. 차량 추적 시스템
-     - GPS 추적
-     - 연료 모니터링
-     - 유지보수 알림
-     - 운전자 성과
-
-184. 자동차 공유
-     - 차량 등록
-     - 예약 관리
-     - 결제
-     - 평가
-
-185. 중고 자동차 거래
-     - 판매자 등록
-     - 검사
-     - 거래
-     - 배송
-
-186. 자동차 보험
-     - 정책 판매
-     - 청구 처리
-     - 고객 관리
-```
-
-### 15. 쇼핑 & 마켓플레이스 (Shopping & Marketplace)
-```
-187. 온라인 쇼핑몰
-     - 상품 관리
-     - 장바구니
-     - 주문 처리
-     - 배송 추적
-
-188. 마켓플레이스 (다판매자)
-     - 판매자 관리
-     - 상품 관리
-     - 주문 관리
-     - 결제/정산
-
-189. 옥션/경매 플랫폼
-     - 상품 등록
-     - 입찰 관리
-     - 낙찰 처리
-     - 결제
-
-190. 중고 거래 앱
-     - 상품 등록
-     - 검색
-     - 메시지
-     - 거래 평가
-
-191. 소셜 커머스
-     - 라이브 방송
-     - 쇼핑 추천
-     - 친구 공유
-     - 결제
-
-192. 그룹 구매 플랫폼
-     - 그룹 거래
-     - 공동 구매
-     - 할인 적용
-```
-
-### 16. 분류광고 (Classifieds)
-```
-193. 구인구직 사이트
-     - 공고 등록
-     - 지원 관리
-     - 이력서 관리
-     - 메시지
-
-194. 부동산 분류광고
-     - 매물 등록
-     - 검색
-     - 문의
-     - 예약
-
-195. 구/팔기 분류광고
-     - 상품 등록
-     - 검색 & 필터
-     - 메시지
-     - 거래
-
-196. 서비스 분류광고
-     - 서비스 제공자 등록
-     - 검색
-     - 예약
-     - 평가
-
-197. 임차/임대 분류광고
-     - 임차 광고
-     - 검색
-     - 문의
+152. Scholarship Management
+     - Application management
+     - Selection process
+     - Disbursement management
 ```
 
 ---
 
-## 솔루션 타입별 기본 문서 구조
+## 10. Public / Government
 
-각 솔루션 타입마다 다음 7가지 문서를 준비해야 합니다:
+### 10-1. Public Administration
+```
+153. E-Government Portal
+     - Civil service applications
+     - Authentication
+     - Application tracking
+     - Issuance
+
+154. Public Data Portal
+     - Data publishing
+     - Search
+     - Download
+     - Usage statistics
+
+155. Local Government Management
+     - Budget management
+     - Asset management
+     - Notice management
+```
+
+### 10-2. Tax & Customs
+```
+156. Tax Filing System
+     - Filing preparation
+     - Submission
+     - Tracking
+     - Payment
+
+157. Customs Management
+     - Declaration
+     - Classification
+     - Calculation
+```
+
+### 10-3. Legal
+```
+158. Case Law Search System
+     - Case law search
+     - Analysis
+     - Management
+
+159. Legal Document Management
+     - Contract management
+     - Version control
+     - Search
+
+160. Court Management
+     - Litigation management
+     - Judge scheduling
+     - Ruling management
+```
+
+### 10-4. Public Health
+```
+161. Disease Surveillance System
+     - Outbreak reporting
+     - Tracking
+     - Analysis
+
+162. Public Health Management
+     - Vaccination management
+     - Epidemic management
+     - Data analysis
+```
+
+---
+
+## Additional Categories
+
+### 11. Transportation & Logistics
+```
+163. Taxi / Ride-sharing
+     - Driver management
+     - Passenger requests
+     - Location tracking
+     - Payment
+
+164. Delivery Platform
+     - Order management
+     - Delivery rider tracking
+     - Customer notifications
+     - Payment
+
+165. Bus Operations Management
+     - Route management
+     - Driver management
+     - Pass sales
+     - Location tracking
+
+166. Airline Management
+     - Flight management
+     - Passenger management
+     - Ticket sales
+     - Boarding passes
+
+167. Shipping Management
+     - Vessel tracking
+     - Cargo management
+     - Berthing schedule
+     - Cost calculation
+
+168. Railway Management
+     - Train operations
+     - Passenger management
+     - Ticket sales
+     - Seat management
+```
+
+### 12. Hospitality & Travel
+```
+169. Hotel Reservation System
+     - Room management
+     - Reservation management
+     - Check-in/check-out
+     - Billing
+
+170. Accommodation Sharing (Airbnb-like)
+     - Listing management
+     - Reservation management
+     - Messaging
+     - Payment
+
+171. Flight Reservation System
+     - Flight search
+     - Booking
+     - Payment
+     - Seat selection
+
+172. Travel Planning App
+     - Itinerary planning
+     - Budget management
+     - Collaborative planning
+     - Sharing
+
+173. Tour Guide Booking
+     - Guide management
+     - Booking
+     - Reviews
+     - Payment
+
+174. Guesthouse Management
+     - Accommodation information
+     - Booking
+     - Payment
+```
+
+### 13. Real Estate
+```
+175. Real Estate Portal
+     - Listing registration
+     - Search & filter
+     - Inquiries
+     - Tour booking
+
+176. Real Estate Brokerage System
+     - Listing management
+     - Customer tracking
+     - Transaction records
+     - Contract management
+
+177. Rental Management
+     - Tenant management
+     - Rent tracking
+     - Maintenance
+     - Contract management
+
+178. Construction Project Management
+     - Construction schedule
+     - Budget management
+     - Site photos
+     - Progress rate
+
+179. Real Estate Valuation
+     - Price estimation
+     - Comparative analysis
+     - Reporting
+
+180. Home Purchase Consultation
+     - Qualification check
+     - Mortgage calculation
+     - Legal support
+```
+
+### 14. Automotive
+```
+181. Car Sales
+     - Inventory management
+     - Customer tracking
+     - Test drives
+     - Deal management
+
+182. Service Booking System
+     - Booking management
+     - Service tracking
+     - Cost tracking
+     - Customer notifications
+
+183. Vehicle Tracking System
+     - GPS tracking
+     - Fuel monitoring
+     - Maintenance reminders
+     - Driver performance
+
+184. Car Sharing
+     - Vehicle registration
+     - Reservation management
+     - Payment
+     - Reviews
+
+185. Used Car Trading
+     - Seller registration
+     - Inspection
+     - Transactions
+     - Delivery
+
+186. Auto Insurance
+     - Policy sales
+     - Claim processing
+     - Customer management
+```
+
+### 15. Shopping & Marketplace
+```
+187. Online Shopping Mall
+     - Product management
+     - Shopping cart
+     - Order processing
+     - Delivery tracking
+
+188. Marketplace (Multi-seller)
+     - Seller management
+     - Product management
+     - Order management
+     - Payment/settlement
+
+189. Auction Platform
+     - Item listing
+     - Bid management
+     - Winning-bid processing
+     - Payment
+
+190. Secondhand Trading App
+     - Item listing
+     - Search
+     - Messaging
+     - Transaction reviews
+
+191. Social Commerce
+     - Live streaming
+     - Shopping recommendations
+     - Friend sharing
+     - Payment
+
+192. Group Buying Platform
+     - Group deals
+     - Co-purchasing
+     - Discount application
+```
+
+### 16. Classifieds
+```
+193. Job Listing Site
+     - Posting registration
+     - Application management
+     - Resume management
+     - Messaging
+
+194. Real Estate Classifieds
+     - Listing registration
+     - Search
+     - Inquiries
+     - Booking
+
+195. Buy/Sell Classifieds
+     - Item listing
+     - Search & filter
+     - Messaging
+     - Transactions
+
+196. Service Classifieds
+     - Service provider registration
+     - Search
+     - Booking
+     - Reviews
+
+197. Lease/Rental Classifieds
+     - Rental ads
+     - Search
+     - Inquiries
+```
+
+---
+
+## Base Document Structure per Solution Type
+
+For each solution type, the following 7 documents must be prepared:
 
 ```
 /knowledge_base/
 ├── [CATEGORY]/
 │   └── [SOLUTION_NUMBER]_[SOLUTION_NAME]/
-│       ├── 01_basic_logic.md          ✓ (완료)
+│       ├── 01_basic_logic.md          ✓ (complete)
 │       ├── 02_core_features.md
 │       ├── 03_terminology.md
 │       ├── 04_database_schema.md
@@ -1327,67 +1325,66 @@
 
 ---
 
-## 현재 완료 상태
+## Current Completion Status
 
-### Phase 1 (완료됨) ✅
+### Phase 1 (Complete) ✅
 ```
-1. 쇼핑몰 (E-Commerce) - 01_basic_logic.md
-2. iOS 앱 - 01_basic_logic.md  
-3. Android 앱 - 01_basic_logic.md
-4. Windows 프로그램 - 01_basic_logic.md
-```
-
-### Phase 2 (다음)
-```
-190개의 솔루션 타입 중:
-- 각 솔루션별 02_core_features.md
-- 각 솔루션별 03_terminology.md
-- 각 솔루션별 04_database_schema.md
-- 각 솔루션별 05_api_standard.md (기술 선택에 따라)
+1. E-Commerce - 01_basic_logic.md
+2. iOS App - 01_basic_logic.md  
+3. Android App - 01_basic_logic.md
+4. Windows Program - 01_basic_logic.md
 ```
 
----
-
-## 총 솔루션 타입 수
-
-**현재 정의된 솔루션: 196개**
-
-### 분류별 분포
+### Phase 2 (Next)
 ```
-엔터프라이즈: 27개
-중소기업: 24개
-소비자: 48개
-산업/특수: 17개
-개발자/기술: 17개
-미디어/콘텐츠: 17개
-금융: 11개
-의료: 9개
-교육: 9개
-공공/정부: 6개
-운송/물류: 6개
-숙박/여행: 6개
-부동산: 6개
-자동차: 6개
-쇼핑/마켓플레이스: 6개
-분류광고: 5개
+Among the 190 solution types:
+- 02_core_features.md per solution
+- 03_terminology.md per solution
+- 04_database_schema.md per solution
+- 05_api_standard.md per solution (depending on tech choice)
 ```
 
 ---
 
-## 다음 단계
+## Total Number of Solution Types
 
-1. **각 솔루션의 `02_core_features.md` 작성**
-   - 필수 기능 목록
-   - 선택 기능
+**Currently defined solutions: 196**
 
-2. **각 솔루션의 `03_terminology.md` 작성**
-   - 도메인 용어 정의
-   - 약자 설명
+### Distribution by Category
+```
+Enterprise: 27
+SMB: 24
+Consumer: 48
+Industrial/Specialized: 17
+Developer/Technical: 17
+Media/Content: 17
+Financial: 11
+Healthcare: 9
+Education: 9
+Public/Government: 6
+Transportation/Logistics: 6
+Hospitality/Travel: 6
+Real Estate: 6
+Automotive: 6
+Shopping/Marketplace: 6
+Classifieds: 5
+```
 
-3. **각 솔루션의 `04_database_schema.md` 작성**
-   - DB 엔티티
-   - 관계도
+---
 
-4. **각 솔루션의 `07_spec_template.md` 작성**
-   - 기획서 템플릿
+## Next Steps
 
+1. **Write `02_core_features.md` for each solution**
+   - Required feature list
+   - Optional features
+
+2. **Write `03_terminology.md` for each solution**
+   - Domain term definitions
+   - Abbreviation explanations
+
+3. **Write `04_database_schema.md` for each solution**
+   - DB entities
+   - Relationship diagram
+
+4. **Write `07_spec_template.md` for each solution**
+   - Spec template

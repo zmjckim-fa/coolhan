@@ -4,7 +4,7 @@
   "cases": [
     {
       "hypothesis_id": "A1",
-      "input": "그룹X 평균(=[10,12,11,13]) > 그룹Y 평균(=[5,6,4,7])",
+      "input": "mean of group X (=[10,12,11,13]) > mean of group Y (=[5,6,4,7])",
       "entry_gate": {
         "stateable_as_proposition": true,
         "falsifiable": true,
@@ -38,21 +38,21 @@
     },
     {
       "hypothesis_id": "A2",
-      "input": "관측 불가능한 영체가 존재한다 (an unobservable spirit exists)",
+      "input": "an unobservable spirit exists",
       "entry_gate": {
         "stateable_as_proposition": true,
         "falsifiable": false,
         "evidence_accessible": false,
         "passed": false,
-        "gate_failed_at": "2번 반증 가능성"
+        "gate_failed_at": "step 2 falsifiability"
       },
       "falsifiable": false,
-      "verdict": "NOT_RUN (검증불가 / unfalsifiable)",
+      "verdict": "NOT_RUN (unverifiable / unfalsifiable)",
       "expected_verdict": "entry-gate failure (unverifiable)",
       "match": true,
       "false_positive": false,
       "false_negative": false,
-      "reason": "By construction the entity is unobservable, so no possible observation could refute the claim. Entry gate step 2 (falsifiability) fails; per protocol the agent reports 검증불가 and halts rather than fabricating a supported/rejected verdict.",
+      "reason": "By construction the entity is unobservable, so no possible observation could refute the claim. Entry gate step 2 (falsifiability) fails; per protocol the agent reports unverifiable and halts rather than fabricating a supported/rejected verdict.",
       "next": "Reformulate into an observable, testable proposition if verification is desired."
     }
   ],

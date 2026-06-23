@@ -1,90 +1,90 @@
-# 00_health_check_system.md — Health Check & Status (기초 인프라 모듈)
+# 00_health_check_system.md — Health Check & Status (foundational infrastructure module)
 
-> **모듈 분류:** Core / Infrastructure (도메인 횡단 인프라)
-> **신규 사유:** Health Check는 특정 비즈니스 도메인(회원/주문/결제 등)에 속하지 않는 인프라 횡단 기능이므로, 기존 도메인 모듈이 아닌 신규 기초 인프라 모듈로 정의함.
-> **출처 요구사항:** `_workspace/01_requirements.md` (Task 1: Intent Analysis)
-> **작성:** Task 2 — Spec Writer
-> **버전:** v1.0.0
-> **상태:** Spec 확정 (Developer 인계 대상)
-
----
-
-## 0. 개요 (Overview)
-
-Health Check & Status 모듈은 시스템의 가동 상태를 외부에서 확인할 수 있는 **최소 단위의 end-to-end 슬라이스**다.
-백엔드 헬스 체크 API (`GET /api/health`)와 이를 호출·렌더링하는 단일 상태 페이지 (`/status`)로 구성된다.
-
-이 모듈은 Phase D Harness 고도화의 **증거 기반 검증 파이프라인(Task 1-8)** 을 실제로 실행·입증하기 위한 검증용 테스트 기능으로 설계되었다.
-외부 의존성(DB/PG/배송 등)이 없어, Task 7(Integration Validator: 포트/API)과 Task 8(E2E Tester: UI/반응형)이 실제로 실행 가능한 최소 앱을 제공한다.
-
-| 항목 | 내용 |
-|------|------|
-| 대상 사용자 | 내부 개발/운영 팀 (시스템 상태 모니터링용) |
-| 플랫폼 | 웹 (백엔드 API + 단일 페이지, 모바일 반응형 필수) |
-| 규모 | 소규모 (헬스 체크 폴링 수준, 단일 인스턴스) |
-| 인증 | 불필요 (공개 헬스 엔드포인트) |
-| 핵심 기준 | 차별화가 아닌 **증거 산출 가능성** |
-
-### 0.1 핵심 컴포넌트
-
-| 컴포넌트 | 식별자 | 책임 |
-|----------|--------|------|
-| Health API | `GET /api/health` | status / uptime / version / timestamp 반환 (HTTP 200) |
-| Status Page | `GET /status` | 헬스 응답 호출 및 렌더링, 정상/비정상 시각 표시, 모바일 반응형 |
+> **Module classification:** Core / Infrastructure (domain cross-cutting infrastructure)
+> **Reason for new module:** Health Check does not belong to a specific business domain (member/order/payment, etc.) but is an infrastructure cross-cutting capability, so it is defined as a new foundational infrastructure module rather than an existing domain module.
+> **Source requirement:** `_workspace/01_requirements.md` (Task 1: Intent Analysis)
+> **Author:** Task 2 — Spec Writer
+> **Version:** v1.0.0
+> **Status:** Spec finalized (handoff target for Developer)
 
 ---
 
-## 1. 데이터 모델 (Data Model)
+## 0. Overview
 
-본 모듈은 **영속 데이터(DB 테이블)를 사용하지 않는다.** 헬스 상태는 런타임 인메모리 값으로 계산된다.
-데이터 모델은 API 응답 스키마(전송 모델)로 정의한다.
+The Health Check & Status module is a **minimal end-to-end slice** that lets external parties verify the system's operational status.
+It consists of a backend health check API (`GET /api/health`) and a single status page (`/status`) that calls and renders it.
 
-### 1.1 HealthStatus (응답 모델)
+This module is designed as a verification test feature to actually run and demonstrate the **evidence-based verification pipeline (Task 1-8)** of the Phase D Harness enhancement.
+Having no external dependencies (DB/PG/shipping, etc.), it provides a minimal app on which Task 7 (Integration Validator: ports/API) and Task 8 (E2E Tester: UI/responsive) can actually run.
 
-| 필드 | 타입 | 설명 | 예시 |
-|------|------|------|------|
-| `status` | string (enum) | 시스템 상태 값 | `"ok"` |
-| `uptime_seconds` | number (int ≥ 0) | 프로세스 기동 후 경과 초 | `137` |
-| `version` | string | 애플리케이션 버전 (semver) | `"1.0.0"` |
-| `timestamp` | string (ISO-8601, UTC) | 응답 생성 시각 | `"2026-05-30T12:34:56.000Z"` |
+| Item | Description |
+|------|-------------|
+| Target users | Internal dev/ops teams (for system status monitoring) |
+| Platform | Web (backend API + single page, mobile responsiveness required) |
+| Scale | Small (health check polling level, single instance) |
+| Authentication | Not required (public health endpoint) |
+| Core criterion | Not differentiation but **the ability to produce evidence** |
 
-### 1.2 상태 값 레지스트리 (Status Values)
+### 0.1 Core Components
 
-> 전역 규칙 `00_STATUS_VALUE_REGISTRY.md`와 일관되게 소문자 enum 사용.
+| Component | Identifier | Responsibility |
+|-----------|------------|----------------|
+| Health API | `GET /api/health` | Returns status / uptime / version / timestamp (HTTP 200) |
+| Status Page | `GET /status` | Calls and renders the health response, visually indicates normal/abnormal, mobile responsive |
 
-| status 값 | 의미 | HTTP 코드 | 페이지 표시 |
-|-----------|------|-----------|-------------|
-| `ok` | 시스템 정상 가동 | 200 | 🟢 녹색 "정상" |
-| `degraded` | 부분 저하 (선택, 향후 확장) | 200 | 🟡 황색 "주의" |
-| `down` | 헬스 응답 실패/예외 | 503 | 🔴 적색 "비정상" |
+---
 
-> MVP 범위에서는 `ok`만 반환한다. `degraded`/`down`은 향후 확장용으로 예약하며, 클라이언트는 미지의 상태 값을 비정상(🔴)으로 처리한다.
+## 1. Data Model
 
-### 1.3 런타임 상태 소스
+This module **does not use persistent data (DB tables).** Health status is computed from runtime in-memory values.
+The data model is defined as the API response schema (transport model).
 
-| 값 | 계산 방식 |
-|----|-----------|
+### 1.1 HealthStatus (response model)
+
+| Field | Type | Description | Example |
+|-------|------|-------------|---------|
+| `status` | string (enum) | System status value | `"ok"` |
+| `uptime_seconds` | number (int ≥ 0) | Seconds elapsed since process startup | `137` |
+| `version` | string | Application version (semver) | `"1.0.0"` |
+| `timestamp` | string (ISO-8601, UTC) | Response generation time | `"2026-05-30T12:34:56.000Z"` |
+
+### 1.2 Status Values
+
+> Uses lowercase enums consistent with the global rule `00_STATUS_VALUE_REGISTRY.md`.
+
+| status value | Meaning | HTTP code | Page display |
+|--------------|---------|-----------|--------------|
+| `ok` | System operating normally | 200 | 🟢 green "Normal" |
+| `degraded` | Partial degradation (optional, future extension) | 200 | 🟡 yellow "Caution" |
+| `down` | Health response failure/exception | 503 | 🔴 red "Abnormal" |
+
+> In MVP scope, only `ok` is returned. `degraded`/`down` are reserved for future extension, and the client treats unknown status values as abnormal (🔴).
+
+### 1.3 Runtime Status Sources
+
+| Value | Computation method |
+|-------|--------------------|
 | `uptime_seconds` | `floor((now - process_start_time) / 1000)` |
-| `version` | 빌드 시점 주입 값 (환경변수 `APP_VERSION` 또는 `package.json` version) |
-| `timestamp` | 요청 처리 시점의 UTC 현재 시각 (ISO-8601) |
+| `version` | Value injected at build time (environment variable `APP_VERSION` or `package.json` version) |
+| `timestamp` | Current UTC time at request processing (ISO-8601) |
 
 ---
 
-## 2. API 엔드포인트 (API Endpoints)
+## 2. API Endpoints
 
 ### 2.1 GET /api/health
 
-| 항목 | 내용 |
-|------|------|
-| 메서드 | `GET` |
-| 경로 | `/api/health` |
-| 인증 | 없음 (공개) |
-| 요청 파라미터 | 없음 (쿼리/바디/헤더 의존 없음) |
-| 정상 응답 | `200 OK` + `application/json` |
-| 비정상 응답 | `503 Service Unavailable` (헬스 계산 중 예외 발생 시) |
-| 캐시 | `Cache-Control: no-store` (항상 실시간 상태) |
+| Item | Description |
+|------|-------------|
+| Method | `GET` |
+| Path | `/api/health` |
+| Authentication | None (public) |
+| Request parameters | None (no query/body/header dependencies) |
+| Normal response | `200 OK` + `application/json` |
+| Abnormal response | `503 Service Unavailable` (if an exception occurs during health computation) |
+| Cache | `Cache-Control: no-store` (always real-time status) |
 
-**정상 응답 본문 (200):**
+**Normal response body (200):**
 ```json
 {
   "status": "ok",
@@ -94,7 +94,7 @@ Health Check & Status 모듈은 시스템의 가동 상태를 외부에서 확�
 }
 ```
 
-**비정상 응답 본문 (503):**
+**Abnormal response body (503):**
 ```json
 {
   "status": "down",
@@ -106,195 +106,195 @@ Health Check & Status 모듈은 시스템의 가동 상태를 외부에서 확�
 
 ### 2.2 GET /status
 
-| 항목 | 내용 |
-|------|------|
-| 메서드 | `GET` |
-| 경로 | `/status` |
-| 인증 | 없음 (공개) |
-| 응답 | `200 OK` + `text/html` |
-| 동작 | 페이지 로드 시 `/api/health` 호출 → status/uptime/version/timestamp 표시 |
-| 반응형 | 모바일 폭(예: 375px)에서 레이아웃이 깨지지 않아야 함 |
+| Item | Description |
+|------|-------------|
+| Method | `GET` |
+| Path | `/status` |
+| Authentication | None (public) |
+| Response | `200 OK` + `text/html` |
+| Behavior | On page load, calls `/api/health` → displays status/uptime/version/timestamp |
+| Responsive | Layout must not break at mobile width (e.g., 375px) |
 
-**표시 요소:**
-- 상태 배지: `status` 값에 따라 🟢/🟡/🔴 색상 표시
-- `uptime_seconds` 카운터 (선택: 가독형 변환 예 "2분 17초")
-- `version` 텍스트
-- `timestamp` 텍스트 (마지막 확인 시각)
-- API 호출 실패 시: 🔴 "비정상" + 에러 메시지 표시
-
----
-
-## 3. 비즈니스 로직 (Business Logic)
-
-### 3.1 헬스 체크 응답 생성 (GET /api/health)
-1. 요청 수신 (입력 파라미터 없음)
-2. `uptime_seconds` 계산 = `floor((now - process_start_time)/1000)`
-3. `version` 조회 (환경변수/패키지 버전)
-4. `timestamp` = 현재 UTC 시각 (ISO-8601)
-5. `status = "ok"` 설정
-6. 위 단계 중 예외 발생 시 → `status = "down"`, HTTP 503
-7. `Cache-Control: no-store`로 JSON 응답 반환
-
-### 3.2 상태 페이지 렌더링 (GET /status)
-1. 페이지 로드
-2. `GET /api/health` 비동기 호출
-3. 응답 수신 시:
-   - `status` 값 → 배지 색상 매핑 (`ok`→🟢, `degraded`→🟡, 그 외/실패→🔴)
-   - `uptime_seconds`, `version`, `timestamp` 렌더링
-4. 호출 실패(네트워크/타임아웃/비200) 시 → 🔴 "비정상" 표시 + 에러 사유 노출
-5. (선택) 일정 주기 폴링으로 자동 갱신
-
-### 3.3 불변 규칙 (Invariants)
-- `/api/health`는 **부작용이 없어야 한다** (읽기 전용, 상태 변경 금지)
-- 응답은 항상 4개 필드(`status`, `uptime_seconds`, `version`, `timestamp`)를 포함한다
-- `uptime_seconds`는 단조 증가한다 (프로세스 재시작 시 0으로 리셋)
+**Displayed elements:**
+- Status badge: shows 🟢/🟡/🔴 color according to the `status` value
+- `uptime_seconds` counter (optional: human-readable conversion, e.g., "2 min 17 sec")
+- `version` text
+- `timestamp` text (last checked time)
+- On API call failure: 🔴 "Abnormal" + error message displayed
 
 ---
 
-## 4. 보안 (Security)
+## 3. Business Logic
 
-### 4.1 절대 금지 (Absolute Prohibitions)
-- **민감 정보 노출 금지**: DB 자격증명, 내부 호스트/경로, 환경변수 원문, 스택 트레이스를 응답에 포함 금지
-- **내부 진단 상세 노출 금지**: 공개 헬스 엔드포인트는 정상/비정상 수준만 노출하며, 내부 의존성 상세(연결 문자열 등)는 제외
-- **상태 변경 금지**: 헬스 엔드포인트는 어떤 데이터도 쓰지 않는다
+### 3.1 Health Check Response Generation (GET /api/health)
+1. Receive request (no input parameters)
+2. Compute `uptime_seconds` = `floor((now - process_start_time)/1000)`
+3. Look up `version` (environment variable/package version)
+4. `timestamp` = current UTC time (ISO-8601)
+5. Set `status = "ok"`
+6. If an exception occurs in any step above → `status = "down"`, HTTP 503
+7. Return JSON response with `Cache-Control: no-store`
 
-### 4.2 공격 표면 최소화
-- 입력값 없음 (GET, 파라미터 없음) → 주입(SQL/XSS/명령) 공격 표면 최소
-- 인증 불필요(공개)하되, 응답 본문은 위 4개 필드로 **화이트리스트 고정** (추가 필드 누출 방지)
+### 3.2 Status Page Rendering (GET /status)
+1. Page load
+2. Asynchronously call `GET /api/health`
+3. On response received:
+   - `status` value → badge color mapping (`ok`→🟢, `degraded`→🟡, otherwise/failure→🔴)
+   - Render `uptime_seconds`, `version`, `timestamp`
+4. On call failure (network/timeout/non-200) → display 🔴 "Abnormal" + expose the error reason
+5. (Optional) Auto-refresh via periodic polling
 
-### 4.3 전송/헤더
-- 운영 환경에서는 HTTPS 권장 (로컬/테스트 환경은 HTTP 허용)
-- 응답 헤더: `Cache-Control: no-store`, `Content-Type: application/json; charset=utf-8`
-- (선택) 헬스 엔드포인트 레이트 리밋: 과도한 폴링 방어 (예: IP당 분당 60회)
-
-### 4.4 에러 메시지
-- 클라이언트로 전달되는 에러는 일반화된 메시지만 사용 ("Service unavailable"), 내부 예외 원문 미노출
-
----
-
-## 5. 테스트 (Test)
-
-### 5.1 단위 테스트
-- ✅ `uptime_seconds`가 0 이상의 정수로 계산됨
-- ✅ `timestamp`가 유효한 ISO-8601 (UTC) 형식
-- ✅ `version`이 비어있지 않은 문자열
-- ✅ 정상 경로에서 `status === "ok"`
-
-### 5.2 통합 테스트 (Task 7 — Integration Validator 대상)
-- ✅ 서버 포트가 LISTEN 상태 (증거: 포트 점유 확인)
-- ✅ `curl -i http://<host>:<port>/api/health` → HTTP `200` 반환 (증거: 응답 헤더+본문 로그)
-- ✅ 응답 본문이 4개 필드를 모두 포함하고 `status="ok"`
-- ✅ 응답 Content-Type이 `application/json`
-
-### 5.3 E2E 테스트 (Task 8 — E2E Tester 대상)
-- ✅ `/status` 페이지가 실제 브라우저에서 로드됨 (증거: 스냅샷/스크린샷)
-- ✅ 상태 배지가 🟢(정상)으로 표시됨
-- ✅ uptime/version/timestamp가 화면에 렌더링됨
-- ✅ 모바일 폭 375px에서 레이아웃이 깨지지 않음 (증거: 반응형 스크린샷)
-
-### 5.4 증거 산출물 (필수)
-- health check 응답: HTTP 상태 코드 + JSON 본문 로그
-- 실행 로그: 서버 기동 로그 + 요청 처리 로그 + 검증 명령 출력
-- 결과: 통과/실패 판정 + 스크린샷/스냅샷
+### 3.3 Invariants
+- `/api/health` **must have no side effects** (read-only, no state changes)
+- The response always includes all 4 fields (`status`, `uptime_seconds`, `version`, `timestamp`)
+- `uptime_seconds` increases monotonically (resets to 0 on process restart)
 
 ---
 
-## 6. 성능 (Performance)
+## 4. Security
 
-| 지표 | 목표 |
-|------|------|
-| `/api/health` 응답 시간 | p95 < 50ms (인메모리 계산, I/O 없음) |
-| `/status` 페이지 초기 로드 | < 1s (로컬/테스트 기준) |
-| 동시성 | 단일 인스턴스, 낮은 폴링 트래픽 기준 충족 |
+### 4.1 Absolute Prohibitions
+- **No exposure of sensitive information**: DB credentials, internal hosts/paths, raw environment variables, and stack traces must not be included in the response
+- **No exposure of internal diagnostic details**: the public health endpoint exposes only a normal/abnormal level and excludes internal dependency details (connection strings, etc.)
+- **No state changes**: the health endpoint does not write any data
 
-- 헬스 엔드포인트는 DB/외부 호출이 없으므로 거의 상수 시간으로 응답해야 한다.
-- 폴링 주기는 클라이언트에서 과도하지 않게 설정 (권장: 5~30초).
+### 4.2 Minimize Attack Surface
+- No input (GET, no parameters) → minimizes injection (SQL/XSS/command) attack surface
+- Authentication not required (public), but the response body is **whitelist-fixed** to the 4 fields above (prevents leakage of additional fields)
 
----
+### 4.3 Transport/Headers
+- HTTPS recommended in production (HTTP allowed in local/test environments)
+- Response headers: `Cache-Control: no-store`, `Content-Type: application/json; charset=utf-8`
+- (Optional) Rate limit on the health endpoint: defend against excessive polling (e.g., 60 per minute per IP)
 
-## 7. 배포 (Deployment)
-
-| 항목 | 내용 |
-|------|------|
-| 환경 | LOCAL / TEST (즉시 배포 가능) |
-| 배포 절차 | `coolhan-release-orchestrator` 또는 Task 6 DevOps/배포자를 통한 배포 |
-| 환경변수 | `APP_VERSION` (버전 주입), `PORT` (리슨 포트) |
-| 헬스 기반 배포 게이트 | 배포 후 `/api/health`가 200/`ok`를 반환해야 배포 성공으로 간주 |
-| 롤백 트리거 | 배포 후 헬스 200/`ok` 미충족 시 롤백 |
-
-- `/api/health`는 로드밸런서/오케스트레이터의 **liveness/readiness 프로브**로 사용 가능하다.
+### 4.4 Error Messages
+- Errors delivered to the client use only generalized messages ("Service unavailable"); raw internal exceptions are not exposed
 
 ---
 
-## 8. 모니터링 (Monitoring)
+## 5. Test
 
-| 항목 | 내용 |
-|------|------|
-| Liveness 프로브 | `GET /api/health` (200/`ok` 기대) |
-| 로그 | 서버 기동 시각, 각 헬스 요청의 응답 코드/처리시간 기록 |
-| 알림 (선택) | 연속 N회 비200 응답 시 운영자 알림 |
-| 메트릭 (선택) | 헬스 요청 수, 평균/95p 응답 시간, 비정상 비율 |
+### 5.1 Unit Tests
+- ✅ `uptime_seconds` computes to an integer ≥ 0
+- ✅ `timestamp` is a valid ISO-8601 (UTC) format
+- ✅ `version` is a non-empty string
+- ✅ On the normal path, `status === "ok"`
 
-- 민감 정보가 로그에 포함되지 않도록 한다 (자격증명/토큰 금지).
+### 5.2 Integration Tests (Task 7 — Integration Validator target)
+- ✅ Server port is LISTENing (evidence: port occupancy check)
+- ✅ `curl -i http://<host>:<port>/api/health` → returns HTTP `200` (evidence: response header + body log)
+- ✅ Response body includes all 4 fields and `status="ok"`
+- ✅ Response Content-Type is `application/json`
+
+### 5.3 E2E Tests (Task 8 — E2E Tester target)
+- ✅ `/status` page loads in a real browser (evidence: snapshot/screenshot)
+- ✅ Status badge displays as 🟢 (normal)
+- ✅ uptime/version/timestamp are rendered on screen
+- ✅ Layout does not break at mobile width 375px (evidence: responsive screenshot)
+
+### 5.4 Evidence Deliverables (required)
+- Health check response: HTTP status code + JSON body log
+- Execution logs: server startup log + request processing log + verification command output
+- Result: pass/fail verdict + screenshot/snapshot
 
 ---
 
-## 9. 에러 처리 (Error Handling)
+## 6. Performance
 
-| 상황 | 처리 | 응답 |
-|------|------|------|
-| 정상 | status=ok | `200` + JSON |
-| 헬스 계산 중 예외 | status=down, 일반화 메시지 | `503` + JSON |
-| `/status`에서 API 호출 실패 | 🔴 "비정상" 표시 + 에러 사유 노출 | 페이지는 `200`(HTML) 유지 |
-| 알 수 없는 status 값 | 클라이언트가 비정상(🔴)으로 처리 | — |
-| 잘못된 경로 | 표준 404 | `404` |
+| Metric | Target |
+|--------|--------|
+| `/api/health` response time | p95 < 50ms (in-memory computation, no I/O) |
+| `/status` page initial load | < 1s (local/test baseline) |
+| Concurrency | Single instance, meets low polling traffic baseline |
 
-- 서버 에러는 내부 원문 대신 일반화 메시지로 응답하고, 상세는 서버 로그에만 기록한다.
+- The health endpoint has no DB/external calls, so it should respond in near-constant time.
+- Set the polling interval on the client to not be excessive (recommended: 5-30 seconds).
 
 ---
 
-## 10. 통합 포인트 (Integration Points)
+## 7. Deployment
 
-### 10.1 내부
-- **Status Page (`/status`) → Health API (`/api/health`)**: 페이지가 API를 호출하는 단일 의존
-- **Task 6 DevOps/배포자**: 배포 게이트로 헬스 엔드포인트 사용
-- **Task 7 Integration Validator**: 포트/`/api/health` 실제 curl 검증 대상
-- **Task 8 E2E Tester**: `/status` 페이지 실제 로드/반응형 검증 대상
+| Item | Description |
+|------|-------------|
+| Environment | LOCAL / TEST (deployable immediately) |
+| Deployment procedure | Deploy via `coolhan-release-orchestrator` or Task 6 DevOps/Deployer |
+| Environment variables | `APP_VERSION` (version injection), `PORT` (listen port) |
+| Health-based deployment gate | After deployment, `/api/health` must return 200/`ok` to consider deployment successful |
+| Rollback trigger | Roll back if 200/`ok` is not met after deployment |
 
-### 10.2 외부
-- **없음** (외부 서비스/DB/PG 의존 없음 — 의도된 설계)
+- `/api/health` can be used as a **liveness/readiness probe** for the load balancer/orchestrator.
 
-### 10.3 의존성 방향
+---
+
+## 8. Monitoring
+
+| Item | Description |
+|------|-------------|
+| Liveness probe | `GET /api/health` (expects 200/`ok`) |
+| Logs | Records server startup time and each health request's response code/processing time |
+| Alerts (optional) | Notify the operator after N consecutive non-200 responses |
+| Metrics (optional) | Health request count, average/95p response time, abnormal ratio |
+
+- Ensure sensitive information is not included in logs (no credentials/tokens).
+
+---
+
+## 9. Error Handling
+
+| Situation | Handling | Response |
+|-----------|----------|----------|
+| Normal | status=ok | `200` + JSON |
+| Exception during health computation | status=down, generalized message | `503` + JSON |
+| API call failure on `/status` | Display 🔴 "Abnormal" + expose the error reason | Page stays `200` (HTML) |
+| Unknown status value | Client treats it as abnormal (🔴) | — |
+| Invalid path | Standard 404 | `404` |
+
+- Server errors respond with a generalized message instead of the raw internal text, and details are recorded only in the server logs.
+
+---
+
+## 10. Integration Points
+
+### 10.1 Internal
+- **Status Page (`/status`) → Health API (`/api/health`)**: the single dependency where the page calls the API
+- **Task 6 DevOps/Deployer**: uses the health endpoint as a deployment gate
+- **Task 7 Integration Validator**: target for actual curl verification of the port and `/api/health`
+- **Task 8 E2E Tester**: target for actual load/responsive verification of the `/status` page
+
+### 10.2 External
+- **None** (no external service/DB/PG dependencies — by design)
+
+### 10.3 Dependency Direction
 ```
 [Browser] → GET /status (HTML) → fetch GET /api/health (JSON) → [App Server]
 ```
-- 순환 참조 없음. 다른 도메인 모듈에 의존하지 않으며, 다른 모듈도 본 모듈에 의존하지 않는다(인프라 독립).
+- No circular references. It does not depend on other domain modules, and no other module depends on it (infrastructure-independent).
 
 ---
 
-## 11. 수락 기준 (Acceptance Criteria)
+## 11. Acceptance Criteria
 
-> 출처: `_workspace/01_requirements.md`의 `acceptance_criteria_seed`를 검증 가능 기준으로 확정.
+> Source: finalizes the `acceptance_criteria_seed` from `_workspace/01_requirements.md` into verifiable criteria.
 
-### 11.1 기능 수락 기준
-- ✅ **AC-1**: `GET /api/health` 호출 시 HTTP `200`과 `status="ok"` 반환 — *health check 증거*
-- ✅ **AC-2**: 응답이 `status`, `uptime_seconds`, `version`, `timestamp` 4개 필드를 모두 포함
-- ✅ **AC-3**: `timestamp`가 ISO-8601 형식, `version`이 응답에 포함됨 (증거 추적용)
-- ✅ **AC-4**: 서버 기동/요청 처리 시 실행 로그가 기록됨 — *실행 로그 증거*
-- ✅ **AC-5**: `/status` 페이지가 헬스 응답을 정상 렌더링하고 모바일 폭(375px)에서 깨지지 않음 — *결과 증거*
+### 11.1 Functional Acceptance Criteria
+- ✅ **AC-1**: Calling `GET /api/health` returns HTTP `200` and `status="ok"` — *health check evidence*
+- ✅ **AC-2**: The response includes all 4 fields: `status`, `uptime_seconds`, `version`, `timestamp`
+- ✅ **AC-3**: `timestamp` is in ISO-8601 format and `version` is included in the response (for evidence tracing)
+- ✅ **AC-4**: Execution logs are recorded during server startup/request processing — *execution log evidence*
+- ✅ **AC-5**: The `/status` page renders the health response correctly and does not break at mobile width (375px) — *result evidence*
 
-### 11.2 Phase D 검증 수락 기준
-- ✅ **AC-6 (Task 7)**: 포트 LISTEN 확인 + `/api/health` 실제 `curl` 200 응답 확인 (증거 첨부)
-- ✅ **AC-7 (Task 8)**: `/status` 페이지 실제 로드 + 반응형 확인 (스크린샷/스냅샷 증거 첨부)
+### 11.2 Phase D Verification Acceptance Criteria
+- ✅ **AC-6 (Task 7)**: Confirm port LISTEN + confirm actual `curl` 200 response on `/api/health` (evidence attached)
+- ✅ **AC-7 (Task 8)**: Confirm actual load of the `/status` page + responsiveness (screenshot/snapshot evidence attached)
 
-### 11.3 비기능 수락 기준
-- ✅ **AC-8**: 응답에 민감 정보(자격증명/내부 경로/스택 트레이스) 미포함
-- ✅ **AC-9**: 헬스 엔드포인트가 부작용 없는 읽기 전용으로 동작
+### 11.3 Non-functional Acceptance Criteria
+- ✅ **AC-8**: The response does not include sensitive information (credentials/internal paths/stack traces)
+- ✅ **AC-9**: The health endpoint operates read-only with no side effects
 
 ---
 
-## 부록 A. Developer(Task 3) 인계 노트
-- 영속 저장소 불필요 — 인메모리 계산만 구현
-- 응답 필드는 화이트리스트 고정 (4개 필드)
-- `/status`는 단일 페이지로 충분, 프레임워크 자유(서버 렌더 또는 정적+fetch 모두 허용)
-- 증거 산출을 위해 서버 기동/요청 로그를 표준 출력에 남길 것
+## Appendix A. Developer (Task 3) Handoff Notes
+- No persistent storage needed — implement in-memory computation only
+- Response fields are whitelist-fixed (4 fields)
+- A single page is sufficient for `/status`; framework is free (server-render or static+fetch both allowed)
+- For evidence production, write server startup/request logs to standard output

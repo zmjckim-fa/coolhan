@@ -2,22 +2,22 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <!-- 위반: 뷰포트 meta 없음 -->
-  <title>회원가입</title>
+  <!-- violation: no viewport meta -->
+  <title>Sign up</title>
   <style>
-    /* 위반: 디자인 토큰 없음, 색상 하드코딩 */
+    /* violation: no design tokens, hardcoded colors */
     body {
       font-family: Arial;
-      /* 위반: 폰트 11px (16px 미달) */
+      /* violation: font 11px (below 16px) */
       font-size: 11px;
-      /* 위반: 색대비 미달 #aaa on #fff (1.6:1) */
+      /* violation: contrast deficient #aaa on #fff (1.6:1) */
       color: #aaaaaa;
       background: #ffffff;
-      /* 위반: 반응형 없음, 고정 px */
+      /* violation: not responsive, fixed px */
       width: 900px;
     }
     .row { margin: 6px 0; }
-    /* 위반: input 작음, 터치타깃 미달 */
+    /* violation: input small, touch target deficient */
     input {
       width: 200px;
       height: 18px;
@@ -25,12 +25,12 @@
       color: #aaaaaa;
       border: 1px solid #cccccc;
     }
-    /* 위반: div를 버튼처럼 사용, 시맨틱X */
+    /* violation: div used as a button, not semantic */
     .btn {
       display: inline-block;
       width: 90px;
       background: #cccccc;
-      color: #dddddd;        /* 위반: 대비 거의 없음 */
+      color: #dddddd;        /* violation: almost no contrast */
       text-align: center;
       font-size: 11px;
       padding: 4px;
@@ -38,36 +38,36 @@
   </style>
 </head>
 <body>
-  <div style="font-size:14px;">회원가입</div>
+  <div style="font-size:14px;">Sign up</div>
 
-  <!-- 위반: label 없음, placeholder만 -->
+  <!-- violation: no label, placeholder only -->
   <div class="row">
-    <input type="text" id="email" placeholder="이메일">
+    <input type="text" id="email" placeholder="Email">
   </div>
   <div class="row">
-    <input type="text" id="password" placeholder="비밀번호">
+    <input type="text" id="password" placeholder="Password">
   </div>
 
-  <!-- 위반: 에러문구 "오류"만, 해결방안 없음 -->
-  <div class="row" id="err" style="color:#aaaaaa; display:none;">오류</div>
+  <!-- violation: error message says only "error", no resolution -->
+  <div class="row" id="err" style="color:#aaaaaa; display:none;">error</div>
 
-  <!-- 위반: <div onclick>로 버튼 대체 (키보드X, 시맨틱X) -->
-  <div class="btn" onclick="doSignup()">가입</div>
+  <!-- violation: <div onclick> used as a button (no keyboard, not semantic) -->
+  <div class="btn" onclick="doSignup()">Sign up</div>
 
   <script>
-    // 위반: 로딩/에러/성공 상태 없음, 해결안 없는 에러문구
+    // violation: no loading/error/success state, error message with no resolution
     function doSignup() {
       var email = document.getElementById('email').value;
       var pw = document.getElementById('password').value;
       var err = document.getElementById('err');
-      // 로직은 동작: 빈 값이면 막고, 아니면 통과
+      // the logic works: block if empty, otherwise pass
       if (!email || !pw) {
         err.style.display = 'block';
-        err.textContent = '오류';   // 위반: 해결방안 없음
+        err.textContent = 'error';   // violation: no resolution
         return;
       }
-      // 위반: 성공 피드백/로딩 상태 없음. alert만.
-      alert('가입');
+      // violation: no success feedback / loading state. alert only.
+      alert('signed up');
     }
   </script>
 </body>

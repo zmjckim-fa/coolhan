@@ -1,54 +1,54 @@
-# 쇼핑몰 - API 표준 (E-Commerce Mall API Standard)
+# E-Commerce Mall - API Standard
 
-## 1. API 설계 원칙
+## 1. API Design Principles
 
-### REST API 기본
+### REST API Basics
 ```
-HTTP Method     동작         예시
+HTTP Method     Action         Example
 ─────────────────────────────────────────
-GET            조회 (Read)    GET /api/products
-POST           생성 (Create)  POST /api/orders
-PUT            전체 수정      PUT /api/products/1
-PATCH          부분 수정      PATCH /api/orders/1/status
-DELETE         삭제 (Delete)  DELETE /api/cart/1
+GET            Read           GET /api/products
+POST           Create         POST /api/orders
+PUT            Full update    PUT /api/products/1
+PATCH          Partial update PATCH /api/orders/1/status
+DELETE         Delete         DELETE /api/cart/1
 ```
 
-### 엔드포인트 네이밍 규칙
+### Endpoint Naming Conventions
 ```
-- 명사 사용 (동사 X): /api/products (O), /api/getProducts (X)
-- 리소스 ID는 경로 파라미터: /api/products/{productId}
-- 필터/검색은 쿼리 파라미터: /api/products?category=electronics&minPrice=100
-- 하위 리소스: /api/orders/{orderId}/items
-- 버전 관리: /api/v1/products (장기 지원), /api/v2/products (신규)
+- Use nouns (not verbs): /api/products (O), /api/getProducts (X)
+- Resource ID as path parameter: /api/products/{productId}
+- Filter/search as query parameters: /api/products?category=electronics&minPrice=100
+- Sub-resources: /api/orders/{orderId}/items
+- Versioning: /api/v1/products (long-term support), /api/v2/products (new)
 ```
 
 ---
 
-## 2. 상품 관련 API
+## 2. Product APIs
 
-### 2.1 상품 목록 조회
+### 2.1 Get Product List
 ```
 GET /api/v1/products
 
-쿼리 파라미터:
-- page: 페이지 번호 (기본값: 1)
-- limit: 페이지당 항목 수 (기본값: 20, 최대: 100)
-- category: 카테고리 ID
-- search: 검색어 (상품명, 설명)
-- minPrice: 최저 가격
-- maxPrice: 최고 가격
-- sortBy: 정렬 기준 (popularity, price, newest, rating)
-- sortOrder: 정렬 순서 (asc, desc)
-- inStock: 재고 있음만 (true/false)
+Query parameters:
+- page: page number (default: 1)
+- limit: items per page (default: 20, max: 100)
+- category: category ID
+- search: search term (product name, description)
+- minPrice: minimum price
+- maxPrice: maximum price
+- sortBy: sort criterion (popularity, price, newest, rating)
+- sortOrder: sort order (asc, desc)
+- inStock: in-stock only (true/false)
 
-응답 200:
+Response 200:
 {
   "success": true,
   "data": {
     "items": [
       {
         "productId": 1,
-        "productName": "상품명",
+        "productName": "Product name",
         "thumbnailImage": "url",
         "price": 10000,
         "discountPrice": 8000,
@@ -70,31 +70,31 @@ GET /api/v1/products
   "timestamp": "2026-05-27T10:30:00Z"
 }
 
-응답 400:
+Response 400:
 {
   "success": false,
   "error": {
     "code": "INVALID_REQUEST",
-    "message": "잘못된 요청 파라미터"
+    "message": "Invalid request parameter"
   }
 }
 ```
 
-### 2.2 상품 상세 조회
+### 2.2 Get Product Detail
 ```
 GET /api/v1/products/{productId}
 
-응답 200:
+Response 200:
 {
   "success": true,
   "data": {
     "productId": 1,
-    "productName": "상품명",
-    "description": "짧은 설명",
-    "detailedDescription": "상세 설명",
+    "productName": "Product name",
+    "description": "Short description",
+    "detailedDescription": "Detailed description",
     "seller": {
       "sellerId": 100,
-      "sellerName": "판매자명",
+      "sellerName": "Seller name",
       "rating": 4.7,
       "productCount": 150
     },
@@ -105,7 +105,7 @@ GET /api/v1/products/{productId}
     "sku": "SKU12345",
     "category": {
       "categoryId": 5,
-      "categoryName": "전자제품"
+      "categoryName": "Electronics"
     },
     "images": [
       { "imageUrl": "url1", "isMain": true },
@@ -117,9 +117,9 @@ GET /api/v1/products/{productId}
       {
         "reviewId": 1,
         "rating": 5,
-        "title": "리뷰 제목",
-        "content": "리뷰 내용",
-        "buyerName": "구매자명",
+        "title": "Review title",
+        "content": "Review content",
+        "buyerName": "Buyer name",
         "createdAt": "2026-05-20T10:00:00Z"
       }
     ],
@@ -132,74 +132,74 @@ GET /api/v1/products/{productId}
   }
 }
 
-응답 404:
+Response 404:
 {
   "success": false,
   "error": {
     "code": "PRODUCT_NOT_FOUND",
-    "message": "상품을 찾을 수 없습니다"
+    "message": "Product not found"
   }
 }
 ```
 
 ---
 
-## 3. 사용자 관련 API
+## 3. User APIs
 
-### 3.1 회원가입
+### 3.1 Sign-up
 ```
 POST /api/v1/auth/register
 
-요청:
+Request:
 {
   "email": "user@example.com",
   "password": "SecurePassword123!",
-  "name": "사용자명",
+  "name": "User name",
   "phone": "010-1234-5678",
   "agreeToTerms": true,
   "agreeToPrivacy": true
 }
 
-응답 201:
+Response 201:
 {
   "success": true,
   "data": {
     "userId": 1000,
     "email": "user@example.com",
-    "name": "사용자명",
+    "name": "User name",
     "token": "eyJhbGc...",
     "refreshToken": "eyJhbGc...",
     "expiresIn": 3600
   }
 }
 
-응답 400:
+Response 400:
 {
   "success": false,
   "error": {
     "code": "EMAIL_ALREADY_EXISTS",
-    "message": "이미 등록된 이메일입니다"
+    "message": "Email already registered"
   }
 }
 ```
 
-### 3.2 로그인
+### 3.2 Login
 ```
 POST /api/v1/auth/login
 
-요청:
+Request:
 {
   "email": "user@example.com",
   "password": "SecurePassword123!"
 }
 
-응답 200:
+Response 200:
 {
   "success": true,
   "data": {
     "userId": 1000,
     "email": "user@example.com",
-    "name": "사용자명",
+    "name": "User name",
     "userType": "BUYER",
     "token": "eyJhbGc...",
     "refreshToken": "eyJhbGc...",
@@ -207,30 +207,30 @@ POST /api/v1/auth/login
   }
 }
 
-응답 401:
+Response 401:
 {
   "success": false,
   "error": {
     "code": "INVALID_CREDENTIALS",
-    "message": "이메일 또는 비밀번호가 일치하지 않습니다"
+    "message": "Email or password does not match"
   }
 }
 ```
 
-### 3.3 프로필 조회
+### 3.3 Get Profile
 ```
 GET /api/v1/users/me
 
-요청 헤더:
+Request header:
 Authorization: Bearer {token}
 
-응답 200:
+Response 200:
 {
   "success": true,
   "data": {
     "userId": 1000,
     "email": "user@example.com",
-    "name": "사용자명",
+    "name": "User name",
     "phone": "010-1234-5678",
     "gender": "M",
     "birthDate": "1990-01-15",
@@ -240,36 +240,36 @@ Authorization: Bearer {token}
 }
 ```
 
-### 3.4 프로필 수정
+### 3.4 Update Profile
 ```
 PUT /api/v1/users/me
 
-요청:
+Request:
 {
-  "name": "변경된 이름",
+  "name": "Changed name",
   "phone": "010-9876-5432",
   "gender": "M"
 }
 
-응답 200:
+Response 200:
 {
   "success": true,
-  "message": "프로필이 수정되었습니다"
+  "message": "Profile updated"
 }
 ```
 
 ---
 
-## 4. 장바구니 API
+## 4. Cart API
 
-### 4.1 장바구니 조회
+### 4.1 Get Cart
 ```
 GET /api/v1/cart
 
-요청 헤더:
+Request header:
 Authorization: Bearer {token}
 
-응답 200:
+Response 200:
 {
   "success": true,
   "data": {
@@ -278,7 +278,7 @@ Authorization: Bearer {token}
       {
         "cartItemId": 1,
         "productId": 10,
-        "productName": "상품명",
+        "productName": "Product name",
         "quantity": 2,
         "price": 10000,
         "discountPrice": 8000,
@@ -297,17 +297,17 @@ Authorization: Bearer {token}
 }
 ```
 
-### 4.2 장바구니에 상품 추가
+### 4.2 Add Product to Cart
 ```
 POST /api/v1/cart/items
 
-요청:
+Request:
 {
   "productId": 10,
   "quantity": 2
 }
 
-응답 201:
+Response 201:
 {
   "success": true,
   "data": {
@@ -318,26 +318,26 @@ POST /api/v1/cart/items
   }
 }
 
-응답 400:
+Response 400:
 {
   "success": false,
   "error": {
     "code": "INSUFFICIENT_STOCK",
-    "message": "재고가 부족합니다"
+    "message": "Insufficient stock"
   }
 }
 ```
 
-### 4.3 장바구니 항목 수량 변경
+### 4.3 Change Cart Item Quantity
 ```
 PATCH /api/v1/cart/items/{cartItemId}
 
-요청:
+Request:
 {
   "quantity": 3
 }
 
-응답 200:
+Response 200:
 {
   "success": true,
   "data": {
@@ -349,26 +349,26 @@ PATCH /api/v1/cart/items/{cartItemId}
 }
 ```
 
-### 4.4 장바구니 항목 삭제
+### 4.4 Delete Cart Item
 ```
 DELETE /api/v1/cart/items/{cartItemId}
 
-응답 200:
+Response 200:
 {
   "success": true,
-  "message": "장바구니 항목이 삭제되었습니다"
+  "message": "Cart item deleted"
 }
 ```
 
 ---
 
-## 5. 주문 API
+## 5. Order API
 
-### 5.1 주문 생성
+### 5.1 Create Order
 ```
 POST /api/v1/orders
 
-요청:
+Request:
 {
   "items": [
     {
@@ -382,11 +382,11 @@ POST /api/v1/orders
   ],
   "deliveryAddressId": 5,
   "shippingMethod": "STANDARD",
-  "memo": "배송시 조심해주세요",
+  "memo": "Please handle with care during delivery",
   "paymentMethod": "CREDIT_CARD"
 }
 
-응답 201:
+Response 201:
 {
   "success": true,
   "data": {
@@ -398,7 +398,7 @@ POST /api/v1/orders
       {
         "orderItemId": 1,
         "productId": 10,
-        "productName": "상품명",
+        "productName": "Product name",
         "quantity": 2,
         "unitPrice": 8000,
         "subtotal": 16000
@@ -415,16 +415,16 @@ POST /api/v1/orders
 }
 ```
 
-### 5.2 주문 조회
+### 5.2 Get Orders
 ```
 GET /api/v1/orders
 
-쿼리 파라미터:
-- status: 주문 상태 필터
-- page: 페이지 번호
-- limit: 페이지당 항목 수
+Query parameters:
+- status: order status filter
+- page: page number
+- limit: items per page
 
-응답 200:
+Response 200:
 {
   "success": true,
   "data": {
@@ -436,7 +436,7 @@ GET /api/v1/orders
         "status": "DELIVERED",
         "finalAmount": 20000,
         "itemCount": 2,
-        "mainProduct": "상품명"
+        "mainProduct": "Product name"
       }
     ],
     "pagination": {...}
@@ -444,18 +444,18 @@ GET /api/v1/orders
 }
 ```
 
-### 5.3 주문 상세 조회
+### 5.3 Get Order Detail
 ```
 GET /api/v1/orders/{orderId}
 
-응답 200:
+Response 200:
 {
   "success": true,
   "data": {
     "orderId": 1000,
     "orderNumber": "ORD20260527001",
     "buyer": {
-      "name": "구매자명",
+      "name": "Buyer name",
       "phone": "010-1234-5678",
       "email": "user@example.com"
     },
@@ -463,17 +463,17 @@ GET /api/v1/orders/{orderId}
       {
         "orderItemId": 1,
         "productId": 10,
-        "productName": "상품명",
+        "productName": "Product name",
         "quantity": 2,
         "unitPrice": 8000,
         "subtotal": 16000
       }
     ],
     "deliveryAddress": {
-      "recipientName": "배송받을사람",
+      "recipientName": "Recipient",
       "phone": "010-9876-5432",
-      "streetAddress": "서울시 강남구",
-      "detailedAddress": "123번지"
+      "streetAddress": "Gangnam-gu, Seoul",
+      "detailedAddress": "123 Beonji"
     },
     "payment": {
       "method": "CREDIT_CARD",
@@ -497,17 +497,17 @@ GET /api/v1/orders/{orderId}
 }
 ```
 
-### 5.4 주문 취소
+### 5.4 Cancel Order
 ```
 POST /api/v1/orders/{orderId}/cancel
 
-요청:
+Request:
 {
-  "reason": "변심",
-  "comment": "상세 이유"
+  "reason": "Change of mind",
+  "comment": "Detailed reason"
 }
 
-응답 200:
+Response 200:
 {
   "success": true,
   "data": {
@@ -517,25 +517,25 @@ POST /api/v1/orders/{orderId}/cancel
   }
 }
 
-응답 400:
+Response 400:
 {
   "success": false,
   "error": {
     "code": "CANNOT_CANCEL_ORDER",
-    "message": "배송이 시작되어 주문을 취소할 수 없습니다"
+    "message": "Order cannot be cancelled because shipping has started"
   }
 }
 ```
 
 ---
 
-## 6. 배송 API
+## 6. Shipping API
 
-### 6.1 배송 조회
+### 6.1 Get Shipping
 ```
 GET /api/v1/orders/{orderId}/shipping
 
-응답 200:
+Response 200:
 {
   "success": true,
   "data": {
@@ -549,12 +549,12 @@ GET /api/v1/orders/{orderId}/shipping
       {
         "status": "PREPARING",
         "timestamp": "2026-05-27T10:30:00Z",
-        "description": "배송준비 중"
+        "description": "Preparing shipment"
       },
       {
         "status": "IN_TRANSIT",
         "timestamp": "2026-05-27T18:00:00Z",
-        "description": "배송 중"
+        "description": "In transit"
       }
     ]
   }
@@ -563,13 +563,13 @@ GET /api/v1/orders/{orderId}/shipping
 
 ---
 
-## 7. 결제 API
+## 7. Payment API
 
-### 7.1 결제 콜백 (Payment Webhook)
+### 7.1 Payment Callback (Payment Webhook)
 ```
 POST /api/v1/webhooks/payment
 
-요청 (PG에서 발송):
+Request (sent from PG):
 {
   "transactionId": "123456",
   "orderId": 1000,
@@ -580,32 +580,32 @@ POST /api/v1/webhooks/payment
   "timestamp": "2026-05-27T10:35:00Z"
 }
 
-응답 200:
+Response 200:
 {
   "success": true,
-  "message": "결제 정보가 처리되었습니다"
+  "message": "Payment information processed"
 }
 ```
 
 ---
 
-## 8. 리뷰 API
+## 8. Review API
 
-### 8.1 리뷰 작성
+### 8.1 Write Review
 ```
 POST /api/v1/reviews
 
-요청:
+Request:
 {
   "productId": 10,
   "orderItemId": 1,
   "rating": 5,
-  "title": "좋은 상품입니다",
-  "content": "상세한 리뷰 내용",
+  "title": "Great product",
+  "content": "Detailed review content",
   "images": ["image_url_1", "image_url_2"]
 }
 
-응답 201:
+Response 201:
 {
   "success": true,
   "data": {
@@ -617,16 +617,16 @@ POST /api/v1/reviews
 }
 ```
 
-### 8.2 리뷰 조회
+### 8.2 Get Reviews
 ```
 GET /api/v1/products/{productId}/reviews
 
-쿼리 파라미터:
-- page: 페이지 번호
+Query parameters:
+- page: page number
 - sortBy: rating, helpful, newest
-- filterRating: 특정 평점만 조회 (1~5)
+- filterRating: view only a specific rating (1~5)
 
-응답 200:
+Response 200:
 {
   "success": true,
   "data": {
@@ -634,9 +634,9 @@ GET /api/v1/products/{productId}/reviews
       {
         "reviewId": 1000,
         "rating": 5,
-        "title": "좋은 상품입니다",
-        "content": "상세한 리뷰 내용",
-        "buyerName": "구매자",
+        "title": "Great product",
+        "content": "Detailed review content",
+        "buyerName": "Buyer",
         "createdAt": "2026-05-25T10:00:00Z",
         "helpfulCount": 15,
         "unhelpfulCount": 2,
@@ -660,22 +660,22 @@ GET /api/v1/products/{productId}/reviews
 
 ---
 
-## 9. 반품 API
+## 9. Return API
 
-### 9.1 반품 신청
+### 9.1 Return Request
 ```
 POST /api/v1/returns
 
-요청:
+Request:
 {
   "orderId": 1000,
   "orderItemId": 1,
   "reason": "DEFECTIVE",
-  "reasonDetail": "상품에 흠집이 있습니다",
+  "reasonDetail": "The product has a scratch",
   "images": ["evidence_image_url"]
 }
 
-응답 201:
+Response 201:
 {
   "success": true,
   "data": {
@@ -686,11 +686,11 @@ POST /api/v1/returns
 }
 ```
 
-### 9.2 반품 조회
+### 9.2 Get Return
 ```
 GET /api/v1/returns/{returnId}
 
-응답 200:
+Response 200:
 {
   "success": true,
   "data": {
@@ -701,54 +701,54 @@ GET /api/v1/returns/{returnId}
     "refundAmount": 8000,
     "requestedAt": "2026-05-27T10:30:00Z",
     "approvedAt": "2026-05-27T12:00:00Z",
-    "sellerResponse": "반품을 승인하였습니다"
+    "sellerResponse": "The return has been approved"
   }
 }
 ```
 
 ---
 
-## 10. 오류 응답 표준
+## 10. Error Response Standard
 
-### 에러 코드 및 HTTP 상태
+### Error Codes and HTTP Status
 ```
-HTTP 400 Bad Request (클라이언트 오류)
-- INVALID_REQUEST: 잘못된 요청 형식
-- INVALID_PARAMETER: 잘못된 파라미터 값
-- MISSING_PARAMETER: 필수 파라미터 누락
+HTTP 400 Bad Request (client error)
+- INVALID_REQUEST: invalid request format
+- INVALID_PARAMETER: invalid parameter value
+- MISSING_PARAMETER: required parameter missing
 
-HTTP 401 Unauthorized (인증 오류)
-- INVALID_TOKEN: 토큰이 유효하지 않음
-- TOKEN_EXPIRED: 토큰이 만료됨
-- NOT_AUTHENTICATED: 인증이 필요함
+HTTP 401 Unauthorized (authentication error)
+- INVALID_TOKEN: token is invalid
+- TOKEN_EXPIRED: token has expired
+- NOT_AUTHENTICATED: authentication required
 
-HTTP 403 Forbidden (권한 오류)
-- INSUFFICIENT_PERMISSION: 권한 부족
-- SELLER_ONLY: 판매자만 접근 가능
+HTTP 403 Forbidden (permission error)
+- INSUFFICIENT_PERMISSION: insufficient permission
+- SELLER_ONLY: accessible by sellers only
 
-HTTP 404 Not Found (리소스 없음)
-- PRODUCT_NOT_FOUND: 상품을 찾을 수 없음
-- ORDER_NOT_FOUND: 주문을 찾을 수 없음
+HTTP 404 Not Found (resource not found)
+- PRODUCT_NOT_FOUND: product not found
+- ORDER_NOT_FOUND: order not found
 
-HTTP 409 Conflict (충돌)
-- INSUFFICIENT_STOCK: 재고 부족
-- DUPLICATE_REQUEST: 중복 요청
-- INVALID_ORDER_STATUS: 유효하지 않은 주문 상태
+HTTP 409 Conflict (conflict)
+- INSUFFICIENT_STOCK: insufficient stock
+- DUPLICATE_REQUEST: duplicate request
+- INVALID_ORDER_STATUS: invalid order status
 
-HTTP 500 Internal Server Error (서버 오류)
-- INTERNAL_ERROR: 서버 내부 오류
+HTTP 500 Internal Server Error (server error)
+- INTERNAL_ERROR: internal server error
 ```
 
-### 에러 응답 형식
+### Error Response Format
 ```json
 {
   "success": false,
   "error": {
     "code": "ERROR_CODE",
-    "message": "사용자 친화적 메시지",
+    "message": "User-friendly message",
     "details": {
       "field": "fieldName",
-      "issue": "상세 설명"
+      "issue": "Detailed description"
     }
   },
   "timestamp": "2026-05-27T10:30:00Z"
@@ -757,9 +757,9 @@ HTTP 500 Internal Server Error (서버 오류)
 
 ---
 
-## 11. 인증 및 보안
+## 11. Authentication and Security
 
-### JWT 토큰 구조
+### JWT Token Structure
 ```
 Header: { alg: "HS256", typ: "JWT" }
 Payload: {
@@ -770,11 +770,11 @@ Payload: {
   exp: 1234571490
 }
 
-토큰 유효 시간: 1시간
-Refresh Token 유효 시간: 30일
+Token lifetime: 1 hour
+Refresh Token lifetime: 30 days
 ```
 
-### 요청 헤더
+### Request Headers
 ```
 Authorization: Bearer {token}
 Content-Type: application/json
@@ -783,28 +783,28 @@ X-API-Version: v1
 
 ---
 
-## 12. 레이트 리미팅
+## 12. Rate Limiting
 
 ```
-일반 사용자:
-- API 호출: 100회/분
-- 파일 업로드: 10회/분
+Regular user:
+- API calls: 100/min
+- File uploads: 10/min
 
-판매자:
-- API 호출: 500회/분
-- 상품 일괄 작업: 50회/분
+Seller:
+- API calls: 500/min
+- Bulk product operations: 50/min
 
-관리자:
-- 제한 없음
+Admin:
+- No limit
 ```
 
 ---
 
-## 13. API 사용 예시
+## 13. API Usage Examples
 
 ### JavaScript (Fetch API)
 ```javascript
-// 상품 목록 조회
+// Get product list
 fetch('/api/v1/products?category=1&limit=20', {
   method: 'GET',
   headers: {
@@ -815,7 +815,7 @@ fetch('/api/v1/products?category=1&limit=20', {
 .then(data => console.log(data))
 .catch(error => console.error(error));
 
-// 주문 생성
+// Create order
 fetch('/api/v1/orders', {
   method: 'POST',
   headers: {
@@ -834,7 +834,7 @@ fetch('/api/v1/orders', {
 
 ---
 
-## 다음 문서로 읽어야 할 것
+## What to Read Next
 
-1. **06_security_requirements.md** - 보안 요구사항
-2. **07_spec_template.md** - 기획서 템플릿
+1. **06_security_requirements.md** - Security requirements
+2. **07_spec_template.md** - Specification template

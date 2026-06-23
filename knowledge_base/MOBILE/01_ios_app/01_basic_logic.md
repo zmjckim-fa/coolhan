@@ -1,529 +1,528 @@
-# iOS 앱 - 기본 논리 (iOS App Basic Logic)
+# iOS App - Basic Logic
 
-## 1. iOS 앱의 특징
+## 1. Characteristics of iOS Apps
 
-iOS는 **Apple의 iPhone/iPad 운영체제**에서 실행되는 네이티브 앱입니다.
+iOS is a native app that runs on **Apple's iPhone/iPad operating system**.
 
-### 핵심 특징
+### Key Characteristics
 ```
-- Apple App Store에서만 배포 가능
-- Swift 언어 사용 (네이티브)
-- iOS 버전 관리 (지원 최소 버전 필요)
-- Apple 심사 프로세스 필수
-- 높은 보안 및 성능 요구
-```
-
----
-
-## 2. iOS 앱의 생명주기 (App Lifecycle)
-
-### 2.1 앱 실행 흐름
-```
-사용자가 앱 아이콘 터치
-    ↓
-1. Not Running (실행 안 됨)
-    ↓
-2. Foreground (화면에 보임)
-    ├─ Active (활성 - 이벤트 받음)
-    └─ Inactive (비활성 - 이벤트 못 받음)
-    ↓
-3. Background (백그라운드에서 실행)
-    ├─ Suspended (일시 중단)
-    └─ Running (계속 실행)
-    ↓
-4. Terminated (앱 종료)
-```
-
-### 2.2 상태 변화 이벤트
-```
-AppDelegate 함수:
-- application(_:didFinishLaunchingWithOptions:) - 앱 시작
-- applicationDidBecomeActive(_:) - 활성화됨
-- applicationWillResignActive(_:) - 비활성화 예정
-- applicationDidEnterBackground(_:) - 백그라운드 진입
-- applicationWillEnterForeground(_:) - 포그라운드 복귀
-- applicationWillTerminate(_:) - 앱 종료 예정
+- Distribution only through the Apple App Store
+- Uses the Swift language (native)
+- iOS version management (a minimum supported version is required)
+- Apple review process is mandatory
+- High security and performance requirements
 ```
 
 ---
 
-## 3. UI/UX 구조
+## 2. iOS App Lifecycle
 
-### 3.1 네비게이션 패턴
+### 2.1 App Launch Flow
+```
+User taps the app icon
+    ↓
+1. Not Running
+    ↓
+2. Foreground (visible on screen)
+    ├─ Active (receives events)
+    └─ Inactive (does not receive events)
+    ↓
+3. Background (running in the background)
+    ├─ Suspended
+    └─ Running
+    ↓
+4. Terminated (app closed)
+```
+
+### 2.2 State Transition Events
+```
+AppDelegate functions:
+- application(_:didFinishLaunchingWithOptions:) - app start
+- applicationDidBecomeActive(_:) - became active
+- applicationWillResignActive(_:) - about to become inactive
+- applicationDidEnterBackground(_:) - entered background
+- applicationWillEnterForeground(_:) - returning to foreground
+- applicationWillTerminate(_:) - about to terminate
+```
+
+---
+
+## 3. UI/UX Structure
+
+### 3.1 Navigation Patterns
 ```
 Tab Navigation
-├─ Tab 1: 홈
-├─ Tab 2: 검색/카테고리
-├─ Tab 3: 장바구니
-├─ Tab 4: 주문/구독
-└─ Tab 5: 마이페이지
+├─ Tab 1: Home
+├─ Tab 2: Search/Categories
+├─ Tab 3: Cart
+├─ Tab 4: Orders/Subscriptions
+└─ Tab 5: My Page
 
-또는
+or
 
 Stack Navigation
-└─ 리스트 → 상세 → 서브 상세
+└─ List → Detail → Sub-detail
 ```
 
-### 3.2 iOS 디자인 시스템
+### 3.2 iOS Design System
 ```
-- Safe Area (화면 안전 영역)
-  → 노치/홈 인디케이터 고려
-- Status Bar (상단 상태 표시)
-- Navigation Bar (뒤로가기, 제목)
-- Tab Bar (하단 탭)
+- Safe Area
+  → Account for notch / home indicator
+- Status Bar (top status display)
+- Navigation Bar (back button, title)
+- Tab Bar (bottom tabs)
 - Safe Area Insets
 ```
 
-### 3.3 일반적인 화면 구조
+### 3.3 Typical Screen Structure
 ```
 ┌──────────────────────┐
 │    Status Bar        │
 ├──────────────────────┤
-│  Navigation Bar      │ (뒤로가기, 제목)
+│  Navigation Bar      │ (back button, title)
 ├──────────────────────┤
 │                      │
-│   Content Area       │ (Safe Area 내)
-│   (스크롤 가능)       │
+│   Content Area       │ (within Safe Area)
+│   (scrollable)       │
 │                      │
 ├──────────────────────┤
-│   Tab Bar            │ (하단 탭)
+│   Tab Bar            │ (bottom tabs)
 └──────────────────────┘
 ```
 
 ---
 
-## 4. 데이터 저장소 (Data Storage)
+## 4. Data Storage
 
-### 4.1 로컬 저장 옵션
+### 4.1 Local Storage Options
 
 #### UserDefaults
 ```
-용도: 간단한 설정값 저장
-예: 사용자 선호도, 토큰, 간단한 캐시
-한계: 대용량 데이터 부적합, 암호화 필요
+Purpose: Storing simple settings values
+Examples: User preferences, tokens, simple caches
+Limitations: Not suitable for large data, requires encryption
 ```
 
 #### CoreData
 ```
-용도: 구조화된 데이터 로컬 저장
-예: 오프라인 주문 목록, 사용자 정보 캐시
-장점: 관계형 쿼리 가능, 자동 마이그레이션
+Purpose: Local storage of structured data
+Examples: Offline order list, user info cache
+Advantages: Relational queries possible, automatic migration
 ```
 
 #### FileManager
 ```
-용도: 파일 저장 (이미지, 문서)
-예: 다운로드한 이미지, 임시 파일
-경로: Documents, Caches, Temp
+Purpose: File storage (images, documents)
+Examples: Downloaded images, temporary files
+Paths: Documents, Caches, Temp
 ```
 
 #### Keychain
 ```
-용도: 민감한 데이터 암호화 저장
-예: 비밀번호, 토큰, API 키
-보안: iOS 수준의 암호화
+Purpose: Encrypted storage of sensitive data
+Examples: Passwords, tokens, API keys
+Security: iOS-level encryption
 ```
 
-### 4.2 서버 통신
+### 4.2 Server Communication
 ```
 HTTP/HTTPS API
-├─ REST API (표준)
-├─ GraphQL (선택사항)
-└─ WebSocket (실시간)
+├─ REST API (standard)
+├─ GraphQL (optional)
+└─ WebSocket (real-time)
 
-JSON 형식 데이터 송수신
-Session 관리 (JWT 토큰)
+Sending/receiving data in JSON format
+Session management (JWT tokens)
 ```
 
 ---
 
-## 5. 권한 관리 (Permission)
+## 5. Permission Management
 
-### 5.1 iOS 권한 요청
+### 5.1 iOS Permission Requests
 ```
-앱이 처음 권한 사용 시 사용자에게 팝업으로 요청
-사용자 동의 후에만 접근 가능
-거부 시 앱 설정에서만 변경 가능
-```
-
-### 5.2 일반적인 권한들
-```
-- Camera (카메라)
-- Photos (사진앨범)
-- Microphone (마이크)
-- Location (위치정보)
-- Contacts (연락처)
-- Calendar (캘린더)
-- Reminders (미리알림)
-- Health (헬스)
-- HomeKit (스마트홈)
-- Bluetooth (블루투스)
-- NotificationCenter (알림)
+When the app uses a permission for the first time, it prompts the user with a popup
+Access is only granted after the user consents
+If denied, it can only be changed in the app settings
 ```
 
-### 5.3 권한 요청 예시 (쇼핑몰 앱)
+### 5.2 Common Permissions
 ```
-필수:
-- PhotoLibrary (상품 리뷰 사진)
+- Camera
+- Photos (photo library)
+- Microphone
+- Location
+- Contacts
+- Calendar
+- Reminders
+- Health
+- HomeKit (smart home)
+- Bluetooth
+- NotificationCenter (notifications)
+```
 
-선택:
-- Location (배송지 근처 매장 찾기)
-- NotificationCenter (주문 알림)
-- Camera (실시간 상품 스캔)
+### 5.3 Permission Request Examples (Shopping Mall App)
+```
+Required:
+- PhotoLibrary (product review photos)
+
+Optional:
+- Location (find stores near the delivery address)
+- NotificationCenter (order notifications)
+- Camera (real-time product scanning)
 ```
 
 ---
 
-## 6. 네트워킹 (Networking)
+## 6. Networking
 
-### 6.1 URLSession 기본 구조
+### 6.1 URLSession Basic Structure
 ```
 URLSession
-├─ Request 생성
-├─ Server 전송
-└─ Response 수신
-   ├─ 200-299: 성공
-   ├─ 300-399: 리다이렉트
-   ├─ 400-499: 클라이언트 오류
-   └─ 500-599: 서버 오류
+├─ Create Request
+├─ Send to Server
+└─ Receive Response
+   ├─ 200-299: Success
+   ├─ 300-399: Redirect
+   ├─ 400-499: Client error
+   └─ 500-599: Server error
 ```
 
-### 6.2 네트워크 요청 흐름
+### 6.2 Network Request Flow
 ```
-1. Request 객체 생성 (URL, 메서드, 헤더, 바디)
-2. URLSession을 통해 전송
-3. 응답 대기 (비동기)
-4. 응답 처리
-   └─ 성공: JSON 파싱
-   └─ 실패: 에러 처리
-5. UI 업데이트 (메인 스레드)
+1. Create the Request object (URL, method, headers, body)
+2. Send via URLSession
+3. Await response (asynchronous)
+4. Handle the response
+   └─ Success: Parse JSON
+   └─ Failure: Handle error
+5. Update UI (main thread)
 ```
 
-### 6.3 에러 처리
+### 6.3 Error Handling
 ```
-네트워크 에러:
-- 인터넷 연결 없음
-- 타임아웃
-- DNS 실패
+Network errors:
+- No internet connection
+- Timeout
+- DNS failure
 
-HTTP 에러:
-- 401 Unauthorized (재인증 필요)
+HTTP errors:
+- 401 Unauthorized (re-authentication required)
 - 404 Not Found
 - 500 Server Error
 
-파싱 에러:
-- JSON 파싱 실패
-- 데이터 타입 불일치
+Parsing errors:
+- JSON parsing failure
+- Data type mismatch
 ```
 
 ---
 
-## 7. 오프라인 대응 (Offline Support)
+## 7. Offline Support
 
-### 7.1 오프라인 감지
+### 7.1 Offline Detection
 ```
-Network Framework 사용
-- WiFi 연결 상태 모니터링
-- Cellular 연결 상태 모니터링
-- 인터넷 연결 가능 여부 확인
-```
-
-### 7.2 오프라인 모드
-```
-온라인 상태:
-- 실시간 데이터 로드
-- 서버에 변경사항 전송
-
-오프라인 상태:
-- 캐시된 데이터 표시
-- 로컬 저장소 데이터 표시
-- 변경사항 임시 저장
-- 온라인 복귀 시 동기화
+Use the Network Framework
+- Monitor WiFi connection status
+- Monitor Cellular connection status
+- Check internet connection availability
 ```
 
-### 7.3 동기화 전략
+### 7.2 Offline Mode
 ```
-1. 온라인 복귀 감지
-2. 대기 중인 변경사항 수집
-3. 서버에 업로드
-4. 충돌 해결 (서버 데이터 우선, 로컬 우선 등)
-5. UI 업데이트
+Online state:
+- Load real-time data
+- Send changes to the server
+
+Offline state:
+- Display cached data
+- Display data from local storage
+- Temporarily store changes
+- Synchronize when back online
+```
+
+### 7.3 Synchronization Strategy
+```
+1. Detect return to online
+2. Collect pending changes
+3. Upload to the server
+4. Resolve conflicts (server data first, local first, etc.)
+5. Update UI
 ```
 
 ---
 
-## 8. 백그라운드 작업 (Background Tasks)
+## 8. Background Tasks
 
-### 8.1 배경 작업 종류
+### 8.1 Types of Background Tasks
 
 #### 1. Background App Refresh
 ```
-목적: 주기적으로 데이터 갱신
-예: 새로운 주문 확인, 배송상태 업데이트
-실행 빈도: iOS가 결정 (개발자가 제어 불가)
-시간: 수 분 단위
+Purpose: Periodically refresh data
+Examples: Check for new orders, update shipping status
+Execution frequency: Determined by iOS (not controllable by the developer)
+Duration: On the order of minutes
 ```
 
 #### 2. Background Fetch
 ```
-목적: 앱을 열지 않고 데이터 획득
-예: 메일 수신, 메시지 확인
-설정: 최소 주기 지정
+Purpose: Obtain data without opening the app
+Examples: Receive mail, check messages
+Configuration: Specify a minimum interval
 ```
 
 #### 3. Silent Push Notification
 ```
-목적: 조용한 백그라운드 갱신
-예: 신규 주문, 배송 상태 변경
-사용자에게 보이지 않음 (선택사항)
+Purpose: Quiet background refresh
+Examples: New orders, shipping status changes
+Not visible to the user (optional)
 ```
 
 #### 4. VoIP Push
 ```
-목적: 실시간 통신
-예: 채팅, 통화
-낮은 지연시간 (< 1초)
+Purpose: Real-time communication
+Examples: Chat, calls
+Low latency (< 1 second)
 ```
 
-### 8.2 백그라운드 작업 제약
+### 8.2 Background Task Constraints
 ```
-- 최대 실행 시간 제한 (보통 30초)
-- CPU 사용 제한
-- 네트워크 사용 가능
-- 배터리 고려
-```
-
----
-
-## 9. 알림 (Notifications)
-
-### 9.1 로컬 알림
-```
-앱이 예약하는 알림
-예: 상품 배송 예정, 구매 완료
-
-구성:
-- 제목
-- 메시지
-- 배지 (앱 아이콘 숫자)
-- 사운드
-- 실행 시간 (즉시, 예약)
-```
-
-### 9.2 원격 알림 (Push Notification)
-```
-서버에서 전송하는 알림
-예: 새 주문, 배송 상태 변경
-
-구성:
-- Alert (제목/메시지)
-- Badge (앱 아이콘 숫자)
-- Sound (알림음)
-- Custom Data (추가 정보)
-
-전달: Apple Push Notification Service (APNs)
-```
-
-### 9.3 알림 권한
-```
-사용자가 앱 최초 실행 시 알림 권한 요청
-거부 시:
-- 알림 전송 불가
-- 사용자 설정에서 수동으로 활성화 가능
+- Maximum execution time limit (usually 30 seconds)
+- CPU usage limit
+- Network usage allowed
+- Battery considerations
 ```
 
 ---
 
-## 10. 성능 최적화
+## 9. Notifications
 
-### 10.1 메모리 관리
+### 9.1 Local Notifications
 ```
-- 이미지 캐싱 (SDWebImage, Kingfisher)
-- 대용량 목록 lazy loading
-- 메모리 경고 대응 (캐시 정리)
-- ARC (Automatic Reference Counting) 활용
-```
+Notifications scheduled by the app
+Examples: Product shipment scheduled, purchase complete
 
-### 10.2 네트워크 최적화
-```
-- HTTP 압축 사용
-- 이미지 최적화 (WebP, JPEG)
-- Gzip 압축
-- 불필요한 요청 제거
-- 배치 요청
+Composition:
+- Title
+- Message
+- Badge (number on the app icon)
+- Sound
+- Trigger time (immediate, scheduled)
 ```
 
-### 10.3 UI 성능
+### 9.2 Remote Notifications (Push Notification)
 ```
-- 메인 스레드에서만 UI 업데이트
-- 높은 프레임 레이트 유지 (60fps)
-- 스크롤 성능 (cell 재사용)
-- 레이아웃 계산 최적화
+Notifications sent from the server
+Examples: New order, shipping status change
+
+Composition:
+- Alert (title/message)
+- Badge (number on the app icon)
+- Sound (notification sound)
+- Custom Data (additional information)
+
+Delivery: Apple Push Notification Service (APNs)
 ```
 
----
-
-## 11. 보안
-
-### 11.1 데이터 보안
+### 9.3 Notification Permission
 ```
-- 민감한 데이터는 Keychain에 저장
-- 통신은 HTTPS만 사용
-- 토큰 저장: Keychain
-- 로그아웃 시 민감한 데이터 삭제
-```
-
-### 11.2 API 보안
-```
-- SSL Pinning (특정 인증서만 허용)
-- 요청 서명 (HMAC)
-- 토큰 만료 관리
-- Refresh Token 사용
-```
-
-### 11.3 코드 보안
-```
-- 민감한 정보 하드코딩 금지
-- 로그에 민감한 정보 출력 금지
-- 디버그 빌드와 릴리스 빌드 분리
+The app requests notification permission on first launch
+If denied:
+- Notifications cannot be sent
+- The user can manually enable it in settings
 ```
 
 ---
 
-## 12. 앱 배포 (Distribution)
+## 10. Performance Optimization
 
-### 12.1 개발 단계
+### 10.1 Memory Management
 ```
-1. 개발 인증서 생성
-2. 개발 기기 등록
-3. 개발 프로비저닝 프로필 생성
-4. Xcode에서 개발 및 테스트
-```
-
-### 12.2 테스트 (TestFlight)
-```
-1. 베타 테스터 초대
-2. 앱 빌드 업로드
-3. 테스터가 설치 및 테스트
-4. 피드백 수집
+- Image caching (SDWebImage, Kingfisher)
+- Lazy loading for large lists
+- Respond to memory warnings (clear caches)
+- Leverage ARC (Automatic Reference Counting)
 ```
 
-### 12.3 App Store 배포
+### 10.2 Network Optimization
 ```
-1. 릴리스 인증서 생성
-2. 릴리스 프로비저닝 프로필 생성
-3. 앱 빌드 (릴리스)
-4. App Store Connect에 업로드
-5. 앱 정보 입력 (설명, 스크린샷, 가격)
-6. Apple 심사 신청
-7. Apple 심사 (1~3일)
-8. 승인 후 배포
+- Use HTTP compression
+- Image optimization (WebP, JPEG)
+- Gzip compression
+- Eliminate unnecessary requests
+- Batch requests
 ```
 
-### 12.4 App Store 심사 규칙
+### 10.3 UI Performance
 ```
-- 크래시 없음
-- 명확한 기능 설명
-- 성인 콘텐츠 표시
-- 개인정보처리방침 명시
-- 광고 투명성
-- 결제 시스템 준수 (Apple In-App Purchase 또는 명시적 외부 결제)
+- Update the UI only on the main thread
+- Maintain a high frame rate (60fps)
+- Scroll performance (cell reuse)
+- Optimize layout calculations
 ```
 
 ---
 
-## 13. 사용자 분석
+## 11. Security
 
-### 13.1 추적 (Analytics)
+### 11.1 Data Security
+```
+- Store sensitive data in the Keychain
+- Use HTTPS only for communication
+- Token storage: Keychain
+- Delete sensitive data on logout
+```
+
+### 11.2 API Security
+```
+- SSL Pinning (only allow specific certificates)
+- Request signing (HMAC)
+- Token expiration management
+- Use Refresh Tokens
+```
+
+### 11.3 Code Security
+```
+- No hardcoding of sensitive information
+- No printing of sensitive information in logs
+- Separate debug and release builds
+```
+
+---
+
+## 12. App Distribution
+
+### 12.1 Development Stage
+```
+1. Create a development certificate
+2. Register development devices
+3. Create a development provisioning profile
+4. Develop and test in Xcode
+```
+
+### 12.2 Testing (TestFlight)
+```
+1. Invite beta testers
+2. Upload the app build
+3. Testers install and test
+4. Collect feedback
+```
+
+### 12.3 App Store Distribution
+```
+1. Create a release certificate
+2. Create a release provisioning profile
+3. Build the app (release)
+4. Upload to App Store Connect
+5. Enter app information (description, screenshots, price)
+6. Submit for Apple review
+7. Apple review (1-3 days)
+8. Distribute after approval
+```
+
+### 12.4 App Store Review Rules
+```
+- No crashes
+- Clear feature descriptions
+- Mark adult content
+- State the privacy policy
+- Advertising transparency
+- Comply with payment systems (Apple In-App Purchase or explicit external payment)
+```
+
+---
+
+## 13. User Analytics
+
+### 13.1 Analytics
 ```
 Google Analytics
 Firebase Analytics
 Amplitude
 
-추적 항목:
-- 사용자 행동 (화면 전환, 버튼 클릭)
-- 이벤트 (상품 구매, 리뷰 작성)
-- 사용 시간
-- 충돌 (크래시)
+Tracked items:
+- User behavior (screen transitions, button clicks)
+- Events (product purchase, review submission)
+- Usage time
+- Crashes
 ```
 
-### 13.2 크래시 리포팅
+### 13.2 Crash Reporting
 ```
 Firebase Crashlytics
 Sentry
 Bugly
 
-기능:
-- 크래시 자동 보고
-- 스택 트레이스 분석
-- 영향받은 사용자 수
-- 크래시율 추이
+Features:
+- Automatic crash reporting
+- Stack trace analysis
+- Number of affected users
+- Crash rate trends
 ```
 
 ---
 
-## 14. 주요 프레임워크 및 라이브러리
+## 14. Major Frameworks and Libraries
 
 ```
 UI:
-- UIKit (전통적)
-- SwiftUI (최신)
+- UIKit (traditional)
+- SwiftUI (latest)
 
-네트워킹:
-- URLSession (기본)
-- Alamofire (래퍼)
+Networking:
+- URLSession (basic)
+- Alamofire (wrapper)
 
-JSON 파싱:
-- Codable (기본)
+JSON parsing:
+- Codable (basic)
 - SwiftyJSON
 
-이미지 캐싱:
+Image caching:
 - Kingfisher
 - SDWebImage
 
-데이터 저장:
+Data storage:
 - CoreData
 - SQLite (FMDB)
 - Realm
 
-비동기:
+Asynchronous:
 - Combine
 - RxSwift
 
-의존성 주입:
+Dependency injection:
 - Swinject
 ```
 
 ---
 
-## 15. iOS 버전 관리
+## 15. iOS Version Management
 
-### 15.1 최소 배포 대상 (Minimum Deployment Target)
+### 15.1 Minimum Deployment Target
 ```
-일반적으로: 현재 최신 버전에서 2버전 뒤
-예: iOS 15를 지원하면 iOS 13 이상 필요
+Typically: Two versions behind the current latest version
+Example: Supporting iOS 15 requires iOS 13 or later
 
-최신 기능 사용:
-- iOS 14 이상에서만 가능한 API는 @available 체크
+Using the latest features:
+- For APIs available only on iOS 14 or later, use an @available check
 ```
 
-### 15.2 버전별 변경사항 대응
+### 15.2 Handling Version-Specific Changes
 ```
-새로운 iOS 버전 출시 시:
-1. 새 API 및 기능 검토
-2. 기존 API 중 deprecated된 것 제거
-3. UI 변화에 대응
-4. 새로운 권한 시스템 대응
-5. 테스트 및 인증 업데이트
+When a new iOS version is released:
+1. Review new APIs and features
+2. Remove deprecated APIs among existing ones
+3. Respond to UI changes
+4. Respond to new permission systems
+5. Update tests and certificates
 ```
 
 ---
 
-## 16. 다음 문서로 읽어야 할 것
+## 16. What to Read Next
 
-1. **core_features.md** - iOS 앱의 일반적인 기능들
-2. **terminology.md** - iOS 기술 용어
-3. **architecture.md** - MVVM, MVC 등 아키텍처
-4. **api_standard.md** - 네트워킹 API 표준
-5. **spec_template.md** - iOS 앱 기획서 템플릿
-
+1. **core_features.md** - Common features of iOS apps
+2. **terminology.md** - iOS technical terminology
+3. **architecture.md** - Architectures such as MVVM, MVC
+4. **api_standard.md** - Networking API standards
+5. **spec_template.md** - iOS app specification template

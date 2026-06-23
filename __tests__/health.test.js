@@ -106,7 +106,7 @@ test('integration: GET /status serves HTML page', async () => {
     const res = await request(server, '/status');
     assert.equal(res.status, 200);
     assert.match(res.headers['content-type'], /text\/html/);
-    assert.match(res.body, /시스템 상태/);
+    assert.match(res.body, /System Status/);
     assert.match(res.body, /\/api\/health/);
   } finally {
     server.close();

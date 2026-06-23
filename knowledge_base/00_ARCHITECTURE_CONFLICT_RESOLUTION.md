@@ -1,4 +1,4 @@
-# Architecture Conflict Resolution (아키텍처 충돌 해결)
+# Architecture Conflict Resolution
 
 **Effective Date:** 2026-05-27  
 **Authority:** Design Architecture  
@@ -8,195 +8,195 @@
 
 ## Overview
 
-Base Knowledge Core 시스템 (shopping_mall_core, marketplace_core, purchase_agency_core, logistics_core 등)과 도메인 모듈 시스템 (01_member ~ 10_)*을 통합하면서 발견된 11개 아키텍처 충돌을 해결합니다.
+Resolves the 11 architecture conflicts found while integrating the Base Knowledge Core system (shopping_mall_core, marketplace_core, purchase_agency_core, logistics_core, etc.) with the domain module system (01_member ~ 10_)*.
 
 ---
 
-## 충돌 #1: product_reviews 테이블 중복
+## Conflict #1: product_reviews Table Duplication
 
-**문제:**
-- 02_shopping_mall (도메인 모듈): product_reviews 테이블 포함
-- 07_review_rating_system (도메인 모듈): review_ratings 테이블 포함
-- shopping_mall_core: product_reviews 포함 가능
+**Problem:**
+- 02_shopping_mall (domain module): includes product_reviews table
+- 07_review_rating_system (domain module): includes review_ratings table
+- shopping_mall_core: may include product_reviews
 
-**해결책:**
+**Solution:**
 
 ### Single Source of Truth: 07_review_rating_system
 
 ```
-소유권: 07_review_rating_system (리뷰 및 평점 관리 전담)
+Ownership: 07_review_rating_system (dedicated to review and rating management)
 
-테이블 통합:
-- 07_review_rating_system이 모든 리뷰/평점 관리
-- 02_shopping_mall은 review 기능을 07_review_rating_system으로 위임
+Table consolidation:
+- 07_review_rating_system manages all reviews/ratings
+- 02_shopping_mall delegates review functionality to 07_review_rating_system
 
-02_shopping_mall에서 제거:
-- product_reviews 테이블
-- /products/{id}/reviews 엔드포인트 (대신 07_review_rating_system에서 제공)
+Removed from 02_shopping_mall:
+- product_reviews table
+- /products/{id}/reviews endpoint (provided instead by 07_review_rating_system)
 
-07_review_rating_system에서 제공:
-- reviews, ratings, review_replies 테이블
-- /reviews/{product_id} (리뷰 목록)
-- /reviews/{id} (리뷰 상세)
-- /reviews/{id}/rate (평점 매기기)
-- /reviews/{id}/reply (리뷰 답글)
+Provided by 07_review_rating_system:
+- reviews, ratings, review_replies tables
+- /reviews/{product_id} (review list)
+- /reviews/{id} (review detail)
+- /reviews/{id}/rate (rate)
+- /reviews/{id}/reply (review reply)
 ```
 
-**규칙:**
+**Rule:**
 ```
 IF module needs review functionality
 THEN call 07_review_rating_system APIs
-ELSE 02_shopping_mall에 리뷰 저장 금지
+ELSE forbidden to store reviews in 02_shopping_mall
 ```
 
 ---
 
-## 충돌 #2: inventory_transactions 테이블 중복
+## Conflict #2: inventory_transactions Table Duplication
 
-**문제:**
-- 02_shopping_mall (도메인 모듈): inventory_transactions 포함 가능
-- 08_inventory_management: inventory_transactions 포함
-- shopping_mall_core에서 간단한 inventory만 정의
+**Problem:**
+- 02_shopping_mall (domain module): may include inventory_transactions
+- 08_inventory_management: includes inventory_transactions
+- shopping_mall_core defines only simple inventory
 
-**해결책:**
+**Solution:**
 
 ### Single Source of Truth: 08_inventory_management
 
 ```
-소유권: 08_inventory_management (재고 관리 전담)
+Ownership: 08_inventory_management (dedicated to inventory management)
 
-테이블 통합:
-- 08_inventory_management이 모든 재고 거래 관리
-- 02_shopping_mall은 재고 조회만 가능 (읽기 전용)
+Table consolidation:
+- 08_inventory_management manages all inventory transactions
+- 02_shopping_mall can only query inventory (read-only)
 
-02_shopping_mall에서 제거:
-- inventory_transactions 테이블
-- inventory_levels 관리 로직
+Removed from 02_shopping_mall:
+- inventory_transactions table
+- inventory_levels management logic
 
-02_shopping_mall에서 허용:
-- products.stock_quantity 필드 (읽기 전용)
-- /products/{id}/inventory (GET only, 08에서 조회)
+Allowed in 02_shopping_mall:
+- products.stock_quantity field (read-only)
+- /products/{id}/inventory (GET only, queried from 08)
 
-08_inventory_management에서 제공:
-- inventory_transactions (모든 재고 변화 기록)
-- inventory_reservations (주문 시 재고 예약)
-- inventory_adjustments (수정, 정품 검사 등)
-- /inventory/{product_id} (GET - 현재 재고)
-- /inventory/{product_id}/transactions (GET - 거래 내역)
-- /inventory/reserve (POST - 09_order_management에서 호출)
-- /inventory/release (POST - 09_order_management에서 호출)
+Provided by 08_inventory_management:
+- inventory_transactions (records all inventory changes)
+- inventory_reservations (reserve inventory on order)
+- inventory_adjustments (corrections, authenticity inspection, etc.)
+- /inventory/{product_id} (GET - current inventory)
+- /inventory/{product_id}/transactions (GET - transaction history)
+- /inventory/reserve (POST - called from 09_order_management)
+- /inventory/release (POST - called from 09_order_management)
 ```
 
-**규칙:**
+**Rule:**
 ```
 IF module needs to update inventory
 THEN call 08_inventory_management POST/PUT APIs
-ELSE 02_shopping_mall에 재고 수정 금지
+ELSE forbidden to modify inventory in 02_shopping_mall
 
-09_order_management 통합:
-- 주문 생성 시 08_inventory_management.reserve() 호출
-- 주문 취소 시 08_inventory_management.release() 호출
+09_order_management integration:
+- On order creation, call 08_inventory_management.reserve()
+- On order cancellation, call 08_inventory_management.release()
 ```
 
 ---
 
-## 충돌 #3: 상태값 레지스트리 부족
+## Conflict #3: Insufficient Status Value Registry
 
-**문제:**
-- 각 모듈이 자체 상태값 정의
-- 모듈 간 상태값 이름이 다르거나 충돌 가능
-- 상태 전이 규칙이 명확하지 않음
+**Problem:**
+- Each module defines its own status values
+- Status value names across modules may differ or conflict
+- Status transition rules are not clear
 
-**해결책:**
+**Solution:**
 
-### 해결책: 00_STATUS_VALUE_REGISTRY.md 생성 (별도 문서)
+### Solution: Create 00_STATUS_VALUE_REGISTRY.md (separate document)
 
 ```
-이 문서에서:
-- 모든 모듈의 모든 상태값 통합 정의
-- 상태 전이 규칙 명확화
-- 충돌하는 상태값명 표준화
+In this document:
+- Consolidated definition of all status values of all modules
+- Clarification of status transition rules
+- Standardization of conflicting status value names
 ```
 
 ---
 
-## 충돌 #4: /admin/audit-log 엔드포인트 충돌
+## Conflict #4: /admin/audit-log Endpoint Conflict
 
-**문제:**
-- 01_member_system: /admin/audit-log (사용자 로그인/로그아웃 감사)
-- 05_admin_system: /admin/audit-log (전체 시스템 감사)
+**Problem:**
+- 01_member_system: /admin/audit-log (user login/logout audit)
+- 05_admin_system: /admin/audit-log (whole-system audit)
 
-**해결책:**
+**Solution:**
 
 ### Single Source of Truth: 05_admin_system
 
 ```
-소유권: 05_admin_system (모든 감사 로그 통합 관리)
+Ownership: 05_admin_system (consolidated management of all audit logs)
 
-01_member_system에서 변경:
-❌ /admin/audit-log (제거)
-✓ /admin/member/login-history (변경 - 사용자 로그인 히스토리)
-✓ /admin/member/activity-log (변경 - 사용자 활동 로그)
+Changed in 01_member_system:
+❌ /admin/audit-log (removed)
+✓ /admin/member/login-history (changed - user login history)
+✓ /admin/member/activity-log (changed - user activity log)
 
-05_admin_system에서 제공:
-- /admin/audit-log (모든 시스템 감사 로그)
-- /admin/audit-log?type=member (회원 관련)
-- /admin/audit-log?type=order (주문 관련)
-- /admin/audit-log?type=payment (결제 관련)
-- /admin/audit-log?type=inventory (재고 관련)
+Provided by 05_admin_system:
+- /admin/audit-log (all system audit logs)
+- /admin/audit-log?type=member (member-related)
+- /admin/audit-log?type=order (order-related)
+- /admin/audit-log?type=payment (payment-related)
+- /admin/audit-log?type=inventory (inventory-related)
 ```
 
-**규칙:**
+**Rule:**
 ```
 IF endpoint starts with /admin/
-THEN 05_admin_system에서만 제공
-ELSE 각 모듈에서 /module/ 프리픽스로 제공
+THEN provided only by 05_admin_system
+ELSE provided by each module under the /module/ prefix
 
-예외:
-- /admin/member/login-history (01_member_system 관리, 별도)
-- /admin/member/activity-log (01_member_system 관리, 별도)
+Exceptions:
+- /admin/member/login-history (managed by 01_member_system, separate)
+- /admin/member/activity-log (managed by 01_member_system, separate)
 ```
 
 ---
 
-## 충돌 #5: /admin/inventory 엔드포인트 충돌
+## Conflict #5: /admin/inventory Endpoint Conflict
 
-**문제:**
-- 02_shopping_mall: /admin/inventory (상품 재고 조회)
-- 08_inventory_management: /admin/inventory (재고 관리)
+**Problem:**
+- 02_shopping_mall: /admin/inventory (product inventory query)
+- 08_inventory_management: /admin/inventory (inventory management)
 
-**해결책:**
+**Solution:**
 
 ### Single Source of Truth: 08_inventory_management
 
 ```
-소유권: 08_inventory_management (모든 재고 조회 및 관리)
+Ownership: 08_inventory_management (all inventory query and management)
 
-02_shopping_mall에서 변경:
-❌ /admin/inventory (제거)
-✓ /admin/products/{id}/details (상품 상세 - 재고 포함)
+Changed in 02_shopping_mall:
+❌ /admin/inventory (removed)
+✓ /admin/products/{id}/details (product detail - includes inventory)
 
-08_inventory_management에서 제공:
-- /admin/inventory (모든 재고 상태)
-- /admin/inventory/{product_id} (특정 상품 재고)
-- /admin/inventory/{product_id}/transactions (거래 내역)
-- /admin/inventory/{product_id}/adjust (재고 수정)
-- /admin/inventory/low-stock (낮은 재고 알림)
-- /admin/inventory/forecast (재고 예측)
+Provided by 08_inventory_management:
+- /admin/inventory (all inventory status)
+- /admin/inventory/{product_id} (specific product inventory)
+- /admin/inventory/{product_id}/transactions (transaction history)
+- /admin/inventory/{product_id}/adjust (inventory adjustment)
+- /admin/inventory/low-stock (low stock alert)
+- /admin/inventory/forecast (inventory forecast)
 ```
 
 ---
 
-## 충돌 #6: 주문 총액 계산 불일치
+## Conflict #6: Order Total Calculation Inconsistency
 
-**문제:**
+**Problem:**
 - 03_payment_system: order_total = product_price × quantity
 - 09_order_management: order_total = product_price × quantity + shipping + tax - discount
-- shipping_logistics_core: 배송료 포함
+- shipping_logistics_core: includes shipping cost
 
-**해결책:**
+**Solution:**
 
-### 통합 계산 규칙 (09_order_management 소유)
+### Consolidated Calculation Rule (owned by 09_order_management)
 
 ```
 Order Total Calculation (09_order_management):
@@ -205,165 +205,165 @@ total = base_amount + shipping_cost + tax - discount + additional_fees
 
 Where:
 - base_amount = SUM(product_price × quantity) 
-  (02_shopping_mall에서 조회)
+  (queried from 02_shopping_mall)
   
-- shipping_cost = 배송료 (04_shipping_logistics에서 조회)
+- shipping_cost = shipping cost (queried from 04_shipping_logistics)
   
-- tax = 부가세 (현지 세법 적용)
+- tax = VAT (local tax law applied)
   
-- discount = 할인액 (쿠폰, 프로모션 등)
+- discount = discount amount (coupons, promotions, etc.)
   
-- additional_fees = 기타 비용
-  (commission, handling_fee 등)
+- additional_fees = other costs
+  (commission, handling_fee, etc.)
 
-03_payment_system 역할:
-- ✓ 결제 금액 확인 (09에서 받은 total로)
-- ✓ 결제 처리
-- ✓ 환불 처리
-- ❌ 주문 총액 계산 (09의 값만 사용)
+Role of 03_payment_system:
+- ✓ Confirm payment amount (using the total received from 09)
+- ✓ Process payment
+- ✓ Process refund
+- ❌ Calculate order total (use only 09's value)
 
-규칙:
+Rule:
 IF payment_amount != order_total
-THEN 거래 거절 (금액 불일치)
+THEN reject transaction (amount mismatch)
 ```
 
 ---
 
-## 충돌 #7: 재고 예약 타이밍
+## Conflict #7: Inventory Reservation Timing
 
-**문제:**
-- 08_inventory_management: 주문 생성 시 즉시 예약
-- 09_order_management: 결제 완료 시 예약
-- purchase_agency_core: 구매 승인 시 예약
+**Problem:**
+- 08_inventory_management: reserve immediately on order creation
+- 09_order_management: reserve on payment completion
+- purchase_agency_core: reserve on purchase approval
 
-**해결책:**
+**Solution:**
 
-### 통합 재고 예약 정책 (08_inventory_management 소유)
+### Consolidated Inventory Reservation Policy (owned by 08_inventory_management)
 
 ```
-재고 예약 타이밍:
+Inventory reservation timing:
 
-일반 쇼핑 (shopping_mall_core):
-1. 주문 생성 (09) → 재고 예약 (08)
-2. 결제 완료 (03) → 재고 확정
-3. 배송 시작 (04) → 재고 차감
-4. 배송 완료 (04) → 재고 결산
+General shopping (shopping_mall_core):
+1. Order creation (09) → inventory reserved (08)
+2. Payment completion (03) → inventory confirmed
+3. Shipping start (04) → inventory deducted
+4. Shipping completion (04) → inventory settled
 
-마켓플레이스 (marketplace_core):
-1. 주문 생성 (09) → 각 판매자별 재고 예약 (08)
-2. 판매자 확인 (seller) → 재고 예약 유지
-3. 결제 완료 (03) → 재고 확정
-4. 판매자 배송 준비 (04) → 재고 차감
-5. 배송 완료 (04) → 재고 결산
+Marketplace (marketplace_core):
+1. Order creation (09) → inventory reserved per seller (08)
+2. Seller confirmation (seller) → inventory reservation maintained
+3. Payment completion (03) → inventory confirmed
+4. Seller shipping preparation (04) → inventory deducted
+5. Shipping completion (04) → inventory settled
 
-구매대행 (purchase_agency_core):
-1. 구매 요청 (req) → 재고 예약 없음 (해외 구매)
-2. 구매 완료 (agency) → 로컬 재고 예약 (전용)
-3. 국내 입항 (04) → 재고 확정
-4. 국내 배송 (04) → 재고 차감
+Purchase agency (purchase_agency_core):
+1. Purchase request (req) → no inventory reservation (overseas purchase)
+2. Purchase completion (agency) → local inventory reserved (dedicated)
+3. Domestic arrival (04) → inventory confirmed
+4. Domestic shipping (04) → inventory deducted
 
-규칙:
-- 재고 예약은 08_inventory_management에서만 관리
-- 다른 모듈은 08의 API만 호출
-- 타이밍은 core별로 다를 수 있음 (위 참조)
+Rule:
+- Inventory reservation is managed only in 08_inventory_management
+- Other modules call only 08's API
+- Timing may differ per core (see above)
 ```
 
 ---
 
-## 충돌 #8: 결제 멱등성 보장
+## Conflict #8: Payment Idempotency Guarantee
 
-**문제:**
-- 03_payment_system: 동일 주문으로 2회 결제 시?
-- 09_order_management: 결제 실패 후 재시도?
-- 외부 결제 게이트웨이: 중복 결제 가능?
+**Problem:**
+- 03_payment_system: what if the same order is paid twice?
+- 09_order_management: retry after payment failure?
+- External payment gateway: duplicate payment possible?
 
-**해결책:**
+**Solution:**
 
-### 결제 멱등성 규칙 (03_payment_system 소유)
+### Payment Idempotency Rule (owned by 03_payment_system)
 
 ```
-멱등성 보장 전략:
+Idempotency guarantee strategy:
 
-1. 주문별 Payment Idempotency Key 생성
+1. Generate a Payment Idempotency Key per order
    - payment_idempotency_key = MD5(order_id + user_id + amount)
-   - 저장: payments 테이블의 idempotency_key 필드
+   - Storage: idempotency_key field in the payments table
 
-2. 결제 요청 시 검증
+2. Validate on payment request
    IF payment with same idempotency_key EXISTS
-   THEN return existing payment result (재시도 시)
+   THEN return existing payment result (on retry)
    ELSE create new payment
 
-3. 외부 결제 게이트웨이 연동
-   - Stripe, PayPal 등: Idempotency-Key 헤더 사용
-   - 로컬 캐시: 결제 결과를 1시간 캐싱
+3. External payment gateway integration
+   - Stripe, PayPal, etc.: use Idempotency-Key header
+   - Local cache: cache payment result for 1 hour
 
-4. 결제 상태 관리
+4. Payment status management
    payments.status:
    - pending → processing → completed
    - pending → processing → failed
-   - completed는 최종 상태 (변경 불가)
+   - completed is the final state (cannot be changed)
 
-규칙:
+Rule:
 IF payment_status = 'completed'
 THEN cannot retry or modify
 ELSE can retry with same idempotency_key
 
-09_order_management 통합:
-- 결제 재시도는 09에서 제안 (안내)
-- 재시도 버튼을 사용자에게 제공
-- 03이 멱등성 보장
+09_order_management integration:
+- Payment retry is suggested (guided) by 09
+- Provide a retry button to the user
+- 03 guarantees idempotency
 ```
 
 ---
 
-## 충돌 #9: 모듈 책임 행렬 부재
+## Conflict #9: Missing Module Responsibility Matrix
 
-**문제:**
-- 어떤 테이블이 어느 모듈 소유인지 불명확
-- 어떤 API가 어느 모듈에서 제공되는지 불명확
-- 어떤 상태값이 어느 모듈에서 관리되는지 불명확
+**Problem:**
+- Unclear which table is owned by which module
+- Unclear which API is provided by which module
+- Unclear which status value is managed by which module
 
-**해결책:**
+**Solution:**
 
-### 해결책: 00_MODULE_RESPONSIBILITY_MATRIX.md 생성 (별도 문서)
+### Solution: Create 00_MODULE_RESPONSIBILITY_MATRIX.md (separate document)
 
 ```
-이 문서에서:
-- 테이블별 소유권 명시
-- API 엔드포인트별 제공 모듈 명시
-- 상태값별 관리 모듈 명시
-- 예: 
-  - products 테이블: 02_shopping_mall 소유
-  - inventory_transactions: 08_inventory_management 소유
-  - /admin/audit-log: 05_admin_system 소유
+In this document:
+- State ownership per table
+- State the providing module per API endpoint
+- State the managing module per status value
+- e.g.: 
+  - products table: owned by 02_shopping_mall
+  - inventory_transactions: owned by 08_inventory_management
+  - /admin/audit-log: owned by 05_admin_system
 ```
 
 ---
 
-## 충돌 #10: Core vs Domain Module 우선순위
+## Conflict #10: Core vs Domain Module Priority
 
-**문제:**
+**Problem:**
 - shopping_mall_core vs 02_shopping_mall
 - marketplace_core vs marketplace integration
-- 어느 것을 따를 것인가?
+- Which one to follow?
 
-**해결책:**
+**Solution:**
 
-### 우선순위 규칙
+### Priority Rule
 
 ```
-1순위: 도메인 모듈 (01-10)
-- 실제 구현 기준
-- 코드가 존재하는 정의
+1st priority: domain module (01-10)
+- The actual implementation standard
+- The definition that has code
 
-2순위: Base Knowledge Core (shopping_mall_core 등)
-- 최소 표준 정의
-- 도메인 모듈이 Core를 확장/수정 가능
+2nd priority: Base Knowledge Core (shopping_mall_core, etc.)
+- The minimum standard definition
+- Domain modules can extend/modify the Core
 
-3순위: 일반 패턴
-- Core나 도메인 모듈에 없으면 일반 패턴 참조
+3rd priority: generic pattern
+- If not in the Core or domain module, refer to the generic pattern
 
-규칙:
+Rule:
 IF domain module defines behavior
 THEN use domain module definition
 ELSE IF Base Knowledge Core defines
@@ -373,61 +373,61 @@ ELSE use general pattern
 
 ---
 
-## 충돌 #11: 교차 모듈 API 호출 규약
+## Conflict #11: Cross-Module API Call Convention
 
-**문제:**
-- 09_order_management가 08_inventory_management 호출?
-- 04_shipping_logistics가 09_order_management 호출?
-- 순환 참조 위험?
+**Problem:**
+- Does 09_order_management call 08_inventory_management?
+- Does 04_shipping_logistics call 09_order_management?
+- Risk of circular references?
 
-**해결책:**
+**Solution:**
 
-### API 호출 그래프 정의
+### API Call Graph Definition
 
 ```
-허용되는 호출:
+Allowed calls:
 09_order_management 
-  → 02_shopping_mall (상품 조회)
-  → 03_payment_system (결제 처리)
-  → 04_shipping_logistics (배송 계산)
-  → 08_inventory_management (재고 예약)
-  → 10_gdpr_privacy (개인정보 처리)
+  → 02_shopping_mall (product query)
+  → 03_payment_system (payment processing)
+  → 04_shipping_logistics (shipping calculation)
+  → 08_inventory_management (inventory reservation)
+  → 10_gdpr_privacy (personal data processing)
 
 03_payment_system 
-  → 09_order_management (주문 조회)
-  → 06_notification (결제 알림)
+  → 09_order_management (order query)
+  → 06_notification (payment notification)
 
 04_shipping_logistics 
-  → 09_order_management (주문 조회)
-  → 06_notification (배송 알림)
+  → 09_order_management (order query)
+  → 06_notification (shipping notification)
 
-금지되는 호출:
-❌ 순환 참조 (A → B → A)
-❌ 3단계 이상 깊은 호출 (A → B → C → D)
-❌ 같은 레벨 모듈 간 직접 호출
+Forbidden calls:
+❌ Circular reference (A → B → A)
+❌ Calls 3 or more levels deep (A → B → C → D)
+❌ Direct calls between modules at the same level
 
-규칙:
+Rule:
 IF call violates graph
 THEN route through 09_order_management (orchestrator)
 ```
 
 ---
 
-## 요약: 해결된 충돌
+## Summary: Resolved Conflicts
 
-| # | 충돌 | 원인 | 해결책 | 소유 모듈 |
+| # | Conflict | Cause | Solution | Owner Module |
 |---|------|------|--------|---------|
-| 1 | product_reviews 중복 | 두 모듈이 리뷰 관리 | 07_review_rating_system 소유 | 07 |
-| 2 | inventory_transactions 중복 | 두 모듈이 재고 관리 | 08_inventory_management 소유 | 08 |
-| 3 | 상태값 정의 부재 | 모듈별 상태값 불일치 | 00_STATUS_VALUE_REGISTRY 생성 | Registry |
-| 4 | /admin/audit-log 충돌 | 두 모듈이 감사 로그 | 05_admin_system 소유 | 05 |
-| 5 | /admin/inventory 충돌 | 두 모듈이 재고 조회 | 08_inventory_management 소유 | 08 |
-| 6 | 주문 총액 계산 불일치 | 다른 계산 공식 | 09_order_management 소유 | 09 |
-| 7 | 재고 예약 타이밍 불일치 | core별 다른 타이밍 | 08_inventory_management에서 정책 관리 | 08 |
-| 8 | 결제 멱등성 미보장 | 중복 결제 위험 | 03_payment_system에서 idempotency_key 관리 | 03 |
-| 9 | 모듈 책임 불명확 | 누가 뭘 하는지 모호 | 00_MODULE_RESPONSIBILITY_MATRIX 생성 | Matrix |
-| 10 | Core vs Module 우선순위 | 어느 것을 따를지 불명확 | 우선순위 규칙 정의 | Rule |
-| 11 | 교차 모듈 호출 규약 | 순환 참조 위험 | API 호출 그래프 정의 | Graph |
+| 1 | product_reviews duplication | Two modules manage reviews | 07_review_rating_system owns | 07 |
+| 2 | inventory_transactions duplication | Two modules manage inventory | 08_inventory_management owns | 08 |
+| 3 | Missing status value definition | Status value mismatch per module | Create 00_STATUS_VALUE_REGISTRY | Registry |
+| 4 | /admin/audit-log conflict | Two modules handle audit log | 05_admin_system owns | 05 |
+| 5 | /admin/inventory conflict | Two modules query inventory | 08_inventory_management owns | 08 |
+| 6 | Order total calculation inconsistency | Different calculation formulas | 09_order_management owns | 09 |
+| 7 | Inventory reservation timing inconsistency | Different timing per core | Policy managed in 08_inventory_management | 08 |
+| 8 | Payment idempotency not guaranteed | Risk of duplicate payment | idempotency_key managed in 03_payment_system | 03 |
+| 9 | Unclear module responsibility | Ambiguous who does what | Create 00_MODULE_RESPONSIBILITY_MATRIX | Matrix |
+| 10 | Core vs Module priority | Unclear which to follow | Define priority rule | Rule |
+| 11 | Cross-module call convention | Risk of circular reference | Define API call graph | Graph |
 
 ---
 
@@ -436,11 +436,11 @@ THEN route through 09_order_management (orchestrator)
 **Document:** 00_ARCHITECTURE_CONFLICT_RESOLUTION.md  
 **Created:** 2026-05-27  
 **Authority:** Design Architecture  
-**Status:** 🟢 **COMPLETE - 모든 충돌 해결됨**
+**Status:** 🟢 **COMPLETE - All conflicts resolved**
 
-**다음 단계:**
-- [ ] 00_STATUS_VALUE_REGISTRY.md 생성
-- [ ] 00_MODULE_RESPONSIBILITY_MATRIX.md 생성
-- [ ] 도메인 모듈 (01-10) 업데이트 (충돌 해결 반영)
-- [ ] Base Knowledge Core 업데이트 (충돌 해결 반영)
-- [ ] GitHub 업로드
+**Next steps:**
+- [ ] Create 00_STATUS_VALUE_REGISTRY.md
+- [ ] Create 00_MODULE_RESPONSIBILITY_MATRIX.md
+- [ ] Update domain modules (01-10) (reflecting conflict resolution)
+- [ ] Update Base Knowledge Core (reflecting conflict resolution)
+- [ ] Upload to GitHub

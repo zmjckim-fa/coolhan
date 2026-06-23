@@ -1,33 +1,33 @@
-# HX 하네스 — 더 깊은 고민 (남은 간극)
+# HX Harness — Deeper Considerations (Remaining Gaps)
 
-## 근본 문제: "체크리스트 통과 ≠ 사람이 느끼는 완벽"
+## Fundamental problem: "passing the checklist ≠ what a human perceives as perfect"
 
-현재 HX 게이트는 측정 가능한 것(대비비, 시맨틱 태그, 브레이크포인트 존재)만 잡는다.
-그러나 "이 화면이 쓰기 편한가/직관적인가/아름다운가"는 측정값이 아니다.
-모든 박스를 통과해도 실제로는 어색할 수 있다 → **체크리스트 연극(checklist theater)** 위험.
-게다가 판정 주체가 여전히 AI다. 사용자의 명제 자체가 "AI의 완벽 ≠ 사람의 완벽"인데, 검증을 또 AI가 한다.
+The current HX gate only catches what is measurable (contrast ratio, semantic tags, presence of breakpoints).
+But "is this screen easy to use / intuitive / beautiful" is not a measured value.
+Even if every box is checked, it can still feel awkward in practice → risk of **checklist theater**.
+Moreover, the judging entity is still the AI. The user's very thesis is "AI's 'perfect' ≠ a human's 'perfect'," yet the verification is again done by an AI.
 
-## 식별된 8대 간극
+## 8 identified gaps
 
-| # | 간극 | 왜 문제인가 | 제안 |
+| # | Gap | Why it is a problem | Proposal |
 |---|------|-------------|------|
-| G1 | **실제 렌더링 부재** | track7은 HTML을 "읽고" 대비를 계산했을 뿐, 실제 브라우저에 안 띄움. 반응형/크로스브라우저/"진짜 보임"은 렌더링해야 안다. track4 GAP-1(실행 없이 주장)과 동류 | Claude Preview/Playwright로 3개 브레이크포인트 스크린샷 → **비전 모델 시각 비평**을 증거로 |
-| G2 | **실제 사람 피드백 루프 없음** | 전부 AI 자가판정. "사람이 써보고 판단"이 빠짐 | 라이브 프리뷰를 사람이 보고 평점/코멘트 → `_hx-feedback.md` 기록 → 승인까지 반복 |
-| G3 | **웹 편향** | 버튼색·반응형·브라우저는 웹 전제. 데스크톱/모바일네이티브/CLI는 HX가 다름 | HX 표준을 플랫폼별로(stack-agnostic HX) |
-| G4 | **i18n/RTL/로케일/문화 누락** | 색의 문화적 의미, RTL, CJK 폰트, 번역 길이 깨짐 미반영 | HX에 다국어/RTL/로케일 정확성 항목 추가 |
-| G5 | **화면 간 일관성 미강제** | HX가 기능 단위 → 화면마다 버튼 스타일 제각각 가능 | 프로젝트 레벨 디자인시스템 일관성 검사(전역) |
-| G6 | **체감 성능 누락** | 로딩속도/INP/CLS(레이아웃 이동)도 편의성 | HX에 성능 예산(perf budget) 추가 |
-| G7 | **주관 항목 증거 빈약** | 가독성/직관성은 PASS 위조 쉬움 | Nielsen 10 휴리스틱 평가 + 비교기준(baseline A/B) + 비전 비평을 증거로 |
-| G8 | **P0 경계 모호** | 좋은 UX엔 기획서에 없는 보조화면(에러/빈/확인)이 필요한데 P0 무단추가와 충돌 | 규칙: HX 필수 보조상태는 허용, 신규 "기능"만 차단 — 경계 명문화 |
+| G1 | **No actual rendering** | track7 only "read" the HTML and computed contrast; it never rendered in a real browser. Responsiveness/cross-browser/"actually visible" can only be known by rendering. Same kind as track4 GAP-1 (claiming without running) | Screenshots at 3 breakpoints via Claude Preview/Playwright → **vision-model visual critique** as evidence |
+| G2 | **No real human feedback loop** | Everything is AI self-judgment. "A human actually uses it and judges" is missing | A human views the live preview, gives a rating/comment → record in `_hx-feedback.md` → iterate until approval |
+| G3 | **Web bias** | Button colors, responsiveness, browsers assume web. Desktop/mobile-native/CLI have different HX | Make the HX standard platform-specific (stack-agnostic HX) |
+| G4 | **i18n/RTL/locale/culture missing** | Cultural meaning of color, RTL, CJK fonts, translation-length breakage not reflected | Add multilingual/RTL/locale-accuracy items to HX |
+| G5 | **Cross-screen consistency not enforced** | HX is per-feature → button styles can differ screen to screen | Project-level design-system consistency check (global) |
+| G6 | **Perceived performance missing** | Loading speed/INP/CLS (layout shift) are also part of usability | Add a performance budget (perf budget) to HX |
+| G7 | **Weak evidence for subjective items** | Readability/intuitiveness are easy to fake a PASS | Nielsen 10 heuristics evaluation + comparison baseline (A/B) + vision critique as evidence |
+| G8 | **Vague P0 boundary** | Good UX needs auxiliary screens not in the spec (error/empty/confirm), which conflicts with P0 unauthorized addition | Rule: required HX auxiliary states are allowed; only new "features" are blocked — codify the boundary |
 
-## 우선순위 (가장 본질적인 것)
+## Priority (most essential first)
 
-1순위 **G1 실제 렌더링 + G2 사람 피드백 루프** — 사용자 명제의 정곡. 이 둘 없이는 "사람 중심"이 구호에 그침.
-   - 렌더 → 스크린샷 → (a)비전 모델 비평 (b)사람 승인. 둘 다 증거로 채택, 사람 승인이 최종.
-2순위 G7(휴리스틱+비교), G5(전역 일관성), G6(성능).
-3순위 G3(플랫폼별), G4(i18n/RTL), G8(경계 명문화).
+1st **G1 actual rendering + G2 human feedback loop** — the heart of the user's thesis. Without these two, "human-centered" remains a slogan.
+   - render → screenshot → (a) vision-model critique (b) human approval. Both adopted as evidence; human approval is final.
+2nd G7 (heuristics+comparison), G5 (global consistency), G6 (performance).
+3rd G3 (per-platform), G4 (i18n/RTL), G8 (boundary codification).
 
-## 핵심 결론
-체크리스트는 **바닥(floor)**을 보장할 뿐 **천장(ceiling, 진짜 좋은 경험)**을 못 만든다.
-천장은 (1) 실제 렌더링을 (2) 비전으로 보고 (3) 사람이 최종 판정하고 (4) 만족할 때까지 반복할 때만 닿는다.
-다음 업그레이드는 "HX Preview & Human-in-the-loop 루프"가 되어야 한다.
+## Core conclusion
+A checklist only guarantees the **floor**; it cannot create the **ceiling (a truly good experience)**.
+The ceiling is reached only when (1) actual rendering is (2) viewed with vision, (3) a human makes the final judgment, and (4) it iterates until satisfaction.
+The next upgrade should be an "HX Preview & Human-in-the-loop" loop.

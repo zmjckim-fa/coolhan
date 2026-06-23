@@ -6,7 +6,7 @@
  *   node scripts/check-update.js
  *   npx coolhan-update-check
  *
- * 설치된 버전과 GitHub 최신 릴리스를 비교하여 업데이트 여부를 알린다.
+ * Compares the installed version with the latest GitHub release and reports whether an update is available.
  */
 
 'use strict';
@@ -103,12 +103,12 @@ function compareVersions(installed, latest) {
 function printUpdateBanner(installed, latest, releaseData) {
   const line = '═'.repeat(60);
   console.log('\n' + c('yellow', '╔' + line + '╗'));
-  console.log(c('yellow', '║') + c('bold', '  🚀 CoolHan 업데이트 알림 / Update Available!              ') + c('yellow', '║'));
+  console.log(c('yellow', '║') + c('bold', '  🚀 CoolHan Update Available!                              ') + c('yellow', '║'));
   console.log(c('yellow', '╠' + line + '╣'));
-  console.log(c('yellow', '║') + `  현재 설치 버전: ${c('red', installed.padEnd(10))}                          ` + c('yellow', '║'));
-  console.log(c('yellow', '║') + `  최신 버전:     ${c('green', latest.padEnd(10))}  ✨ NEW                    ` + c('yellow', '║'));
+  console.log(c('yellow', '║') + `  Installed version: ${c('red', installed.padEnd(10))}                       ` + c('yellow', '║'));
+  console.log(c('yellow', '║') + `  Latest version:    ${c('green', latest.padEnd(10))}  ✨ NEW                 ` + c('yellow', '║'));
   console.log(c('yellow', '╠' + line + '╣'));
-  console.log(c('yellow', '║') + c('bold', '  업데이트 방법 / Update Method:                            ') + c('yellow', '║'));
+  console.log(c('yellow', '║') + c('bold', '  Update Method:                                            ') + c('yellow', '║'));
   console.log(c('yellow', '║') + '  Linux/macOS:                                               ' + c('yellow', '║'));
   console.log(c('yellow', '║') + `  ${c('cyan', 'curl -fsSL https://raw.githubusercontent.com/' + REPO + '/main/install.sh | bash')}` + c('yellow', '║'));
   console.log(c('yellow', '║') + '  Windows:                                                   ' + c('yellow', '║'));
@@ -118,34 +118,34 @@ function printUpdateBanner(installed, latest, releaseData) {
 
   if (releaseData && releaseData.html_url) {
     console.log(c('yellow', '╠' + line + '╣'));
-    console.log(c('yellow', '║') + `  릴리스 노트: ${c('blue', releaseData.html_url)}` + c('yellow', '║'));
+    console.log(c('yellow', '║') + `  Release notes: ${c('blue', releaseData.html_url)}` + c('yellow', '║'));
   }
   console.log(c('yellow', '╚' + line + '╝\n'));
 }
 
 function printUpToDate(installed) {
-  console.log(c('green', `✅ CoolHan ${installed} — 최신 버전입니다. (Up to date)`));
+  console.log(c('green', `✅ CoolHan ${installed} — Up to date.`));
 }
 
 function printError(msg) {
-  console.log(c('yellow', `⚠️  업데이트 확인 실패 (Check failed): ${msg}`));
-  console.log(c('yellow', `   GitHub에서 확인: https://github.com/${REPO}/releases`));
+  console.log(c('yellow', `⚠️  Update check failed: ${msg}`));
+  console.log(c('yellow', `   Check on GitHub: https://github.com/${REPO}/releases`));
 }
 
 async function main() {
-  console.log(c('blue', '\n🔍 CoolHan 업데이트 확인 중... (Checking for updates...)'));
+  console.log(c('blue', '\n🔍 Checking for updates...'));
 
   const installed = readInstalledVersion();
   if (!installed) {
-    console.log(c('yellow', '⚠️  설치 정보를 찾을 수 없습니다. 재설치를 권장합니다.'));
+    console.log(c('yellow', '⚠️  Install info not found. Reinstalling is recommended.'));
     console.log(c('yellow', '   Install info not found. Please reinstall CoolHan.'));
     console.log(c('cyan', `   https://github.com/${REPO}#quick-start`));
     return;
   }
 
-  console.log(c('blue', `   설치된 버전: ${installed.version}`));
+  console.log(c('blue', `   Installed version: ${installed.version}`));
   if (installed.installed_at && installed.installed_at !== 'unknown') {
-    console.log(c('blue', `   설치일: ${installed.installed_at}`));
+    console.log(c('blue', `   Installed at: ${installed.installed_at}`));
   }
 
   try {
@@ -153,7 +153,7 @@ async function main() {
     const latestVersion = releaseData.tag_name || releaseData.name;
 
     if (!latestVersion) {
-      printError('릴리스 정보를 읽을 수 없습니다');
+      printError('Unable to read release information');
       return;
     }
 

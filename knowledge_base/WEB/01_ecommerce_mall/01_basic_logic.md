@@ -1,421 +1,422 @@
-# 쇼핑몰 시스템 - 기본 논리 (E-Commerce Mall Basic Logic)
+# E-Commerce Mall - Basic Logic
 
-## 1. 시스템 개요
+## 1. System Overview
 
-쇼핑몰은 **상품을 판매하는 온라인 플랫폼**입니다.
+An e-commerce mall is an **online platform for selling products**.
 
-### 기본 흐름
+### Basic Flow
 ```
-상품 등록 → 상품 검색/열람 → 장바구니 추가 → 주문 → 결제 → 배송 → 수령 → 리뷰/반품
-```
-
----
-
-## 2. 핵심 엔티티 (Entity)
-
-### 2.1 상품 (Product)
-```
-상품 = 판매하는 물건
-- 상품ID
-- 상품명
-- 설명
-- 가격
-- 재고수량
-- 이미지
-- 카테고리
-- 상태 (판매중/품절/중단)
-```
-
-### 2.2 사용자 (User)
-```
-구매자 또는 판매자
-- 사용자ID
-- 이메일
-- 비밀번호
-- 이름
-- 전화번호
-- 주소
-- 가입일
-- 타입 (구매자/판매자/관리자)
-```
-
-### 2.3 주문 (Order)
-```
-구매 트랜잭션
-- 주문ID
-- 구매자ID
-- 주문일시
-- 상태 (결제대기/결제완료/배송중/배송완료/취소)
-- 총액
-- 배송지 주소
-```
-
-### 2.4 주문항목 (OrderItem)
-```
-주문에 포함된 상품
-- 항목ID
-- 주문ID
-- 상품ID
-- 수량
-- 단가
-- 소계
-```
-
-### 2.5 결제 (Payment)
-```
-결제 기록
-- 결제ID
-- 주문ID
-- 결제수단 (신용카드/무통장/계좌이체/휴대폰)
-- 금액
-- 상태 (결제대기/결제완료/결제실패/환불)
-- 결제일시
-```
-
-### 2.6 배송 (Shipping)
-```
-배송 정보
-- 배송ID
-- 주문ID
-- 운송사 (택배/우체국/직배송)
-- 송장번호
-- 상태 (배송준비/배송중/배송완료)
-- 예상배송일
-```
-
-### 2.7 장바구니 (Cart)
-```
-임시 구매 목록
-- 장바구니ID
-- 사용자ID
-- 상품ID
-- 수량
-- 추가일시
-```
-
-### 2.8 리뷰 (Review)
-```
-상품 평가
-- 리뷰ID
-- 상품ID
-- 구매자ID
-- 평점 (1~5)
-- 제목
-- 내용
-- 작성일
-```
-
-### 2.9 반품/환불 (Return/Refund)
-```
-상품 반품 요청
-- 반품ID
-- 주문ID
-- 반품사유
-- 상태 (반품신청/반품승인/반품거절/환불완료)
-- 신청일
-- 반품일
-- 환불금액
+Product registration → Product search/browse → Add to cart → Order → Payment → Shipping → Receipt → Review/Return
 ```
 
 ---
 
-## 3. 핵심 프로세스 (Process)
+## 2. Core Entities
 
-### 3.1 상품 관리 흐름
+### 2.1 Product
 ```
-판매자
-├─ 상품 등록 (상품명, 가격, 이미지, 설명)
-├─ 상품 수정
-├─ 상품 삭제 또는 판매중단
-├─ 재고 관리 (수량 업데이트)
-└─ 판매통계 조회
-```
-
-### 3.2 상품 검색/열람 흐름
-```
-구매자
-├─ 카테고리 탐색
-├─ 키워드 검색
-├─ 상품 필터링 (가격, 평점, 신상품)
-├─ 상품 상세페이지 열람
-├─ 리뷰/평점 확인
-└─ 다른 상품과 비교
+Product = item being sold
+- Product ID
+- Product name
+- Description
+- Price
+- Stock quantity
+- Image
+- Category
+- Status (on sale / out of stock / discontinued)
 ```
 
-### 3.3 장바구니 흐름
+### 2.2 User
 ```
-구매자
-├─ 상품을 장바구니에 추가
-├─ 장바구니 수량 변경
-├─ 장바구니에서 상품 제거
-├─ 장바구니 조회 (총액 계산)
-└─ 장바구니 → 주문 진행
-```
-
-### 3.4 주문 흐름
-```
-1. 주문생성 (장바구니 → 주문)
-2. 배송지 입력
-3. 배송방법 선택
-4. 최종 금액 확인
-5. 주문 확정
+Buyer or seller
+- User ID
+- Email
+- Password
+- Name
+- Phone number
+- Address
+- Sign-up date
+- Type (buyer / seller / admin)
 ```
 
-### 3.5 결제 흐름
+### 2.3 Order
 ```
-1. 결제수단 선택 (신용카드/계좌이체 등)
-2. 결제 진행
-3. PG(결제게이트웨이) 연동
-4. 결제 승인/실패 응답
-5. 결제 완료 → 주문 확정
-```
-
-### 3.6 배송 흐름
-```
-1. 결제완료 → 배송준비 상태
-2. 판매자가 상품 준비
-3. 운송사에 인계 (배송중 상태)
-4. 고객이 수령 (배송완료 상태)
-5. 배송 추적번호 제공
+Purchase transaction
+- Order ID
+- Buyer ID
+- Order date/time
+- Status (awaiting payment / payment completed / shipping / delivered / cancelled)
+- Total amount
+- Delivery address
 ```
 
-### 3.7 반품/환불 흐름
+### 2.4 OrderItem
 ```
-1. 고객 반품 신청
-2. 판매자 반품 승인/거절
-3. 고객이 반품 배송
-4. 판매자가 반품 상품 수령
-5. 환불 처리
-6. 환불 완료
-```
-
-### 3.8 리뷰 흐름
-```
-1. 배송 완료 후 리뷰 작성 가능
-2. 평점(1~5점) + 제목 + 내용
-3. 리뷰 승인 (스팸/욕설 필터링)
-4. 리뷰 게시
-5. 다른 구매자가 리뷰 참고
+Product included in an order
+- Item ID
+- Order ID
+- Product ID
+- Quantity
+- Unit price
+- Subtotal
 ```
 
----
-
-## 4. 사용자 타입과 권한
-
-### 4.1 구매자 (Buyer)
-**권한:**
-- 상품 검색/열람 ✓
-- 장바구니 추가 ✓
-- 주문 ✓
-- 주문 조회 ✓
-- 배송 추적 ✓
-- 리뷰 작성 ✓
-- 반품 신청 ✓
-- 프로필 관리 ✓
-
-**금지:**
-- 상품 등록 ✗
-- 다른 사용자 정보 접근 ✗
-- 반품 강제 처리 ✗
-
-### 4.2 판매자 (Seller)
-**권한:**
-- 상품 등록/수정/삭제 ✓
-- 자신의 상품만 관리 ✓
-- 주문 조회 (자신 상품) ✓
-- 배송 상태 업데이트 ✓
-- 반품 승인/거절 ✓
-- 판매 통계 조회 ✓
-- 정산 조회 ✓
-
-**금지:**
-- 다른 판매자 상품 관리 ✗
-- 강제 환불 ✗
-- 다른 사용자 정보 접근 ✗
-
-### 4.3 관리자 (Admin)
-**권한:**
-- 모든 상품 관리 ✓
-- 모든 사용자 관리 ✓
-- 모든 주문 조회 ✓
-- 반품 강제 처리 ✓
-- 환불 강제 처리 ✓
-- 통계/리포트 조회 ✓
-- 사용자 정지 ✓
-- 상품 강제 삭제 ✓
-
----
-
-## 5. 상태 관리 (State Management)
-
-### 5.1 주문 상태 흐름
+### 2.5 Payment
 ```
-결제대기
-  ↓ (사용자 결제)
-결제완료
-  ↓ (판매자 준비)
-배송중
-  ↓ (고객 수령)
-배송완료
-  ↓ (고객 요청) 또는
-취소 (결제 전에만 가능)
+Payment record
+- Payment ID
+- Order ID
+- Payment method (credit card / bank transfer / account transfer / mobile)
+- Amount
+- Status (awaiting payment / payment completed / payment failed / refunded)
+- Payment date/time
 ```
 
-### 5.2 결제 상태
+### 2.6 Shipping
 ```
-결제대기 → 결제완료 (또는 결제실패)
-결제완료 → 환불 가능
-```
-
-### 5.3 상품 상태
-```
-판매중 (정상 판매 중)
-품절 (재고 없음, 계속 보임)
-판매중단 (판매자 중단, 숨김)
-삭제 (관리자 강제 삭제)
+Shipping information
+- Shipping ID
+- Order ID
+- Carrier (courier / postal service / direct delivery)
+- Tracking number
+- Status (preparing shipment / shipping / delivered)
+- Estimated delivery date
 ```
 
-### 5.4 배송 상태
+### 2.7 Cart
 ```
-배송준비 → 배송중 → 배송완료
-              또는 → 배송실패
+Temporary purchase list
+- Cart ID
+- User ID
+- Product ID
+- Quantity
+- Added date/time
+```
+
+### 2.8 Review
+```
+Product rating
+- Review ID
+- Product ID
+- Buyer ID
+- Rating (1~5)
+- Title
+- Content
+- Created date
+```
+
+### 2.9 Return/Refund
+```
+Product return request
+- Return ID
+- Order ID
+- Return reason
+- Status (return requested / return approved / return rejected / refund completed)
+- Request date
+- Return date
+- Refund amount
 ```
 
 ---
 
-## 6. 주요 계산 로직
+## 3. Core Processes
 
-### 6.1 장바구니 총액
+### 3.1 Product Management Flow
 ```
-장바구니 총액 = Σ(상품가격 × 수량)
-```
-
-### 6.2 주문 최종금액
-```
-최종금액 = 상품금액 + 배송비 - 할인금액
-```
-
-### 6.3 배송비
-```
-무료배송 조건: 주문금액 ≥ 최소금액 (예: 30,000원)
-그 외: 배송비 정액 (예: 3,000원)
-또는 지역별 차등배송
+Seller
+├─ Register product (name, price, image, description)
+├─ Edit product
+├─ Delete or discontinue product
+├─ Manage inventory (update quantity)
+└─ View sales statistics
 ```
 
-### 6.4 포인트/할인
+### 3.2 Product Search/Browse Flow
 ```
-구매금액의 일정% 포인트 적립
-포인트로 할인 가능
+Buyer
+├─ Browse categories
+├─ Keyword search
+├─ Filter products (price, rating, new arrivals)
+├─ View product detail page
+├─ Check reviews/ratings
+└─ Compare with other products
 ```
 
-### 6.5 정산
+### 3.3 Cart Flow
 ```
-판매자 정산액 = Σ(판매금액) - 수수료 - 반품환불액
-수수료율 = 판매 카테고리에 따라 다름 (보통 5~15%)
+Buyer
+├─ Add product to cart
+├─ Change cart quantity
+├─ Remove product from cart
+├─ View cart (calculate total)
+└─ Cart → proceed to order
+```
+
+### 3.4 Order Flow
+```
+1. Create order (cart → order)
+2. Enter delivery address
+3. Select shipping method
+4. Confirm final amount
+5. Confirm order
+```
+
+### 3.5 Payment Flow
+```
+1. Select payment method (credit card / account transfer, etc.)
+2. Proceed with payment
+3. PG (payment gateway) integration
+4. Payment approval/failure response
+5. Payment completed → order confirmed
+```
+
+### 3.6 Shipping Flow
+```
+1. Payment completed → preparing shipment status
+2. Seller prepares product
+3. Hand over to carrier (shipping status)
+4. Customer receives (delivered status)
+5. Provide shipment tracking number
+```
+
+### 3.7 Return/Refund Flow
+```
+1. Customer requests return
+2. Seller approves/rejects return
+3. Customer ships the return
+4. Seller receives the returned product
+5. Process refund
+6. Refund completed
+```
+
+### 3.8 Review Flow
+```
+1. Review can be written after delivery is completed
+2. Rating (1~5) + title + content
+3. Review approval (spam/profanity filtering)
+4. Review published
+5. Other buyers reference the review
 ```
 
 ---
 
-## 7. 보안 고려사항
+## 4. User Types and Permissions
 
-### 7.1 결제 보안
-- PG(Payment Gateway) 연동으로 신용카드 직접 저장 금지
-- SSL/HTTPS 필수
-- PCI DSS 준수
+### 4.1 Buyer
+**Permissions:**
+- Search/browse products ✓
+- Add to cart ✓
+- Place orders ✓
+- View orders ✓
+- Track shipping ✓
+- Write reviews ✓
+- Request returns ✓
+- Manage profile ✓
 
-### 7.2 사용자 데이터 보안
-- 비밀번호 암호화 저장
-- 개인정보 암호화
-- 접근 제어 (사용자는 자신 정보만)
+**Prohibited:**
+- Register products ✗
+- Access other users' information ✗
+- Force-process returns ✗
 
-### 7.3 주문/결제 보안
-- 주문 위변조 방지
-- 결제액 검증
-- 이중 체크 (클라이언트+서버)
+### 4.2 Seller
+**Permissions:**
+- Register/edit/delete products ✓
+- Manage only their own products ✓
+- View orders (their own products) ✓
+- Update shipping status ✓
+- Approve/reject returns ✓
+- View sales statistics ✓
+- View settlements ✓
 
-### 7.4 사기 방지
-- 중복 결제 방지
-- 비정상 주문 감지
-- IP/기기 인증
+**Prohibited:**
+- Manage other sellers' products ✗
+- Force refunds ✗
+- Access other users' information ✗
+
+### 4.3 Admin
+**Permissions:**
+- Manage all products ✓
+- Manage all users ✓
+- View all orders ✓
+- Force-process returns ✓
+- Force-process refunds ✓
+- View statistics/reports ✓
+- Suspend users ✓
+- Force-delete products ✓
 
 ---
 
-## 8. 비즈니스 용어 (Domain Language)
+## 5. State Management
 
-| 용어 | 정의 |
+### 5.1 Order State Flow
+```
+Awaiting payment
+  ↓ (user pays)
+Payment completed
+  ↓ (seller prepares)
+Shipping
+  ↓ (customer receives)
+Delivered
+  ↓ (customer request) or
+Cancelled (possible only before payment)
+```
+
+### 5.2 Payment States
+```
+Awaiting payment → Payment completed (or payment failed)
+Payment completed → Refund possible
+```
+
+### 5.3 Product States
+```
+On sale (selling normally)
+Out of stock (no inventory, still visible)
+Discontinued (seller stopped selling, hidden)
+Deleted (force-deleted by admin)
+```
+
+### 5.4 Shipping States
+```
+Preparing shipment → Shipping → Delivered
+                              or → Shipping failed
+```
+
+---
+
+## 6. Key Calculation Logic
+
+### 6.1 Cart Total
+```
+Cart total = Σ(product price × quantity)
+```
+
+### 6.2 Order Final Amount
+```
+Final amount = product amount + shipping fee - discount amount
+```
+
+### 6.3 Shipping Fee
+```
+Free shipping condition: order amount ≥ minimum amount (e.g., 30,000 KRW)
+Otherwise: flat shipping fee (e.g., 3,000 KRW)
+Or differentiated shipping by region
+```
+
+### 6.4 Points/Discount
+```
+Earn points as a percentage of the purchase amount
+Points can be used for discounts
+```
+
+### 6.5 Settlement
+```
+Seller settlement amount = Σ(sales amount) - commission - return refund amount
+Commission rate = varies by sales category (typically 5~15%)
+```
+
+---
+
+## 7. Security Considerations
+
+### 7.1 Payment Security
+- Direct storage of credit cards prohibited via PG (Payment Gateway) integration
+- SSL/HTTPS required
+- PCI DSS compliance
+
+### 7.2 User Data Security
+- Store passwords encrypted
+- Encrypt personal information
+- Access control (users access only their own information)
+
+### 7.3 Order/Payment Security
+- Prevent order tampering
+- Validate payment amount
+- Double check (client + server)
+
+### 7.4 Fraud Prevention
+- Prevent duplicate payments
+- Detect abnormal orders
+- IP/device authentication
+
+---
+
+## 8. Domain Language
+
+| Term | Definition |
 |------|------|
-| SKU | Stock Keeping Unit (상품 고유번호) |
-| PG | Payment Gateway (결제 중개 서비스) |
-| 정산 | 판매자에게 수익금 지급 |
-| ROI | Return On Investment (투자 수익률) |
-| DAU | Daily Active Users (일일 활성 사용자) |
-| 전환율 | (구매자 수 / 방문자 수) × 100% |
-| CPA | Cost Per Acquisition (고객 획득 비용) |
-| AOV | Average Order Value (평균 주문 금액) |
-| RFM | Recency, Frequency, Monetary (고객 분석) |
+| SKU | Stock Keeping Unit (unique product number) |
+| PG | Payment Gateway (payment intermediary service) |
+| Settlement | Paying out revenue to the seller |
+| ROI | Return On Investment |
+| DAU | Daily Active Users |
+| Conversion rate | (number of buyers / number of visitors) × 100% |
+| CPA | Cost Per Acquisition |
+| AOV | Average Order Value |
+| RFM | Recency, Frequency, Monetary (customer analysis) |
 
 ---
 
-## 9. 핵심 KPI (Key Performance Indicator)
+## 9. Key KPIs (Key Performance Indicators)
 
 ```
-1. 판매액
-2. 주문건수
-3. 방문자수
-4. 전환율 (방문→구매)
-5. 고객만족도 (평균 평점)
-6. 반품율
-7. 평균주문금액 (AOV)
-8. 고객 재방문율
-9. 카테고리별 판매액
-10. 시간대별/요일별 판매 패턴
-```
-
----
-
-## 10. 예외 상황 처리
-
-### 10.1 결제 실패
-```
-결제 실패 → 사용자 알림 → 재결제 또는 주문 취소
-```
-
-### 10.2 배송 지연
-```
-예상 배송일 초과 → 자동 알림 → 고객 보상 (포인트/할인)
-```
-
-### 10.3 상품 품질 문제
-```
-고객 반품 신청 → 판매자 승인 → 환불 처리
-또는 교환 처리
-```
-
-### 10.4 판매자 폐점
-```
-판매자 탈퇴 → 진행 중인 주문은 관리자 처리
-마이너스 정산은 회수
-```
-
-### 10.5 시스템 오류
-```
-결제 중 서버 다운 → 거래 롤백
-데이터 손상 → 백업에서 복구
+1. Sales amount
+2. Order count
+3. Visitor count
+4. Conversion rate (visit → purchase)
+5. Customer satisfaction (average rating)
+6. Return rate
+7. Average order value (AOV)
+8. Customer revisit rate
+9. Sales by category
+10. Sales patterns by time of day / day of week
 ```
 
 ---
 
-## 11. 기본 시스템 아키텍처
+## 10. Exception Handling
+
+### 10.1 Payment Failure
+```
+Payment failure → notify user → retry payment or cancel order
+```
+
+### 10.2 Shipping Delay
+```
+Estimated delivery date exceeded → automatic notification → customer compensation (points/discount)
+```
+
+### 10.3 Product Quality Issue
+```
+Customer requests return → seller approves → process refund
+or process exchange
+```
+
+### 10.4 Seller Closure
+```
+Seller withdrawal → in-progress orders handled by admin
+Negative settlement is recovered
+```
+
+### 10.5 System Error
+```
+Server down during payment → roll back transaction
+Data corruption → restore from backup
+```
+
+---
+
+## 11. Basic System Architecture
 
 ```
 ┌─────────────────────────────────────────┐
-│        Frontend (웹/모바일)              │
-│  상품 검색, 주문, 마이페이지            │
+│        Frontend (web/mobile)            │
+│  Product search, orders, my page        │
 └──────────────────┬──────────────────────┘
                    │
 ┌──────────────────▼──────────────────────┐
 │        Backend API Server               │
-│  상품 관리, 주문 처리, 결제              │
+│  Product management, order processing,  │
+│  payment                                │
 └──────────────────┬──────────────────────┘
                    │
         ┌──────────┼──────────┬──────────┐
@@ -423,24 +424,23 @@
         ▼          ▼          ▼          ▼
     ┌────────┐┌────────┐┌────────┐┌────────┐
     │  DB   ││  Cache ││ File   ││ Queue  │
-    │(주문) ││(상품)  ││(이미지)││(알림) │
+    │(order)││(product)││(image)││(notify)│
     └────────┘└────────┘└────────┘└────────┘
         │
         ▼
 ┌─────────────────────────────────────────┐
 │      External Services                  │
-│  PG(결제), SMS(알림), 배송(추적)        │
+│  PG(payment), SMS(notify), shipping(track)│
 └─────────────────────────────────────────┘
 ```
 
 ---
 
-## 12. 다음 문서로 읽어야 할 것
+## 12. What to Read Next
 
-1. **core_features.md** - 상세 기능 목록
-2. **terminology.md** - 도메인 용어 완전 정의
-3. **database_schema.md** - DB 설계도
-4. **api_standard.md** - API 명세 표준
-5. **security_requirements.md** - 보안 요구사항
-6. **spec_template.md** - 기획서 템플릿
-
+1. **core_features.md** - Detailed feature list
+2. **terminology.md** - Complete definitions of domain terms
+3. **database_schema.md** - DB design
+4. **api_standard.md** - API specification standard
+5. **security_requirements.md** - Security requirements
+6. **spec_template.md** - Specification template

@@ -1,455 +1,455 @@
-# Android 앱 - 기본 논리 (Android App Basic Logic)
+# Android App - Basic Logic
 
-## 1. Android 앱의 특징
+## 1. Characteristics of Android Apps
 
-Android는 **Google의 모바일 운영체제**에서 실행되는 네이티브 앱입니다.
+Android is a **native app** that runs on **Google's mobile operating system**.
 
-### 핵심 특징
+### Key Characteristics
 ```
-- Google Play Store에서 배포
-- Kotlin 언어 사용 (공식 권장)
-- 다양한 화면 크기 지원
-- 낮은 심사 기준 (빠른 배포)
-- 높은 자유도와 유연성
+- Distributed through the Google Play Store
+- Uses the Kotlin language (officially recommended)
+- Supports a wide range of screen sizes
+- Low review bar (fast deployment)
+- High degree of freedom and flexibility
 ```
 
 ---
 
-## 2. Android 앱의 생명주기 (App Lifecycle)
+## 2. Android App Lifecycle
 
-### 2.1 Activity 생명주기
+### 2.1 Activity Lifecycle
 ```
 1. Created
    ↓
 2. Started
    ↓
-3. Resumed (활성 - 화면에 보임)
+3. Resumed (active - visible on screen)
    ↓
-4. Paused (부분 가려짐)
+4. Paused (partially obscured)
    ↓
-5. Stopped (배경 이동)
+5. Stopped (moved to background)
    ↓
-6. Destroyed (종료)
+6. Destroyed (terminated)
 ```
 
-### 2.2 생명주기 콜백
+### 2.2 Lifecycle Callbacks
 ```
-onCreate()        - 처음 생성
-onStart()         - 보이기 시작
-onResume()        - 활성화됨
-onPause()         - 일시 중단
-onStop()          - 숨겨짐
-onDestroy()       - 파괴됨
-onRestart()       - 재시작
+onCreate()        - First created
+onStart()         - Becoming visible
+onResume()        - Activated
+onPause()         - Temporarily suspended
+onStop()          - Hidden
+onDestroy()       - Destroyed
+onRestart()       - Restarted
 ```
 
-### 2.3 상태 저장 및 복원
+### 2.3 State Save and Restore
 ```
-onSaveInstanceState()  - 상태 저장 (메모리 부족 시)
-onRestoreInstanceState() - 상태 복원
-Bundle를 통한 데이터 전달
+onSaveInstanceState()  - Save state (when memory is low)
+onRestoreInstanceState() - Restore state
+Pass data via Bundle
 ```
 
 ---
 
-## 3. UI 구조
+## 3. UI Structure
 
-### 3.1 레이아웃 시스템
+### 3.1 Layout System
 ```
-LinearLayout      - 선형 배치 (가로/세로)
-FrameLayout       - 겹치기 배치
-RelativeLayout    - 상대 위치 배치
-ConstraintLayout  - 제약 기반 배치 (권장)
-RecyclerView      - 리스트/그리드
+LinearLayout      - Linear arrangement (horizontal/vertical)
+FrameLayout       - Stacked arrangement
+RelativeLayout    - Relative positioning
+ConstraintLayout  - Constraint-based layout (recommended)
+RecyclerView      - List/grid
 ```
 
-### 3.2 네비게이션 패턴
+### 3.2 Navigation Patterns
 ```
-Bottom Navigation (탭)
-Navigation Drawer (사이드 메뉴)
+Bottom Navigation (tabs)
+Navigation Drawer (side menu)
 Tab Navigation
 Stack Navigation (Fragment)
 ```
 
 ### 3.3 Material Design
 ```
-- 색상 시스템 (Primary, Secondary, Tertiary)
-- 타이포그래피 (Display, Headline, Title, Body)
-- Elevation (그림자)
-- 공백 (패딩/마진)
+- Color system (Primary, Secondary, Tertiary)
+- Typography (Display, Headline, Title, Body)
+- Elevation (shadows)
+- Spacing (padding/margin)
 ```
 
 ---
 
-## 4. 컴포넌트 (Components)
+## 4. Components
 
 ### 4.1 Activity
 ```
-화면을 나타내는 UI 컴포넌트
-- 하나의 화면 = 하나의 Activity
-- 예: 로그인 화면, 상품 목록, 상품 상세
-- 생명주기 관리 필수
+A UI component representing a screen
+- One screen = one Activity
+- Examples: login screen, product list, product detail
+- Lifecycle management required
 ```
 
 ### 4.2 Fragment
 ```
-Activity 내 부분 UI
-- 재사용 가능한 UI 컴포넌트
-- 태블릿과 폰 모두 지원 (반응형)
-- Activity의 일부 생명주기 따름
+A partial UI within an Activity
+- Reusable UI component
+- Supports both tablets and phones (responsive)
+- Follows part of the Activity's lifecycle
 ```
 
 ### 4.3 Service
 ```
-배경에서 실행되는 컴포넌트
-- 오래 걸리는 작업 (음악 재생, 파일 다운로드)
-- 사용자 인터페이스 없음
-- 예: 파일 다운로드, 음악 플레이어
+A component that runs in the background
+- Long-running tasks (music playback, file download)
+- No user interface
+- Examples: file download, music player
 ```
 
 ### 4.4 Broadcast Receiver
 ```
-시스템 이벤트 수신
-- 예: 부팅 완료, 배터리 부족, 네트워크 변경
-- 백그라운드에서 작동
+Receives system events
+- Examples: boot completed, low battery, network change
+- Operates in the background
 ```
 
 ### 4.5 Content Provider
 ```
-데이터 공유 및 관리
-- 앱 간 데이터 공유
-- 예: 연락처, 사진 라이브러리
+Data sharing and management
+- Shares data between apps
+- Examples: contacts, photo library
 ```
 
 ---
 
-## 5. 데이터 저장소 (Data Storage)
+## 5. Data Storage
 
 ### 5.1 SharedPreferences
 ```
-간단한 키-값 저장
-- 사용자 설정, 토큰, 간단한 캐시
-- 앱 재시작 후에도 유지
-- 암호화: EncryptedSharedPreferences
+Simple key-value storage
+- User settings, tokens, simple cache
+- Persists after app restart
+- Encryption: EncryptedSharedPreferences
 ```
 
 ### 5.2 SQLite Database
 ```
-관계형 데이터베이스
-- Room (권장 추상화 라이브러리)
-- 구조화된 데이터 저장
-- 복잡한 쿼리 지원
+Relational database
+- Room (recommended abstraction library)
+- Stores structured data
+- Supports complex queries
 ```
 
 ### 5.3 File System
 ```
-파일 저장
-- Internal Storage (앱 전용, 삭제 시 함께 삭제)
-- External Storage (모든 앱 접근 가능)
-- Cache Directory (캐시, 자동 삭제 가능)
+File storage
+- Internal Storage (app-only, deleted along with the app)
+- External Storage (accessible by all apps)
+- Cache Directory (cache, can be deleted automatically)
 ```
 
 ### 5.4 Data Store
 ```
-SharedPreferences 대체
-- 더 안전한 비동기 처리
+Replacement for SharedPreferences
+- Safer asynchronous handling
 - Type-safe
-- Coroutines 지원
+- Coroutines support
 ```
 
-### 5.5 서버 통신
+### 5.5 Server Communication
 ```
 HTTP/HTTPS API
-- Retrofit (HTTP 클라이언트)
-- OkHttp (HTTP 클라이언트)
-- JSON 파싱 (Gson, Moshi)
+- Retrofit (HTTP client)
+- OkHttp (HTTP client)
+- JSON parsing (Gson, Moshi)
 ```
 
 ---
 
-## 6. 권한 관리 (Permissions)
+## 6. Permission Management
 
-### 6.1 권한 종류
+### 6.1 Permission Types
 ```
-일반 권한 (Normal Permissions)
-- 사용자 동의 불필요
-- 예: 인터넷 접근
+Normal Permissions
+- No user consent required
+- Example: internet access
 
-위험 권한 (Dangerous Permissions)
-- 사용자 동의 필수
-- 런타임에 요청
-- 예: 카메라, 위치, 저장소
-```
-
-### 6.2 권한 요청 흐름
-```
-1. AndroidManifest.xml에 권한 선언
-2. Android 6.0 이상: 런타임 권한 요청
-3. requestPermissions() 호출
-4. 사용자 응답 onRequestPermissionsResult()
-5. 권한 사용
+Dangerous Permissions
+- User consent required
+- Requested at runtime
+- Examples: camera, location, storage
 ```
 
-### 6.3 쇼핑몰 앱 필요 권한
+### 6.2 Permission Request Flow
 ```
-필수:
-- INTERNET (서버 통신)
+1. Declare the permission in AndroidManifest.xml
+2. Android 6.0+: runtime permission request
+3. Call requestPermissions()
+4. User response in onRequestPermissionsResult()
+5. Use the permission
+```
 
-필요:
-- ACCESS_COARSE_LOCATION (배송지 찾기)
-- READ_MEDIA_IMAGES (리뷰 사진)
-- CAMERA (상품 스캔)
-- POST_NOTIFICATIONS (주문 알림)
+### 6.3 Permissions Needed by a Shopping Mall App
+```
+Required:
+- INTERNET (server communication)
+
+Needed:
+- ACCESS_COARSE_LOCATION (finding shipping address)
+- READ_MEDIA_IMAGES (review photos)
+- CAMERA (product scanning)
+- POST_NOTIFICATIONS (order notifications)
 ```
 
 ---
 
-## 7. 네트워킹 (Networking)
+## 7. Networking
 
-### 7.1 Retrofit 기본 구조
+### 7.1 Basic Retrofit Structure
 ```
-Interface 정의 (API 명세)
+Define interface (API spec)
     ↓
-Request 객체 생성
+Create request object
     ↓
-Retrofit을 통해 전송
+Send via Retrofit
     ↓
-Response 수신
+Receive response
     ↓
-JSON 파싱 (Gson)
+JSON parsing (Gson)
     ↓
-UI 업데이트
+Update UI
 ```
 
-### 7.2 비동기 처리
+### 7.2 Asynchronous Handling
 ```
-Callback 방식
+Callback approach
 - onResponse()
 - onFailure()
 
-Coroutines 방식 (권장)
-- suspend 함수
-- try-catch로 에러 처리
-- Main 스레드에서 UI 업데이트
+Coroutines approach (recommended)
+- suspend functions
+- Error handling with try-catch
+- Update UI on the Main thread
 ```
 
-### 7.3 에러 처리
+### 7.3 Error Handling
 ```
-네트워크 에러:
-- IOException (연결 실패, 타임아웃)
+Network errors:
+- IOException (connection failure, timeout)
 
-HTTP 에러:
-- 4xx (클라이언트 오류)
-- 5xx (서버 오류)
+HTTP errors:
+- 4xx (client errors)
+- 5xx (server errors)
 
-파싱 에러:
+Parsing errors:
 - JsonSyntaxException
-- Type 불일치
+- Type mismatch
 ```
 
 ---
 
-## 8. 오프라인 대응 (Offline Support)
+## 8. Offline Support
 
-### 8.1 연결 상태 감지
+### 8.1 Connection State Detection
 ```
-ConnectivityManager 사용
-- isNetworkConnected() 확인
-- WiFi vs Cellular 구분
-```
-
-### 8.2 오프라인 모드
-```
-온라인:
-- 실시간 데이터 로드
-- 서버 동기화
-
-오프라인:
-- 로컬 캐시 표시
-- 변경사항 저장
-- 온라인 시 동기화
+Use ConnectivityManager
+- Check isNetworkConnected()
+- Distinguish WiFi vs Cellular
 ```
 
-### 8.3 데이터 동기화
+### 8.2 Offline Mode
+```
+Online:
+- Load real-time data
+- Sync with server
+
+Offline:
+- Display local cache
+- Save changes
+- Sync when back online
+```
+
+### 8.3 Data Synchronization
 ```
 Room Database + Retrofit
-- 로컬 저장
-- 온라인 시 서버 업로드
-- 충돌 해결 (마지막 승리, 사용자 선택)
+- Save locally
+- Upload to server when online
+- Conflict resolution (last write wins, user choice)
 ```
 
 ---
 
-## 9. 백그라운드 작업 (Background Tasks)
+## 9. Background Tasks
 
-### 9.1 작업 스케줄링
+### 9.1 Task Scheduling
 ```
-WorkManager (권장)
-- 다양한 작업 유형
-- 배터리 최적화
-- 기기 재부팅 후에도 실행
+WorkManager (recommended)
+- Various task types
+- Battery optimization
+- Runs even after device reboot
 
-AlarmManager (정확한 시간)
-- 정확한 타이밍 필요
-- 배터리 소비 주의
+AlarmManager (exact timing)
+- For tasks requiring precise timing
+- Watch out for battery consumption
 ```
 
-### 9.2 백그라운드 제약
+### 9.2 Background Constraints
 ```
 Android 6.0+: Doze Mode
-- 배터리 절약
-- 앱이 백그라운드 작업 제한
+- Battery saving
+- Restricts apps' background tasks
 
 Android 8.0+: Background Execution Limits
-- startService() 제약
-- foreground service 권장
+- startService() restrictions
+- Foreground service recommended
 ```
 
 ### 9.3 Foreground Service
 ```
-사용자에게 알려진 백그라운드 작업
-- 알림 표시 필수
-- 예: 음악 재생, 파일 다운로드
-- 배터리 오래 소비 가능
+Background tasks the user is aware of
+- Notification display required
+- Examples: music playback, file download
+- May consume battery over a long period
 ```
 
 ---
 
-## 10. 알림 (Notifications)
+## 10. Notifications
 
-### 10.1 로컬 알림
+### 10.1 Local Notifications
 ```
 AlarmManager + Broadcast Receiver
-또는
-WorkManager로 스케줄
-- 제목, 메시지
-- 아이콘, 색상
-- 액션 버튼
+or
+Schedule with WorkManager
+- Title, message
+- Icon, color
+- Action buttons
 ```
 
-### 10.2 원격 알림 (Push Notification)
+### 10.2 Remote Notifications (Push Notification)
 ```
 Firebase Cloud Messaging (FCM)
-- 토큰 관리
-- 메시지 처리
-- 백그라운드/포그라운드 처리
+- Token management
+- Message handling
+- Background/foreground handling
 ```
 
-### 10.3 알림 채널
+### 10.3 Notification Channels
 ```
-Android 8.0+: 채널 필수
-- 소리, 진동, 불빛
-- 사용자가 채널별로 제어
-- 예: 주문알림, 광고알림
-```
-
----
-
-## 11. 성능 최적화
-
-### 11.1 메모리 관리
-```
-- 이미지 캐싱 라이브러리 (Glide, Picasso)
-- 리스트 메모리 누수 방지
-- 큰 비트맵 처리
-- WeakReference 사용
-```
-
-### 11.2 네트워크 최적화
-```
-- HTTP 압축 (gzip)
-- 이미지 최적화
-- 배치 요청
-- 캐싱 헤더 활용
-```
-
-### 11.3 UI 성능
-```
-- Jank 방지 (60fps 유지)
-- Layout 최적화
-- 메인 스레드 차단 금지
-- Lint 경고 해결
-```
-
-### 11.4 배터리 최적화
-```
-- 위치 추적 최소화
-- 센서 사용 최소화
-- 높은 CPU 작업 제한
-- 네트워크 요청 배치
+Android 8.0+: channels required
+- Sound, vibration, light
+- Controlled by the user per channel
+- Examples: order notifications, promotional notifications
 ```
 
 ---
 
-## 12. 보안
+## 11. Performance Optimization
 
-### 12.1 데이터 보안
+### 11.1 Memory Management
 ```
-- EncryptedSharedPreferences (민감 데이터)
-- SQLite 암호화 (SQLCipher)
-- HTTPS만 사용
-- 토큰 저장: Shared Preferences 또는 KeyStore
+- Image caching libraries (Glide, Picasso)
+- Prevent list memory leaks
+- Handle large bitmaps
+- Use WeakReference
 ```
 
-### 12.2 API 보안
+### 11.2 Network Optimization
+```
+- HTTP compression (gzip)
+- Image optimization
+- Batch requests
+- Leverage caching headers
+```
+
+### 11.3 UI Performance
+```
+- Prevent jank (maintain 60fps)
+- Optimize layouts
+- Do not block the main thread
+- Resolve Lint warnings
+```
+
+### 11.4 Battery Optimization
+```
+- Minimize location tracking
+- Minimize sensor usage
+- Limit high-CPU tasks
+- Batch network requests
+```
+
+---
+
+## 12. Security
+
+### 12.1 Data Security
+```
+- EncryptedSharedPreferences (sensitive data)
+- SQLite encryption (SQLCipher)
+- Use HTTPS only
+- Token storage: Shared Preferences or KeyStore
+```
+
+### 12.2 API Security
 ```
 - SSL Pinning
-- 요청 서명 (HMAC)
-- 토큰 만료 관리
-- Refresh Token 사용
+- Request signing (HMAC)
+- Token expiration management
+- Use Refresh Token
 ```
 
-### 12.3 코드 보안
+### 12.3 Code Security
 ```
-- 민감한 정보 하드코딩 금지
-- 로그에 민감한 정보 출력 금지
-- ProGuard/R8 난독화
-- debuggable = false (릴리스)
-```
-
----
-
-## 13. 앱 배포 (Distribution)
-
-### 13.1 개발 단계
-```
-1. 개발용 키스토어 생성
-2. 에뮬레이터 또는 테스트 기기에서 실행
-3. Logcat으로 디버깅
-```
-
-### 13.2 테스트 (Google Play Internal Testing)
-```
-1. 내부 테스터 초대
-2. APK/AAB 업로드
-3. 테스터가 설치 및 테스트
-4. 피드백 수집
-```
-
-### 13.3 Google Play 배포
-```
-1. 릴리스 키스토어 생성 (안전하게 보관)
-2. 앱 서명 구성
-3. Release 빌드 생성
-4. AAB (Android App Bundle) 생성
-5. Google Play Console에 업로드
-6. 앱 정보 입력 (설명, 스크린샷, 등급)
-7. Google Play 심사 신청 (보통 1-2시간)
-8. 승인 후 배포
-```
-
-### 13.4 배포 설정
-```
-대상 국가
-가격
-등급 심사 (IARC)
-개인정보처리방침 링크
-연락처 정보
+- No hardcoding of sensitive information
+- No output of sensitive information in logs
+- ProGuard/R8 obfuscation
+- debuggable = false (release)
 ```
 
 ---
 
-## 14. 사용자 분석
+## 13. App Distribution
+
+### 13.1 Development Stage
+```
+1. Create a development keystore
+2. Run on an emulator or test device
+3. Debug with Logcat
+```
+
+### 13.2 Testing (Google Play Internal Testing)
+```
+1. Invite internal testers
+2. Upload APK/AAB
+3. Testers install and test
+4. Collect feedback
+```
+
+### 13.3 Google Play Distribution
+```
+1. Create a release keystore (store securely)
+2. Configure app signing
+3. Create a Release build
+4. Generate an AAB (Android App Bundle)
+5. Upload to Google Play Console
+6. Enter app information (description, screenshots, rating)
+7. Submit for Google Play review (usually 1-2 hours)
+8. Distribute after approval
+```
+
+### 13.4 Distribution Settings
+```
+Target countries
+Price
+Rating review (IARC)
+Privacy policy link
+Contact information
+```
+
+---
+
+## 14. User Analytics
 
 ### 14.1 Analytics
 ```
@@ -457,31 +457,31 @@ Google Analytics for Firebase
 Amplitude
 Mixpanel
 
-추적:
-- 사용자 행동
-- 이벤트 (구매, 리뷰 작성)
-- 사용 시간
-- 고객 수명 가치 (LTV)
+Tracking:
+- User behavior
+- Events (purchases, writing reviews)
+- Usage time
+- Lifetime value (LTV)
 ```
 
-### 14.2 크래시 리포팅
+### 14.2 Crash Reporting
 ```
-Firebase Crashlytics (권장)
-- 자동 크래시 보고
-- 심각도 분류
-- 영향받은 사용자
+Firebase Crashlytics (recommended)
+- Automatic crash reporting
+- Severity classification
+- Affected users
 ```
 
 ---
 
-## 15. 주요 라이브러리
+## 15. Key Libraries
 
 ```
 UI:
 - Material Components
-- Jetpack Compose (최신)
+- Jetpack Compose (latest)
 
-네트워킹:
+Networking:
 - Retrofit
 - OkHttp
 
@@ -489,22 +489,22 @@ JSON:
 - Gson
 - Moshi
 
-이미지:
+Images:
 - Glide
 - Picasso
 
-데이터:
+Data:
 - Room
 - DataStore
 
-비동기:
+Asynchronous:
 - Coroutines
 - RxJava
 
-의존성 주입:
+Dependency Injection:
 - Hilt
 
-테스트:
+Testing:
 - JUnit
 - Mockito
 - Espresso
@@ -512,29 +512,28 @@ JSON:
 
 ---
 
-## 16. 다양한 화면 크기 지원 (Responsiveness)
+## 16. Supporting Various Screen Sizes (Responsiveness)
 
 ### 16.1 dp (Density-independent Pixels)
 ```
-화면 밀도와 무관한 단위
-- 1 dp ≈ 1 픽셀 (160dpi 기준)
-- hdpi, xhdpi, xxhdpi 자동 변환
+A unit independent of screen density
+- 1 dp ≈ 1 pixel (at 160dpi baseline)
+- Automatically converted for hdpi, xhdpi, xxhdpi
 ```
 
-### 16.2 레이아웃 구성
+### 16.2 Layout Composition
 ```
-- ConstraintLayout으로 반응형 설계
-- 폰/태블릿 다른 레이아웃 (sw600dp)
-- 이미지 여러 해상도 제공 (1x, 2x, 3x)
+- Responsive design with ConstraintLayout
+- Different layouts for phone/tablet (sw600dp)
+- Provide images at multiple resolutions (1x, 2x, 3x)
 ```
 
 ---
 
-## 17. 다음 문서로 읽어야 할 것
+## 17. Documents to Read Next
 
-1. **core_features.md** - Android 앱의 일반적인 기능
-2. **terminology.md** - Android 기술 용어
-3. **architecture.md** - MVVM, MVP 등 아키텍처
-4. **api_standard.md** - 네트워킹 표준
-5. **spec_template.md** - Android 앱 기획서 템플릿
-
+1. **core_features.md** - Common features of Android apps
+2. **terminology.md** - Android technical terms
+3. **architecture.md** - Architectures such as MVVM, MVP
+4. **api_standard.md** - Networking standards
+5. **spec_template.md** - Android app specification template

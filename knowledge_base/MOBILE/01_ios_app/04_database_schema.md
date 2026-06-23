@@ -1,9 +1,9 @@
-# iOS 앱 데이터 모델 (Database Schema)
+# iOS App Data Model (Database Schema)
 
-## Core Data 엔티티 구조 (공통 베이스)
+## Core Data Entity Structure (Common Base)
 
 ```
-[Core Data 스택]
+[Core Data stack]
 NSPersistentContainer
   └─ NSPersistentStoreCoordinator
       └─ NSManagedObjectModel (.xcdatamodeld)
@@ -12,24 +12,24 @@ NSPersistentContainer
           ├─ Entity: Order
           └─ Entity: Cache
 
-컨텍스트 사용 규칙:
-- viewContext (Main Queue) → UI 표시용 조회만
-- backgroundContext (Private Queue) → 저장·수정·삭제
-- container.performBackgroundTask { ctx in ... } 사용
+Context usage rules:
+- viewContext (Main Queue) → for UI-display reads only
+- backgroundContext (Private Queue) → save/modify/delete
+- Use container.performBackgroundTask { ctx in ... }
 ```
 
 ---
 
-## 표준 엔티티 정의
+## Standard Entity Definitions
 
-### User (사용자)
+### User
 ```
 Entity: User
 Attributes:
-  id          : UUID    (required, 기본키)
+  id          : UUID    (required, primary key)
   email       : String  (required, unique)
   displayName : String  (required)
-  avatarURL   : String  (optional, URL 문자열)
+  avatarURL   : String  (optional, URL string)
   createdAt   : Date    (required)
   updatedAt   : Date    (required)
 
@@ -38,10 +38,10 @@ Relationships:
   preferences : UserPreference (one-to-one, cascade delete)
 
 Indexes: email (unique), createdAt
-Fetch predicate 예: NSPredicate(format: "email == %@", email)
+Fetch predicate example: NSPredicate(format: "email == %@", email)
 ```
 
-### Product (상품)
+### Product
 ```
 Entity: Product
 Attributes:
@@ -60,7 +60,7 @@ Attributes:
 Indexes: category, price, isAvailable
 ```
 
-### Order (주문)
+### Order
 ```
 Entity: Order
 Attributes:
@@ -76,12 +76,12 @@ Relationships:
   items       : OrderItem (one-to-many, cascade delete)
 ```
 
-### OrderItem (주문 항목)
+### OrderItem
 ```
 Entity: OrderItem
 Attributes:
   id          : UUID    (required)
-  productTitle: String  (required, 주문 시 스냅샷)
+  productTitle: String  (required, snapshot at order time)
   unitPrice   : Double  (required)
   quantity    : Integer16 (required, min: 1)
   subtotal    : Double  (required, derived)
@@ -90,26 +90,26 @@ Relationships:
   order       : Order   (many-to-one, nullify)
 ```
 
-### CachedResponse (API 응답 캐시)
+### CachedResponse (API response cache)
 ```
 Entity: CachedResponse
 Attributes:
-  cacheKey    : String  (required, unique) — URL + 파라미터 해시
+  cacheKey    : String  (required, unique) — hash of URL + parameters
   data        : Binary  (required) — JSON Data
   etag        : String  (optional)
   expiresAt   : Date    (required)
   cachedAt    : Date    (required)
 
 Index: cacheKey (unique), expiresAt
-만료 정리: 앱 시작 시 expiresAt < now 전체 삭제
+Expiration cleanup: delete all where expiresAt < now at app startup
 ```
 
 ---
 
-## Keychain 저장 구조
+## Keychain Storage Structure
 
 ```swift
-// Keychain 항목 키 정의 (Constants)
+// Keychain item key definitions (Constants)
 enum KeychainKey: String {
     case authToken      = "com.app.auth_token"
     case refreshToken   = "com.app.refresh_token"
@@ -117,24 +117,24 @@ enum KeychainKey: String {
     case biometricToken = "com.app.biometric_token"
 }
 
-// 저장 속성
+// Storage attributes
 kSecClass: kSecClassGenericPassword
 kSecAttrService: Bundle.main.bundleIdentifier
 kSecAttrAccount: KeychainKey.rawValue
 kSecAttrAccessible: kSecAttrAccessibleWhenUnlockedThisDeviceOnly
-                    // 이 기기에서만, 잠금 해제 상태에서만
-kSecAttrSynchronizable: false  // iCloud 동기화 금지 (보안)
+                    // on this device only, only while unlocked
+kSecAttrSynchronizable: false  // no iCloud synchronization (security)
 
-// Access Group (앱 그룹 간 공유 시)
+// Access Group (when sharing across app groups)
 kSecAttrAccessGroup: "$(AppIdentifierPrefix)com.app.shared"
 ```
 
 ---
 
-## UserDefaults 저장 구조
+## UserDefaults Storage Structure
 
 ```swift
-// 구조화된 키 관리
+// Structured key management
 enum UserDefaultsKey: String {
     case hasOnboarded       = "has_onboarded"
     case selectedLanguage   = "selected_language"
@@ -143,43 +143,43 @@ enum UserDefaultsKey: String {
     case appVersion         = "app_version"
 }
 
-// 사용 패턴
+// Usage pattern
 UserDefaults.standard.set(true, forKey: UserDefaultsKey.hasOnboarded.rawValue)
 UserDefaults.standard.bool(forKey: UserDefaultsKey.hasOnboarded.rawValue)
 
-// 앱 그룹 공유 (위젯/Extension)
+// App group sharing (widgets/Extensions)
 let sharedDefaults = UserDefaults(suiteName: "group.com.app.shared")
 ```
 
 ---
 
-## 파일 시스템 구조
+## File System Structure
 
 ```
-앱 샌드박스:
-/Documents/          → 사용자 데이터, iCloud 백업 대상
-  ├─ exports/        → 사용자가 생성한 내보내기 파일
-  └─ downloads/      → 사용자 다운로드 파일
+App sandbox:
+/Documents/          → user data, backed up to iCloud
+  ├─ exports/        → export files created by the user
+  └─ downloads/      → user-downloaded files
 /Library/
-  ├─ Application Support/  → 앱 데이터, iCloud 백업 대상
+  ├─ Application Support/  → app data, backed up to iCloud
   │   ├─ CoreData/         → .sqlite, .sqlite-wal, .sqlite-shm
-  │   └─ config.json       → 앱 설정
-  ├─ Caches/               → 재생성 가능한 캐시, 백업 제외
-  │   ├─ images/           → 다운로드 이미지 캐시
-  │   └─ responses/        → API 응답 캐시
+  │   └─ config.json       → app settings
+  ├─ Caches/               → regenerable cache, excluded from backup
+  │   ├─ images/           → downloaded image cache
+  │   └─ responses/        → API response cache
   └─ Preferences/          → UserDefaults (.plist)
-/tmp/                → 임시 파일, 시스템이 주기적으로 삭제
+/tmp/                → temporary files, periodically purged by the system
 
-파일명 규칙: UUID 기반 (충돌 방지)
-ex) "550e8400-e29b-41d4-a716-446655440000.jpg"
+File naming rule: UUID-based (collision avoidance)
+e.g.) "550e8400-e29b-41d4-a716-446655440000.jpg"
 ```
 
 ---
 
-## 마이그레이션 전략 (Core Data)
+## Migration Strategy (Core Data)
 
 ```swift
-// Lightweight Migration (대부분의 경우 충분)
+// Lightweight Migration (sufficient in most cases)
 let options: [String: Any] = [
     NSMigratePersistentStoresAutomaticallyOption: true,
     NSInferMappingModelAutomaticallyOption: true
@@ -187,23 +187,23 @@ let options: [String: Any] = [
 container.persistentStoreDescriptions.first?.setOption(true as NSNumber,
     forKey: NSMigratePersistentStoresAutomaticallyOption)
 
-// Heavy Migration (구조 대폭 변경)
-// 1. 새 .xcdatamodeld 버전 추가 (Add Model Version)
-// 2. NSMappingModel 생성 (변환 규칙 명시)
-// 3. NSMigrationManager로 단계적 마이그레이션
+// Heavy Migration (major structural changes)
+// 1. Add a new .xcdatamodeld version (Add Model Version)
+// 2. Create an NSMappingModel (specify transformation rules)
+// 3. Stepwise migration with NSMigrationManager
 
-버전 관리 규칙:
-- Core Data 모델 변경 = 반드시 새 버전 추가
-- 이전 버전 파일 절대 삭제 금지
-- 마이그레이션 실패 시 사용자 데이터 초기화 금지 → 오류 보고
+Version management rules:
+- Any Core Data model change = must add a new version
+- Never delete previous version files
+- On migration failure, do not reset user data → report the error
 ```
 
 ---
 
-## NSFetchRequest 표준 패턴
+## NSFetchRequest Standard Patterns
 
 ```swift
-// 단건 조회
+// Single-item fetch
 func fetchUser(by id: UUID, context: NSManagedObjectContext) -> User? {
     let request: NSFetchRequest<User> = User.fetchRequest()
     request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
@@ -211,7 +211,7 @@ func fetchUser(by id: UUID, context: NSManagedObjectContext) -> User? {
     return try? context.fetch(request).first
 }
 
-// 목록 조회 (페이지네이션)
+// List fetch (pagination)
 func fetchOrders(page: Int, pageSize: Int = 20,
                  context: NSManagedObjectContext) -> [Order] {
     let request: NSFetchRequest<Order> = Order.fetchRequest()
@@ -221,7 +221,7 @@ func fetchOrders(page: Int, pageSize: Int = 20,
     return (try? context.fetch(request)) ?? []
 }
 
-// 집계
+// Aggregation
 func countPendingOrders(context: NSManagedObjectContext) -> Int {
     let request: NSFetchRequest<Order> = Order.fetchRequest()
     request.predicate = NSPredicate(format: "status == %@", "pending")
@@ -231,4 +231,4 @@ func countPendingOrders(context: NSManagedObjectContext) -> Int {
 
 ---
 
-**문서 버전:** 1.0.0 | **작성일:** 2026-06-13 | **대상 OS:** iOS 15+
+**Document version:** 1.0.0 | **Date:** 2026-06-13 | **Target OS:** iOS 15+

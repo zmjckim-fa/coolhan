@@ -1,87 +1,87 @@
-# Windows 데스크탑 앱 핵심 기능 (Core Features)
+# Windows Desktop App Core Features
 
-## 섹션 1: 앱 프레임워크 선택
+## Section 1: App Framework Selection
 
 ```
-Windows 데스크탑 프레임워크 비교:
-┌────────────────┬────────────┬─────────────┬──────────────────────────┐
-│ 프레임워크     │ UI 방식    │ 최소 OS     │ 적합 시나리오            │
-├────────────────┼────────────┼─────────────┼──────────────────────────┤
-│ WinUI 3        │ XAML 선언형│ Windows 10  │ 모던 Windows 앱, Store   │
-│ WPF            │ XAML 선언형│ Windows 7   │ 엔터프라이즈, 복잡한 UI  │
-│ WinForms       │ 코드 기반  │ Windows XP  │ 레거시, 단순 업무 도구   │
-│ .NET MAUI      │ XAML 선언형│ Windows 10  │ 크로스플랫폼 (Win/Mac/iOS/Android) │
-│ Blazor Desktop │ HTML/CSS   │ Windows 10  │ 웹 개발자, 웹 기술 재사용│
-└────────────────┴────────────┴─────────────┴──────────────────────────┘
+Windows desktop framework comparison:
+┌────────────────┬─────────────┬─────────────┬──────────────────────────┐
+│ Framework      │ UI approach │ Minimum OS  │ Suitable scenarios       │
+├────────────────┼─────────────┼─────────────┼──────────────────────────┤
+│ WinUI 3        │ Declarative XAML │ Windows 10 │ Modern Windows apps, Store │
+│ WPF            │ Declarative XAML │ Windows 7  │ Enterprise, complex UI   │
+│ WinForms       │ Code-based  │ Windows XP  │ Legacy, simple line-of-business tools │
+│ .NET MAUI      │ Declarative XAML │ Windows 10 │ Cross-platform (Win/Mac/iOS/Android) │
+│ Blazor Desktop │ HTML/CSS    │ Windows 10  │ Web developers, web tech reuse │
+└────────────────┴─────────────┴─────────────┴──────────────────────────┘
 
-CoolHan 권장:
-- 신규 프로젝트: WinUI 3 (Microsoft Store 배포, 최신 API)
-- 엔터프라이즈/레거시: WPF
-- 크로스플랫폼: .NET MAUI
+CoolHan recommendation:
+- New projects: WinUI 3 (Microsoft Store distribution, latest API)
+- Enterprise/legacy: WPF
+- Cross-platform: .NET MAUI
 ```
 
 ---
 
-## 섹션 2: 앱 생명주기 & 구조
+## Section 2: App Lifecycle & Structure
 
 ```
-WinUI 3 / WPF 진입점:
-App.xaml → Application 클래스
-  OnLaunched() / Application_Startup → 초기화
-    → MainWindow 생성
-      → 네비게이션 프레임 (Frame) 또는 ContentControl
+WinUI 3 / WPF entry point:
+App.xaml → Application class
+  OnLaunched() / Application_Startup → initialization
+    → MainWindow creation
+      → navigation Frame or ContentControl
 
-WPF 생명주기:
-Application.Startup → MainWindow.Loaded → 실행 중
-  → MainWindow.Closing (취소 가능) → MainWindow.Closed
-  → Application.Exit → 종료
+WPF lifecycle:
+Application.Startup → MainWindow.Loaded → running
+  → MainWindow.Closing (cancelable) → MainWindow.Closed
+  → Application.Exit → shutdown
 
-단일 인스턴스 보장 (Mutex 기반):
+Single-instance guarantee (Mutex-based):
 static Mutex _mutex = new Mutex(true, "MyApp-{GUID}");
 if (!_mutex.WaitOne(0, false)) {
-    // 기존 인스턴스 활성화 후 종료
+    // Activate the existing instance, then exit
     BringExistingInstanceToFront();
     Application.Current.Shutdown();
     return;
 }
 ```
 
-**CoolHan 규칙:**
-- 업무용 앱은 단일 인스턴스 강제 (Mutex + Named Pipe 조합)
-- 종료 전 미저장 데이터 확인 다이얼로그 필수 (데이터 손실 방지)
-- 앱 설정은 `%AppData%\{Company}\{App}` 경로에 저장
+**CoolHan rules:**
+- Business apps enforce a single instance (Mutex + Named Pipe combination)
+- A confirmation dialog for unsaved data before exit is mandatory (prevents data loss)
+- App settings are stored under the `%AppData%\{Company}\{App}` path
 
 ---
 
-## 섹션 3: 네비게이션 & 레이아웃
+## Section 3: Navigation & Layout
 
 ```xml
-<!-- WinUI 3 / WPF XAML 네비게이션 패턴 -->
+<!-- WinUI 3 / WPF XAML navigation pattern -->
 <NavigationView x:Name="NavView" SelectionChanged="NavView_SelectionChanged">
     <NavigationView.MenuItems>
-        <NavigationViewItem Content="홈" Tag="home" Icon="Home"/>
-        <NavigationViewItem Content="주문" Tag="orders" Icon="List"/>
-        <NavigationViewItem Content="설정" Tag="settings" Icon="Setting"/>
+        <NavigationViewItem Content="Home" Tag="home" Icon="Home"/>
+        <NavigationViewItem Content="Orders" Tag="orders" Icon="List"/>
+        <NavigationViewItem Content="Settings" Tag="settings" Icon="Setting"/>
     </NavigationView.MenuItems>
     <Frame x:Name="ContentFrame"/>
 </NavigationView>
 
-<!-- 레이아웃 컨테이너 -->
-Grid      → 격자 레이아웃 (행/열 분할)
-StackPanel → 수직/수평 스택
-DockPanel  → 도킹 레이아웃 (WPF)
-WrapPanel  → 자동 줄바꿈
-Canvas    → 절대 위치 (드래그 앤 드롭 등 특수 케이스)
+<!-- Layout containers -->
+Grid      → grid layout (row/column division)
+StackPanel → vertical/horizontal stack
+DockPanel  → docking layout (WPF)
+WrapPanel  → automatic line wrapping
+Canvas    → absolute positioning (special cases such as drag and drop)
 ```
 
-**CoolHan 규칙:**
-- 데이터그리드(DataGrid/ListView) + 상세 패널 분할 레이아웃이 업무 앱 표준
-- NavigationView는 WinUI 3 표준 컨트롤. WPF는 TabControl 또는 TreeView+ContentControl
-- 최소 해상도: 1366×768 기준 레이아웃 설계, 가변 크기 지원
+**CoolHan rules:**
+- A DataGrid/ListView + detail panel split layout is the standard for business apps
+- NavigationView is the standard WinUI 3 control. For WPF, use TabControl or TreeView+ContentControl
+- Minimum resolution: design the layout for 1366×768, with variable-size support
 
 ---
 
-## 섹션 4: 데이터 바인딩 & MVVM
+## Section 4: Data Binding & MVVM
 
 ```csharp
 // ViewModel (INotifyPropertyChanged)
@@ -108,7 +108,7 @@ public class OrderViewModel : ObservableObject  // CommunityToolkit.Mvvm
     private bool CanDeleteOrder(Order? order) => order?.Status == "pending";
 }
 
-// XAML 바인딩
+// XAML binding
 <ListView ItemsSource="{Binding Orders}" SelectedItem="{Binding SelectedOrder}">
     <ListView.ItemTemplate>
         <DataTemplate>
@@ -118,56 +118,56 @@ public class OrderViewModel : ObservableObject  // CommunityToolkit.Mvvm
 </ListView>
 <Button Command="{Binding DeleteOrderCommand}"
         CommandParameter="{Binding SelectedOrder}"
-        Content="삭제"/>
+        Content="Delete"/>
 ```
 
-**CoolHan 규칙:**
-- `CommunityToolkit.Mvvm` 사용 권장 (소스 제너레이터 기반, 보일러플레이트 최소)
-- ViewModel은 View 참조 금지 (테스트 가능성)
-- 컬렉션 변경은 `ObservableCollection<T>` 사용 (UI 자동 갱신)
+**CoolHan rules:**
+- `CommunityToolkit.Mvvm` is recommended (source-generator based, minimal boilerplate)
+- ViewModels must not reference Views (testability)
+- Use `ObservableCollection<T>` for collection changes (automatic UI refresh)
 
 ---
 
-## 섹션 5: 파일 시스템 & 저장소
+## Section 5: File System & Storage
 
 ```csharp
-// 표준 경로
+// Standard paths
 string appData   = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 string localData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 string documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-// 앱 데이터 경로 (권장)
+// App data path (recommended)
 string appDir = Path.Combine(appData, "CompanyName", "AppName");
 Directory.CreateDirectory(appDir);
 
-// 설정 파일
+// Settings file
 string configPath = Path.Combine(appDir, "settings.json");
 
-// SQLite 데이터베이스
+// SQLite database
 string dbPath = Path.Combine(localData, "CompanyName", "AppName", "data.db");
 
-// 파일 선택 다이얼로그 (WinUI 3)
+// File picker dialog (WinUI 3)
 var picker = new FileOpenPicker();
 picker.FileTypeFilter.Add(".csv");
 picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-// WinUI 3: picker를 Window에 연결 필요
+// WinUI 3: the picker must be associated with a Window
 WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
 StorageFile file = await picker.PickSingleFileAsync();
 ```
 
 ---
 
-## 섹션 6: 백그라운드 작업 & 비동기
+## Section 6: Background Work & Async
 
 ```csharp
-// async/await 패턴 (UI 블로킹 방지 필수)
+// async/await pattern (essential to prevent UI blocking)
 private async void LoadData_Click(object sender, RoutedEventArgs e)
 {
     LoadButton.IsEnabled = false;
     ProgressRing.IsActive = true;
     try {
         var data = await _service.FetchDataAsync();
-        // UI 업데이트는 Dispatcher를 통해
+        // UI updates go through the Dispatcher
         await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
             DataGrid.ItemsSource = data;
         });
@@ -179,18 +179,18 @@ private async void LoadData_Click(object sender, RoutedEventArgs e)
     }
 }
 
-// 장시간 작업: Progress<T>로 진행률 보고
+// Long-running work: report progress with Progress<T>
 var progress = new Progress<int>(percent => ProgressBar.Value = percent);
 await Task.Run(() => LongRunningOperation(progress));
 
-// CancellationToken (작업 취소)
+// CancellationToken (canceling work)
 private CancellationTokenSource? _cts;
 private async Task StartImportAsync() {
     _cts = new CancellationTokenSource();
     try {
         await _importService.ImportAsync(_cts.Token);
     } catch (OperationCanceledException) {
-        ShowMessage("가져오기가 취소되었습니다.");
+        ShowMessage("The import was canceled.");
     }
 }
 private void CancelButton_Click() => _cts?.Cancel();
@@ -198,39 +198,39 @@ private void CancelButton_Click() => _cts?.Cancel();
 
 ---
 
-## 섹션 7: 알림 & 시스템 트레이
+## Section 7: Notifications & System Tray
 
 ```csharp
-// Windows Toast 알림 (WinUI 3 / UWP 방식)
+// Windows Toast notification (WinUI 3 / UWP style)
 var builder = new AppNotificationBuilder()
-    .AddText("주문이 승인되었습니다")
-    .AddText("주문번호: ORD-20260613-0001")
-    .AddButton(new AppNotificationButton("확인")
+    .AddText("Your order has been approved")
+    .AddText("Order number: ORD-20260613-0001")
+    .AddButton(new AppNotificationButton("Confirm")
         .AddArgument("action", "view_order"));
 AppNotificationManager.Default.Show(builder.BuildNotification());
 
-// 시스템 트레이 아이콘 (WPF / WinForms)
+// System tray icon (WPF / WinForms)
 var trayIcon = new NotifyIcon {
     Icon = new Icon("app.ico"),
-    Text = "앱 이름",
+    Text = "App name",
     Visible = true,
     ContextMenuStrip = BuildContextMenu()
 };
 trayIcon.DoubleClick += (s, e) => ShowMainWindow();
-// 앱 종료 시 trayIcon.Dispose() 필수
+// trayIcon.Dispose() is required when the app exits
 ```
 
 ---
 
-## 섹션 8: 인쇄 & 내보내기
+## Section 8: Printing & Export
 
 ```csharp
-// Excel 내보내기 (ClosedXML)
+// Excel export (ClosedXML)
 using var workbook = new XLWorkbook();
-var sheet = workbook.Worksheets.Add("주문 목록");
-sheet.Cell(1, 1).Value = "주문번호";
-sheet.Cell(1, 2).Value = "금액";
-sheet.Cell(1, 3).Value = "상태";
+var sheet = workbook.Worksheets.Add("Order list");
+sheet.Cell(1, 1).Value = "Order number";
+sheet.Cell(1, 2).Value = "Amount";
+sheet.Cell(1, 3).Value = "Status";
 for (int i = 0; i < orders.Count; i++) {
     sheet.Cell(i + 2, 1).Value = orders[i].Id;
     sheet.Cell(i + 2, 2).Value = orders[i].TotalAmount;
@@ -238,41 +238,41 @@ for (int i = 0; i < orders.Count; i++) {
 }
 workbook.SaveAs(filePath);
 
-// PDF 내보내기 (QuestPDF)
+// PDF export (QuestPDF)
 Document.Create(container => {
     container.Page(page => {
         page.Content().Table(table => {
             table.ColumnsDefinition(c => { c.RelativeColumn(); c.RelativeColumn(); });
-            // 헤더, 데이터 행 추가
+            // Add header and data rows
         });
     });
 }).GeneratePdf(filePath);
 
-// 인쇄 (WPF PrintDialog)
+// Printing (WPF PrintDialog)
 var printDialog = new PrintDialog();
 if (printDialog.ShowDialog() == true) {
-    printDialog.PrintVisual(printCanvas, "주문 목록 인쇄");
+    printDialog.PrintVisual(printCanvas, "Print order list");
 }
 ```
 
 ---
 
-## 섹션 9: 업데이트 & 배포
+## Section 9: Updates & Distribution
 
 ```
-배포 방식 비교:
+Distribution method comparison:
 ┌─────────────────┬──────────────────────────────────────────┐
-│ 방식            │ 특징                                     │
+│ Method          │ Characteristics                          │
 ├─────────────────┼──────────────────────────────────────────┤
-│ Microsoft Store │ MSIX 패키지, 자동 업데이트, 서명 필요    │
-│ MSIX Installer  │ 단독 설치 파일, 자동 업데이트 가능       │
-│ ClickOnce       │ 웹 기반 배포, 간단한 자동 업데이트       │
-│ WiX Toolset     │ 전통적 MSI, 엔터프라이즈 배포           │
-│ Squirrel        │ GitHub Releases 연동 자동 업데이트       │
+│ Microsoft Store │ MSIX package, automatic updates, signing required │
+│ MSIX Installer  │ Standalone installer, automatic updates supported │
+│ ClickOnce       │ Web-based distribution, simple automatic updates │
+│ WiX Toolset     │ Traditional MSI, enterprise distribution │
+│ Squirrel        │ Automatic updates integrated with GitHub Releases │
 └─────────────────┴──────────────────────────────────────────┘
 
-자동 업데이트 (Squirrel.Windows):
-// 시작 시 업데이트 확인
+Automatic updates (Squirrel.Windows):
+// Check for updates at startup
 using var mgr = new UpdateManager("https://releases.example.com/myapp");
 var release = await mgr.UpdateApp();
 if (release != null) RestartApp();
@@ -280,31 +280,31 @@ if (release != null) RestartApp();
 
 ---
 
-## 섹션 10: 접근성 & 국제화
+## Section 10: Accessibility & Internationalization
 
 ```csharp
-// 접근성 (UI Automation / AutomationProperties)
-<Button AutomationProperties.Name="주문 삭제"
-        AutomationProperties.HelpText="선택된 주문을 삭제합니다"/>
+// Accessibility (UI Automation / AutomationProperties)
+<Button AutomationProperties.Name="Delete order"
+        AutomationProperties.HelpText="Deletes the selected order"/>
 
-// 키보드 네비게이션 (TabIndex, AccessKey)
-<Button Content="_저장(S)" KeyboardAccelerator.Key="S"
+// Keyboard navigation (TabIndex, AccessKey)
+<Button Content="_Save(S)" KeyboardAccelerator.Key="S"
         KeyboardAccelerator.Modifiers="Control"/>
 
-// 국제화 (리소스 파일)
-// Resources.resx (기본) + Resources.ko-KR.resx (한국어)
-// Properties.Resources.OrderTitle = "주문 목록"
+// Internationalization (resource files)
+// Resources.resx (default) + Resources.ko-KR.resx (Korean)
+// Properties.Resources.OrderTitle = "Order list"
 
-// 날짜/숫자 형식 (CultureInfo)
-CultureInfo.CurrentCulture    // 표시 형식
-CultureInfo.CurrentUICulture  // 리소스 선택
+// Date/number formatting (CultureInfo)
+CultureInfo.CurrentCulture    // display format
+CultureInfo.CurrentUICulture  // resource selection
 Thread.CurrentThread.CurrentCulture = new CultureInfo("ko-KR");
 
-// WPF 현재 언어 기반 바인딩
+// WPF binding based on the current language
 <TextBlock Text="{Binding Amount, StringFormat='{}{0:C}'}"/>
-// C = 통화 형식, CultureInfo.CurrentCulture 자동 적용
+// C = currency format, CultureInfo.CurrentCulture applied automatically
 ```
 
 ---
 
-**문서 버전:** 1.0.0 | **작성일:** 2026-06-13 | **대상 OS:** Windows 10 1809+, .NET 8+
+**Document version:** 1.0.0 | **Date:** 2026-06-13 | **Target OS:** Windows 10 1809+, .NET 8+

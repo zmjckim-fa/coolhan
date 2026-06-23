@@ -1,45 +1,45 @@
-# CoolHan Framework - 빠른 시작 가이드
+# CoolHan Framework - Quick Start Guide
 
-**5분 안에 CoolHan을 설치하고 시작하세요!**
+**Install and start using CoolHan in 5 minutes!**
 
 ---
 
-## 🚀 시작 전 필수 요구사항
+## 🚀 Prerequisites
 
 ```
-✅ Node.js 14.0.0 이상
-✅ npm 7.0.0 이상 (또는 yarn, pnpm)
-✅ Git 2.30.0 이상
-✅ Windows, macOS, 또는 Linux
+✅ Node.js 14.0.0 or higher
+✅ npm 7.0.0 or higher (or yarn, pnpm)
+✅ Git 2.30.0 or higher
+✅ Windows, macOS, or Linux
 ```
 
-**버전 확인:**
+**Check versions:**
 ```bash
-node --version    # v14.0.0 이상
-npm --version     # 7.0.0 이상
-git --version     # 2.30.0 이상
+node --version    # v14.0.0 or higher
+npm --version     # 7.0.0 or higher
+git --version     # 2.30.0 or higher
 ```
 
 ---
 
-## ⚡ 1단계: CoolHan 설치 (1분)
+## ⚡ Step 1: Install CoolHan (1 minute)
 
-### 방법 1: 전역 설치 (권장) 🏆
+### Method 1: Global install (recommended) 🏆
 
 ```bash
 npm install -g coolhan-builder
 ```
 
-이제 어디서든 `coolhan-install` 명령을 사용할 수 있습니다.
+Now you can use the `coolhan-install` command from anywhere.
 
-### 방법 2: npx 사용 (패키지 필요 없음)
+### Method 2: Use npx (no package needed)
 
 ```bash
 cd my-project
 npx coolhan-builder
 ```
 
-### 방법 3: 로컬 설치 (프로젝트별)
+### Method 3: Local install (per project)
 
 ```bash
 npm install --save-dev coolhan-builder
@@ -48,23 +48,23 @@ npm run setup
 
 ---
 
-## ⚡ 2단계: CoolHan 초기화 (2분)
+## ⚡ Step 2: Initialize CoolHan (2 minutes)
 
-### 설치 실행
+### Run the installer
 
 ```bash
 coolhan-install
 ```
 
-이 명령이 자동으로:
-- ✅ `.claude/` 디렉토리 생성
-- ✅ 검증 훅(8개) 설치
-- ✅ 에이전트 정의(5개) 복사
-- ✅ 지식 기반(30+개 문서) 복사
-- ✅ Git 설정 (`.gitignore` 생성)
-- ✅ npm scripts 추가
+This command automatically:
+- ✅ Creates the `.claude/` directory
+- ✅ Installs validation hooks (8)
+- ✅ Copies agent definitions (5)
+- ✅ Copies the knowledge base (30+ documents)
+- ✅ Configures Git (creates `.gitignore`)
+- ✅ Adds npm scripts
 
-**출력 예시:**
+**Example output:**
 ```
 🚀 CoolHan Framework Installer
 
@@ -83,85 +83,85 @@ coolhan-install
 
 ---
 
-## ⚡ 3단계: 첫 커밋 (1분)
+## ⚡ Step 3: First commit (1 minute)
 
 ```bash
-# 변경 사항 확인
+# Check changes
 git status
 
-# 모든 파일 스테이징
+# Stage all files
 git add .
 
-# 첫 번째 커밋
+# First commit
 git commit -m "chore: Initialize CoolHan Framework"
 
-# 리모트 저장소에 푸시 (이미 설정된 경우)
+# Push to remote repository (if already configured)
 git push
 ```
 
 ---
 
-## ⚡ 4단계: 문서 읽기 (1분)
+## ⚡ Step 4: Read the docs (1 minute)
 
-설치 후 다음 파일들을 순서대로 읽어보세요:
+After installation, read the following files in order:
 
 ```
 1️⃣ README.md
-   → CoolHan Framework의 전체 개요
+   → Full overview of the CoolHan Framework
 
 2️⃣ CLAUDE.md  
-   → 프로젝트 운영 가이드
+   → Project operations guide
 
 3️⃣ knowledge_base/00_AI_MASTER_RULES.md
-   → AI 실행 규칙 (필수)
+   → AI execution rules (essential)
 
 4️⃣ knowledge_base/00_DEVELOPMENT_LOCKED_MODE.md
-   → 개발 락 모드 이해
+   → Understanding development locked mode
 
 5️⃣ INSTALLATION_GUIDE.md
-   → 상세 설치 및 설정 가이드
+   → Detailed installation and configuration guide
 ```
 
 ---
 
-## ✨ 설치 확인
+## ✨ Verify the installation
 
-설치가 정상적으로 완료되었는지 확인하세요:
+Confirm the installation completed correctly:
 
 ```bash
-# 디렉토리 구조 확인
+# Check directory structure
 ls -la .claude/
 
-# 검증 훅 확인
+# Check validation hooks
 ls -la .claude/hooks/
 
-# 에이전트 확인
+# Check agents
 ls -la .claude/agents/
 
-# 지식 기반 확인
+# Check knowledge base
 ls -la knowledge_base/
 
-# npm scripts 확인
+# Check npm scripts
 npm run
 ```
 
 ---
 
-## 🎯 다음 할 일
+## 🎯 Next steps
 
-### 1단계: 기본 설정 (5분)
+### Step 1: Basic setup (5 minutes)
 
 ```bash
-# 환경 검증
+# Validate environment
 npm run env:validate
 
-# 스펙 검증
+# Validate specifications
 npm run spec:validate
 ```
 
-### 2단계: 프로젝트별 문서 작성 (30분)
+### Step 2: Write project-specific documents (30 minutes)
 
-`knowledge_base/` 디렉토리에 프로젝트별 스펙 문서 작성:
+Write project-specific spec documents in the `knowledge_base/` directory:
 
 ```
 knowledge_base/
@@ -172,181 +172,181 @@ knowledge_base/
 └── 05_module_responsibilities.md
 ```
 
-### 3단계: 자동 검증 활성화 (10분)
+### Step 3: Enable automatic validation (10 minutes)
 
 ```bash
-# Git hooks 자동 실행
+# Auto-run Git hooks
 npm run setup-hooks
 
-# 커밋 시 자동 검증
+# Auto-validate on commit
 git commit -m "feat: new feature"
-# → 자동으로 spec:validate 실행
+# → automatically runs spec:validate
 ```
 
 ---
 
-## 📚 주요 명령어
+## 📚 Key commands
 
-### 검증 관련
+### Validation
 ```bash
-npm run spec:validate    # 규격 검증
-npm run spec:parse       # 규격 파싱
-npm run spec:analyze     # 코드 분석
-npm run env:validate     # 환경 검증
+npm run spec:validate    # Validate specifications
+npm run spec:parse       # Parse specifications
+npm run spec:analyze     # Analyze code
+npm run env:validate     # Validate environment
 ```
 
-### 배포 관련
+### Deployment
 ```bash
-npm run lock:status      # 배포 락 상태 확인
-npm run lock:cleanup     # 배포 락 정리
+npm run lock:status      # Check deploy lock status
+npm run lock:cleanup     # Clean up deploy locks
 ```
 
-### Git 관련
+### Git
 ```bash
-git commit -m "feat: ..."        # 자동 검증 실행
-git push                         # 배포 전 검증 실행
+git commit -m "feat: ..."        # Runs automatic validation
+git push                         # Runs pre-deploy validation
 ```
 
 ---
 
-## 🆘 자주 묻는 질문
+## 🆘 Frequently Asked Questions
 
-### Q: 설치 중 오류가 발생했어요
-**A:** 다음을 확인하세요:
+### Q: I got an error during installation
+**A:** Check the following:
 ```bash
-# Node.js 버전 확인
-node --version   # 14.0.0 이상?
+# Check Node.js version
+node --version   # 14.0.0 or higher?
 
-# npm 캐시 정리
+# Clean npm cache
 npm cache clean --force
 
-# 다시 설치
+# Reinstall
 npm install -g coolhan-builder
 coolhan-install
 ```
 
-### Q: Windows에서 설치가 안 되어요
-**A:** PowerShell을 관리자 권한으로 실행하세요:
+### Q: Installation fails on Windows
+**A:** Run PowerShell as administrator:
 ```powershell
-# PowerShell (관리자 권한)
+# PowerShell (administrator)
 npm install -g coolhan-builder
 coolhan-install
 ```
 
-### Q: 이미 설치된 프로젝트에서 사용하려면?
+### Q: How do I use it in an already-installed project?
 **A:** 
 ```bash
-# 방법 1: 글로벌 설치 후 사용
+# Method 1: Global install, then use
 npm install -g coolhan-builder
 coolhan-install
 
-# 방법 2: npx로 바로 실행
+# Method 2: Run directly with npx
 npx coolhan-builder
 ```
 
-### Q: 설치 후 무엇을 해야 하나요?
-**A:** 순서대로 진행하세요:
-1. `npm run env:validate` - 환경 확인
-2. `npm run spec:validate` - 규격 검증
-3. `knowledge_base/` 문서 읽기
-4. 프로젝트별 스펙 문서 작성
-5. `git commit` 시 자동 검증 활성화
+### Q: What should I do after installation?
+**A:** Proceed in order:
+1. `npm run env:validate` - Check environment
+2. `npm run spec:validate` - Validate specifications
+3. Read `knowledge_base/` documents
+4. Write project-specific spec documents
+5. Enable automatic validation on `git commit`
 
-### Q: 스펙 검증이 실패했어요
-**A:** 로그를 확인하세요:
+### Q: Spec validation failed
+**A:** Check the logs:
 ```bash
-# 상세 로그 확인
+# View detailed logs
 npm run spec:validate -- --verbose
 
-# 도움말 보기
+# View help
 npm run spec:validate -- --help
 ```
 
 ---
 
-## 🎓 학습 경로
+## 🎓 Learning path
 
-**초급 (30분)**
-- [ ] README.md 읽기
-- [ ] QUICK_START.md 읽기 (현재 페이지)
-- [ ] INSTALLATION_GUIDE.md 읽기
-- [ ] `npm run env:validate` 실행
+**Beginner (30 minutes)**
+- [ ] Read README.md
+- [ ] Read QUICK_START.md (this page)
+- [ ] Read INSTALLATION_GUIDE.md
+- [ ] Run `npm run env:validate`
 
-**중급 (2시간)**
-- [ ] CLAUDE.md 읽기
-- [ ] knowledge_base/00_AI_MASTER_RULES.md 읽기
-- [ ] 프로젝트 스펙 문서 작성 시작
-- [ ] `npm run spec:validate` 실행
+**Intermediate (2 hours)**
+- [ ] Read CLAUDE.md
+- [ ] Read knowledge_base/00_AI_MASTER_RULES.md
+- [ ] Start writing project spec documents
+- [ ] Run `npm run spec:validate`
 
-**고급 (4시간)**
-- [ ] 전체 knowledge_base 문서 학습
-- [ ] 커스텀 검증 훅 작성
-- [ ] 팀 규칙 정의
-- [ ] 배포 전략 수립
+**Advanced (4 hours)**
+- [ ] Study the entire knowledge_base
+- [ ] Write custom validation hooks
+- [ ] Define team rules
+- [ ] Establish a deployment strategy
 
 ---
 
-## 💡 팁과 요령
+## 💡 Tips and tricks
 
-### 팁 1: 정기적인 검증
+### Tip 1: Regular validation
 ```bash
-# 하루 시작 시
+# At the start of the day
 npm run env:validate
 npm run spec:validate
 
-# 커밋 전
+# Before committing
 npm run spec:validate
 git commit -m "..."
 
-# 배포 전
+# Before deploying
 npm run lock:status
 git push
 ```
 
-### 팁 2: 문서를 버전 관리하세요
+### Tip 2: Version-control your documents
 ```bash
 git add knowledge_base/
 git commit -m "docs: Update API specifications"
 ```
 
-### 팁 3: 팀 규칙 공유
+### Tip 3: Share team rules
 ```bash
-# CLAUDE.md에서 팀 규칙 정의
-# .claude/settings.json에서 훅 설정
-# 커밋 메시지: "docs: Define team rules"
+# Define team rules in CLAUDE.md
+# Configure hooks in .claude/settings.json
+# Commit message: "docs: Define team rules"
 ```
 
 ---
 
-## 📞 도움말
+## 📞 Help
 
-더 많은 도움말이 필요하신가요?
+Need more help?
 
-### 문서
-- **README.md** - 전체 개요
-- **INSTALLATION_GUIDE.md** - 상세 설치
-- **CONTRIBUTING.md** - 기여 방법
-- **CHANGELOG.md** - 변경 이력
+### Documentation
+- **README.md** - Full overview
+- **INSTALLATION_GUIDE.md** - Detailed installation
+- **CONTRIBUTING.md** - How to contribute
+- **CHANGELOG.md** - Version history
 
-### 온라인
+### Online
 - **GitHub Issues** - https://github.com/zmjckim-fa/coolhan/issues
 - **GitHub Discussions** - https://github.com/zmjckim-fa/coolhan/discussions
 - **GitHub Wiki** - https://github.com/zmjckim-fa/coolhan/wiki
 
 ---
 
-## ✅ 완료!
+## ✅ Done!
 
-축하합니다! 🎉 CoolHan Framework가 성공적으로 설치되었습니다.
+Congratulations! 🎉 The CoolHan Framework has been installed successfully.
 
-이제 다음을 할 수 있습니다:
-- ✅ 규격 기반 개발 시작
-- ✅ 자동 검증으로 오류 방지
-- ✅ 팀 규칙 강제
-- ✅ 완벽한 배포 관리
+You can now:
+- ✅ Start specification-driven development
+- ✅ Prevent errors with automatic validation
+- ✅ Enforce team rules
+- ✅ Manage deployments perfectly
 
-**CoolHan과 함께 완벽한 개발을 시작하세요!** 🚀
+**Start perfect development with CoolHan!** 🚀
 
 ---
 
-**다음:** [README.md](README.md) 읽기
+**Next:** Read [README.md](README.md)

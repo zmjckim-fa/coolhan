@@ -1,683 +1,683 @@
-# POS 시스템 - 프로젝트 사양서 템플릿 (POS System - Project Specification Template)
+# POS System - Project Specification Template
 
-> **사용 안내**: 이 템플릿을 복사하여 새로운 POS 프로젝트마다 작성하십시오. 모든 파라미터는 프로젝트 시작 전에 정의되어야 합니다.
+> **Usage**: Copy this template and fill it out for each new POS project. All parameters must be defined before project initiation.
 >
 > **Instructions**: Copy this template for each new POS project. All parameters must be defined before project initiation.
 
 ---
 
-## 0. 프로젝트 정보 (Project Information)
+## 0. Project Information
 
-### 0.1 기본 정보
+### 0.1 Basic Information
 
-| 항목 | 값 |
+| Item | Value |
 |------|-----|
-| **프로젝트명** (Project Name) | _[프로젝트 명칭 입력]_ |
-| **고객사** (Client) | _[고객사명 입력]_ |
-| **프로젝트 기간** (Duration) | _[시작일] ~ [종료일]_ |
-| **담당 팀장** (Lead) | _[이름 입력]_ |
-| **승인자** (Approver) | _[경영진 이름 입력]_ |
-| **작성일** (Created) | YYYY-MM-DD |
-| **최종 승인일** (Approved) | YYYY-MM-DD |
+| **Project Name** | _[enter project name]_ |
+| **Client** | _[enter client name]_ |
+| **Duration** | _[start date] ~ [end date]_ |
+| **Lead** | _[enter name]_ |
+| **Approver** | _[enter management name]_ |
+| **Created** | YYYY-MM-DD |
+| **Approved** | YYYY-MM-DD |
 
 ---
 
-## 1. 파라미터화 설정 (Parameterization Settings)
+## 1. Parameterization Settings
 
-### 1.1 데이터베이스 명명 규칙
+### 1.1 Database Naming Conventions
 
-> **설명**: 이 프로젝트의 모든 데이터베이스, 테이블, 컬럼 이름을 생성할 규칙을 정의합니다.
+> **Description**: Defines the rules for generating all database, table, and column names for this project.
 
-#### 데이터베이스 이름
-
-```
-기본 규칙:     [project_code]_[environment]_db
-예:            store_prod_db, store_dev_db
-
-프로젝트 코드: _[코드 입력: 최대 6자, 소문자]_
-환경 접두사:   ☐ prod  ☐ dev  ☐ stg
-명명 스타일:   ☐ snake_case  ☐ camelCase  ☐ PascalCase
-
-최종 데이터베이스명: _____________________________
-```
-
-#### 테이블 명명 규칙
+#### Database Name
 
 ```
-기본 규칙:     [prefix][entity][suffix]
-예:            tbl_transaction, store_products, trans_history
+Base rule:      [project_code]_[environment]_db
+Example:        store_prod_db, store_dev_db
 
-테이블 접두사: ☐ tbl_  ☐ t_  ☐ (없음)
-테이블 이름:   ☐ 단수형  ☐ 복수형
-테이블 접미사: ☐ (없음)  ☐ _data  ☐ _info
+Project code:   _[enter code: max 6 chars, lowercase]_
+Environment prefix:  ☐ prod  ☐ dev  ☐ stg
+Naming style:   ☐ snake_case  ☐ camelCase  ☐ PascalCase
 
-예시:
-- 거래 테이블: _____________________________
-- 상품 테이블: _____________________________
-- 재고 테이블: _____________________________
-- 직원 테이블: _____________________________
+Final database name: _____________________________
 ```
 
-#### 컬럼 명명 규칙
+#### Table Naming Conventions
 
 ```
-컬럼 스타일:   ☐ snake_case  ☐ camelCase  ☐ PascalCase
-ID 필드 이름:  ☐ id  ☐ [entity]_id  ☐ [entity]Id
-날짜 필드:     ☐ created_at  ☐ createdDate  ☐ CreateTime
-상태 필드:     ☐ status  ☐ state  ☐ flag
+Base rule:      [prefix][entity][suffix]
+Example:        tbl_transaction, store_products, trans_history
 
-예시:
-- 거래 ID:     _____________________________
-- 생성 시간:   _____________________________
-- 수정 시간:   _____________________________
-- 거래 상태:   _____________________________
+Table prefix:   ☐ tbl_  ☐ t_  ☐ (none)
+Table name:     ☐ singular  ☐ plural
+Table suffix:   ☐ (none)  ☐ _data  ☐ _info
+
+Examples:
+- Transaction table: _____________________________
+- Product table: _____________________________
+- Inventory table: _____________________________
+- Employee table: _____________________________
 ```
 
-### 1.2 데이터베이스 기능 변형
-
-> **선택**: 아래 기능 중 이 프로젝트에 필요한 것을 선택하세요.
+#### Column Naming Conventions
 
 ```
-☐ 소프트 삭제 (Soft Delete)
-  └─ 활성화 시: is_deleted boolean 컬럼 추가
+Column style:   ☐ snake_case  ☐ camelCase  ☐ PascalCase
+ID field name:  ☐ id  ☐ [entity]_id  ☐ [entity]Id
+Date field:     ☐ created_at  ☐ createdDate  ☐ CreateTime
+Status field:   ☐ status  ☐ state  ☐ flag
 
-☐ 감사 필드 (Audit Fields)
-  └─ created_by, updated_by, deleted_by 컬럼 추가
+Examples:
+- Transaction ID: _____________________________
+- Created time: _____________________________
+- Modified time: _____________________________
+- Transaction status: _____________________________
+```
 
-☐ 버전 관리 (Versioning)
-  └─ version integer 컬럼 추가 (낙관적 락)
+### 1.2 Database Feature Variations
 
-☐ 타임스탐프 형식
-  ☐ Unix timestamp (초 단위)
+> **Optional**: Select which of the features below this project needs.
+
+```
+☐ Soft Delete
+  └─ When enabled: add is_deleted boolean column
+
+☐ Audit Fields
+  └─ Add created_by, updated_by, deleted_by columns
+
+☐ Versioning
+  └─ Add version integer column (optimistic lock)
+
+☐ Timestamp format
+  ☐ Unix timestamp (in seconds)
   ☐ ISO 8601 (2026-05-27T14:30:00Z)
   ☐ MySQL datetime (2026-05-27 14:30:00)
 
-☐ 분할 (Partitioning) - 대용량 테이블용
-  └─ 분할 키: ☐ date  ☐ month  ☐ 분기별
+☐ Partitioning - for large tables
+  └─ Partition key: ☐ date  ☐ month  ☐ quarterly
 
-☐ 아카이브 테이블
-  └─ 1년 이상 된 거래는 별도 테이블로 이관
+☐ Archive table
+  └─ Move transactions older than 1 year to a separate table
 ```
 
-### 1.3 API 엔드포인트 구조 변형
+### 1.3 API Endpoint Structure Variations
 
-> **선택**: API 설계 방식을 선택하세요.
-
-```
-API 버전 관리:
-☐ URL 경로: /v1/transactions, /v2/transactions
-☐ 헤더: Accept: application/vnd.api+v1+json
-☐ 쿼리파라미터: ?api-version=1
-
-API 응답 래퍼:
-☐ 표준 래퍼: { success, code, message, data, timestamp }
-☐ JSON:API 표준: { data, included, meta, errors }
-☐ GraphQL: 쿼리 기반 응답
-
-리소스 이름 스타일:
-☐ /transactions (복수형)
-☐ /transaction (단수형)
-☐ /orders (해당 프로젝트 용어)
-
-페이지네이션:
-☐ 오프셋 기반: ?offset=0&limit=20
-☐ 커서 기반: ?cursor=abc123&limit=20
-☐ 페이지 기반: ?page=1&per_page=20
-기본 페이지 크기: ______개
-
-정렬:
-☐ 쿼리: ?sort=-created_at,+name
-☐ 헤더: Sort: -created_at, +name
-기본 정렬: ____________________________
-```
-
-### 1.4 API 인증 변형
+> **Optional**: Select the API design approach.
 
 ```
-토큰 방식:
+API versioning:
+☐ URL path: /v1/transactions, /v2/transactions
+☐ Header: Accept: application/vnd.api+v1+json
+☐ Query parameter: ?api-version=1
+
+API response wrapper:
+☐ Standard wrapper: { success, code, message, data, timestamp }
+☐ JSON:API standard: { data, included, meta, errors }
+☐ GraphQL: query-based response
+
+Resource name style:
+☐ /transactions (plural)
+☐ /transaction (singular)
+☐ /orders (project-specific term)
+
+Pagination:
+☐ Offset-based: ?offset=0&limit=20
+☐ Cursor-based: ?cursor=abc123&limit=20
+☐ Page-based: ?page=1&per_page=20
+Default page size: ______ items
+
+Sorting:
+☐ Query: ?sort=-created_at,+name
+☐ Header: Sort: -created_at, +name
+Default sort: ____________________________
+```
+
+### 1.4 API Authentication Variations
+
+```
+Token method:
 ☐ Bearer Token (JWT): Authorization: Bearer [token]
 ☐ API Key: X-API-Key: [key]
 ☐ Basic Auth: Authorization: Basic [base64(user:pass)]
 
-JWT 설정 (Bearer Token 선택 시):
-- 액세스 토큰 유효시간: ________분 (기본: 60분)
-- 리프레시 토큰 유효시간: ________일 (기본: 30일)
-- 서명 알고리즘: ☐ HS256  ☐ RS256  ☐ ES256
-- JWT 클레임 추가: ☐ role  ☐ permissions  ☐ store_id
+JWT settings (if Bearer Token is selected):
+- Access token lifetime: ________ minutes (default: 60 minutes)
+- Refresh token lifetime: ________ days (default: 30 days)
+- Signing algorithm: ☐ HS256  ☐ RS256  ☐ ES256
+- Additional JWT claims: ☐ role  ☐ permissions  ☐ store_id
 
-API 레이트 제한:
-- 일반 사용자: ________요청/분 (기본: 100)
-- 판매원: ________요청/분 (기본: 500)
-- 관리자: ☐ 제한 없음  ☐ ________요청/분
+API rate limits:
+- Regular user: ________ requests/min (default: 100)
+- Cashier: ________ requests/min (default: 500)
+- Admin: ☐ no limit  ☐ ________ requests/min
 ```
 
-### 1.5 비즈니스 로직 플로우 변형
+### 1.5 Business Logic Flow Variations
 
-> **선택**: 거래 처리의 핵심 로직 구조를 선택하세요.
-
-```
-거래 처리 모델:
-☐ 직선형 (Linear)
-  └─ 생성 → 상품 추가 → 결제 → 완료 (순차 처리)
-
-☐ 이벤트 기반 (Event-Driven)
-  └─ 각 단계가 이벤트 발행 (TransactionCreated, ItemAdded, PaymentProcessed)
-
-☐ 상태 머신 (State Machine)
-  └─ 명시적 상태 전이 (Created → Active → Processing → Completed)
-
-선택된 모델: _____________________________
-
-영수증 생성:
-☐ 동기: 거래 완료 직후 즉시 생성
-☐ 비동기: 별도 작업 큐에서 생성 (지연 가능)
-
-환불 처리:
-☐ 즉시 처리: 신청 후 즉시 반영
-☐ 승인 필수: 관리자 승인 후 반영
-☐ 순차 처리: 신청 → 검증 → 승인 → 처리
-
-일일 마감:
-☐ 수동: 점포 관리자가 명시적으로 "마감" 버튼
-☐ 자동: 매일 자정에 자동 마감
-☐ 예약: 관리자가 원하는 시간에 마감
-```
-
-### 1.6 보안 프로필
+> **Optional**: Select the core logic structure for transaction processing.
 
 ```
-PCI DSS 준수 레벨:
-☐ Level 1 (최고 보안): 연 6백만 건 이상 카드 거래
-☐ Level 2 (높음): 연 1-6백만 건 카드 거래
-☐ Level 3 (중간): 연 20,000-1백만 건 카드 거래
-☐ Level 4 (낮음): 연 20,000 건 미만
+Transaction processing model:
+☐ Linear
+  └─ Create → add products → pay → complete (sequential processing)
 
-카드 데이터 저장:
-☐ 저장 금지 (권장): 결제 게이트웨이가 관리
-☐ 토큰화: 카드의 토큰만 저장 (뒤 4자리 포함 가능)
-☐ 암호화: 전체 카드 정보 암호화 저장 (PCI DSS 필수)
+☐ Event-Driven
+  └─ Each step publishes an event (TransactionCreated, ItemAdded, PaymentProcessed)
 
-암호화 표준:
-- 데이터 암호화: ☐ AES-128  ☐ AES-256 (권장)
-- 키 관리: ☐ 애플리케이션 내부  ☐ KMS (권장)
+☐ State Machine
+  └─ Explicit state transitions (Created → Active → Processing → Completed)
 
-감시 레벨:
-☐ 기본: 모든 거래 로그 기록
-☐ 강화: 모든 액세스 + 변경 로그 기록
-☐ 최고: 모든 작업 + 네트워크 트래픽 로깅
+Selected model: _____________________________
+
+Receipt generation:
+☐ Synchronous: generate immediately after transaction completion
+☐ Asynchronous: generate in a separate job queue (may be delayed)
+
+Refund processing:
+☐ Immediate processing: reflect immediately after request
+☐ Approval required: reflect after admin approval
+☐ Sequential processing: request → verify → approve → process
+
+End of day:
+☐ Manual: store manager explicitly clicks the "Close" button
+☐ Automatic: automatically close at midnight each day
+☐ Scheduled: close at a time the admin chooses
 ```
 
----
-
-## 2. 프로젝트 범위 (Project Scope)
-
-### 2.1 기능 범위
+### 1.6 Security Profile
 
 ```
-☐ 기본 거래 (판매)
-☐ 환불/반품 처리
-☐ 회원 할인
-☐ 상품 할인 및 프로모션
-☐ 쿠폰 관리
-☐ 재고 관리
-☐ 일일 마감 및 정산
-☐ 보고서 생성
-☐ 사용자 권한 관리
-☐ 다중 결제 수단 (현금, 카드, 기타)
-☐ 구매 이력 조회
-☐ 통계 및 분석
-☐ 영수증 재발행
-```
+PCI DSS compliance level:
+☐ Level 1 (highest security): 6 million or more card transactions per year
+☐ Level 2 (high): 1-6 million card transactions per year
+☐ Level 3 (medium): 20,000-1 million card transactions per year
+☐ Level 4 (low): fewer than 20,000 per year
 
-### 2.2 사용자 역할
+Card data storage:
+☐ No storage (recommended): managed by the payment gateway
+☐ Tokenization: store only the card's token (may include last 4 digits)
+☐ Encryption: store full card info encrypted (required by PCI DSS)
 
-```
-☐ 판매원 (Cashier)
-   └─ 주요 작업: 상품 스캔, 결제 처리, 환불 신청
+Encryption standards:
+- Data encryption: ☐ AES-128  ☐ AES-256 (recommended)
+- Key management: ☐ within the application  ☐ KMS (recommended)
 
-☐ 계산대 관리자 (Manager)
-   └─ 주요 작업: 일일 마감, 거래 취소 승인, 권한 설정
-
-☐ 본사 관리자 (Admin)
-   └─ 주요 작업: 사용자 관리, 상품 마스터, 시스템 설정
-
-☐ 감시자 (Auditor)
-   └─ 주요 작업: 로그 조회, 보고서 분석, 감사 (읽기 전용)
-
-추가 역할: _____________________________
-```
-
-### 2.3 제외 범위
-
-```
-이 프로젝트에 포함되지 않는 기능:
-- ☐ 
-- ☐ 
-- ☐ 
-
-향후 단계에서 추가될 기능:
-- ☐ 
-- ☐ 
+Monitoring level:
+☐ Basic: log all transactions
+☐ Enhanced: log all access + change logs
+☐ Highest: log all operations + network traffic
 ```
 
 ---
 
-## 3. 시스템 요구사항 (System Requirements)
+## 2. Project Scope
 
-### 3.1 기술 스택
+### 2.1 Feature Scope
 
-| 계층 | 기술 | 버전 |
+```
+☐ Basic transactions (sales)
+☐ Refund/return processing
+☐ Member discount
+☐ Product discounts and promotions
+☐ Coupon management
+☐ Inventory management
+☐ End-of-day and reconciliation
+☐ Report generation
+☐ User permission management
+☐ Multiple payment methods (cash, card, other)
+☐ Purchase history lookup
+☐ Statistics and analytics
+☐ Receipt reissue
+```
+
+### 2.2 User Roles
+
+```
+☐ Cashier
+   └─ Main tasks: product scanning, payment processing, refund request
+
+☐ Register Manager
+   └─ Main tasks: end-of-day, transaction cancellation approval, permission settings
+
+☐ Headquarters Admin
+   └─ Main tasks: user management, product master, system settings
+
+☐ Auditor
+   └─ Main tasks: log lookup, report analysis, audit (read-only)
+
+Additional roles: _____________________________
+```
+
+### 2.3 Out of Scope
+
+```
+Features not included in this project:
+- ☐ 
+- ☐ 
+- ☐ 
+
+Features to be added in future phases:
+- ☐ 
+- ☐ 
+```
+
+---
+
+## 3. System Requirements
+
+### 3.1 Tech Stack
+
+| Layer | Technology | Version |
 |------|------|------|
-| **프론트엔드** | ☐ React  ☐ Vue  ☐ Angular  ☐ 기타 | _______ |
-| **백엔드** | ☐ Node.js  ☐ Python  ☐ Java  ☐ .NET  ☐ Go | _______ |
-| **데이터베이스** | ☐ MySQL  ☐ PostgreSQL  ☐ MongoDB  ☐ 기타 | _______ |
-| **결제 게이트웨이** | ☐ Stripe  ☐ Square  ☐ 현지 PG사 | _______ |
-| **호스팅** | ☐ AWS  ☐ Azure  ☐ 온프레미스 | _______ |
+| **Frontend** | ☐ React  ☐ Vue  ☐ Angular  ☐ Other | _______ |
+| **Backend** | ☐ Node.js  ☐ Python  ☐ Java  ☐ .NET  ☐ Go | _______ |
+| **Database** | ☐ MySQL  ☐ PostgreSQL  ☐ MongoDB  ☐ Other | _______ |
+| **Payment Gateway** | ☐ Stripe  ☐ Square  ☐ Local PG | _______ |
+| **Hosting** | ☐ AWS  ☐ Azure  ☐ On-premises | _______ |
 
-### 3.2 성능 요구사항
-
-```
-응답 시간:
-- 거래 생성: ______ms 이내 (기본: 1000ms)
-- 결제 처리: ______ms 이내 (기본: 5000ms, PG 포함)
-- 보고서 생성: ______ms 이내 (기본: 10000ms)
-
-동시성:
-- 계산대당 동시 사용자: ______ (기본: 1)
-- 시스템 총 동시 사용자: ______ (기본: 점포당 5)
-- 동시 거래 처리: ______ 거래/초 (기본: 10)
-
-가용성:
-- SLA: ______% (기본: 99.5%)
-- 목표 다운타임: ______분/월 (기본: 36분)
-- 백업 주기: ______ (기본: 6시간)
-```
-
-### 3.3 보안 요구사항
+### 3.2 Performance Requirements
 
 ```
-필수 보안 기준:
-☐ PCI DSS 준수 (카드 거래)
-☐ SSL/TLS 1.2 이상
-☐ 데이터 암호화 (저장소, 전송)
-☐ 역할 기반 접근 제어
-☐ 감시 로그 (최소 1년)
-☐ 정기 보안 감사 (연 1회 이상)
-☐ 보안 패치 관리 (월 1회 이상)
+Response time:
+- Transaction creation: within ______ms (default: 1000ms)
+- Payment processing: within ______ms (default: 5000ms, including PG)
+- Report generation: within ______ms (default: 10000ms)
 
-추가 보안 요구사항: _________________________
+Concurrency:
+- Concurrent users per register: ______ (default: 1)
+- Total system concurrent users: ______ (default: 5 per store)
+- Concurrent transaction processing: ______ transactions/sec (default: 10)
+
+Availability:
+- SLA: ______% (default: 99.5%)
+- Target downtime: ______ minutes/month (default: 36 minutes)
+- Backup cycle: ______ (default: 6 hours)
 ```
 
----
-
-## 4. 디자인 파라미터화 (Design Parameterization)
-
-> **설명**: CSS 스타일을 동적으로 변경할 수 있도록 파라미터를 정의합니다.
-
-### 4.1 디자인 프로필 선택
+### 3.3 Security Requirements
 
 ```
-5차원 디자인 공간 선택:
+Required security criteria:
+☐ PCI DSS compliance (card transactions)
+☐ SSL/TLS 1.2 or higher
+☐ Data encryption (at rest, in transit)
+☐ Role-based access control
+☐ Audit logs (minimum 1 year)
+☐ Regular security audit (at least once a year)
+☐ Security patch management (at least once a month)
 
-1. 따뜻함 (Warmth)        [━━━●━━━]
-   차갑게 ─────────────────── 따뜻하게
-   선택: ☐ 차갑게  ☐ 중립적  ☐ 따뜻하게
-
-2. 에너지 (Energy)        [━━━━●━━]
-   차분함 ─────────────────── 발랄함
-   선택: ☐ 차분함  ☐ 중립적  ☐ 발랄함
-
-3. 현대성 (Modernity)     [━●━━━━━]
-   클래식 ─────────────────── 현대적
-   선택: ☐ 클래식  ☐ 중립적  ☐ 현대적
-
-4. 정식성 (Formality)     [━━●━━━━]
-   캐주얼 ─────────────────── 정식적
-   선택: ☐ 캐주얼  ☐ 중립적  ☐ 정식적
-
-5. 복잡도 (Complexity)    [━━━━━●━]
-   최소한 ─────────────────── 풍부함
-   선택: ☐ 최소한  ☐ 중립적  ☐ 풍부함
-
-추천 프로필:
-- 엘레강트 (Elegant): 클래식, 정식적, 차분함
-- 신선함 (Fresh): 현대적, 발랄함, 최소한
-- 믿음직함 (Trustworthy): 정식적, 중립적
-- 활발함 (Vibrant): 발랄함, 따뜻함, 풍부함
-```
-
-### 4.2 색상 선택
-
-```
-주요 색상:
-☐ 파란색 (Blue): 신뢰, 안정, 전문성
-☐ 초록색 (Green): 성장, 신선함, 안전
-☐ 주황색 (Orange): 에너지, 따뜻함, 활동성
-☐ 보라색 (Purple): 창의성, 프리미엄, 신비로움
-☐ 빨강색 (Red): 긴급, 활동, 열정
-☐ 회색 (Gray): 중립, 전문성, 세련됨
-
-선택된 색상: _____________________________
-
-각 색상별 옵션:
-☐ 옵션 1 (밝음): 밝고 신선한 톤
-☐ 옵션 2 (중간): 균형잡힌 톤
-☐ 옵션 3 (진함): 진하고 신중한 톤
-☐ 옵션 4 (회색조): 회색과 혼합
-☐ 옵션 5 (파스텔): 밝고 부드러운 톤
-
-선택된 옵션: _____________________________
-```
-
-### 4.3 타이포그래피
-
-```
-영문 폰트:
-☐ 세리프: Georgia, Times New Roman (전통적, 정식)
-☐ 산세리프: Helvetica, Arial, Roboto (현대적, 깔끔)
-☐ 기하학: Poppins, Montserrat (현대적, 친근함)
-☐ 손글씨: Pacifico, Dancing Script (창의적, 따뜻함)
-
-선택: _____________________________
-
-한글 폰트:
-☐ 명조: 나눔명조 (전통적, 가독성)
-☐ 고딕: 나눔고딕, 본고딕 (현대적, 깔끔)
-☐ 라운드: 카카오 OTF (친근함, 따뜻함)
-
-선택: _____________________________
-
-폰트 스케일:
-☐ 1.2배 (작은 스케일): 콤팩트한 레이아웃
-☐ 1.5배 (중간 스케일): 균형잡힌 레이아웃 (기본)
-☐ 1.618배 (황금비): 세련된 레이아웃
-☐ 2배 (큰 스케일): 대담한 레이아웃
-
-선택: _____________________________
-
-기본 폰트 크기:
-- 본문: ____px (기본: 16px)
-- 헤딩: ____px (기본: 28px)
-- 라벨: ____px (기본: 14px)
-
-줄 높이:
-☐ 1.2 (콤팩트): 정보 밀도 높음
-☐ 1.5 (일반): 일반적인 가독성 (기본)
-☐ 1.8 (여유): 우아한 가독성
-
-자간:
-☐ 좁음: -0.5px
-☐ 기본: 0px
-☐ 넓음: 0.5px
-```
-
-### 4.4 레이아웃 및 간격
-
-```
-기본 단위:
-☐ 4px 그리드 (매우 정밀)
-☐ 8px 그리드 (일반적, 기본)
-☐ 16px 그리드 (큼, 느슨함)
-
-선택: _____________________________
-
-컨테이너 너비:
-☐ 모바일만: 100vw
-☐ 태블릿 대응: 768px
-☐ 데스크톱: 1200px
-☐ 와이드: 1400px 이상
-
-경계 반경:
-☐ 각짐: 0px (기하학적, 현대적)
-☐ 약간: 4px (균형)
-☐ 일반: 8px (친근함, 기본)
-☐ 둥금: 16px (부드러움)
-☐ 매우 둥금: 32px (재미있음)
-
-선택: _____________________________
-
-그림자 스타일:
-☐ 없음 (최소주의)
-☐ 미세: 0 2px 4px rgba(0,0,0,0.1)
-☐ 일반: 0 4px 12px rgba(0,0,0,0.15) (기본)
-☐ 강함: 0 8px 24px rgba(0,0,0,0.2)
-```
-
-### 4.5 접근성 요구사항
-
-```
-색상 대비:
-☐ WCAG AA: 일반 텍스트 4.5:1 이상
-☐ WCAG AAA: 일반 텍스트 7:1 이상 (권장)
-
-아이콘:
-☐ 아이콘 + 텍스트 필수 (시각 장애 고려)
-
-대화형 요소:
-☐ 최소 크기: 44x44px (터치 대응)
-☐ 포커스 표시: 명확한 초점 테두리
-
-언어:
-☐ 한글만
-☐ 한영 혼용
-☐ 영문만
+Additional security requirements: _________________________
 ```
 
 ---
 
-## 5. 데이터 마이그레이션 (Data Migration)
+## 4. Design Parameterization
 
-### 5.1 레거시 시스템
+> **Description**: Defines parameters to allow CSS styles to be changed dynamically.
 
-```
-기존 시스템:
-☐ 없음 (신규 구축)
-☐ 있음:
-   - 시스템명: _____________________________
-   - 데이터 규모: ______ 건 (거래 기준)
-   - 마이그레이션 전략: ☐ 전체  ☐ 부분  ☐ 없음
-```
-
-### 5.2 초기 마스터 데이터
+### 4.1 Design Profile Selection
 
 ```
-필요한 마스터 데이터:
-☐ 상품 정보 (개수: ______)
-☐ 직원 정보 (인원: ______)
-☐ 고객 정보 (인원: ______)
-☐ 할인 및 프로모션
-☐ 카테고리
-☐ 세금 설정
+5-dimensional design space selection:
+
+1. Warmth                 [━━━●━━━]
+   Cold ─────────────────── Warm
+   Select: ☐ Cold  ☐ Neutral  ☐ Warm
+
+2. Energy                 [━━━━●━━]
+   Calm ─────────────────── Lively
+   Select: ☐ Calm  ☐ Neutral  ☐ Lively
+
+3. Modernity              [━●━━━━━]
+   Classic ─────────────────── Modern
+   Select: ☐ Classic  ☐ Neutral  ☐ Modern
+
+4. Formality              [━━●━━━━]
+   Casual ─────────────────── Formal
+   Select: ☐ Casual  ☐ Neutral  ☐ Formal
+
+5. Complexity             [━━━━━●━]
+   Minimal ─────────────────── Rich
+   Select: ☐ Minimal  ☐ Neutral  ☐ Rich
+
+Recommended profiles:
+- Elegant: classic, formal, calm
+- Fresh: modern, lively, minimal
+- Trustworthy: formal, neutral
+- Vibrant: lively, warm, rich
+```
+
+### 4.2 Color Selection
+
+```
+Primary color:
+☐ Blue: trust, stability, professionalism
+☐ Green: growth, freshness, safety
+☐ Orange: energy, warmth, activity
+☐ Purple: creativity, premium, mystery
+☐ Red: urgency, activity, passion
+☐ Gray: neutral, professionalism, sophistication
+
+Selected color: _____________________________
+
+Options per color:
+☐ Option 1 (light): bright, fresh tone
+☐ Option 2 (medium): balanced tone
+☐ Option 3 (dark): deep, serious tone
+☐ Option 4 (grayscale): mixed with gray
+☐ Option 5 (pastel): bright, soft tone
+
+Selected option: _____________________________
+```
+
+### 4.3 Typography
+
+```
+Latin font:
+☐ Serif: Georgia, Times New Roman (traditional, formal)
+☐ Sans-serif: Helvetica, Arial, Roboto (modern, clean)
+☐ Geometric: Poppins, Montserrat (modern, friendly)
+☐ Handwriting: Pacifico, Dancing Script (creative, warm)
+
+Select: _____________________________
+
+Korean font:
+☐ Myeongjo: Nanum Myeongjo (traditional, readable)
+☐ Gothic: Nanum Gothic, Noto Sans KR (modern, clean)
+☐ Round: Kakao OTF (friendly, warm)
+
+Select: _____________________________
+
+Font scale:
+☐ 1.2x (small scale): compact layout
+☐ 1.5x (medium scale): balanced layout (default)
+☐ 1.618x (golden ratio): refined layout
+☐ 2x (large scale): bold layout
+
+Select: _____________________________
+
+Base font size:
+- Body: ____px (default: 16px)
+- Heading: ____px (default: 28px)
+- Label: ____px (default: 14px)
+
+Line height:
+☐ 1.2 (compact): high information density
+☐ 1.5 (normal): general readability (default)
+☐ 1.8 (relaxed): elegant readability
+
+Letter spacing:
+☐ Narrow: -0.5px
+☐ Default: 0px
+☐ Wide: 0.5px
+```
+
+### 4.4 Layout and Spacing
+
+```
+Base unit:
+☐ 4px grid (very precise)
+☐ 8px grid (common, default)
+☐ 16px grid (large, loose)
+
+Select: _____________________________
+
+Container width:
+☐ Mobile only: 100vw
+☐ Tablet support: 768px
+☐ Desktop: 1200px
+☐ Wide: 1400px or more
+
+Border radius:
+☐ Sharp: 0px (geometric, modern)
+☐ Slight: 4px (balanced)
+☐ Normal: 8px (friendly, default)
+☐ Rounded: 16px (soft)
+☐ Very rounded: 32px (playful)
+
+Select: _____________________________
+
+Shadow style:
+☐ None (minimalist)
+☐ Subtle: 0 2px 4px rgba(0,0,0,0.1)
+☐ Normal: 0 4px 12px rgba(0,0,0,0.15) (default)
+☐ Strong: 0 8px 24px rgba(0,0,0,0.2)
+```
+
+### 4.5 Accessibility Requirements
+
+```
+Color contrast:
+☐ WCAG AA: normal text 4.5:1 or higher
+☐ WCAG AAA: normal text 7:1 or higher (recommended)
+
+Icons:
+☐ Icon + text required (consider visual impairment)
+
+Interactive elements:
+☐ Minimum size: 44x44px (touch support)
+☐ Focus indicator: clear focus border
+
+Language:
+☐ Korean only
+☐ Korean-English mixed
+☐ English only
 ```
 
 ---
 
-## 6. 배포 계획 (Deployment Plan)
+## 5. Data Migration
 
-### 6.1 환경
-
-```
-개발 환경:
-- 서버: _____________________________
-- 데이터베이스: _____________________________
-- 접근: 팀내 전용
-
-스테이징 환경:
-- 서버: _____________________________
-- 데이터베이스: _____________________________
-- 접근: 팀내 + 테스트 권한자
-
-프로덕션 환경:
-- 서버: _____________________________
-- 데이터베이스: _____________________________
-- 접근: 운영팀 전용
-```
-
-### 6.2 배포 일정
+### 5.1 Legacy System
 
 ```
-Phase 1 (단일 계산대):
-- 일정: __________ ~ __________
-- 영역: 1개 점포
-
-Phase 2 (전체 계산대):
-- 일정: __________ ~ __________
-- 영역: 전체 점포
-
-Phase 3 (전사 확대):
-- 일정: __________ ~ __________
-- 영역: 모든 운영 점포
+Existing system:
+☐ None (new build)
+☐ Exists:
+   - System name: _____________________________
+   - Data volume: ______ records (transaction basis)
+   - Migration strategy: ☐ Full  ☐ Partial  ☐ None
 ```
 
-### 6.3 롤백 전략
+### 5.2 Initial Master Data
 
 ```
-배포 시 문제 발생 시:
-☐ 즉시 롤백
-☐ 30분 모니터링 후 결정
-☐ 수동 검증 후 롤백
-
-이전 버전 유지 기간: ______ (기본: 1주)
-롤백 테스트 주기: ☐ 배포 전 매번  ☐ 월 1회
+Required master data:
+☐ Product info (count: ______)
+☐ Employee info (count: ______)
+☐ Customer info (count: ______)
+☐ Discounts and promotions
+☐ Categories
+☐ Tax settings
 ```
 
 ---
 
-## 7. 운영 및 지원 (Operations & Support)
+## 6. Deployment Plan
 
-### 7.1 운영팀
-
-```
-24/7 모니터링:
-☐ 예 (비용 추가)
-☐ 아니오 (업무 시간만)
-
-헬프데스크:
-☐ 전화: ________
-☐ 이메일: ________
-☐ 채팅: ________
-
-장애 대응 SLA:
-- Critical: ______분 이내 대응
-- High: ______분 이내 대응
-- Medium: ______분 이내 대응
-```
-
-### 7.2 유지보수
+### 6.1 Environments
 
 ```
-정기 점검:
-- 월 1회: ☐ 데이터베이스  ☐ 보안 패치  ☐ 성능 검토
-- 분기별: ☐ 보안 감사  ☐ 용량 계획
-- 연 1회: ☐ 재해복구 훈련  ☐ 대대적 검토
+Development environment:
+- Server: _____________________________
+- Database: _____________________________
+- Access: team only
 
-업그레이드:
-- 마이너 업그레이드: ☐ 자동  ☐ 수동 승인
-- 메이저 업그레이드: ☐ 계획된 일정 (연 __ 회)
+Staging environment:
+- Server: _____________________________
+- Database: _____________________________
+- Access: team + testers
+
+Production environment:
+- Server: _____________________________
+- Database: _____________________________
+- Access: operations team only
 ```
 
-### 7.3 교육 및 문서
+### 6.2 Deployment Schedule
 
 ```
-교육 대상:
-☐ 판매원 (신입: _____분, 정기: 분기별)
-☐ 관리자 (심화: _____분, 정기: 분기별)
-☐ 본사팀 (기술: _____시간)
+Phase 1 (single register):
+- Schedule: __________ ~ __________
+- Area: 1 store
 
-문서:
-☐ 사용자 매뉴얼
-☐ 운영 가이드
-☐ 기술 문서
-☐ API 문서
+Phase 2 (all registers):
+- Schedule: __________ ~ __________
+- Area: entire store
+
+Phase 3 (company-wide rollout):
+- Schedule: __________ ~ __________
+- Area: all operating stores
 ```
 
----
-
-## 8. 예산 및 리소스
-
-### 8.1 팀 구성
+### 6.3 Rollback Strategy
 
 ```
-개발팀:
-- 백엔드 개발자: ______ 명
-- 프론트엔드 개발자: ______ 명
-- 데이터베이스 설계자: ______ 명
-- QA 엔지니어: ______ 명
+When a problem occurs during deployment:
+☐ Immediate rollback
+☐ Decide after 30 minutes of monitoring
+☐ Rollback after manual verification
 
-리더십:
-- 프로젝트 매니저: ______ 명
-- 기술 리드: ______ 명
-```
-
-### 8.2 일정 및 예산
-
-```
-예상 공수: ______명 × ______ 개월
-예상 비용: ₩ ______________
-위험 보관금 (10%): ₩ ______________
+Previous version retention period: ______ (default: 1 week)
+Rollback test cycle: ☐ before every deployment  ☐ monthly
 ```
 
 ---
 
-## 9. 위험 및 가정사항 (Risks & Assumptions)
+## 7. Operations & Support
 
-### 9.1 가정사항
+### 7.1 Operations Team
 
 ```
-기술적 가정:
+24/7 monitoring:
+☐ Yes (additional cost)
+☐ No (business hours only)
+
+Help desk:
+☐ Phone: ________
+☐ Email: ________
+☐ Chat: ________
+
+Incident response SLA:
+- Critical: respond within ______ minutes
+- High: respond within ______ minutes
+- Medium: respond within ______ minutes
+```
+
+### 7.2 Maintenance
+
+```
+Regular inspections:
+- Monthly: ☐ Database  ☐ Security patches  ☐ Performance review
+- Quarterly: ☐ Security audit  ☐ Capacity planning
+- Annually: ☐ Disaster recovery drill  ☐ Major review
+
+Upgrades:
+- Minor upgrades: ☐ Automatic  ☐ Manual approval
+- Major upgrades: ☐ Scheduled (__ times per year)
+```
+
+### 7.3 Training and Documentation
+
+```
+Training audiences:
+☐ Cashiers (new hires: _____ minutes, regular: quarterly)
+☐ Managers (advanced: _____ minutes, regular: quarterly)
+☐ Headquarters team (technical: _____ hours)
+
+Documentation:
+☐ User manual
+☐ Operations guide
+☐ Technical documentation
+☐ API documentation
+```
+
+---
+
+## 8. Budget and Resources
+
+### 8.1 Team Composition
+
+```
+Development team:
+- Backend developers: ______ people
+- Frontend developers: ______ people
+- Database designers: ______ people
+- QA engineers: ______ people
+
+Leadership:
+- Project managers: ______ people
+- Technical leads: ______ people
+```
+
+### 8.2 Schedule and Budget
+
+```
+Estimated effort: ______ people × ______ months
+Estimated cost: ₩ ______________
+Risk reserve (10%): ₩ ______________
+```
+
+---
+
+## 9. Risks & Assumptions
+
+### 9.1 Assumptions
+
+```
+Technical assumptions:
 - 
 
-사업적 가정:
+Business assumptions:
 - 
 
-운영적 가정:
+Operational assumptions:
 -
 ```
 
-### 9.2 위험 목록
+### 9.2 Risk List
 
-| 위험 | 영향 | 확률 | 대책 |
+| Risk | Impact | Probability | Mitigation |
 |------|------|------|------|
 | | | | |
 | | | | |
 
 ---
 
-## 10. 승인 (Sign-off)
+## 10. Sign-off
 
 ```
-이 사양서는 다음 조건으로 승인합니다:
+This specification is approved under the following conditions:
 
-[ ] 기능 범위를 이해했습니다
-[ ] 일정을 수용합니다
-[ ] 예산을 승인합니다
-[ ] 위험을 인식합니다
+[ ] I understand the feature scope
+[ ] I accept the schedule
+[ ] I approve the budget
+[ ] I am aware of the risks
 
-프로젝트 매니저:     ________________  날짜: __________
-기술 리드:         ________________  날짜: __________
-고객사 담당자:      ________________  날짜: __________
-경영진:            ________________  날짜: __________
+Project Manager:     ________________  Date: __________
+Technical Lead:      ________________  Date: __________
+Client Contact:      ________________  Date: __________
+Management:          ________________  Date: __________
 ```
 
 ---
 
-## 부록: 용어 정의 (Appendix: Glossary)
+## Appendix: Glossary
 
-### 용어
+### Terms
 
-| 용어 | 정의 |
+| Term | Definition |
 |------|------|
-| **거래 (Transaction)** | 고객의 상품 구매부터 결제까지의 전체 프로세스 |
-| **재고 (Inventory)** | 점포에 보유한 상품의 수량 |
-| **환불 (Refund)** | 거래 후 고객이 돈을 돌려받는 것 |
-| **판매원 (Cashier)** | 거래를 처리하는 직원 |
-| **마진 (Margin)** | 판매가에서 원가를 뺀 이익 |
-| **SKU** | 재고 관리 단위 (상품) |
-| **POS** | Point of Sale (판매점) |
-| **PCI DSS** | Payment Card Industry Data Security Standard (카드 보안 표준) |
-| **JWT** | JSON Web Token (인증 토큰) |
-| **API** | Application Programming Interface (시스템 연결) |
+| **Transaction** | The entire process from a customer's product purchase to payment |
+| **Inventory** | The quantity of products held at the store |
+| **Refund** | The customer getting money back after a transaction |
+| **Cashier** | The staff member who processes transactions |
+| **Margin** | The profit from subtracting cost from the selling price |
+| **SKU** | Stock Keeping Unit (product) |
+| **POS** | Point of Sale |
+| **PCI DSS** | Payment Card Industry Data Security Standard (card security standard) |
+| **JWT** | JSON Web Token (authentication token) |
+| **API** | Application Programming Interface (system connection) |
 
 ---
 
-> **최종 확인**: 모든 파라미터가 명확하게 정의되었는지 확인하세요. 명확하지 않은 항목은 프로젝트 시작 전에 해결되어야 합니다.
+> **Final check**: Confirm that all parameters are clearly defined. Any unclear items must be resolved before project initiation.

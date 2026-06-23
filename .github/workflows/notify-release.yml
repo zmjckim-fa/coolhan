@@ -51,13 +51,13 @@ jobs:
           BODY=$(cat /tmp/release_body.txt)
 
           # Build discussion body
-          DISCUSSION_BODY="## 🚀 CoolHan ${VERSION} 출시 / Released
+          DISCUSSION_BODY="## 🚀 CoolHan ${VERSION} Released
 
-> **자동 업데이트 알림입니다.** 이 메시지를 받으려면 이 저장소를 **Watch → All Activity 또는 Discussions**로 설정하세요.
+> **This is an automatic update notification.** To receive this message, set this repository to **Watch → All Activity or Discussions**.
 
 ---
 
-### 업데이트 방법 / How to Update
+### How to Update
 
 \`\`\`bash
 # Linux / macOS
@@ -69,11 +69,11 @@ iwr https://raw.githubusercontent.com/${{ github.repository }}/main/install.ps1 
 # npm
 npm install -g coolhan-builder
 
-# 업데이트 확인 (Check for updates)
+# Check for updates
 node scripts/check-update.js
 \`\`\`
 
-### 또는 Claude Code에서 / Or in Claude Code:
+### Or in Claude Code:
 \`\`\`
 쿨한 업데이트 확인해
 CoolHan check for updates
@@ -81,21 +81,21 @@ CoolHan check for updates
 
 ---
 
-### 변경 사항 / What's New
+### What's New
 
 ${BODY}
 
 ---
 
-### 전체 릴리스 노트 / Full Release Notes
+### Full Release Notes
 🔗 ${URL}
 
 ---
 
-> **구독 방법 / Subscribe to Updates:**
-> - GitHub 상단의 **Watch** 버튼 클릭
-> - **All Activity** 또는 **Releases** 선택
-> - 새 버전 출시 시 이메일 자동 발송됩니다"
+> **Subscribe to Updates:**
+> - Click the **Watch** button at the top of GitHub
+> - Select **All Activity** or **Releases**
+> - You will receive automatic email notifications when a new version is released"
 
           # Post to GitHub Discussions via GraphQL
           # First get the repo ID and a discussion category ID
@@ -125,7 +125,7 @@ import json, sys
 d = json.load(sys.stdin)
 cats = d['data']['repository']['discussionCategories']['nodes']
 for cat in cats:
-    if cat['name'].lower() in ('announcements', '공지', 'releases', 'general', '일반'):
+    if cat['name'].lower() in ('announcements', '공지', 'releases', 'general', '일반'):  # category names may be localized
         print(cat['id'])
         break
 else:
@@ -140,7 +140,7 @@ else:
           fi
 
           # Create discussion
-          TITLE="🚀 CoolHan ${VERSION} 출시 알림 / Release Announcement"
+          TITLE="🚀 CoolHan ${VERSION} Release Announcement"
 
           MUTATION="mutation {
             createDiscussion(input: {

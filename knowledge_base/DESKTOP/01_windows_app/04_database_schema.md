@@ -1,15 +1,15 @@
-# Windows 데스크탑 앱 데이터 모델 (Database Schema)
+# Windows Desktop App Data Model (Database Schema)
 
-## EF Core + SQLite 구조
+## EF Core + SQLite Structure
 
 ```
-EF Core 스택:
-DbContext → AppDbContext (DbContext 상속)
-  ├─ DbSet<T> → 엔티티(테이블) 선언
-  ├─ OnModelCreating() → Fluent API 설정
-  └─ Migrations/ → 스키마 버전 관리
+EF Core stack:
+DbContext → AppDbContext (inherits DbContext)
+  ├─ DbSet<T> → entity (table) declarations
+  ├─ OnModelCreating() → Fluent API configuration
+  └─ Migrations/ → schema version management
 
-싱글톤 팩토리 패턴:
+Singleton factory pattern:
 public class AppDbContextFactory : IDbContextFactory<AppDbContext>
 {
     private readonly string _connectionString;
@@ -19,15 +19,15 @@ public class AppDbContextFactory : IDbContextFactory<AppDbContext>
         => new AppDbContext(new DbContextOptionsBuilder<AppDbContext>()
             .UseSqlite(_connectionString).Options);
 }
-// DI 등록: services.AddDbContextFactory<AppDbContext>(opt =>
+// DI registration: services.AddDbContextFactory<AppDbContext>(opt =>
 //     opt.UseSqlite($"Data Source={dbPath}"));
 ```
 
 ---
 
-## 표준 엔티티 정의
+## Standard Entity Definitions
 
-### User (사용자)
+### User
 
 ```csharp
 public class User
@@ -43,7 +43,7 @@ public class User
     public List<Order> Orders { get; set; } = new();
 }
 
-// Fluent API 설정
+// Fluent API configuration
 modelBuilder.Entity<User>(entity =>
 {
     entity.HasKey(u => u.Id);
@@ -53,7 +53,7 @@ modelBuilder.Entity<User>(entity =>
 });
 ```
 
-### Product (상품)
+### Product
 
 ```csharp
 public class Product
@@ -83,7 +83,7 @@ modelBuilder.Entity<Product>(entity =>
 });
 ```
 
-### Order (주문)
+### Order
 
 ```csharp
 public class Order
@@ -105,7 +105,7 @@ public class OrderItem
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string OrderId { get; set; } = string.Empty;
-    public string ProductTitle { get; set; } = string.Empty;  // 주문 시점 스냅샷
+    public string ProductTitle { get; set; } = string.Empty;  // snapshot at order time
     public decimal UnitPrice { get; set; }
     public int Quantity { get; set; }
     public decimal Subtotal { get; set; }
@@ -123,7 +123,7 @@ modelBuilder.Entity<Order>(entity =>
     entity.HasKey(o => o.Id);
     entity.HasIndex(o => o.UserId);
     entity.HasIndex(o => o.Status);
-    entity.Property(o => o.Status).HasConversion<string>();  // enum → 문자열 저장
+    entity.Property(o => o.Status).HasConversion<string>();  // store enum as string
     entity.HasOne(o => o.User)
           .WithMany(u => u.Orders)
           .HasForeignKey(o => o.UserId)
@@ -143,13 +143,13 @@ modelBuilder.Entity<OrderItem>(entity =>
 });
 ```
 
-### CachedResponse (API 응답 캐시)
+### CachedResponse (API response cache)
 
 ```csharp
 public class CachedResponse
 {
-    public string CacheKey { get; set; } = string.Empty;   // URL + 파라미터 해시
-    public string Data { get; set; } = string.Empty;       // JSON 문자열
+    public string CacheKey { get; set; } = string.Empty;   // hash of URL + parameters
+    public string Data { get; set; } = string.Empty;       // JSON string
     public string? Etag { get; set; }
     public DateTime ExpiresAt { get; set; }
     public DateTime CachedAt { get; set; } = DateTime.UtcNow;
@@ -164,10 +164,10 @@ modelBuilder.Entity<CachedResponse>(entity =>
 
 ---
 
-## Repository 패턴 (표준)
+## Repository Pattern (standard)
 
 ```csharp
-// 인터페이스
+// Interface
 public interface IProductRepository
 {
     Task<Product?> FindByIdAsync(string id, CancellationToken ct = default);
@@ -177,7 +177,7 @@ public interface IProductRepository
     Task DeleteAsync(string id, CancellationToken ct = default);
 }
 
-// 구현
+// Implementation
 public class ProductRepository : IProductRepository
 {
     private readonly IDbContextFactory<AppDbContext> _factory;
@@ -213,12 +213,12 @@ public class ProductRepository : IProductRepository
 
 ---
 
-## Windows Credential Manager (보안 자격증명)
+## Windows Credential Manager (secure credentials)
 
 ```csharp
 using System.Runtime.InteropServices;
 
-// Windows Credential Manager를 통한 토큰 저장
+// Token storage via the Windows Credential Manager
 public static class CredentialManager
 {
     private const string APP_PREFIX = "MyApp_";
@@ -288,18 +288,18 @@ public static class CredentialManager
     }
 }
 
-// 사용 예
+// Usage example
 CredentialManager.SaveCredential("auth_token", accessToken);
 var token = CredentialManager.ReadCredential("auth_token");
-CredentialManager.DeleteCredential("auth_token"); // 로그아웃 시
+CredentialManager.DeleteCredential("auth_token"); // on logout
 ```
 
 ---
 
-## 앱 설정 저장 (JSON)
+## App Settings Storage (JSON)
 
 ```csharp
-// AppSettings 모델
+// AppSettings model
 public class AppSettings
 {
     public string ThemeMode { get; set; } = "System";      // Light / Dark / System
@@ -309,7 +309,7 @@ public class AppSettings
     public DateTime? LastSyncTime { get; set; }
 }
 
-// 설정 관리자
+// Settings manager
 public class SettingsManager
 {
     private readonly string _settingsPath;
@@ -334,7 +334,7 @@ public class SettingsManager
                 return System.Text.Json.JsonSerializer.Deserialize<AppSettings>(json)
                        ?? new AppSettings();
             }
-        } catch { /* 손상된 설정 파일 → 기본값 사용 */ }
+        } catch { /* corrupted settings file → use defaults */ }
         return new AppSettings();
     }
 
@@ -349,39 +349,39 @@ public class SettingsManager
 
 ---
 
-## 마이그레이션 전략
+## Migration Strategy
 
 ```csharp
-// EF Core 마이그레이션 관리
+// EF Core migration management
 // dotnet ef migrations add InitialCreate --project YourProject
 // dotnet ef database update
 
-// 앱 시작 시 자동 마이그레이션 (데스크탑 앱 권장 — 사용자가 서버 없음)
+// Automatic migration at app startup (recommended for desktop apps — the user has no server)
 public static class DatabaseInitializer
 {
     public static async Task InitializeAsync(IDbContextFactory<AppDbContext> factory)
     {
         await using var ctx = await factory.CreateDbContextAsync();
-        // 마이그레이션 자동 적용 (미적용 마이그레이션 존재 시 실행)
+        // Apply migrations automatically (runs if there are pending migrations)
         await ctx.Database.MigrateAsync();
     }
 }
 
-// App.xaml.cs OnLaunched 에서 호출
+// Called from OnLaunched in App.xaml.cs
 await DatabaseInitializer.InitializeAsync(dbContextFactory);
 
-// 마이그레이션 예시 (버전 1→2: phone_number 컬럼 추가)
-// Migration 파일 내 Up() 메서드:
+// Migration example (version 1→2: add phone_number column)
+// Inside the Up() method of the migration file:
 migrationBuilder.AddColumn<string>(
     name: "PhoneNumber",
     table: "Users",
     type: "TEXT",
     nullable: true);
 
-// 파괴적 마이그레이션 (데이터 손실) 절대 금지
-// context.Database.EnsureDeleted() → 프로덕션 사용 금지
+// Never perform destructive migrations (data loss)
+// context.Database.EnsureDeleted() → forbidden in production
 ```
 
 ---
 
-**문서 버전:** 1.0.0 | **작성일:** 2026-06-13 | **대상 스택:** C# + EF Core + SQLite + .NET 8
+**Document version:** 1.0.0 | **Date:** 2026-06-13 | **Target stack:** C# + EF Core + SQLite + .NET 8

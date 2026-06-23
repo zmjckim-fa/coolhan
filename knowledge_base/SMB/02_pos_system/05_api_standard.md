@@ -1,80 +1,80 @@
-# POS 시스템 - API 표준 (POS System - API Standard)
+# POS System - API Standard
 
-## 개요 (Overview)
+## Overview
 
-이 문서는 POS 시스템의 모든 API 엔드포인트, 요청/응답 형식, 상태 코드, 인증 방식을 정의한다.
+This document defines all API endpoints, request/response formats, status codes, and authentication methods of the POS system.
 
 ---
 
-## 1. 기본 설정 (Base Configuration)
+## 1. Base Configuration
 
-### 1.1 API 기본 정보 (Base Information)
+### 1.1 Base Information
 
 ```
-API 버전: v1
+API version: v1
 Base URL: https://api.pos-system.com/api/v1
 
-인증 방식: JWT Bearer Token
-  - 토큰 유효기간: 1시간
-  - 리프레시 토큰: 30일
-  - 헤더: Authorization: Bearer <token>
+Authentication: JWT Bearer Token
+  - Token lifetime: 1 hour
+  - Refresh token: 30 days
+  - Header: Authorization: Bearer <token>
 
-요청 형식: JSON
-응답 형식: 
+Request format: JSON
+Response format: 
   {
     "success": true/false,
     "code": "SUCCESS" | "[ERROR_CODE]",
-    "message": "[설명]",
+    "message": "[description]",
     "data": {...},
     "timestamp": "2026-05-27T10:30:00Z"
   }
 
-속도 제한:
-  - 일반 사용자: 100 요청/분
-  - 판매원: 500 요청/분
-  - 관리자: 제한 없음
+Rate limits:
+  - Regular user: 100 requests/min
+  - Cashier: 500 requests/min
+  - Admin: no limit
 
-응답 시간 목표:
-  - 평균: 200ms 이하
-  - 최대: 1000ms 이하
+Response time targets:
+  - Average: under 200ms
+  - Maximum: under 1000ms
 ```
 
-### 1.2 상태 코드 정의 (Status Codes)
+### 1.2 Status Codes
 
 ```
-2xx (성공)
-  200 OK: 요청 성공
-  201 Created: 리소스 생성 성공
+2xx (success)
+  200 OK: request succeeded
+  201 Created: resource creation succeeded
 
-4xx (클라이언트 오류)
-  400 Bad Request: 요청 형식 오류
-  401 Unauthorized: 인증 필요
-  403 Forbidden: 권한 부족
-  404 Not Found: 리소스 없음
-  409 Conflict: 거래 상태 충돌 (예: 이미 완료된 거래)
+4xx (client error)
+  400 Bad Request: request format error
+  401 Unauthorized: authentication required
+  403 Forbidden: insufficient permission
+  404 Not Found: resource not found
+  409 Conflict: transaction state conflict (e.g., already completed transaction)
 
-5xx (서버 오류)
-  500 Internal Server Error: 서버 오류
-  503 Service Unavailable: 일시적 장애
+5xx (server error)
+  500 Internal Server Error: server error
+  503 Service Unavailable: temporary outage
 ```
 
 ---
 
-## 2. 인증 및 권한 (Authentication & Authorization)
+## 2. Authentication & Authorization
 
-### 2.1 로그인 (Login)
+### 2.1 Login
 
 ```
 POST /auth/login
 
-요청:
+Request:
 {
   "user_id": "cashier_001",
   "password": "encrypted_password",
   "terminal_id": "POS-001"
 }
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
@@ -82,52 +82,52 @@ POST /auth/login
     "refresh_token": "eyJhbGc...",
     "user": {
       "id": "USR-001",
-      "name": "김철수",
+      "name": "Kim Cheolsu",
       "role": "CASHIER",
       "permissions": ["transaction_create", "transaction_cancel"]
     },
     "terminal_info": {
       "id": "POS-001",
       "store": "store-001",
-      "name": "1번 계산대"
+      "name": "Register 1"
     }
   }
 }
 
-에러 (401 Unauthorized):
+Error (401 Unauthorized):
 {
   "success": false,
   "code": "INVALID_CREDENTIALS",
-  "message": "사용자ID 또는 비밀번호가 잘못되었습니다"
+  "message": "Invalid user ID or password"
 }
 ```
 
-### 2.2 로그아웃 (Logout)
+### 2.2 Logout
 
 ```
 POST /auth/logout
 Authorization: Bearer <token>
 
-요청:
+Request:
 {}
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
-  "message": "로그아웃되었습니다"
+  "message": "Logged out"
 }
 ```
 
-### 2.3 토큰 갱신 (Refresh Token)
+### 2.3 Refresh Token
 
 ```
 POST /auth/refresh
 Authorization: Bearer <refresh_token>
 
-요청:
+Request:
 {}
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
@@ -139,20 +139,20 @@ Authorization: Bearer <refresh_token>
 
 ---
 
-## 3. 거래 API (Transaction API)
+## 3. Transaction API
 
-### 3.1 거래 시작 (Start Transaction)
+### 3.1 Start Transaction
 
 ```
 POST /transactions
 
-요청:
+Request:
 {
   "terminal_id": "POS-001",
   "cashier_id": "USR-001"
 }
 
-응답 (201 Created):
+Response (201 Created):
 {
   "success": true,
   "data": {
@@ -167,25 +167,25 @@ POST /transactions
 }
 ```
 
-### 3.2 거래에 항목 추가 (Add Item to Transaction)
+### 3.2 Add Item to Transaction
 
 ```
 POST /transactions/{transaction_id}/items
 
-요청:
+Request:
 {
   "product_code": "PROD-001",
   "quantity": 2,
   "unit_price": 10000
 }
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
     "item_id": "ITEM-001",
     "product_code": "PROD-001",
-    "product_name": "라면",
+    "product_name": "Ramen",
     "quantity": 2,
     "unit_price": 10000,
     "subtotal": 20000,
@@ -199,20 +199,20 @@ POST /transactions/{transaction_id}/items
   }
 }
 
-에러 (409 Conflict):
+Error (409 Conflict):
 {
   "success": false,
   "code": "OUT_OF_STOCK",
-  "message": "재고 부족 (현재 재고: 1)"
+  "message": "Insufficient stock (current stock: 1)"
 }
 ```
 
-### 3.3 거래 항목 삭제 (Remove Item from Transaction)
+### 3.3 Remove Item from Transaction
 
 ```
 DELETE /transactions/{transaction_id}/items/{item_id}
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
@@ -226,17 +226,17 @@ DELETE /transactions/{transaction_id}/items/{item_id}
 }
 ```
 
-### 3.4 거래 항목 수량 변경 (Update Item Quantity)
+### 3.4 Update Item Quantity
 
 ```
 PUT /transactions/{transaction_id}/items/{item_id}
 
-요청:
+Request:
 {
   "quantity": 3
 }
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
@@ -252,17 +252,17 @@ PUT /transactions/{transaction_id}/items/{item_id}
 }
 ```
 
-### 3.5 거래 취소 (Cancel Transaction)
+### 3.5 Cancel Transaction
 
 ```
 POST /transactions/{transaction_id}/cancel
 
-요청:
+Request:
 {
-  "reason": "고객 요청"
+  "reason": "Customer request"
 }
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
@@ -272,30 +272,30 @@ POST /transactions/{transaction_id}/cancel
   }
 }
 
-에러 (409 Conflict):
+Error (409 Conflict):
 {
   "success": false,
   "code": "TRANSACTION_ALREADY_COMPLETED",
-  "message": "이미 완료된 거래는 취소할 수 없습니다"
+  "message": "An already completed transaction cannot be cancelled"
 }
 ```
 
 ---
 
-## 4. 결제 API (Payment API)
+## 4. Payment API
 
-### 4.1 현금 결제 (Cash Payment)
+### 4.1 Cash Payment
 
 ```
 POST /transactions/{transaction_id}/payment/cash
 
-요청:
+Request:
 {
   "received_amount": 50000,
   "transaction_total": 22000
 }
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
@@ -309,27 +309,27 @@ POST /transactions/{transaction_id}/payment/cash
   }
 }
 
-에러 (400 Bad Request):
+Error (400 Bad Request):
 {
   "success": false,
   "code": "INSUFFICIENT_PAYMENT",
-  "message": "지불액이 결제액보다 적습니다"
+  "message": "Payment amount is less than the amount due"
 }
 ```
 
-### 4.2 카드 결제 (Card Payment)
+### 4.2 Card Payment
 
 ```
 POST /transactions/{transaction_id}/payment/card
 
-요청:
+Request:
 {
   "card_token": "tok_visa_4242",
   "card_last4": "4242",
   "amount": 22000
 }
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
@@ -343,25 +343,25 @@ POST /transactions/{transaction_id}/payment/card
   }
 }
 
-에러 (400 Bad Request):
+Error (400 Bad Request):
 {
   "success": false,
   "code": "CARD_DECLINED",
-  "message": "카드 결제가 거절되었습니다",
+  "message": "The card payment was declined",
   "pg_error_code": "CARD_DECLINED"
 }
 ```
 
 ---
 
-## 5. 반품/환불 API (Return & Refund API)
+## 5. Return & Refund API
 
-### 5.1 반품 거래 조회 (Search Original Transaction)
+### 5.1 Search Original Transaction
 
 ```
 GET /returns/search?receipt_number=RCP-20260527-001
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
@@ -372,7 +372,7 @@ GET /returns/search?receipt_number=RCP-20260527-001
       {
         "item_id": "ITEM-001",
         "product_code": "PROD-001",
-        "product_name": "라면",
+        "product_name": "Ramen",
         "quantity": 2,
         "unit_price": 10000,
         "line_total": 22000
@@ -383,12 +383,12 @@ GET /returns/search?receipt_number=RCP-20260527-001
 }
 ```
 
-### 5.2 부분 반품 (Partial Return)
+### 5.2 Partial Return
 
 ```
 POST /returns
 
-요청:
+Request:
 {
   "original_transaction_id": "TXN-20260527-00001",
   "items": [
@@ -397,10 +397,10 @@ POST /returns
       "return_quantity": 1
     }
   ],
-  "reason": "품질 불량"
+  "reason": "Quality defect"
 }
 
-응답 (201 Created):
+Response (201 Created):
 {
   "success": true,
   "data": {
@@ -419,17 +419,17 @@ POST /returns
 }
 ```
 
-### 5.3 환불 처리 (Process Refund)
+### 5.3 Process Refund
 
 ```
 POST /returns/{return_id}/approve
 
-요청:
+Request:
 {
   "refund_method": "CASH"
 }
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
@@ -445,19 +445,19 @@ POST /returns/{return_id}/approve
 
 ---
 
-## 6. 재고 API (Inventory API)
+## 6. Inventory API
 
-### 6.1 상품 재고 조회 (Get Product Stock)
+### 6.1 Get Product Stock
 
 ```
 GET /inventory/{product_code}
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
     "product_code": "PROD-001",
-    "product_name": "라면",
+    "product_name": "Ramen",
     "current_stock": 150,
     "minimum_stock": 50,
     "maximum_stock": 500,
@@ -467,19 +467,19 @@ GET /inventory/{product_code}
 }
 ```
 
-### 6.2 재고 검색 (Search Low Stock Items)
+### 6.2 Search Low Stock Items
 
 ```
 GET /inventory/low-stock?store_id=store-001
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
     "items": [
       {
         "product_code": "PROD-002",
-        "product_name": "음료수",
+        "product_name": "Beverage",
         "current_stock": 30,
         "minimum_stock": 50,
         "status": "LOW"
@@ -492,14 +492,14 @@ GET /inventory/low-stock?store_id=store-001
 
 ---
 
-## 7. 일일 마감 API (End of Day API)
+## 7. End of Day API
 
-### 7.1 마감 데이터 조회 (Get Daily Summary)
+### 7.1 Get Daily Summary
 
 ```
 GET /daily-close?date=2026-05-27
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
@@ -522,19 +522,19 @@ GET /daily-close?date=2026-05-27
 }
 ```
 
-### 7.2 마감 완료 (Complete Daily Close)
+### 7.2 Complete Daily Close
 
 ```
 POST /daily-close/{date}/complete
 
-요청:
+Request:
 {
   "terminal_id": "POS-001",
   "actual_cash_amount": 500000,
   "discrepancy_notes": ""
 }
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
@@ -549,21 +549,21 @@ POST /daily-close/{date}/complete
 
 ---
 
-## 8. 상품 및 카테고리 API (Product & Category API)
+## 8. Product & Category API
 
-### 8.1 상품 목록 (Get Products)
+### 8.1 Get Products
 
 ```
 GET /products?category=beverages&limit=20
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
     "products": [
       {
         "code": "PROD-001",
-        "name": "라면",
+        "name": "Ramen",
         "category": "food",
         "price": 10000,
         "tax_rate": 0.1,
@@ -579,24 +579,24 @@ GET /products?category=beverages&limit=20
 }
 ```
 
-### 8.2 카테고리 목록 (Get Categories)
+### 8.2 Get Categories
 
 ```
 GET /categories
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
     "categories": [
       {
         "id": "cat-001",
-        "name": "음식",
+        "name": "Food",
         "count": 150
       },
       {
         "id": "cat-002",
-        "name": "음료",
+        "name": "Beverage",
         "count": 195
       }
     ]
@@ -606,19 +606,19 @@ GET /categories
 
 ---
 
-## 9. 할인 API (Discount API)
+## 9. Discount API
 
-### 9.1 회원 할인 조회 (Get Member Discount)
+### 9.1 Get Member Discount
 
 ```
 GET /discounts/member/{member_id}
 
-응답 (200 OK):
+Response (200 OK):
 {
   "success": true,
   "data": {
     "member_id": "MEM-001",
-    "name": "김철수",
+    "name": "Kim Cheolsu",
     "grade": "VIP",
     "discount_rate": 0.15,
     "points_balance": 50000,
@@ -633,20 +633,20 @@ GET /discounts/member/{member_id}
 
 ---
 
-## 10. 에러 처리 (Error Handling)
+## 10. Error Handling
 
-### 10.1 일반적인 에러 응답 형식
+### 10.1 General Error Response Format
 
 ```
 400 Bad Request:
 {
   "success": false,
   "code": "INVALID_REQUEST",
-  "message": "요청 형식이 올바르지 않습니다",
+  "message": "The request format is invalid",
   "errors": [
     {
       "field": "quantity",
-      "message": "수량은 0보다 커야 합니다"
+      "message": "Quantity must be greater than 0"
     }
   ]
 }
@@ -655,33 +655,33 @@ GET /discounts/member/{member_id}
 {
   "success": false,
   "code": "INVALID_TOKEN",
-  "message": "인증 토큰이 유효하지 않습니다"
+  "message": "The authentication token is invalid"
 }
 
 403 Forbidden:
 {
   "success": false,
   "code": "INSUFFICIENT_PERMISSION",
-  "message": "이 작업을 수행할 권한이 없습니다"
+  "message": "You do not have permission to perform this action"
 }
 
 500 Internal Server Error:
 {
   "success": false,
   "code": "SERVER_ERROR",
-  "message": "서버 오류가 발생했습니다",
+  "message": "A server error occurred",
   "request_id": "req-12345"
 }
 ```
 
 ---
 
-## 11. API 사용 예시 (API Usage Examples)
+## 11. API Usage Examples
 
-### 11.1 JavaScript Fetch 예시
+### 11.1 JavaScript Fetch Example
 
 ```javascript
-// 로그인
+// Login
 const loginResponse = await fetch('https://api.pos-system.com/api/v1/auth/login', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -694,7 +694,7 @@ const loginResponse = await fetch('https://api.pos-system.com/api/v1/auth/login'
 const { data } = await loginResponse.json();
 const token = data.access_token;
 
-// 거래 시작
+// Start transaction
 const txnResponse = await fetch(
   'https://api.pos-system.com/api/v1/transactions',
   {
@@ -712,7 +712,7 @@ const txnResponse = await fetch(
 const { data: txnData } = await txnResponse.json();
 const transactionId = txnData.transaction_id;
 
-// 거래에 항목 추가
+// Add item to transaction
 const itemResponse = await fetch(
   `https://api.pos-system.com/api/v1/transactions/${transactionId}/items`,
   {
@@ -732,21 +732,21 @@ const itemResponse = await fetch(
 
 ---
 
-## 요약 (Summary)
+## Summary
 
-이 API는 다음을 지원한다:
-- ✅ 인증 및 세션 관리
-- ✅ 거래 생성 및 관리
-- ✅ 결제 처리 (현금, 카드)
-- ✅ 반품/환불 처리
-- ✅ 재고 조회
-- ✅ 일일 마감 및 정산
-- ✅ 상품 및 할인 관리
+This API supports the following:
+- ✅ Authentication and session management
+- ✅ Transaction creation and management
+- ✅ Payment processing (cash, card)
+- ✅ Return/refund processing
+- ✅ Inventory lookup
+- ✅ End-of-day and reconciliation
+- ✅ Product and discount management
 
-모든 API는 JWT 토큰 기반 인증이 필요하며, 표준화된 응답 형식을 사용한다.
+All APIs require JWT token-based authentication and use a standardized response format.
 
 ---
 
-**버전**: 1.0
-**작성일**: 2026-05-27
-**상태**: 완료
+**Version**: 1.0
+**Created date**: 2026-05-27
+**Status**: Complete

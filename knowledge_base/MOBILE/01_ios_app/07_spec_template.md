@@ -1,94 +1,94 @@
-# iOS 앱 규격 템플릿 (Specification Template)
+# iOS App Specification Template
 
-## 프로젝트 기본 정보
+## Project Basic Information
 
 ```yaml
-project_name: "{앱 이름}"
+project_name: "{App Name}"
 bundle_identifier: "com.{company}.{appname}"
 version: "1.0.0"
 build_number: 1
 minimum_ios: "15.0"
-target_devices: ["iPhone", "iPad"]   # 해당 항목 선택
+target_devices: ["iPhone", "iPad"]   # select the applicable items
 language: "Swift"
-ui_framework: "SwiftUI"              # SwiftUI | UIKit | 혼합
+ui_framework: "SwiftUI"              # SwiftUI | UIKit | mixed
 architecture: "MVVM"                 # MVC | MVVM | VIPER | Clean
 ```
 
 ---
 
-## 섹션 1: 앱 개요
+## Section 1: App Overview
 
-| 항목 | 내용 |
+| Item | Content |
 |------|------|
-| **앱 이름** | |
-| **한줄 설명** | (App Store 서브타이틀 < 30자) |
-| **앱 카테고리** | (App Store 카테고리) |
-| **타겟 사용자** | |
-| **핵심 가치 제안** | |
-| **수익 모델** | 무료 | 유료($N) | Freemium | 구독 |
+| **App name** | |
+| **One-line description** | (App Store subtitle < 30 characters) |
+| **App category** | (App Store category) |
+| **Target users** | |
+| **Core value proposition** | |
+| **Revenue model** | Free | Paid ($N) | Freemium | Subscription |
 
 ---
 
-## 섹션 2: 화면 목록 (Screens)
+## Section 2: Screen List (Screens)
 
-| # | 화면 이름 | 역할 | 접근 권한 | 네비게이션 진입 |
+| # | Screen name | Role | Access permission | Navigation entry |
 |---|----------|------|---------|--------------|
-| S01 | 스플래시/온보딩 | 첫 실행 환경 설정 | 비로그인 | 앱 시작 |
-| S02 | 로그인 | 이메일/SNS 인증 | 비로그인 | 온보딩 완료 |
-| S03 | 메인(탭바) | 앱 핵심 탐색 | 로그인 | 로그인 성공 |
-| S04 | {기능} 목록 | | | |
-| S05 | {기능} 상세 | | | |
-| S06 | 프로필 / 마이페이지 | | 로그인 | 탭바 |
-| S07 | 설정 | | 로그인 | 프로필 |
+| S01 | Splash/Onboarding | First-launch environment setup | Not logged in | App start |
+| S02 | Login | Email/SNS authentication | Not logged in | Onboarding complete |
+| S03 | Main (tab bar) | Core app navigation | Logged in | Login success |
+| S04 | {Feature} list | | | |
+| S05 | {Feature} detail | | | |
+| S06 | Profile / My Page | | Logged in | Tab bar |
+| S07 | Settings | | Logged in | Profile |
 
 ---
 
-## 섹션 3: 기능 명세 (Feature Specifications)
+## Section 3: Feature Specifications
 
-### F001: 인증 (Authentication)
+### F001: Authentication
 ```
-지원 방식: [ ] 이메일/패스워드  [ ] Apple Sign In  [ ] Google  [ ] Kakao
-필수: Apple Sign In (앱 내 소셜 로그인 있으면 Apple도 필수, 심사 기준)
+Supported methods: [ ] Email/Password  [ ] Apple Sign In  [ ] Google  [ ] Kakao
+Required: Apple Sign In (if in-app social login exists, Apple is also required, per review guidelines)
 
-이메일 유효성: RFC 5322
-패스워드 정책: 최소 8자, 대소문자+숫자 조합
-토큰 저장: Keychain (kSecAttrAccessibleWhenUnlockedThisDeviceOnly)
-자동 로그인: Keychain 토큰 유효 시 자동 로그인
+Email validation: RFC 5322
+Password policy: minimum 8 characters, combination of upper/lowercase + digits
+Token storage: Keychain (kSecAttrAccessibleWhenUnlockedThisDeviceOnly)
+Auto login: log in automatically when the Keychain token is valid
 
-에러 처리:
-- 잘못된 이메일/패스워드: "이메일 또는 패스워드가 올바르지 않습니다"
-- 5회 실패: 계정 잠금 (30분) + 안내 메시지
-- 네트워크 오류: "인터넷 연결을 확인해 주세요"
-```
-
-### F002: {핵심 기능 1}
-```
-기능 설명:
-입력:
-출력:
-비즈니스 규칙:
-예외 처리:
+Error handling:
+- Wrong email/password: "The email or password is incorrect"
+- 5 failures: account lockout (30 minutes) + guidance message
+- Network error: "Please check your internet connection"
 ```
 
-### F003: {핵심 기능 2}
+### F002: {Core Feature 1}
 ```
-[동일 구조]
+Feature description:
+Input:
+Output:
+Business rules:
+Exception handling:
+```
+
+### F003: {Core Feature 2}
+```
+[Same structure]
 ```
 
 ---
 
-## 섹션 4: 데이터 모델
+## Section 4: Data Model
 
-### 4.1 Core Data 엔티티
+### 4.1 Core Data Entities
 ```
-{프로젝트 필요에 따라 04_database_schema.md의 표준 엔티티에서 선택}
+{Select from the standard entities in 04_database_schema.md as needed for the project}
 
-사용 엔티티:
+Entities used:
 - [ ] User
 - [ ] {Custom Entity 1}
 - [ ] {Custom Entity 2}
 
-커스텀 엔티티 추가:
+Adding a custom entity:
 Entity: {Name}
 Attributes:
   id        : UUID     (required)
@@ -97,23 +97,23 @@ Attributes:
   updatedAt : Date     (required)
 ```
 
-### 4.2 UserDefaults 키 목록
-| 키 | 타입 | 기본값 | 설명 |
+### 4.2 UserDefaults Key List
+| Key | Type | Default | Description |
 |----|------|--------|------|
-| has_onboarded | Bool | false | 온보딩 완료 여부 |
+| has_onboarded | Bool | false | Whether onboarding is complete |
 | {key} | {type} | {default} | {description} |
 
-### 4.3 Keychain 항목
-| 항목 | 접근 수준 | 설명 |
+### 4.3 Keychain Items
+| Item | Access level | Description |
 |------|---------|------|
-| auth_token | WhenUnlockedThisDeviceOnly | 액세스 토큰 |
+| auth_token | WhenUnlockedThisDeviceOnly | Access token |
 | {item} | {level} | {description} |
 
 ---
 
-## 섹션 5: API 연동
+## Section 5: API Integration
 
-### 5.1 기본 설정
+### 5.1 Basic Configuration
 ```yaml
 base_url:
   production: "https://api.{domain}.com/v1"
@@ -121,101 +121,101 @@ base_url:
   development: "https://localhost:3000/v1"
 
 auth: Bearer Token
-timeout: 30초
-retry: 최대 3회 (지수 백오프)
+timeout: 30 seconds
+retry: up to 3 times (exponential backoff)
 ```
 
-### 5.2 사용 엔드포인트
-| 메서드 | 경로 | 기능 | 인증 필요 |
+### 5.2 Endpoints Used
+| Method | Path | Function | Auth required |
 |--------|------|------|---------|
-| POST | /auth/login | 로그인 | 불필요 |
-| POST | /auth/refresh | 토큰 갱신 | 불필요 |
-| GET | /user/me | 내 정보 | 필요 |
+| POST | /auth/login | Login | Not required |
+| POST | /auth/refresh | Token refresh | Not required |
+| GET | /user/me | My info | Required |
 | {method} | {path} | {description} | {yes/no} |
 
 ---
 
-## 섹션 6: 권한 (Permissions)
+## Section 6: Permissions
 
-| 권한 | Info.plist 키 | 요청 사유 (사용자 표시 문구) | 요청 시점 |
+| Permission | Info.plist key | Request reason (text shown to user) | Request timing |
 |------|-------------|--------------------------|---------|
-| [ ] 카메라 | NSCameraUsageDescription | "프로필 사진 촬영에 사용됩니다" | 사진 변경 버튼 탭 |
-| [ ] 사진 라이브러리 | NSPhotoLibraryUsageDescription | "사진 선택에 사용됩니다" | 사진 선택 버튼 탭 |
-| [ ] 위치(사용중) | NSLocationWhenInUseUsageDescription | | |
-| [ ] 위치(항상) | NSLocationAlwaysAndWhenInUseUsageDescription | | |
-| [ ] 알림 | (UNUserNotificationCenter 코드) | | |
-| [ ] 마이크 | NSMicrophoneUsageDescription | | |
+| [ ] Camera | NSCameraUsageDescription | "Used to take your profile photo" | Photo change button tap |
+| [ ] Photo Library | NSPhotoLibraryUsageDescription | "Used to select a photo" | Photo selection button tap |
+| [ ] Location (when in use) | NSLocationWhenInUseUsageDescription | | |
+| [ ] Location (always) | NSLocationAlwaysAndWhenInUseUsageDescription | | |
+| [ ] Notifications | (UNUserNotificationCenter code) | | |
+| [ ] Microphone | NSMicrophoneUsageDescription | | |
 | [ ] Face ID | NSFaceIDUsageDescription | | |
-| [ ] {기타} | {키} | | |
+| [ ] {Other} | {key} | | |
 
 ---
 
-## 섹션 7: 알림 명세
+## Section 7: Notification Specifications
 
-| # | 알림 트리거 | 제목 | 내용 | 타입 |
+| # | Notification trigger | Title | Body | Type |
 |---|-----------|------|------|------|
-| N01 | 주문 상태 변경 | "주문이 배송 시작되었습니다" | "{상품명} 배송 출발!" | Remote (APNs) |
-| N02 | {트리거} | | | Local | Remote |
+| N01 | Order status change | "Your order has shipped" | "{Product name} is on its way!" | Remote (APNs) |
+| N02 | {trigger} | | | Local | Remote |
 
 ---
 
-## 섹션 8: 오류 시나리오 (Error Scenarios)
+## Section 8: Error Scenarios
 
-| # | 시나리오 | HTTP 코드 | 표시 메시지 | 처리 방식 |
+| # | Scenario | HTTP code | Displayed message | Handling |
 |---|---------|----------|-----------|---------|
-| E01 | 로그인 실패 (잘못된 자격증명) | 401 | "이메일 또는 패스워드가 올바르지 않습니다" | 인라인 에러 |
-| E02 | 네트워크 없음 | - | "인터넷 연결을 확인해 주세요" | 배너 알림 |
-| E03 | 서버 오류 | 500 | "일시적인 오류입니다. 잠시 후 다시 시도해 주세요" | 알림 + 재시도 버튼 |
-| E04 | {시나리오} | | | |
+| E01 | Login failure (wrong credentials) | 401 | "The email or password is incorrect" | Inline error |
+| E02 | No network | - | "Please check your internet connection" | Banner alert |
+| E03 | Server error | 500 | "A temporary error occurred. Please try again shortly" | Alert + retry button |
+| E04 | {scenario} | | | |
 
 ---
 
-## 섹션 9: 테스트 요구사항
+## Section 9: Test Requirements
 
-### 9.1 단위 테스트
+### 9.1 Unit Tests
 ```
-프레임워크: XCTest
-목표 커버리지: ViewModel, Repository, Business Logic ≥ 80%
+Framework: XCTest
+Target coverage: ViewModel, Repository, Business Logic ≥ 80%
 
-필수 테스트 케이스:
-- [ ] 로그인 성공/실패
-- [ ] 토큰 갱신 로직
-- [ ] 데이터 파싱 (Codable 디코딩)
+Required test cases:
+- [ ] Login success/failure
+- [ ] Token refresh logic
+- [ ] Data parsing (Codable decoding)
 - [ ] Core Data CRUD
 ```
 
-### 9.2 UI 테스트
+### 9.2 UI Tests
 ```
-프레임워크: XCUITest
-대상: 핵심 사용자 플로우 Happy Path
-- [ ] 온보딩 → 로그인 → 메인 화면
-- [ ] {핵심 플로우}
+Framework: XCUITest
+Target: Happy Path of core user flows
+- [ ] Onboarding → Login → Main screen
+- [ ] {core flow}
 ```
 
-### 9.3 TestFlight 검증
+### 9.3 TestFlight Verification
 ```
-내부 테스터: 개발팀 (최대 25명)
-외부 테스터: 베타 사용자 (최대 10,000명)
-최소 테스트 기간: 2주 (App Store 심사 전)
+Internal testers: development team (up to 25)
+External testers: beta users (up to 10,000)
+Minimum test period: 2 weeks (before App Store review)
 ```
 
 ---
 
-## 섹션 10: 배포 계획
+## Section 10: Distribution Plan
 
-| 단계 | 내용 | 기간 |
+| Stage | Content | Duration |
 |------|------|------|
-| Alpha | 내부 개발팀 테스트 | |
-| Beta (TestFlight) | 외부 베타 테스터 | |
-| App Store Review | Apple 심사 | 1~7일 (평균 1~2일) |
-| Production Launch | 단계적 출시 (Phased Release) 권장 | |
+| Alpha | Internal development team testing | |
+| Beta (TestFlight) | External beta testers | |
+| App Store Review | Apple review | 1-7 days (avg. 1-2 days) |
+| Production Launch | Phased Release recommended | |
 
 ```
-Phased Release 설정 (App Store Connect):
-7일에 걸쳐 1% → 2% → 5% → 10% → 20% → 50% → 100% 단계적 배포
-문제 발견 시 즉시 중단 가능
+Phased Release setting (App Store Connect):
+Staged rollout over 7 days: 1% → 2% → 5% → 10% → 20% → 50% → 100%
+Can be halted immediately if issues are found
 ```
 
 ---
 
-**규격 ID:** {id} | **작성일:** {YYYY-MM-DD} | **승인:** {기획자명}
+**Spec ID:** {id} | **Date:** {YYYY-MM-DD} | **Approved by:** {planner name}

@@ -1,59 +1,59 @@
 ---
-name: Feature Request (기능 요청)
-about: 새로운 기능을 제안해주세요
-title: "[FEATURE] 간단한 설명"
+name: Feature Request
+about: Please propose a new feature
+title: "[FEATURE] Brief description"
 labels: enhancement
 assignees: ''
 
 ---
 
-## 기능 설명 (Feature Description)
+## Feature Description
 
-제안하는 기능을 명확하게 설명해주세요.
+Describe the feature you are proposing clearly.
 
-## 문제점 (Problem Statement)
+## Problem Statement
 
-이 기능이 해결할 문제점:
+The problem this feature solves:
 
 - 
 
-## 제안한 해결책 (Proposed Solution)
+## Proposed Solution
 
-기능이 어떻게 작동해야 하는지 설명해주세요:
+Describe how the feature should work:
 
 1. 
 2. 
 3. 
 
-## 사용 예시 (Usage Example)
+## Usage Example
 
-이 기능이 어떻게 사용될지 예시를 들어주세요:
+Give an example of how this feature would be used:
 
 ```bash
-# 예시
+# Example
 coolhan-install --with-feature-name
 ```
 
-## 대안 (Alternatives)
+## Alternatives
 
-이 기능 대신 고려할 다른 방법이 있으면 설명해주세요.
+Describe any alternative approaches you considered instead of this feature.
 
-## 추가 정보 (Additional Context)
+## Additional Context
 
-- [ ] 다른 프로젝트에서 유사한 기능이 있다
-- [ ] 사용자 피드백에 기반한 요청이다
-- [ ] 문서에서 관련 내용이 있다: (링크)
+- [ ] A similar feature exists in another project
+- [ ] This request is based on user feedback
+- [ ] There is related content in the documentation: (link)
 
-## 영향 범위 (Impact)
+## Impact
 
-이 기능이 영향을 미칠 부분:
+The areas this feature would affect:
 
-- [ ] 설치 프로세스
-- [ ] 검증 훅
-- [ ] 문서화
-- [ ] 성능
-- [ ] 기타: ___________
+- [ ] Installation process
+- [ ] Validation hooks
+- [ ] Documentation
+- [ ] Performance
+- [ ] Other: ___________
 
 ---
 
-**명확한 설명일수록 구현 가능성이 높습니다!**
+**The clearer the description, the higher the chance of implementation!**

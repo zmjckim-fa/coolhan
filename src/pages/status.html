@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>시스템 상태 · Status</title>
+  <title>System Status · Status</title>
   <style>
     /* Mobile-first (375px) -> 768px -> 1200px (spec §2.2 responsive) */
     :root {
@@ -95,9 +95,9 @@
 </head>
 <body>
   <main class="card" role="main">
-    <h1>시스템 상태</h1>
+    <h1>System Status</h1>
     <div id="badge" class="badge" role="status" aria-live="polite">
-      <span class="dot"></span><span id="badge-text">확인 중…</span>
+      <span class="dot"></span><span id="badge-text">Checking…</span>
     </div>
     <dl>
       <div class="row"><dt>Uptime</dt><dd id="uptime">—</dd></div>
@@ -105,7 +105,7 @@
       <div class="row"><dt>Last checked</dt><dd id="timestamp">—</dd></div>
     </dl>
     <p id="error" class="err"></p>
-    <p class="meta">5초마다 자동 갱신 · <code>/api/health</code></p>
+    <p class="meta">Auto-refreshes every 5 seconds · <code>/api/health</code></p>
   </main>
 
   <script>
@@ -129,18 +129,18 @@
         var m = Math.floor((sec % 3600) / 60);
         var s = sec % 60;
         var parts = [];
-        if (h) parts.push(h + '시간');
-        if (m) parts.push(m + '분');
-        parts.push(s + '초');
+        if (h) parts.push(h + 'h');
+        if (m) parts.push(m + 'm');
+        parts.push(s + 's');
         return parts.join(' ') + ' (' + sec + 's)';
       }
 
       // Map status value -> badge (spec §3.2). Unknown/failure -> down (🔴).
       function render(data) {
         var status = data && typeof data.status === 'string' ? data.status : 'down';
-        if (status === 'ok') setBadge('ok', '🟢 정상');
-        else if (status === 'degraded') setBadge('warn', '🟡 주의');
-        else setBadge('down', '🔴 비정상');
+        if (status === 'ok') setBadge('ok', '🟢 Operational');
+        else if (status === 'degraded') setBadge('warn', '🟡 Degraded');
+        else setBadge('down', '🔴 Down');
 
         elUptime.textContent = humanizeUptime(data.uptime_seconds);
         elVersion.textContent = data.version != null ? String(data.version) : '—';
@@ -150,7 +150,7 @@
       }
 
       function fail(message) {
-        setBadge('down', '🔴 비정상');
+        setBadge('down', '🔴 Down');
         elError.style.display = 'block';
         elError.textContent = message;
       }
@@ -163,7 +163,7 @@
           })
           .then(render)
           .catch(function (err) {
-            fail('상태 확인 실패: ' + (err && err.message ? err.message : 'unknown'));
+            fail('Status check failed: ' + (err && err.message ? err.message : 'unknown'));
           });
       }
 

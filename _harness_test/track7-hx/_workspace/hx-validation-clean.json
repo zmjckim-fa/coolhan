@@ -3,48 +3,48 @@
   "hx_check": {
     "form_ux": {
       "pass": true,
-      "evidence": "label for 연결(L116,L125), 인라인 blur 검증(L185-186), 에러문구+해결안 'name@example.com 형식으로 입력하세요'(L160,L165), 필수표시 *(L116)"
+      "evidence": "label for association (L116,L125), inline blur validation (L185-186), error message + resolution 'enter in the format name@example.com' (L160,L165), required marker * (L116)"
     },
     "accessibility": {
       "pass": true,
-      "evidence": "시맨틱 <form>/<label for>/<button>(L111-138), focus-visible outline(L59-63), 대비 #1a1a1a/#fff=17.40:1, error #b00020/#fff=7.33:1, role=alert/aria-live(L122,L137)"
+      "evidence": "semantic <form>/<label for>/<button> (L111-138), focus-visible outline (L59-63), contrast #1a1a1a/#fff=17.40:1, error #b00020/#fff=7.33:1, role=alert/aria-live (L122,L137)"
     },
     "responsive": {
       "pass": true,
-      "evidence": "viewport meta(L6), 미디어쿼리 640/1025(L97-104), 터치타깃 min-height 44px(--touch-target, L51,L82)"
+      "evidence": "viewport meta (L6), media queries 640/1025 (L97-104), touch target min-height 44px (--touch-target, L51,L82)"
     },
     "readability": {
       "pass": true,
-      "evidence": "본문 16px(--font-base, L21), line-height 1.5(L27), 제목 28px>본문 위계(L40)"
+      "evidence": "body 16px (--font-base, L21), line-height 1.5 (L27), heading 28px > body hierarchy (L40)"
     },
     "buttons": {
       "pass": true,
-      "evidence": "primary 버튼 1개, 동사 라벨 '가입하기'(L134), hover/active/disabled 상태(L76-78)"
+      "evidence": "1 primary button, verb label 'Sign up' (L134), hover/active/disabled states (L76-78)"
     },
     "states": {
       "pass": true,
-      "evidence": "로딩 '가입 처리 중…'(L206), 에러 상태+해결안(L215), 성공 토스트 '가입이 완료되었습니다'(L211)"
+      "evidence": "loading 'Processing signup…' (L206), error state + resolution (L215), success toast 'Signup completed' (L211)"
     },
     "flow": {
       "pass": true,
-      "evidence": "단일 화면 최소 클릭, 제출 전+인라인 검증으로 이탈 방지"
+      "evidence": "single screen, minimal clicks, pre-submit + inline validation prevents drop-off"
     },
     "security_ux": {
       "pass": true,
-      "evidence": "type=password 마스킹(L126), autocomplete new-password(L126), 비밀번호 강도 안내 hint(L127), 내부정보 미노출"
+      "evidence": "type=password masking (L126), autocomplete new-password (L126), password strength hint (L127), no internal info exposed"
     },
     "modularity": {
       "pass": true,
-      "evidence": "CSS 변수 디자인 토큰(L12-32), 단일책임 setError/clearError/validate* 함수(L143-172), 하드코딩 색상 없음"
+      "evidence": "CSS variable design tokens (L12-32), single-responsibility setError/clearError/validate* functions (L143-172), no hardcoded colors"
     },
     "integrity": {
       "pass": true,
-      "evidence": "빈 catch 없음(catch에 사용자 메시지, L213-216), 죽은코드/TODO/console 없음, 일관 네이밍"
+      "evidence": "no empty catch (catch has user message, L213-216), no dead code/TODO/console, consistent naming"
     }
   },
   "p0_items": ["form_ux", "accessibility", "responsive", "modularity"],
   "verdict": "PASS",
-  "reason": "P0 4항목(폼UX·접근성·반응형·모듈화) 전부 충족 + 비P0 전부 충족. 증거 기반.",
+  "reason": "All 4 P0 items (form UX, accessibility, responsiveness, modularity) satisfied + all non-P0 satisfied. Evidence-based.",
   "contrast_measurements": {
     "body_text": "#1a1a1a on #ffffff = 17.40:1 (AA PASS)",
     "error_text": "#b00020 on #ffffff = 7.33:1 (AA PASS)",
