@@ -1,2 +1,0 @@
-[server] 2026-05-29T23:36:03.680Z listening on http://localhost:4187 (status: /status, health: /api/health)
-[health] 2026-05-29T23:36:04.757Z GET /api/health -> 200 status=ok uptime=1s

@@ -21,3 +21,9 @@ data/
 dist/
 build/
 *.egg-info/
+
+# cruft cleanup (2026-06)
+node_modules/
+coverage/
+_workspace_prev/
+_workspace_prev_temp/
