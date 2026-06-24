@@ -335,6 +335,21 @@ Need more help?
 
 ---
 
+## 🩺 Verify your install
+
+After installing, confirm the harness is complete and healthy:
+
+```bash
+npx coolhan-doctor      # or: node doctor.js
+```
+
+It checks CLAUDE.md harness pointers, the core agents, the orchestrator skill,
+the knowledge-base domain modules, and your Node version — and prints a fix hint
+for anything missing. Exit code `0` means healthy; `1` means problems were found.
+Add `--json` for machine-readable output (useful in CI).
+
+---
+
 ## ✅ Done!
 
 Congratulations! 🎉 The CoolHan Framework has been installed successfully.

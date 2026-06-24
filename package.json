@@ -4,13 +4,15 @@
   "description": "CoolHan Specification-Driven Development Framework - AI-based engineering orchestration with automatic validation | 🌍 Multilingual Support (50+ languages): Korean, English, Japanese, Chinese, Spanish, French, German, Italian, Portuguese, Russian, Hindi, Thai, and more",
   "main": "install.js",
   "bin": {
-    "coolhan-install": "./install.js"
+    "coolhan-install": "./install.js",
+    "coolhan-doctor": "./doctor.js"
   },
   "scripts": {
     "test": "jest",
     "build": "jest",
     "install:coolhan": "node install.js",
-    "setup": "node install.js"
+    "setup": "node install.js",
+    "doctor": "node doctor.js"
   },
   "keywords": [
     "specification-driven",
@@ -45,6 +47,7 @@
   },
   "files": [
     "install.js",
+    "doctor.js",
     "install.sh",
     "install.ps1",
     "README.md",

@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **CoolHan Doctor** (`coolhan-doctor` / `node doctor.js`) — a read-only post-install
+  verification CLI. Checks CLAUDE.md harness pointers, the 6 core agents, the
+  development orchestrator skill, the knowledge-base domain modules, and the Node
+  engine; prints per-check pass/warn/fail with fix hints; exits `0` when healthy,
+  `1` on problems. `--json` for CI. Covered by `src/__tests__/doctor.test.js`.
+
 ## [1.1.0] - 2026-06-13
 
 ### Added

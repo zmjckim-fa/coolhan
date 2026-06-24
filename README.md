@@ -108,6 +108,16 @@ node -e "$(curl -fsSL https://raw.githubusercontent.com/zmjckim-fa/coolhan/main/
 npm install -g coolhan-builder
 ```
 
+### Verify the install
+
+```bash
+npx coolhan-doctor        # or: node doctor.js  (--json for CI)
+```
+
+Confirms the harness is complete and healthy — CLAUDE.md pointers, the 6 core
+agents, the orchestrator skill, the knowledge-base domain modules, and your Node
+version — with a fix hint for anything missing. Exits `0` when healthy, `1` otherwise.
+
 ### Usage
 
 After installation, open Claude Code in your project directory and use natural language:
