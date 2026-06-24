@@ -290,11 +290,25 @@ build/
 
   log('📂 Installed items:', 'bright');
   log('  ✅ .claude/ - Claude Code configuration');
-  log('  ✅ .claude/hooks/ - Validation hook scripts (8)');
-  log('  ✅ .claude/agents/ - Agent definitions (5)');
+  log('  ✅ .claude/hooks/ - Validation hook scripts');
+  log('  ✅ .claude/agents/ - Agent definitions');
   log('  ✅ .claude/skills/ - Claude Code skills');
   log('  ✅ knowledge_base/ - Core documents and modules');
   log('  ✅ CLAUDE.md - Project operations guide');
+
+  // Post-install self-check (non-fatal): confirm the harness is healthy.
+  try {
+    const { runChecks, summarize } = require('./doctor');
+    const checks = runChecks(currentDir);
+    const s = summarize(checks);
+    if (s.fail === 0) {
+      success(`Self-check passed (${s.pass} checks). Run \`npx coolhan-doctor\` anytime.`);
+    } else {
+      warn(`Self-check found ${s.fail} issue(s). Run \`npx coolhan-doctor\` for details.`);
+    }
+  } catch (e) {
+    // Non-fatal: doctor is optional tooling.
+  }
 
   log('\n🚀 Next steps:', 'bright');
   log('  1. Read CLAUDE.md');

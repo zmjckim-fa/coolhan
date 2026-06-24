@@ -1,7 +1,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { runChecks, summarize, CORE_AGENTS } = require('../../doctor');
+const { runChecks, summarize, resolveLang, CORE_AGENTS } = require('../../doctor');
 
 function mkHealthyInstall() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'coolhan-doctor-'));
@@ -89,6 +89,14 @@ describe('CoolHan Doctor', () => {
     } finally {
       rm(root);
     }
+  });
+
+  test('resolveLang: --lang wins, then env, default en', () => {
+    expect(resolveLang(['--lang', 'ko'], {})).toBe('ko');
+    expect(resolveLang(['--lang', 'en'], { LANG: 'ko_KR.UTF-8' })).toBe('en');
+    expect(resolveLang([], { LANG: 'ko_KR.UTF-8' })).toBe('ko');
+    expect(resolveLang([], { LANG: 'en_US.UTF-8' })).toBe('en');
+    expect(resolveLang([], {})).toBe('en');
   });
 
   test('summarize counts statuses', () => {

@@ -9,6 +9,11 @@
   development orchestrator skill, the knowledge-base domain modules, and the Node
   engine; prints per-check pass/warn/fail with fix hints; exits `0` when healthy,
   `1` on problems. `--json` for CI. Covered by `src/__tests__/doctor.test.js`.
+- **Doctor integration & i18n**
+  - `install.js` runs a non-fatal self-check after install and reports pass/issues
+  - `doctor` localized output (English/Korean) via `--lang ko|en` or `LANG`/`LC_ALL`
+  - CI: `harness-check.yml` adds a CoolHan Doctor job that runs `node doctor.js`
+  - Corrected stale "(5 agents)/(8 hooks)" counts in the installer summary
 
 ## [1.1.0] - 2026-06-13
 

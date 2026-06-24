@@ -128,34 +128,55 @@ function summarize(checks) {
   return { pass: count('pass'), warn: count('warn'), fail: count('fail'), total: checks.length };
 }
 
-function render(root, checks, summary) {
+// UI framing strings (the per-check detail/fix text stays technical/English).
+// CoolHan is multilingual; the human-facing framing localizes.
+const MESSAGES = {
+  en: { title: 'CoolHan Doctor', fix: 'fix:', healthy: '✔ healthy',
+    healthyWarn: '▲ healthy with warnings', problems: '✗ problems found',
+    counts: (s) => `(${s.pass} pass, ${s.warn} warn, ${s.fail} fail)` },
+  ko: { title: 'CoolHan Doctor (설치 점검)', fix: '해결:', healthy: '✔ 정상',
+    healthyWarn: '▲ 정상 (경고 있음)', problems: '✗ 문제 발견',
+    counts: (s) => `(통과 ${s.pass} · 경고 ${s.warn} · 실패 ${s.fail})` }
+};
+
+/** Resolve output language: --lang ko|en wins; else env LANG/LC_ALL/LC_MESSAGES; else en. */
+function resolveLang(argv, env) {
+  const i = argv.indexOf('--lang');
+  if (i !== -1 && argv[i + 1]) return argv[i + 1].toLowerCase().startsWith('ko') ? 'ko' : 'en';
+  const loc = (env.LC_ALL || env.LC_MESSAGES || env.LANG || '').toLowerCase();
+  return loc.startsWith('ko') ? 'ko' : 'en';
+}
+
+function render(root, checks, summary, lang = 'en') {
+  const m = MESSAGES[lang] || MESSAGES.en;
   const icon = { pass: paint('✔', 'green'), warn: paint('▲', 'yellow'), fail: paint('✗', 'red') };
-  console.log(paint('\nCoolHan Doctor', 'bright') + paint(`  ${root}`, 'gray'));
+  console.log(paint(`\n${m.title}`, 'bright') + paint(`  ${root}`, 'gray'));
   console.log(paint('─'.repeat(48), 'gray'));
   for (const c of checks) {
     console.log(`${icon[c.status] || '?'} ${paint(c.name.padEnd(16), 'bright')} ${c.detail}`);
-    if (c.fix && c.status !== 'pass') console.log(`   ${paint('fix:', 'gray')} ${c.fix}`);
+    if (c.fix && c.status !== 'pass') console.log(`   ${paint(m.fix, 'gray')} ${c.fix}`);
   }
   console.log(paint('─'.repeat(48), 'gray'));
   const verdict = summary.fail === 0
-    ? paint(summary.warn === 0 ? '✔ healthy' : '▲ healthy with warnings', summary.warn === 0 ? 'green' : 'yellow')
-    : paint('✗ problems found', 'red');
-  console.log(`${verdict}  (${summary.pass} pass, ${summary.warn} warn, ${summary.fail} fail)\n`);
+    ? paint(summary.warn === 0 ? m.healthy : m.healthyWarn, summary.warn === 0 ? 'green' : 'yellow')
+    : paint(m.problems, 'red');
+  console.log(`${verdict}  ${m.counts(summary)}\n`);
 }
 
 function main(argv) {
   const args = argv.slice(2);
   const json = args.includes('--json');
-  const dir = args.find(a => !a.startsWith('--')) || process.cwd();
+  const lang = resolveLang(args, process.env);
+  const dir = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--lang') || process.cwd();
   const root = path.resolve(dir);
 
   const checks = runChecks(root);
   const summary = summarize(checks);
 
   if (json) {
-    console.log(JSON.stringify({ root, summary, checks }, null, 2));
+    console.log(JSON.stringify({ root, lang, summary, checks }, null, 2));
   } else {
-    render(root, checks, summary);
+    render(root, checks, summary, lang);
   }
   return summary.fail === 0 ? 0 : 1;
 }
@@ -164,4 +185,4 @@ if (require.main === module) {
   process.exit(main(process.argv));
 }
 
-module.exports = { runChecks, summarize, main, CORE_AGENTS };
+module.exports = { runChecks, summarize, render, resolveLang, main, CORE_AGENTS };
