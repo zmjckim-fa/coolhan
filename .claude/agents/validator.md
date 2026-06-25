@@ -78,7 +78,12 @@ Runs CoolHan's 9-stage verification pipeline to confirm the code is 100% spec-co
    └─ Only defined status values used, check for missing states
 
 6️⃣ Security Validation
-   └─ Authentication/authorization checks, SQL injection prevention, permission verification
+   └─ Run against the `knowledge_base/00_SECURITY_STANDARDS.md` checklist (OWASP/ASVS):
+      A access-control/auth · B injection/input · C secrets/crypto · D headers/rate-limit/errors/CSRF
+   └─ Evidence required (file:line of the control or its absence); P0 categories (A/B/C) need a
+      negative case (attack input rejected), not just the happy path. No control "pass" without evidence.
+   └─ Two-layer result: controls_status vs residual_risk. "Passed checks ≠ secure" — never assert "secure".
+   └─ For depth (threat model + full SAST review + deploy gate), defer to `agents/security-reviewer.md`.
 
 7️⃣ Business Logic Validation
    └─ Consistency between the spec's behavior definitions and the code

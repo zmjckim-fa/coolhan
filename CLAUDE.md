@@ -111,6 +111,7 @@
 | E2E Tester | `agents/e2e-tester.md` | UI/UX/responsive/browser verification (evidence required) |
 | HX Vision Critic | `agents/hx-vision-critic.md` | Evaluates render screenshots via vision (proxy for human judgment), unattended auto-loop |
 | Self-Auditor | `agents/self-auditor.md` | Continuous plan-vs-work alignment audit inside the non-stop engine loop (drift/scope-creep/fake-completion detection, read-only) |
+| Security Reviewer | `agents/security-reviewer.md` | Threat-model + SAST-style review (OWASP/ASVS) driven by 00_SECURITY_STANDARDS.md; two-layer verdict (controls vs residual risk), pre-deploy gate |
 
 #### Reverse + Reuse Extension (NEW, 3 members)
 
@@ -165,6 +166,7 @@ Analyze an existing site → modularize → apply to another site or continue de
 
 | Date | Change | Target | Reason |
 |------|----------|------|------|
+| **2026-06-26** | **Security Hardening P1 — security KB + Security Reviewer agent + Validator stage-6 upgrade** | knowledge_base/00_SECURITY_STANDARDS.md + agents/(security-reviewer, validator) + skills + CLAUDE.md + _harness_test/track11-security/ | Security was scattered/light (validator stage 6 = 1 line; no security KB/agent). Added OWASP/ASVS security KB (driving doc), a dedicated Security Reviewer (threat-model + SAST review, evidence-based, pre-deploy gate), and upgraded validator stage 6 to reference the checklist with negative-case + evidence requirements. Honest premise (P0): "passed checks ≠ secure" — two-layer verdict (controls_status vs residual_risk), "100% secure" banned. P2/P3 (secret-scan/dep-audit/injection-defense/least-privilege) deferred. Track 11 adversarial: vulnerable→FAIL, clean→PASS, 0 false +/- |
 | **2026-06-25** | **Continuous Self-Audit added** | agents/self-auditor.md + skills/coolhan-development-orchestrator (engine loop + working-mode) + CLAUDE.md + _harness_test/track10-selfaudit/ | Non-stop development risks drifting off-plan over many units. Added a read-only, evidence-based self-audit woven into the continuous-engine loop: after each unit it re-reads plan docs (_goal/spec/_backlog) vs work and checks scope⊆goal, coverage, DoD, completion integrity, drift trend. ALIGNED→continue / DRIFT→correct / P0 VIOLATION→pause. Distinct from Validator (per-unit code↔spec gate). Track 10 adversarial: on-track→ALIGNED, drifted→DRIFT/VIOLATION, 0 false +/- |
 | 2026-05-27 | **Initial Release Engineering harness setup** | agents/, skills/, CLAUDE.md | Build a complete agent team system for CoolHan deployment automation |
 | 2026-05-27 | **Phase 2 complete: 11 architecture conflicts resolved** | knowledge_base/ | Domain module synchronization and architectural consistency |
