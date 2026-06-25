@@ -1,0 +1,34 @@
+{
+  "round": 1,
+  "goal_ref": "_workspace/_goal.md",
+  "scope_alignment": {
+    "in_scope": false,
+    "creep": [
+      "endpoint /admin/users — not traceable to _goal.md (CSV export) or any _backlog item",
+      "table users — not in goal/spec/backlog; unauthorized schema addition"
+    ]
+  },
+  "coverage": {
+    "done": 2,
+    "pending": 1,
+    "missing": [],
+    "backlog_accurate": false
+  },
+  "dod_progress": 0.67,
+  "completion_integrity": {
+    "unverified_done": []
+  },
+  "risks": [
+    "Unauthorized feature addition (P0): /admin/users endpoint + users table expand attack surface and exceed planner intent"
+  ],
+  "drift_vs_prev": "none",
+  "verdict": "VIOLATION",
+  "action": "pause",
+  "evidence": [
+    "_goal.md: scope = CSV export only",
+    "_backlog.md: U1/U2/U3 cover model, endpoint, tests — no /admin/users, no users table",
+    "work-done: /admin/users endpoint present with no plan trace = scope creep",
+    "work-done: users table created with no plan trace = scope creep",
+    "Check 1 (Scope alignment, P0) FAIL: work NOT subset of goal/spec"
+  ]
+}

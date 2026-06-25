@@ -110,6 +110,7 @@
 | Integration Validator | `agents/integration-validator.md` | Real port/API/DB verification (evidence required) |
 | E2E Tester | `agents/e2e-tester.md` | UI/UX/responsive/browser verification (evidence required) |
 | HX Vision Critic | `agents/hx-vision-critic.md` | Evaluates render screenshots via vision (proxy for human judgment), unattended auto-loop |
+| Self-Auditor | `agents/self-auditor.md` | Continuous plan-vs-work alignment audit inside the non-stop engine loop (drift/scope-creep/fake-completion detection, read-only) |
 
 #### Reverse + Reuse Extension (NEW, 3 members)
 
@@ -164,6 +165,7 @@ Analyze an existing site → modularize → apply to another site or continue de
 
 | Date | Change | Target | Reason |
 |------|----------|------|------|
+| **2026-06-25** | **Continuous Self-Audit added** | agents/self-auditor.md + skills/coolhan-development-orchestrator (engine loop + working-mode) + CLAUDE.md + _harness_test/track10-selfaudit/ | Non-stop development risks drifting off-plan over many units. Added a read-only, evidence-based self-audit woven into the continuous-engine loop: after each unit it re-reads plan docs (_goal/spec/_backlog) vs work and checks scope⊆goal, coverage, DoD, completion integrity, drift trend. ALIGNED→continue / DRIFT→correct / P0 VIOLATION→pause. Distinct from Validator (per-unit code↔spec gate). Track 10 adversarial: on-track→ALIGNED, drifted→DRIFT/VIOLATION, 0 false +/- |
 | 2026-05-27 | **Initial Release Engineering harness setup** | agents/, skills/, CLAUDE.md | Build a complete agent team system for CoolHan deployment automation |
 | 2026-05-27 | **Phase 2 complete: 11 architecture conflicts resolved** | knowledge_base/ | Domain module synchronization and architectural consistency |
 | **2026-05-28** | **Development Harness build (Phases 0-4)** | agents/ (6) + skills/coolhan-development-orchestrator + CLAUDE.md | A complete agent team system that automates specification-driven development via natural Korean commands |

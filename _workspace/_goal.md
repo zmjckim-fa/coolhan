@@ -1,19 +1,21 @@
 # Goal (immutable)
 
-run_id: 20260624-doctor
-feature: CoolHan Doctor — post-install verification CLI
+run_id: 20260625-self-audit
+feature: Continuous Self-Audit — concurrent plan-vs-work alignment check during non-stop development
 purpose_fit: |
-  CoolHan is an npm-installable spec-driven dev framework that copies the .claude/
-  agent harness + knowledge_base into a user's project. Users (developers who run
-  `npx coolhan-install`) currently have no way to confirm the install is complete
-  and healthy. "Doctor" verifies a CoolHan installation and reports issues + fixes,
-  embodying CoolHan's own evidence/validation philosophy. Directly serves users.
-scope_boundary (P0 — no arbitrary additions):
-  - ONLY a read-only install health-check CLI (doctor.js) + bin entry + tests + docs.
-  - No changes to agent behavior, no new agents, no network calls, no writes to user files.
+  Non-stop (unattended) development risks drifting away from the planning/spec docs
+  over many units. Add a self-audit that runs CONCURRENTLY inside the continuous-
+  development engine loop: between units it re-reads the planning docs (_goal /
+  requirements / spec / _backlog) and the work done, and self-checks that
+  development is still proceeding correctly and on-plan — catching drift, scope
+  creep, fake completion, and coverage gaps mid-run, not only at final validation.
+scope_boundary (P0):
+  - A read-only, evidence-based audit agent + its weave into the engine loop + docs.
+  - It does NOT replace Validator (per-unit code-vs-spec PASS gate); it is the
+    cross-cutting "are we building the right thing, on track" check.
+  - No new product features; harness self-improvement only.
 definition_of_done:
-  - doctor.js: checks (CLAUDE.md pointer, core agents, orchestrator skills, KB modules, node engine), per-check pass/warn/fail, summary, exit 0/1, fix hints.
-  - package.json bin `coolhan-doctor` + files[] include doctor.js.
-  - __tests__/doctor.test.js green (jest).
-  - README + QUICK_START + CHANGELOG mention.
-  - full `npx jest` passes; commit + push (English message).
+  - agents/self-auditor.md (role, checks, output schema, verdict, collaboration)
+  - orchestrator: Self-Audit woven into continuous-engine loop + working-mode line
+  - CLAUDE.md: team table + change history
+  - adversarial verification: on-track → ALIGNED(continue); drifted → DRIFT(correct/pause), 0 false +/-

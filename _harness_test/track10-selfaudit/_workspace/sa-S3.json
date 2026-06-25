@@ -1,0 +1,34 @@
+{
+  "round": 1,
+  "goal_ref": "_workspace/_goal.md",
+  "scope_alignment": {
+    "in_scope": true,
+    "creep": []
+  },
+  "coverage": {
+    "done": 1,
+    "pending": 1,
+    "missing": [],
+    "backlog_accurate": false
+  },
+  "dod_progress": 0.33,
+  "completion_integrity": {
+    "unverified_done": [
+      "U2 endpoint — backlog marks 'done' but no test/curl verification evidence exists on disk; code present but unverified = fake completion"
+    ]
+  },
+  "risks": [
+    "Backlog overstates progress: U2 counted as done inflates DoD; real converging state is lower than reported"
+  ],
+  "drift_vs_prev": "none",
+  "verdict": "DRIFT",
+  "action": "correct",
+  "evidence": [
+    "_goal.md: scope = CSV export (work in-scope, no creep)",
+    "_backlog.md U1 = done; evidence present",
+    "_backlog.md U2 = 'done' but NO test/curl output found — Check 4 (Completion integrity) FAIL",
+    "_backlog.md U3 = todo",
+    "work-done: U2 endpoint code exists but never executed/verified",
+    "DoD recomputed excluding unverified U2: 1 of 3 truly done = 0.33 (backlog claimed 0.67)"
+  ]
+}

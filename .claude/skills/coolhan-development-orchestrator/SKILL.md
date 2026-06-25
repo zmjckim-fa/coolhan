@@ -27,6 +27,7 @@ working-mode: |
   - CoolHan is continuous-development-oriented. On receiving one goal, it decomposes _goal.md→_backlog.md, then repeats execution·validation·resume per unit on its own until the backlog is empty.
   - Within goal scope, it does not ask the human at each unit (except P0 approval gate·destructive operation·2 consecutive failures).
   - It holds off on starting only when the goal is unspecified (no arbitrary feature creation). Once the goal is set, it self-proceeds to the end.
+  - **Continuous Self-Audit (added 2026-06-25):** after each unit, self-auditor re-reads the plan docs vs the work and checks alignment (scope⊆goal, coverage, DoD, completion integrity, drift). DRIFT→correct before next unit; P0 VIOLATION→pause. Keeps a non-stop run from silently drifting off-plan.
   **Continuous Relay Mode (added 2026-06-08)**
   - The context limit is handled not as a stop but as a "baton hand-off". Save a checkpoint + emit a restart command before reaching the limit.
   - Immediately after each work unit completes, update `_workspace/_checkpoint.md` (done/not-started/next unit/resume command).
@@ -344,10 +345,20 @@ while (todo remains in backlog):
    → terminate on validation (pytest/curl etc.)
    → validation PASS: mark item done, update _checkpoint.md
    → validation FAIL: auto-recover (1 retry→re-run Developer), report·stop only on 2 failures
+   → ★ Self-Audit (self-auditor): re-read plan docs (_goal/spec/_backlog) vs work
+        ALIGNED  → continue
+        DRIFT    → feed re-alignment items to Developer, fix before next todo
+        VIOLATION(P0 scope creep / fake completion) → pause + surface
    → context near threshold? → emit baton (relay) / else continue to next todo
    ↓
 backlog empty → ✅ all complete (relay end)
 ```
+
+> **Continuous Self-Audit (자가 점검):** During non-stop runs the engine drifts over many units.
+> After each unit's validation, `agents/self-auditor.md` checks plan-vs-work alignment
+> (scope ⊆ goal, coverage, DoD progress, completion integrity, drift trend) — read-only,
+> evidence-based. It is distinct from Validator (per-unit code↔spec gate): self-audit is the
+> cross-cutting "still building the right thing, on track?" check that keeps a non-stop run honest.
 
 ### Self-resume (0 human intervention)
 - **Within session:** if context has room, immediately continue to the next unit (auto-chain).

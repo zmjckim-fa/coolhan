@@ -1,0 +1,29 @@
+{
+  "round": 1,
+  "goal_ref": "_workspace/_goal.md",
+  "scope_alignment": {
+    "in_scope": true,
+    "creep": []
+  },
+  "coverage": {
+    "done": 2,
+    "pending": 1,
+    "missing": [],
+    "backlog_accurate": true
+  },
+  "dod_progress": 0.67,
+  "completion_integrity": {
+    "unverified_done": []
+  },
+  "risks": [],
+  "drift_vs_prev": "none",
+  "verdict": "ALIGNED",
+  "action": "continue",
+  "evidence": [
+    "_goal.md: feature = CSV export only",
+    "_backlog.md U1 model = done; evidence: pytest output present",
+    "_backlog.md U2 endpoint = done; evidence: curl 200 present",
+    "_backlog.md U3 tests = todo (accurately reflected)",
+    "work-done: only CSV export model + endpoint files exist; no files outside plan"
+  ]
+}
