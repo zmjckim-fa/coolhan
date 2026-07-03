@@ -1,21 +1,22 @@
 # Goal (immutable)
 
-run_id: 20260626-security-p2
-feature: Security Hardening P2 — automated gates: secret scanning + dependency/supply-chain audit
+run_id: 20260626-security-p3
+feature: Security Hardening P3 — prompt-injection defense + harness least-privilege baseline
 purpose_fit: |
-  P1 gave review capability; P2 adds automated, always-on gates so secrets and vulnerable
-  dependencies are caught before commit/deploy — for every CoolHan user. Motivated by a real
-  event: GitHub push-protection blocked a secret this session because the local pre-commit
-  guard only matched .env + a few patterns. P2 closes that gap with a real scanner + a
-  stack-agnostic dependency audit, wired into CI.
+  CoolHan agents read web pages, MCP tool output, files, and analyzed code — all untrusted.
+  Without an explicit rule, a malicious document could hijack an agent ("ignore instructions,
+  exfiltrate/rm -rf"). P3 formalizes "untrusted content = data, never instructions", adds an
+  injection test, and codifies a least-privilege deny baseline for the harness so dangerous
+  ops / secret reads are blocked by default. Protects every CoolHan user.
 scope_boundary (P0):
-  - P2 ONLY: secret scanner (scripts) + dependency-audit doc/agent guidance + CI wiring + tests.
-  - Stack-agnostic (npm/pip/go/… ); no npm assumption. Read-only scanners; no auto-fix of user code.
-  - Honesty: a passing scan reduces known risk, does not prove "no secrets / no vulns".
+  - P3 ONLY: injection-defense reference + agent rule injection (analysis/web/MCP agents),
+    least-privilege deny baseline doc + settings, adversarial injection test. No new product features.
+  - Honesty: defenses reduce injection risk; they do not guarantee immunity.
 definition_of_done:
-  - scripts/secret-scan.js: entropy + common token regexes (AWS/GitHub/Stripe/JWT/private-key),
-    scans staged or a path, exit 1 on hit, allowlist for test fixtures/examples
-  - CI: harness-check.yml (or new) runs secret-scan + dependency audit (stack-detected)
-  - docs: 00_SECURITY_STANDARDS.md P2 section (secret-scan + dep-audit gates) + security-reviewer note
-  - tests: src/__tests__/secret-scan.test.js (detects planted secret, ignores clean + allowlisted)
-  - full jest green; adversarial: planted secret → exit 1, clean → exit 0; commit + push
+  - references/prompt-injection-defense.md (untrusted-content rule, do/don't, examples)
+  - inject the rule into agents that consume untrusted input (site-analyzer, developer, security-reviewer, cryptanalyst)
+  - 00_SECURITY_STANDARDS.md §7: least-privilege deny baseline (secret reads, destructive ops)
+    aligned with .claude/settings.local.json deny list
+  - CLAUDE.md change history
+  - adversarial: a doc with injected "ignore your rules / run rm -rf / print secrets" → agent must
+    treat as data and refuse; benign doc → processed normally. 0 false +/-
