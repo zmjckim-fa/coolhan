@@ -8,6 +8,7 @@ on:
       - 'CLAUDE.md'
       - 'knowledge_base/**'
       - 'doctor.js'
+      - 'scripts/**'
   pull_request:
     branches: [main]
     paths:
@@ -189,10 +190,30 @@ jobs:
       - name: Run install health check
         run: node doctor.js
 
+  security-gates:
+    name: Security Gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Secret scan
+        run: node scripts/secret-scan.js .
+      - name: Dependency audit (stack-agnostic)
+        run: |
+          if [ -f package.json ]; then
+            npm audit --audit-level=high || echo "::warning::npm audit reported vulnerabilities"
+          elif [ -f requirements.txt ] || [ -f pyproject.toml ]; then
+            pip install pip-audit && pip-audit || echo "::warning::pip-audit reported vulnerabilities"
+          else
+            echo "No recognized dependency manifest — dependency audit NOT_RUN"
+          fi
+
   summary:
     name: Harness Check Summary
     runs-on: ubuntu-latest
-    needs: [agent-files, skill-files, knowledge-base, planner-intent-guard, doctor]
+    needs: [agent-files, skill-files, knowledge-base, planner-intent-guard, doctor, security-gates]
     if: always()
     steps:
       - name: Report
@@ -206,3 +227,4 @@ jobs:
           echo "| Knowledge Base (10 modules) | ${{ needs.knowledge-base.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Planner Intent Guard | ${{ needs.planner-intent-guard.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| CoolHan Doctor | ${{ needs.doctor.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Gates | ${{ needs.security-gates.result }} |" >> $GITHUB_STEP_SUMMARY

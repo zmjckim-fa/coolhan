@@ -1,19 +1,21 @@
 # Goal (immutable)
 
-run_id: 20260626-security-p1
-feature: Security Hardening P1 — Security KB + Security Reviewer agent + Validator stage-6 upgrade + honesty caveat
+run_id: 20260626-security-p2
+feature: Security Hardening P2 — automated gates: secret scanning + dependency/supply-chain audit
 purpose_fit: |
-  CoolHan generates code for users and runs agents with web/MCP/file access, yet security
-  is scattered and light (Validator stage 6 = 1 line; no security KB/agent). P1 gives the
-  harness a real, evidence-based security review capability so generated code is hardened
-  from the first line and reviewed before deploy — serving every CoolHan user.
+  P1 gave review capability; P2 adds automated, always-on gates so secrets and vulnerable
+  dependencies are caught before commit/deploy — for every CoolHan user. Motivated by a real
+  event: GitHub push-protection blocked a secret this session because the local pre-commit
+  guard only matched .env + a few patterns. P2 closes that gap with a real scanner + a
+  stack-agnostic dependency audit, wired into CI.
 scope_boundary (P0):
-  - P1 ONLY: security KB, security-reviewer agent, validator stage-6 upgrade, two-layer
-    honesty caveat, adversarial verification. No P2/P3 items (gates/CI/injection) this run.
-  - "Perfect/100% secure" claims are banned; report controls + residual risk separately.
+  - P2 ONLY: secret scanner (scripts) + dependency-audit doc/agent guidance + CI wiring + tests.
+  - Stack-agnostic (npm/pip/go/… ); no npm assumption. Read-only scanners; no auto-fix of user code.
+  - Honesty: a passing scan reduces known risk, does not prove "no secrets / no vulns".
 definition_of_done:
-  - knowledge_base/00_SECURITY_STANDARDS.md (OWASP/ASVS checklist + acceptance criteria + honesty caveat)
-  - agents/security-reviewer.md (threat-model + SAST review, evidence-based, two-layer verdict, deploy gate)
-  - validator.md stage 6 references the security KB checklist (not a one-liner)
-  - CLAUDE.md team table + change history
-  - adversarial verification: vulnerable sample → FAIL(item+loc+fix); clean → PASS; 0 false +/-
+  - scripts/secret-scan.js: entropy + common token regexes (AWS/GitHub/Stripe/JWT/private-key),
+    scans staged or a path, exit 1 on hit, allowlist for test fixtures/examples
+  - CI: harness-check.yml (or new) runs secret-scan + dependency audit (stack-detected)
+  - docs: 00_SECURITY_STANDARDS.md P2 section (secret-scan + dep-audit gates) + security-reviewer note
+  - tests: src/__tests__/secret-scan.test.js (detects planted secret, ignores clean + allowlisted)
+  - full jest green; adversarial: planted secret → exit 1, clean → exit 0; commit + push

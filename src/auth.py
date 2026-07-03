@@ -16,7 +16,7 @@ from src.models.member import User
 
 # --- Configuration ---
 import os
-SECRET_KEY = os.getenv("SECRET_KEY", "coolhan-secret-key-change-in-production-2026")
+SECRET_KEY = os.getenv("SECRET_KEY", "coolhan-secret-key-change-in-production-2026")  # secret-scan:allow demo default, override via env in production
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
 

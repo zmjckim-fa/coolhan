@@ -67,7 +67,33 @@ Each item: verdict pass/warn/fail/n-a + evidence (file:line) + fix. P0 items fai
 ```
 - `gate = FAIL` if any P0 (A/B/C) item is `fail`. Otherwise PASS with residual_risk listed.
 
-## 5. Scope of application
+## 5. Automated gates (P2)
+
+Always-on gates, not just human review. A passing gate reduces known risk; it does not prove "no secrets / no vulns".
+
+### 5.1 Secret scanning
+- `scripts/secret-scan.js` — named provider patterns (AWS/GitHub/Stripe/Slack/Google/JWT/private-key)
+  + generic `secret=…` assignments + high-entropy tokens in credential context.
+- Run: `node scripts/secret-scan.js --staged` (pre-commit) or on a path (CI). Exit 1 blocks.
+- Allowlist: line marker `secret-scan:allow` or paths under `_harness_test/` (intentional examples).
+- Rationale: the previous pre-commit guard matched only `.env` + a few patterns, so a hardcoded
+  token reached the remote and was caught only by host push-protection. This closes that gap locally.
+
+### 5.2 Dependency / supply-chain audit (stack-agnostic)
+Detect the stack (no npm assumption) and run the matching audit; fail on high/critical CVEs.
+
+| Stack signal | Audit command |
+|---|---|
+| package.json | `npm audit --audit-level=high` |
+| requirements.txt / pyproject | `pip-audit` |
+| Gemfile | `bundle audit` |
+| go.mod | `govulncheck ./...` |
+| composer.json | `composer audit` |
+| pom.xml / gradle | `mvn org.owasp:dependency-check-maven:check` |
+
+- Wire into pre-deploy + CI. Report CVE id + package + fixed version. Missing tool → NOT_RUN (do not silently pass).
+
+## 6. Scope of application
 - agents/security-reviewer.md — primary driver; pre-deploy gate.
 - agents/validator.md stage 6 — references this checklist (no longer a one-liner).
 - Generated code: apply secure-by-default from the first line (compose with HX item 8 security UX).
