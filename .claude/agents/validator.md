@@ -90,9 +90,14 @@ Runs CoolHan's 9-stage verification pipeline to confirm the code is 100% spec-co
 
 8️⃣ Test Coverage Validation
    └─ Number of test cases, coverage, execution success rate
+   └─ **Real execution required (no simulation, C10):** consume `agents/execution-runner.md`
+      evidence (`_workspace/exec-evidence-{id}.json`) — the actual test exit code/output.
+      Do not mark tests "pass" without a captured exit. Missing tool/env → NOT_RUN (honest), not pass.
 
 9️⃣ Deployment Readiness
    └─ Linting, build success, dependency verification
+   └─ Build/install status comes from the Execution Runner's real evidence (install/build phase),
+      captured via `scripts/exec-runner.js` — not asserted.
 
 🔟 Human-Experience (HX) Verification ★ NEW (2026-06-09) — P0 gate
    └─ Compare against the `references/human-experience-standard.md` checklist

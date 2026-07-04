@@ -1,0 +1,16 @@
+{
+  "dir": "C:\\sites\\CoolHan builder\\_harness_test\\track13-execution\\_workspace\\app-fail",
+  "stack": "node",
+  "status": "FAILED",
+  "results": [
+    {
+      "phase": "test",
+      "command": "npm test",
+      "status": "FAILED",
+      "exit": 1,
+      "ms": 745,
+      "stdout_tail": "\n> app-fail@1.0.0 test\n> node -e \"const a=require('./sum');if(a(2,3)!==5){console.error('FAIL: expected 5, got '+a(2,3));process.exit(1)};console.log('ok')\"\n\n",
+      "stderr_tail": "FAIL: expected 5, got -1\n"
+    }
+  ]
+}

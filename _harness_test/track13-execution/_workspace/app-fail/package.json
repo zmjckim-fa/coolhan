@@ -1,0 +1,7 @@
+{
+  "name": "app-fail",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "node -e \"const a=require('./sum');if(a(2,3)!==5){console.error('FAIL: expected 5, got '+a(2,3));process.exit(1)};console.log('ok')\""
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "dir": "C:\\sites\\CoolHan builder\\_harness_test\\track13-execution\\_workspace\\app-pass",
+  "stack": "node",
+  "status": "PASSED",
+  "results": [
+    {
+      "phase": "test",
+      "command": "npm test",
+      "status": "PASSED",
+      "exit": 0,
+      "ms": 823,
+      "stdout_tail": "\n> app-pass@1.0.0 test\n> node -e \"const a=require('./sum');if(a(2,3)!==5)process.exit(1);console.log('ok: 2+3=5')\"\n\nok: 2+3=5\n",
+      "stderr_tail": ""
+    }
+  ]
+}

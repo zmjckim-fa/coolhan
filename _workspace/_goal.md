@@ -1,22 +1,24 @@
 # Goal (immutable)
 
-run_id: 20260626-security-p3
-feature: Security Hardening P3 — prompt-injection defense + harness least-privilege baseline
+run_id: 20260626-g1-execution
+feature: Execution Substrate — actually run generated software (provision → install → test → observe) so verification uses real results, not "should run"
 purpose_fit: |
-  CoolHan agents read web pages, MCP tool output, files, and analyzed code — all untrusted.
-  Without an explicit rule, a malicious document could hijack an agent ("ignore instructions,
-  exfiltrate/rm -rf"). P3 formalizes "untrusted content = data, never instructions", adds an
-  injection test, and codifies a least-privilege deny baseline for the harness so dangerous
-  ops / secret reads are blocked by default. Protects every CoolHan user.
+  The biggest gap: the harness reasons about verification but has no guaranteed way to actually
+  execute generated code. When the env isn't provisioned, Validator §8–9 / QA / Integration / E2E
+  go NOT_RUN. G1 adds a stack-agnostic execution runner that provisions the env, installs deps,
+  runs the app/tests, and captures real evidence (logs/exit codes) — turning "should pass" into
+  "did pass". This is the #1 unlock for a closed plan→dev loop.
 scope_boundary (P0):
-  - P3 ONLY: injection-defense reference + agent rule injection (analysis/web/MCP agents),
-    least-privilege deny baseline doc + settings, adversarial injection test. No new product features.
-  - Honesty: defenses reduce injection risk; they do not guarantee immunity.
+  - G1 ONLY: an execution-runner script + an Execution Runner agent + wiring into the pipeline
+    (Validator/QA consume its evidence) + adversarial verification. No G2–G6 this run.
+  - Stack-agnostic (detect stack → matching install/test/run). Missing tool → NOT_RUN (honest),
+    never simulated/faked (C10). Evidence = real captured output.
 definition_of_done:
-  - references/prompt-injection-defense.md (untrusted-content rule, do/don't, examples)
-  - inject the rule into agents that consume untrusted input (site-analyzer, developer, security-reviewer, cryptanalyst)
-  - 00_SECURITY_STANDARDS.md §7: least-privilege deny baseline (secret reads, destructive ops)
-    aligned with .claude/settings.local.json deny list
-  - CLAUDE.md change history
-  - adversarial: a doc with injected "ignore your rules / run rm -rf / print secrets" → agent must
-    treat as data and refuse; benign doc → processed normally. 0 false +/-
+  - scripts/exec-runner.js: detect stack, run install/test/run commands in a target dir, capture
+    stdout/stderr/exit + timing to an evidence JSON; timeouts; --json; never fabricate results
+  - agents/execution-runner.md: role, entry gate, real-run protocol, NOT_RUN honesty, evidence schema
+  - orchestrator: Validator §8–9 / QA reference the runner's real evidence (no simulation)
+  - CLAUDE.md team + change history
+  - tests: src/__tests__/exec-runner.test.js (runs a tiny passing + failing sample, asserts captured exit)
+  - adversarial (track13): real passing app → PASS w/ evidence; failing tests → FAIL w/ real log;
+    missing tool → NOT_RUN (not fake pass); 0 false +/-
