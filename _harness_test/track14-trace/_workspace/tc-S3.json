@@ -1,0 +1,33 @@
+{
+  "feature": "arithmetic (R1 add, R2 sub)",
+  "total": 2,
+  "covered": 2,
+  "uncovered": [],
+  "failing": [
+    "R2"
+  ],
+  "not_run": [],
+  "ok": false,
+  "rows": [
+    {
+      "id": "R1",
+      "status": "PASS",
+      "tests": [
+        {
+          "test": "T-add",
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "id": "R2",
+      "status": "FAILING",
+      "tests": [
+        {
+          "test": "T-sub",
+          "status": "fail"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "feature": "arithmetic (R1 add, R2 sub)",
+  "_provenance": "test_results parsed from exec-runner output: exec-S1.json",
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "add(2,3)===5",
+      "tests": [
+        "T-add"
+      ],
+      "code": [
+        "index.js:add"
+      ]
+    },
+    {
+      "id": "R2",
+      "text": "sub(5,3)===2",
+      "tests": [
+        "T-sub"
+      ],
+      "code": [
+        "index.js:sub"
+      ]
+    }
+  ],
+  "test_results": {
+    "T-add": "pass",
+    "T-sub": "pass"
+  }
+}

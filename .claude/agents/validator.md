@@ -93,6 +93,9 @@ Runs CoolHan's 9-stage verification pipeline to confirm the code is 100% spec-co
    └─ **Real execution required (no simulation, C10):** consume `agents/execution-runner.md`
       evidence (`_workspace/exec-evidence-{id}.json`) — the actual test exit code/output.
       Do not mark tests "pass" without a captured exit. Missing tool/env → NOT_RUN (honest), not pass.
+   └─ **Requirements traceability gate (G2):** run `scripts/trace-check.js _workspace/traceability-{id}.json`.
+      Every requirement must have ≥1 bound acceptance test that PASSED (results filled from real execution).
+      Uncovered / failing / not_run requirement → FAIL. Ref: `references/requirements-traceability.md`.
 
 9️⃣ Deployment Readiness
    └─ Linting, build success, dependency verification

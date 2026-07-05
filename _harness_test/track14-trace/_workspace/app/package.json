@@ -1,0 +1,9 @@
+{
+  "name": "track14-trace-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tiny app for G2 traceability gate adversarial verification (R1 add, R2 sub)",
+  "scripts": {
+    "test": "node test.js"
+  }
+}

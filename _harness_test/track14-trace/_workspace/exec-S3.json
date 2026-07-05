@@ -1,0 +1,16 @@
+{
+  "dir": "C:\\sites\\CoolHan builder\\_harness_test\\track14-trace\\_workspace\\app",
+  "stack": "node",
+  "status": "FAILED",
+  "results": [
+    {
+      "phase": "test",
+      "command": "npm test",
+      "status": "FAILED",
+      "exit": 1,
+      "ms": 2416,
+      "stdout_tail": "\n> track14-trace-app@1.0.0 test\n> node test.js\n\nT-add:pass\nT-sub:fail\n",
+      "stderr_tail": ""
+    }
+  ]
+}

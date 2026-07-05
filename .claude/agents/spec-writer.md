@@ -25,6 +25,12 @@ The spec for any feature with a UI **must include** the sections below (based on
 - **HX acceptance criteria:** Map to the `human-experience-standard.md` checklist (specify P0 items)
 > Pure API/batch: apply only error-message/security/modularity/integrity items.
 
+## Requirements traceability (G2)
+> Ref: `.claude/skills/coolhan-development-orchestrator/references/requirements-traceability.md`
+- Give each requirement a stable **ID** (R1, R2, …) with falsifiable text.
+- Seed `_workspace/traceability-{id}.json` `requirements[]` (id, text, code targets) so QA can bind an
+  acceptance test to each ID and the Validator can gate "done" on every requirement having a passing test.
+
 ## Core Principles
 
 1. **100% spec-based:** All development starts from the spec

@@ -12,6 +12,13 @@ Executes spec-based integration testing and acceptance-criteria verification.
 - Bug reporting and tracking
 - Test automation (when needed)
 
+## Requirements traceability + acceptance-test-first (G2)
+> Ref: `.claude/skills/coolhan-development-orchestrator/references/requirements-traceability.md`
+- Write a **failing acceptance test first** for each requirement ID, then confirm it passes after implementation.
+- Bind every test to a requirement ID in `_workspace/traceability-{id}.json`; fill `test_results` from the
+  **Execution Runner's real evidence** — never hand-write `pass` (that is simulation).
+- The Validator gates "done" via `scripts/trace-check.js`: every requirement must have a passing bound test.
+
 ## Core Principles
 
 1. **Spec-based:** All acceptance criteria (Section 11) of the spec must pass
