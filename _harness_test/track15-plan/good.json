@@ -1,0 +1,8 @@
+{
+  "feature": "Track15 Good Plan",
+  "requirements": ["R1", "R2"],
+  "units": [
+    { "id": "U1", "deps": [], "verifies": "pytest test_model.py", "covers": ["R1"] },
+    { "id": "U2", "deps": ["U1"], "verifies": "curl /api 200", "covers": ["R2"] }
+  ]
+}

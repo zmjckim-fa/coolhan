@@ -1,26 +1,25 @@
 # Goal (immutable)
 
-run_id: 20260626-g2-traceability
-feature: Requirements Traceability + acceptance-test-first — bind each requirement ↔ test ↔ code, gate "done" on per-requirement passing tests
+run_id: 20260626-g3-planquality
+feature: Plan/Spec quality gate BEFORE coding + backlog-decomposition validation
 purpose_fit: |
-  Today "coverage" is asserted, not proven per requirement. G2 makes every requirement traceable
-  to at least one acceptance test and to code, and gates completion on each requirement having a
-  passing bound test. Combined with G1 (real execution), this turns "built to spec" into
-  "every requirement demonstrably satisfied by a real test".
+  Self-Auditor checks alignment DURING dev; Validator checks code vs spec AFTER. Nothing gates the
+  PLAN itself for feasibility/completeness/testability/contradiction before dev starts, nor validates
+  the goal→backlog decomposition (missing units, wrong order, hidden deps). G3 catches bad plans
+  before wasting units — the last of the "closed plan→dev loop" prerequisites alongside G1/G2.
 scope_boundary (P0):
-  - G2 ONLY: a traceability schema + a trace-check gate script + spec-writer/qa wiring +
-    validator gate + adversarial verification. No G3–G6 this run.
-  - Honesty: full traceability proves each requirement has a passing test — not that the
-    requirements themselves are complete or correct (that's the plan-quality gate, G3).
+  - G3 ONLY: a Spec/Plan Reviewer agent (pre-dev gate) + a backlog-decomposition validator script
+    (dependency graph, completeness, each unit independently verifiable) + wiring + adversarial verify.
+  - Honesty: a passing plan gate means the plan is coherent/testable/decomposed — not that the
+    requirements are what the user ultimately wanted (that remains human judgment).
 definition_of_done:
-  - scripts/trace-check.js: read a traceability file (requirements[] {id, text, tests[], code[]})
-    + test results; verify every requirement has ≥1 bound test and status=pass; report uncovered/failing;
-    exit 1 if any requirement uncovered or its bound test failing; --json
-  - references/requirements-traceability.md: matrix schema + acceptance-test-first rule (write a
-    failing acceptance test per requirement BEFORE coding) + gate definition
-  - spec-writer.md (emit requirement IDs) + qa-tester.md (bind tests to requirement IDs) reference it
-  - validator.md: "done" gate requires trace-check pass (every requirement → passing test)
-  - CLAUDE.md change history
-  - tests: src/__tests__/trace-check.test.js
-  - adversarial (track14): fully-covered+passing → PASS; a requirement with no test → FAIL(uncovered);
-    a requirement whose test failed → FAIL; 0 false +/-
+  - scripts/plan-check.js: validate a backlog file (units[] {id, deps[], verifies}) — every unit has a
+    verification, dependency graph is acyclic + all deps exist, ordering respects deps, requirement
+    coverage (each requirement mapped to ≥1 unit); exit 1 on any violation; --json
+  - agents/plan-reviewer.md: pre-dev gate — reviews spec+plan for feasibility, completeness,
+    testability, internal contradiction, decomposition quality; two-layer (structural pass vs open risks)
+  - orchestrator: run plan-check + Plan Reviewer BEFORE Task 3 (dev); block on FAIL
+  - CLAUDE.md team + change history
+  - tests: src/__tests__/plan-check.test.js
+  - adversarial (track15): good plan → PASS; cyclic deps → FAIL; a unit with no verification → FAIL;
+    a requirement not covered by any unit → FAIL; 0 false +/-

@@ -682,6 +682,7 @@ Prepare resources
 |------|------------|
 | Task 1 | `_workspace/01_requirements-{id}.md` |
 | Task 2 | `_workspace/02_specification-{id}.md` |
+| Task 2.5 | `_workspace/02b_plan-review-{id}.json` (+ .md) |
 | Task 3 | `_workspace/03_code-{id}/` |
 | Task 4 | `_workspace/04_validation-report-{id}.json` |
 | Task 5 | `_workspace/05_test-results-{id}.json` |
@@ -748,6 +749,25 @@ Task 2: Write CoolHan spec (Spec Writer)
 ├─ Domain module selection (knowledge_base/)
 ├─ Write spec + **mandatory integration of UX/design spec section** + check conflict with existing specs
 └─ Output: knowledge_base/{domain}.md (includes UX spec)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛑 Task 2.5: Plan/Spec quality gate (Plan Reviewer) ★ NEW (G3) — PASS-required, before any coding
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+├─ Depends: Task 2 complete (spec) + backlog decomposed (_workspace/_backlog.md or plan.json)
+├─ **Structural gate (mechanical, non-waivable):** `node scripts/plan-check.js <plan.json>` —
+│  dependency graph acyclic + deps exist, ordering respects deps, every unit has a `verifies`
+│  command, every requirement covered by ≥1 unit. Exit 1 → hard FAIL, return to spec-writer.
+├─ **Open-risk review (judgment, advisory unless P0):** feasibility (does `verifies` actually test
+│  what `covers` claims?), completeness (DoD ↔ backlog units), testability (no vague/manual
+│  `verifies`), contradiction (spec/goal/backlog mutually exclusive statements), decomposition
+│  quality (units too large/too small).
+├─ Gate: FAIL on structural violation OR a P0-severity contradiction — dev blocked until fixed.
+├─ Honesty: PASS means the plan is coherent/testable/decomposed — not that it's what the user
+│  ultimately wanted (human judgment).
+└─ Output: _workspace/02b_plan-review-{id}.json (+ .md)
+
+**On FAIL:** re-run Spec Writer (Task 2) with the specific violations; re-check before Task 3.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Task 3: Specification-driven code implementation (Developer)
 ├─ Depends: Task 2 complete
