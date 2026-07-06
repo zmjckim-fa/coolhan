@@ -1,0 +1,7 @@
+{"run_id":"r1","unit":"u1","gate":"security","status":"FAIL","reason":"hardcoded secret","timestamp":"t1"}
+{"run_id":"r2","unit":"u2-auth","gate":"security","status":"FAIL","reason":"hardcoded secret","timestamp":"t2"}
+{"run_id":"r3","unit":"u3","gate":"validator","status":"PASS","reason":"","timestamp":"t3"}
+{"run_id":"r4","unit":"u4-login","gate":"validator","status":"FAIL","reason":"stage 9 regression","timestamp":"t4"}
+{"run_id":"r5","unit":"u5","gate":"plan","status":"FAIL","reason":"missing verifies command","timestamp":"t5"}
+{"run_id":"r6","unit":"u6","gate":"security","status":"PASS","reason":"","timestamp":"t6"}
+{"run_id":"r7","unit":"u7","gate":"security","status":"PASS","reason":"","timestamp":"t7"}

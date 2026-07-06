@@ -36,10 +36,16 @@ or simulates a result.
 ## Entry Gate
 ```
 1️⃣ Target dir exists with a recognized stack signal? (else NOT_RUN: "no recognized stack")
-2️⃣ Required tool on PATH? (else that phase NOT_RUN with reason)
+2️⃣ Required env vars provisioned? (`scripts/provision-check.js` — else NOT_RUN: "missing required env: KEY1, KEY2", never a fabricated FAILED)
+3️⃣ Required tool on PATH? (else that phase NOT_RUN with reason)
 ```
 
 ## Work Steps
+0. **Provision check (G6, pre-flight):** `node scripts/provision-check.js <dir>` — reads
+   `.env.example`/`.env.sample` and checks required env vars are present (name-only, never logs a
+   value). Missing → **NOT_RUN** with reason `"missing required env: KEY1, KEY2"` — distinct from
+   "tool not installed" and distinct from a code-level FAILED. Do not proceed to install/test/run
+   until resolved (or the missing vars are explicitly acknowledged as out-of-scope for this run).
 1. Detect stack (`scripts/exec-runner.js` STACKS table).
 2. Run `install` → `test` (→ `run` if requested), capturing evidence per phase.
 3. If `install` FAILED/NOT_RUN → mark `test` NOT_RUN (results untrustworthy), stop.
@@ -50,6 +56,7 @@ or simulates a result.
 ```json
 {
   "dir": "...", "stack": "node|python-fastapi|...",
+  "provision_check": { "ok": true, "missing": [] },
   "status": "PASSED | FAILED | NOT_RUN",
   "results": [
     { "phase": "install", "command": "npm install", "status": "PASSED", "exit": 0, "ms": 4200 },
@@ -69,6 +76,7 @@ or simulates a result.
 | Situation | Handling |
 |------|------|
 | No stack signal | NOT_RUN ("no recognized stack") |
+| Required env var missing (G6) | NOT_RUN ("missing required env: KEY1, KEY2") — name only, never the value; do not run install/test until provisioned |
 | Tool not installed | phase NOT_RUN + reason (e.g., "pytest not installed") |
 | Timeout | FAILED (reason: timeout) |
 | Install fails | test NOT_RUN (untrustworthy), return install log |

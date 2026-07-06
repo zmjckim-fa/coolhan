@@ -1,36 +1,40 @@
 # Goal (immutable)
 
-run_id: 20260706-g5-ledger
-feature: Run ledger + failure-lesson feedback (G5)
+run_id: 20260706-g6-provision
+feature: Environment/secret provisioning check as a first-class pre-execution stage (G6)
 purpose_fit: |
-  Every gate (Validator, Security Reviewer, Plan Reviewer, regression-check, trace-check) produces a
-  verdict, but nothing persists it across runs. Each new run starts blind — if the same mistake (e.g. a
-  recurring security anti-pattern, a recurring plan contradiction, a recurring flaky test) was already
-  caught and fixed once, the harness has no memory of it and can repeat the same failure cycle. G5
-  closes this: an append-only ledger of gate outcomes across runs, plus a "lessons" query that surfaces
-  recurring failure signatures (same gate + same reason appearing ≥2 times) so upstream agents
-  (Plan Reviewer pre-dev, Security Reviewer pre-deploy) can warn before repeating a known mistake.
+  G1 (exec-runner) runs install/test/run and honestly reports NOT_RUN when a TOOL is missing — but it
+  has no concept of missing ENVIRONMENT (required env vars/config undeclared or unset). A stack can
+  have every tool installed and still fail for a reason the harness currently reports as a generic
+  install/test FAILED, indistinguishable from a real code defect. This misleads Validator/devops into
+  treating an environment gap as a code bug. G6 adds a provisioning check that runs before G1: it reads
+  the project's declared required env vars (from a .env.example/.env.sample convention), checks which
+  are present in the environment, and reports missing ones by NAME ONLY — never their value. This also
+  hardens the P3 least-privilege/secret baseline: no evidence, ledger entry, or log line produced by
+  this or any gate may ever contain an actual secret value.
 scope_boundary (P0):
-  - G5 ONLY: scripts/ledger.js (append/query/lessons) + wiring so Validator/Security
-    Reviewer/Plan Reviewer read lessons before their gate and write their outcome after + adversarial
-    verify. Does not change any gate's pass/fail logic — the ledger is advisory (surfaces a WARNING,
-    never auto-blocks); a recurring pattern is a prompt for extra scrutiny, not a new hard gate.
-  - Storage: append-only JSONL at _workspace/_ledger.jsonl (one JSON object per line, never rewritten
-    except by explicit prune, so historical evidence is never silently lost).
-  - Honesty: a "lesson" is a correlation (same gate+reason recurred N times) — not a proven root cause;
-    label it as a pattern to watch, not a diagnosis.
+  - G6 ONLY: scripts/provision-check.js (declared-vs-present env var check, name-only reporting) +
+    wiring into execution-runner.md as a pre-flight step before G1's install/test/run + adversarial
+    verify. Does NOT provision infrastructure (no cloud resource creation, no DB spin-up, no secret
+    generation) — that remains a human/ops responsibility. This is a READINESS CHECK, not a provisioner.
+  - Convention: a project declares required env vars via `.env.example` (or `.env.sample`) — each
+    non-comment `KEY=` line names a required var. No such file → nothing required, check passes
+    trivially (not an error).
+  - Honesty: "missing env var" is a distinct, named reason from "tool not installed" (G1) or "code
+    defect" (Validator) — never conflate them. Never print or log an actual env var VALUE anywhere in
+    this feature's output, evidence, or ledger entries — name and presence boolean only.
 definition_of_done:
-  - scripts/ledger.js: append(entry) writes one JSONL line {run_id, unit, gate, status, reason,
-    timestamp}; query(filter) reads and filters by gate/status/unit substring; lessons(minCount=2)
-    groups by (gate, reason) and returns signatures recurring at or above minCount, sorted by count
-    desc; CLI: `node scripts/ledger.js append '<json>'`, `node scripts/ledger.js query --gate X
-    --status FAIL`, `node scripts/ledger.js lessons [--min N] [--json]`.
-  - Wired: Validator/Security Reviewer/Plan Reviewer append their gate outcome after running; Plan
-    Reviewer and Security Reviewer additionally query lessons() before running and surface any
-    recurring pattern matching their gate name as an advisory warning (not a block).
+  - scripts/provision-check.js: given a directory, find `.env.example`/`.env.sample`, extract required
+    key names, check `process.env` (or a supplied env object, for testability) for presence of each
+    (empty string counts as missing), report {required: [...], present: [...], missing: [...], ok}.
+    Exit 1 if any required key missing; exit 0 if all present or no example file found; --json.
+    NEVER include a value in any output field — enforced by construction (only key names collected).
+  - Wired: execution-runner.md runs provision-check before exec-runner's install/test/run phases;
+    missing required env → NOT_RUN with reason "missing required env: KEY1, KEY2" (distinct from G1's
+    "tool not installed" NOT_RUN reason) — not a fabricated FAILED, not silently skipped.
   - CLAUDE.md team/change-history entries.
-  - tests: src/__tests__/ledger.test.js
-  - adversarial (track17): append N entries with a repeated (gate,reason) pair ≥2 times → lessons()
-    surfaces it; a (gate,reason) appearing only once → not surfaced; query filters correctly by
-    gate/status/unit; ledger file is append-only (existing lines never mutated by a new append);
-    0 false +/-
+  - tests: src/__tests__/provision-check.test.js
+  - adversarial (track18): all required vars present → PASS; one missing → FAIL naming only the key
+    (never the value of vars that ARE present); no .env.example present → PASS (nothing required,
+    not an error); a var present but set to empty string → treated as missing; confirm no secret
+    VALUE ever appears in any script output across all cases; 0 false +/-

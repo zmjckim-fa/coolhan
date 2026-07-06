@@ -1,11 +1,11 @@
-# Backlog — run_id 20260706-g5-ledger
+# Backlog — run_id 20260706-g6-provision
 
 | # | Unit | Files | Verification | Status |
 |---|------|-------|--------------|--------|
-| U1 | Ledger script | scripts/ledger.js | node --check + append writes JSONL line, query filters by gate/status/unit, lessons() surfaces recurring (gate,reason) >=minCount, CLI works, --json | ✅ done |
-| U2 | Tests | src/__tests__/ledger.test.js | jest ledger pass | ✅ done (11/11) |
-| U3 | Wiring | agents/(validator, security-reviewer, plan-reviewer).md | append outcome after gate; plan-reviewer/security-reviewer query lessons() before gate, surface as advisory warning | ✅ done |
+| U1 | Provision-check script | scripts/provision-check.js | node --check + all-present→exit0, missing→exit1(named,no values), no-example-file→exit0, empty-string→treated missing, --json | ✅ done |
+| U2 | Tests | src/__tests__/provision-check.test.js | jest provision-check pass | ✅ done (7/7) |
+| U3 | Wiring | agents/execution-runner.md | pre-flight before install/test/run; missing env -> NOT_RUN distinct reason from tool-missing | ✅ done |
 | U4 | Docs | CLAUDE.md (team + history) | history entry | ✅ done |
-| U5 | Adversarial verify | _harness_test/track17-ledger/ | repeated (gate,reason)>=2 -> surfaced, single occurrence -> not surfaced, query filters correct, append-only (no mutation), 0 FP/FN | ✅ done (5 cases, 0 FP/FN, verified directly) |
+| U5 | Adversarial verify | _harness_test/track18-provision/ | all-present->PASS, missing->FAIL(named,no leak), no-file->PASS, empty-string->missing, 0 FP/FN | ✅ done (4 cases, 0 FP/FN, 0 leaks, verified directly) |
 
-next: (backlog empty — G5 complete)
+next: (backlog empty — G6 complete)
