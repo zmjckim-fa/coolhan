@@ -42,6 +42,14 @@ present, requirement coverage)
 2️⃣ Backlog/plan.json present with units[]? (else NOT_RUN — nothing to check)
 ```
 
+## Run Ledger (G5) — advisory only
+- **Before reviewing:** `node scripts/ledger.js lessons --min 2` — check for recurring `plan`-gate
+  failure patterns from past runs. Surface any match as an advisory note ("past runs failed this gate
+  N times for: {reason} — watch for it") alongside this run's own findings. This is a correlation, not
+  a proven cause; it never substitutes for actually reviewing this plan.
+- **After reviewing:** `node scripts/ledger.js append '{"run_id":"...","unit":"...","gate":"plan","status":"PASS|FAIL","reason":"..."}'`
+  to record this gate's outcome for future lessons queries.
+
 ## Work Steps
 1. **Run `scripts/plan-check.js`** on the backlog (converted to plan.json shape if needed): dependency
    cycle, missing/ordering deps, units without verification, uncovered requirements. This is

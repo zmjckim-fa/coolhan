@@ -1,33 +1,36 @@
 # Goal (immutable)
 
-run_id: 20260706-g4-regression
-feature: Full regression + integration gate BEFORE deploy (G4)
+run_id: 20260706-g5-ledger
+feature: Run ledger + failure-lesson feedback (G5)
 purpose_fit: |
-  G1 (execution-runner) runs a unit's own tests for real. G2 (trace-check) proves each requirement has
-  a passing bound test. Neither guarantees the CHANGE didn't silently break something that was already
-  passing elsewhere in the suite — no gate re-runs the FULL test suite and diffs against a prior-known-
-  good baseline before deploy. G4 closes that: a regression gate that runs the whole suite (via G1's
-  stack-agnostic exec-runner), compares against a stored baseline, and blocks deploy if a previously-
-  passing test now fails.
+  Every gate (Validator, Security Reviewer, Plan Reviewer, regression-check, trace-check) produces a
+  verdict, but nothing persists it across runs. Each new run starts blind — if the same mistake (e.g. a
+  recurring security anti-pattern, a recurring plan contradiction, a recurring flaky test) was already
+  caught and fixed once, the harness has no memory of it and can repeat the same failure cycle. G5
+  closes this: an append-only ledger of gate outcomes across runs, plus a "lessons" query that surfaces
+  recurring failure signatures (same gate + same reason appearing ≥2 times) so upstream agents
+  (Plan Reviewer pre-dev, Security Reviewer pre-deploy) can warn before repeating a known mistake.
 scope_boundary (P0):
-  - G4 ONLY: scripts/regression-check.js (baseline compare: newly-failing = regression = FAIL; new
-    tests with no baseline entry = informational, not a regression; pre-existing failures unaffected =
-    not a regression) + baseline storage (_workspace/_test-baseline.json) + wiring into the pre-deploy
-    step (devops-deployer / validator) + adversarial verify.
-  - Reuses G1's exec-runner for the actual full-suite run — does not reimplement test execution.
-  - Honesty: this gate proves "nothing that passed before now fails" — it does NOT prove test coverage
-    is adequate (that's G2/QA) or that the plan was sound (G3).
+  - G5 ONLY: scripts/ledger.js (append/query/lessons) + wiring so Validator/Security
+    Reviewer/Plan Reviewer read lessons before their gate and write their outcome after + adversarial
+    verify. Does not change any gate's pass/fail logic — the ledger is advisory (surfaces a WARNING,
+    never auto-blocks); a recurring pattern is a prompt for extra scrutiny, not a new hard gate.
+  - Storage: append-only JSONL at _workspace/_ledger.jsonl (one JSON object per line, never rewritten
+    except by explicit prune, so historical evidence is never silently lost).
+  - Honesty: a "lesson" is a correlation (same gate+reason recurred N times) — not a proven root cause;
+    label it as a pattern to watch, not a diagnosis.
 definition_of_done:
-  - scripts/regression-check.js: given a current full-suite result (from exec-runner, real evidence)
-    and a baseline JSON {test_name: pass|fail}, classify each test as regression (was pass, now fail),
-    new (not in baseline), fixed (was fail, now pass), unaffected (fail before, fail now), still_pass.
-    Exit 1 if any regression found; exit 0 otherwise; --json; --update-baseline writes current results
-    as the new baseline (only after a clean/approved run).
-  - Wired as a pre-deploy gate: devops-deployer.md (and/or validator.md) runs regression-check before
-    Task 6 deploy proceeds; FAIL blocks deploy, returns to Developer.
+  - scripts/ledger.js: append(entry) writes one JSONL line {run_id, unit, gate, status, reason,
+    timestamp}; query(filter) reads and filters by gate/status/unit substring; lessons(minCount=2)
+    groups by (gate, reason) and returns signatures recurring at or above minCount, sorted by count
+    desc; CLI: `node scripts/ledger.js append '<json>'`, `node scripts/ledger.js query --gate X
+    --status FAIL`, `node scripts/ledger.js lessons [--min N] [--json]`.
+  - Wired: Validator/Security Reviewer/Plan Reviewer append their gate outcome after running; Plan
+    Reviewer and Security Reviewer additionally query lessons() before running and surface any
+    recurring pattern matching their gate name as an advisory warning (not a block).
   - CLAUDE.md team/change-history entries.
-  - tests: src/__tests__/regression-check.test.js
-  - adversarial (track16): baseline all-pass + current all-pass (no changes) → PASS/no regression;
-    one previously-passing test now fails → FAIL (regression flagged, named); a new test not in
-    baseline → passes through as "new", not a regression; a test that was already failing and still
-    fails → "unaffected", not a regression; 0 false +/-
+  - tests: src/__tests__/ledger.test.js
+  - adversarial (track17): append N entries with a repeated (gate,reason) pair ≥2 times → lessons()
+    surfaces it; a (gate,reason) appearing only once → not surfaced; query filters correctly by
+    gate/status/unit; ledger file is append-only (existing lines never mutated by a new append);
+    0 false +/-

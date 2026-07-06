@@ -38,6 +38,13 @@
 2️⃣ Spec/requirements available for trust-boundary context? (else partial — code-only review, noted)
 ```
 
+## Run Ledger (G5) — advisory only
+- **Before reviewing:** `node scripts/ledger.js lessons --min 2` — check for recurring `security`-gate
+  failure patterns from past runs (e.g. the same category of vulnerability keeps recurring). Surface
+  a match as an advisory note; it is a correlation across runs, not a substitute for this review.
+- **After reviewing:** `node scripts/ledger.js append '{"run_id":"...","unit":"...","gate":"security","status":"PASS|FAIL","reason":"..."}'`
+  to record this gate's outcome (reason = the failing category, e.g. "hardcoded secret").
+
 ## Work Steps
 1. **Threat-model lite:** list entry points (routes/inputs), assets (tables/PII), trust boundaries, attacker goals.
 2. **Checklist review** (security KB §1): for each category A–D, inspect code → verdict + evidence + fix.

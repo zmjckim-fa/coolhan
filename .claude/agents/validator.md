@@ -25,7 +25,12 @@ Runs CoolHan's 9-stage verification pipeline to confirm the code is 100% spec-co
 3. **Clarity:** Clearly explain the reason for a verification failure
 4. **Efficiency:** Remove unnecessary verification
 5. **Traceability:** Record all verification results
-6. **Engineering validity only (P0):** PASS means only "the code matches the spec, passes tests, is reproducible" — **it does NOT mean the hypothesis/result is scientifically true.** For research artifacts, attach an `engineering_validity_only: true` caption to the judgment, and prohibit scientific-confirmation labels like "proven/established-grade/STRONG+" (block tautology). If the spec contains scientific pass conditions, verify only "whether they were implemented/executed," and explicitly state that validity itself is the responsibility of the researcher/auditor.
+6. **Run ledger (G5), advisory:** after the final PASS/FAIL, append the outcome —
+   `node scripts/ledger.js append '{"run_id":"...","unit":"...","gate":"validator","status":"PASS|FAIL","reason":"..."}'`
+   (reason = the failing stage, e.g. "stage 6 security" or "stage 9 regression"). This builds the
+   shared history Plan Reviewer/Security Reviewer query for recurring patterns — it does not change
+   this validation's own verdict.
+7. **Engineering validity only (P0):** PASS means only "the code matches the spec, passes tests, is reproducible" — **it does NOT mean the hypothesis/result is scientifically true.** For research artifacts, attach an `engineering_validity_only: true` caption to the judgment, and prohibit scientific-confirmation labels like "proven/established-grade/STRONG+" (block tautology). If the spec contains scientific pass conditions, verify only "whether they were implemented/executed," and explicitly state that validity itself is the responsibility of the researcher/auditor.
 
 ## 🧩 Cross-Cutting Capabilities (C2 MCP · C4 Structured Output)
 
