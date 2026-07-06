@@ -1,11 +1,11 @@
-# Backlog — run_id 20260626-g3-planquality
+# Backlog — run_id 20260706-g4-regression
 
 | # | Unit | Files | Verification | Status |
 |---|------|-------|--------------|--------|
-| U1 | Plan-check script | scripts/plan-check.js | node --check + good→exit0, cyclic→exit1, unit-no-verify→exit1, uncovered-req→exit1, --json | ✅ done |
-| U2 | Tests | src/__tests__/plan-check.test.js | jest plan-check pass | ✅ done (9/9) |
-| U3 | Plan Reviewer agent | .claude/agents/plan-reviewer.md | pre-dev gate: feasibility/completeness/testability/contradiction/decomposition, two-layer | ✅ done |
-| U4 | Orchestrator wiring + docs | SKILL.md (plan gate before Task 3) + CLAUDE.md | gate before dev; team/history | ✅ done |
-| U5 | Adversarial verify | _harness_test/track15-plan/ | good→PASS, cyclic→FAIL, no-verify→FAIL, uncovered→FAIL, 0 FP/FN | ✅ done (6 cases, 0 FP/FN) |
+| U1 | Regression-check script | scripts/regression-check.js | node --check + no-change→exit0, new-fail→exit1(regression named), new-test→pass-through, pre-existing-fail→unaffected, --json, --update-baseline | ✅ done |
+| U2 | Tests | src/__tests__/regression-check.test.js | jest regression-check pass | ✅ done (8/8) |
+| U3 | Pre-deploy wiring | agents/devops-deployer.md + agents/validator.md | regression-check runs before Task 6 deploy, FAIL blocks | ✅ done |
+| U4 | Docs | CLAUDE.md (team + history) | history entry | ✅ done |
+| U5 | Adversarial verify | _harness_test/track16-regression/ | no-change→PASS, regression→FAIL(named), new-test→pass-through, pre-existing-fail→unaffected, 0 FP/FN | ✅ done (7 cases, 0 FP/FN) |
 
-next: (backlog empty — G3 complete)
+next: (backlog empty — G4 complete)

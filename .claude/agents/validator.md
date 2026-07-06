@@ -101,6 +101,11 @@ Runs CoolHan's 9-stage verification pipeline to confirm the code is 100% spec-co
    └─ Linting, build success, dependency verification
    └─ Build/install status comes from the Execution Runner's real evidence (install/build phase),
       captured via `scripts/exec-runner.js` — not asserted.
+   └─ **Full regression gate (G4):** run `scripts/regression-check.js <current-results.json>
+      _workspace/_test-baseline.json` — full suite (not just this unit's tests) vs the stored
+      known-good baseline. Any previously-passing test now failing → FAIL, blocks deploy. New/fixed/
+      pre-existing-failing tests are informational, not blockers. Owned in depth by
+      `agents/devops-deployer.md` Step 2.5; Validator cites the same result, doesn't re-derive it.
 
 🔟 Human-Experience (HX) Verification ★ NEW (2026-06-09) — P0 gate
    └─ Compare against the `references/human-experience-standard.md` checklist

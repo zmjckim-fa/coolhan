@@ -60,6 +60,7 @@ Manages CoolHan's deployment lock system and 9-step verification pipeline to ens
 ```
 ✅ Validator: all validations passed
 ✅ QA Tester: all tests passed, 0 bugs
+✅ Regression gate (G4): full suite vs baseline, no regressions
 ✅ Code: latest commit confirmed, all changes committed
 ✅ Environment: deploy environment ready (staging/production)
 ✅ Database: migration ready
@@ -96,6 +97,32 @@ npm run validate:pre-deploy
 # ✅ pre-commit: PASS (all commits comply with rules)
 # ✅ pre-deploy: PASS
 ```
+
+### Step 2.5: Full Regression Gate (G4) ★ NEW — PASS-required, before lock/deploy
+
+**Distinct from G1 (per-unit execution) and G2 (per-requirement trace) — this gate proves the CHANGE
+didn't silently break something else already passing.**
+
+```bash
+# Run the FULL suite for real (no simulation — C10). Use the test framework's own per-test JSON
+# reporter (e.g. `npx jest --json`) or exec-runner.js's `test` phase for stacks without a per-test
+# reporter — then reduce to the {test_name: "pass"|"fail"} shape regression-check.js expects.
+<stack-appropriate full-suite command with per-test JSON output> > _workspace/_current-test-results.json
+
+# Diff against the stored baseline (previously-approved good state)
+node scripts/regression-check.js _workspace/_current-test-results.json _workspace/_test-baseline.json
+```
+
+- **Exit 1 (regression found)** → halt deploy, return the named regressing test(s) to Developer. Do
+  not proceed to Step 3.
+- **Exit 0** → proceed. New tests / fixed tests / pre-existing unaffected failures are informational,
+  not blockers.
+- **After a clean deploy**, update the baseline so future changes are diffed against this new
+  known-good state: `node scripts/regression-check.js <results> <baseline> --update-baseline`.
+- **No stack detected / suite can't run** → NOT_RUN (honest), do not fabricate a pass; escalate rather
+  than skip silently.
+- **Honesty:** PASS means "nothing that passed before now fails" — not full coverage (G2) or plan
+  soundness (G3).
 
 ### Step 3: Acquire Deployment Lock
 
@@ -197,6 +224,7 @@ npm run lock:release {deployment-id}
 |------|------|
 | Deployment lock conflict | Wait for the other deployment to finish, or force-release (procedure required) |
 | Pre-Deploy validation failure | Halt deployment, analyze cause, report to Developer |
+| Regression gate (G4) FAIL | Halt deployment before lock acquisition, report the named regressing test(s) to Developer, do not update baseline |
 | Database migration failure | Roll back, notify Developer |
 | Error during deployment | Halt immediately, roll back to previous version |
 | Post-Deploy health check failure | Start automatic rollback, send notification |

@@ -1,0 +1,7 @@
+{
+  "test_login_success": "fail",
+  "test_login_invalid_password": "pass",
+  "test_logout": "pass",
+  "test_legacy_export_csv": "pass",
+  "test_signup_duplicate_email": "pass"
+}
