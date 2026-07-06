@@ -1,11 +1,10 @@
-# Backlog — run_id 20260706-g6-provision
+# Backlog — run_id 20260707-g7-gaterunner
 
 | # | Unit | Files | Verification | Status |
 |---|------|-------|--------------|--------|
-| U1 | Provision-check script | scripts/provision-check.js | node --check + all-present→exit0, missing→exit1(named,no values), no-example-file→exit0, empty-string→treated missing, --json | ✅ done |
-| U2 | Tests | src/__tests__/provision-check.test.js | jest provision-check pass | ✅ done (7/7) |
-| U3 | Wiring | agents/execution-runner.md | pre-flight before install/test/run; missing env -> NOT_RUN distinct reason from tool-missing | ✅ done |
-| U4 | Docs | CLAUDE.md (team + history) | history entry | ✅ done |
-| U5 | Adversarial verify | _harness_test/track18-provision/ | all-present->PASS, missing->FAIL(named,no leak), no-file->PASS, empty-string->missing, 0 FP/FN | ✅ done (4 cases, 0 FP/FN, 0 leaks, verified directly) |
+| U1 | Gate orchestrator | scripts/gates.js | node --check + reuses modules (require), provision→exec→trace→regression order, honest short-circuit, ledger append, aggregate verdict, --json/--plan/--ledger | ✅ done |
+| U2 | Tests | src/__tests__/gates.test.js | jest gates pass | ✅ done (9/9) |
+| U3 | Docs | CLAUDE.md (history) + SKILL note | history entry + single-entry-point note | ✅ done |
+| U4 | Adversarial verify | _harness_test/track19-gates/ | happy→PASS, provision-missing→downstream SKIPPED, exec-fail→trace/regression SKIPPED, regression→FAIL named, no SKIPPED==PASS, 0 FP/FN | ✅ done (4 cases, real fixtures, exit 0/1/2/1, 0 FP/FN) |
 
-next: (backlog empty — G6 complete)
+next: (backlog empty — G7 complete)

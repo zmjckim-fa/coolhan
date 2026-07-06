@@ -695,6 +695,24 @@ Prepare resources
 
 ---
 
+## 🚦 Gate sequence — single executable entry point (G7)
+
+The pre-deploy gates (G1 execution, G2 traceability, G4 regression, G6 provisioning) are individual
+scripts but compose into one runnable sequence via **`scripts/gates.js`**:
+
+```
+node scripts/gates.js <dir> [--plan plan.json] [--trace trace.json] [--current results.json] [--baseline baseline.json] [--ledger path] [--json]
+```
+- Order: provision (G6) → exec (G1) → trace (G2) → regression (G4); `--plan` runs plan-check (G3) as a
+  separate pre-dev phase. Each gate module is reused via require() — logic is not reimplemented here.
+- **Honest short-circuit (P0):** once a gate is FAILED/NOT_RUN, every downstream gate is SKIPPED —
+  never run, never recorded as PASS. Aggregate verdict: any FAILED → FAIL; else any NOT_RUN → NOT_RUN;
+  else PASS. Each concrete outcome is appended to the ledger (G5).
+- Use this as the one entry point rather than chaining the six scripts by hand; the agent .md files
+  (execution-runner, validator, devops-deployer) describe the same gates individually.
+
+---
+
 ## 📋 Task assignment and dependencies
 
 ### Main workflow (Task 1-6)

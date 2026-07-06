@@ -1,40 +1,41 @@
 # Goal (immutable)
 
-run_id: 20260706-g6-provision
-feature: Environment/secret provisioning check as a first-class pre-execution stage (G6)
+run_id: 20260707-g7-gaterunner
+feature: Gate orchestrator — run G1–G6 in order end-to-end with honest short-circuiting (G7)
 purpose_fit: |
-  G1 (exec-runner) runs install/test/run and honestly reports NOT_RUN when a TOOL is missing — but it
-  has no concept of missing ENVIRONMENT (required env vars/config undeclared or unset). A stack can
-  have every tool installed and still fail for a reason the harness currently reports as a generic
-  install/test FAILED, indistinguishable from a real code defect. This misleads Validator/devops into
-  treating an environment gap as a code bug. G6 adds a provisioning check that runs before G1: it reads
-  the project's declared required env vars (from a .env.example/.env.sample convention), checks which
-  are present in the environment, and reports missing ones by NAME ONLY — never their value. This also
-  hardens the P3 least-privilege/secret baseline: no evidence, ledger entry, or log line produced by
-  this or any gate may ever contain an actual secret value.
+  G1–G6 each exist as an isolated script (provision-check, exec-runner, trace-check, regression-check,
+  ledger, plan-check) proven in its own track. But nothing runs them together in the correct dependency
+  order against one app with one honest aggregate verdict. Today the ordering lives only as prose in
+  agent .md files — a human/LLM must chain them by hand, and there is no verified guarantee that an
+  upstream NOT_RUN/FAILED correctly stops downstream (instead of a downstream gate fabricating a pass on
+  absent evidence). G7 closes the composition gap: a single orchestrator that runs the pre-deploy gate
+  sequence, short-circuits honestly, records each outcome to the ledger, and emits one verdict.
 scope_boundary (P0):
-  - G6 ONLY: scripts/provision-check.js (declared-vs-present env var check, name-only reporting) +
-    wiring into execution-runner.md as a pre-flight step before G1's install/test/run + adversarial
-    verify. Does NOT provision infrastructure (no cloud resource creation, no DB spin-up, no secret
-    generation) — that remains a human/ops responsibility. This is a READINESS CHECK, not a provisioner.
-  - Convention: a project declares required env vars via `.env.example` (or `.env.sample`) — each
-    non-comment `KEY=` line names a required var. No such file → nothing required, check passes
-    trivially (not an error).
-  - Honesty: "missing env var" is a distinct, named reason from "tool not installed" (G1) or "code
-    defect" (Validator) — never conflate them. Never print or log an actual env var VALUE anywhere in
-    this feature's output, evidence, or ledger entries — name and presence boolean only.
+  - G7 ONLY: scripts/gates.js (orchestrate existing gate modules in dependency order) + a test suite +
+    adversarial verify + docs. It REUSES the existing scripts as libraries (require their exported
+    evaluate/run functions) — it must NOT reimplement any gate's logic.
+  - Order (pre-deploy sequence): provision-check → exec-runner → trace-check → regression-check, with
+    each result appended to the ledger (G5). plan-check (G3) is a PRE-dev gate on a plan file, not part
+    of the per-build run sequence, so it is invoked only when a plan file is supplied (separate phase),
+    not inline in the build sequence.
+  - Honest short-circuit (P0): if provision NOT_RUN → stop, downstream = SKIPPED (never run, never
+    faked). If exec FAILED/NOT_RUN → trace + regression = SKIPPED (their evidence would be
+    untrustworthy). A SKIPPED gate is reported as SKIPPED, never as PASS. Aggregate verdict is FAIL if
+    any gate FAILED, NOT_RUN if the sequence couldn't start, else PASS.
+  - No new verification semantics: gates.js decides ordering and aggregation only; each gate's own
+    pass/fail logic is unchanged and owned by its module.
 definition_of_done:
-  - scripts/provision-check.js: given a directory, find `.env.example`/`.env.sample`, extract required
-    key names, check `process.env` (or a supplied env object, for testability) for presence of each
-    (empty string counts as missing), report {required: [...], present: [...], missing: [...], ok}.
-    Exit 1 if any required key missing; exit 0 if all present or no example file found; --json.
-    NEVER include a value in any output field — enforced by construction (only key names collected).
-  - Wired: execution-runner.md runs provision-check before exec-runner's install/test/run phases;
-    missing required env → NOT_RUN with reason "missing required env: KEY1, KEY2" (distinct from G1's
-    "tool not installed" NOT_RUN reason) — not a fabricated FAILED, not silently skipped.
-  - CLAUDE.md team/change-history entries.
-  - tests: src/__tests__/provision-check.test.js
-  - adversarial (track18): all required vars present → PASS; one missing → FAIL naming only the key
-    (never the value of vars that ARE present); no .env.example present → PASS (nothing required,
-    not an error); a var present but set to empty string → treated as missing; confirm no secret
-    VALUE ever appears in any script output across all cases; 0 false +/-
+  - scripts/gates.js: run(targetDir, opts) executes the sequence, returns
+    {gates: [{name, status, reason}], verdict, ledger_written}; honest short-circuit as above; appends
+    each concrete (non-skipped) gate outcome to the ledger via scripts/ledger.js; CLI
+    `node scripts/gates.js <dir> [--plan plan.json] [--json] [--ledger path]`; exit 0 PASS, 1 FAIL,
+    2 NOT_RUN/usage.
+  - Reuses provision-check, exec-runner, trace-check, regression-check, ledger, plan-check as modules
+    (require), not reimplemented.
+  - CLAUDE.md change-history entry; brief note in the orchestrator SKILL that gates.js is the single
+    executable entry point for the gate sequence.
+  - tests: src/__tests__/gates.test.js
+  - adversarial (track19): full happy path (all gates pass) → verdict PASS + each gate PASS in ledger;
+    provision missing → verdict NOT_RUN/FAIL + downstream SKIPPED (not faked); exec FAILED → trace +
+    regression SKIPPED (not faked) + verdict FAIL; a real regression → verdict FAIL named; confirm no
+    SKIPPED gate is ever recorded as PASS; 0 false +/-

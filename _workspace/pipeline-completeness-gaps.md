@@ -54,6 +54,23 @@ DB migrations/seed/config/secret setup for the running app is implicit in DevOps
 3. **G3 plan/spec quality gate** (catch bad plans before wasting units).
 4. G4 regression/integration gate → G5 ledger/lessons → G6 provisioning.
 
+## STATUS (2026-07-07): G1–G6 all built + adversarially verified (tracks 13–18), pushed.
+
+## Second-round rescan — the integration gap (G7)
+Each of G1–G6 exists as its own script (exec-runner/trace-check/plan-check/regression-check/ledger/
+provision-check), tested in isolation and wired into agent .md files as prose. But there is **no single
+executable entry point** that actually runs them in the correct order against one app —
+provision → exec → trace → regression → record to ledger — with one honest overall verdict and correct
+short-circuiting (a NOT_RUN provision must stop before exec; a FAILED exec must not report a fake
+trace). Today the ordering lives only in agent instructions (a human/LLM must chain them). That is the
+decisive remaining gap: the pieces are proven individually but their **composition** is unverified.
+→ Build G7: `scripts/gates.js` — a gate orchestrator that runs the six checks in dependency order on a
+   target dir, short-circuits honestly (NOT_RUN/FAILED upstream stops downstream, never fabricates a
+   downstream pass), appends each gate outcome to the ledger, and emits one aggregate verdict. Proves
+   the closed loop actually closes end-to-end, not just per-piece.
+
+## Honest bound (unchanged)
+
 ## Honest bound
 Even with all six, the harness guarantees **engineering validity** (built-to-spec, tested, reproducible),
 not that the spec is what the user ultimately wanted, nor absence of unknown defects. Human judgment on
