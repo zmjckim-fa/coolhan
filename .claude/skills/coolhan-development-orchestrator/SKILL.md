@@ -18,11 +18,22 @@ working-mode: |
   - On FAIL, auto-recover: 1 retry → re-run Developer → re-validate. Report to user only on 2 consecutive failures.
   - Stop conditions (stop only then): P0 approval gate, unrecoverable error, explicit destructive operation.
   - All automatic decisions are recorded in _workspace/ (audit trail).
-  **Non-Stop Execution (reinforced 2026-06-09)**
+  **Non-Stop Execution (reinforced 2026-06-09; completion-gated 2026-07-07 / G8-B)**
   - **Process multiple units consecutively** in a single turn. No "wait after 1 minute of work". Stop only at stop conditions.
   - Do not insert human approval at every step. HX iterates unattended via the vision critic (below); the human reviews once at the end (or auto-approve).
   - No mid-process questions (within goal scope). When stuck, don't stop — continue via baton/checkpoint.
-  - Stop conditions (only then): P0 gate (new feature not approved by the planner)·unrecoverable (2 failures)·destructive operation·context limit (baton)·goal unspecified.
+  - ⛔ **"Done" is mechanical, not a feeling.** Never declare/behave as complete until
+    `node scripts/completion-check.js _workspace/_backlog.md` exits 0 (every unit done AND validated).
+    A natural pause, "a good stopping point", or finishing one unit is NOT completion — keep going to
+    the next unit automatically.
+  - ⛔ **A context-limit baton is a CONTINUATION, never a completion.** Emitting a baton because
+    context is running out is allowed ONLY as a hand-off (the work resumes next session); it must never
+    be presented as, or substituted for, finishing the goal. "✅ 전체 완료" is permitted only after
+    completion-check passes.
+  - Stop conditions (the ONLY reasons to stop before completion-check passes): P0 gate (new feature not
+    approved by the planner) · unrecoverable (2 consecutive failures) · destructive operation · context
+    limit (emit baton = continuation, not done) · goal genuinely unspecified. Absent one of these,
+    continuing is mandatory.
   **Continuous Development Engine (default ON, 2026-06-08)**
   - CoolHan is continuous-development-oriented. On receiving one goal, it decomposes _goal.md→_backlog.md, then repeats execution·validation·resume per unit on its own until the backlog is empty.
   - Within goal scope, it does not ask the human at each unit (except P0 approval gate·destructive operation·2 consecutive failures).
@@ -338,7 +349,9 @@ CoolHan is **continuous-development-oriented**. On receiving one goal, it repeat
 
 ### Engine loop
 ```
-[Goal received] → save _goal.md → decompose backlog (_backlog.md)
+[Goal received] → Context Ingestion Gate (Phase 0: read all + _context-digest.json + context-check PASS)
+   ↓
+save _goal.md → decompose backlog (_backlog.md)
    ↓
 while (todo remains in backlog):
    execute next todo 1 unit (relevant part of Task 1~6)
@@ -349,10 +362,14 @@ while (todo remains in backlog):
         ALIGNED  → continue
         DRIFT    → feed re-alignment items to Developer, fix before next todo
         VIOLATION(P0 scope creep / fake completion) → pause + surface
-   → context near threshold? → emit baton (relay) / else continue to next todo
+   → context near threshold? → emit baton (CONTINUATION, not done) / else continue to next todo
    ↓
-backlog empty → ✅ all complete (relay end)
+[COMPLETION GATE — G8-B] node scripts/completion-check.js _workspace/_backlog.md
+   ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
+   ✓ every unit done + validated → ✅ 전체 완료 (relay end)
 ```
+> ⛔ The loop ends ONLY when completion-check exits 0, or a stop condition fires. "backlog looks
+> mostly done" / "reached a natural break" / "emitted a baton" are NOT loop exits.
 
 > **Continuous Self-Audit (자가 점검):** During non-stop runs the engine drifts over many units.
 > After each unit's validation, `agents/self-auditor.md` checks plan-vs-work alignment
@@ -618,23 +635,39 @@ _workspace/
 ```
 (After showing the banner, immediately proceed with the normal workflow — no user confirmation needed)
 
-### Phase 0: context check
+### Phase 0: Context Ingestion Gate (G8-A) ★ mandatory — read the whole picture before acting
+
+> **A command is an instruction to advance the WHOLE goal, not to act on the last message in isolation.**
+> Before any task work, the orchestrator MUST read and internalize the full context, then record a
+> digest. Skipping this is the root cause of "acted on the latest command only → wrong output".
 
 ```
 User command
     ↓
-Check existing outputs (_workspace/)
+READ ALL (not just "check exists"):
+  • _workspace/_goal.md            (the immutable goal + scope + DoD)
+  • _workspace/_backlog.md         (units, order, what's done vs remaining)
+  • _workspace/_checkpoint.md      (if present — exact resume point)
+  • the spec doc(s) for this goal  (knowledge_base/ + _workspace/02_specification-*)
+  • CLAUDE.md change-history       (prior development on this area — do not re-do or contradict it)
+  • prior _workspace artifacts     (requirements/spec/validation/test outputs already produced)
+  • relevant knowledge_base module(s) for the domain
     ↓
-Decide execution mode (initial/re-run/partial-fix)
+WRITE _workspace/_context-digest.json  { run_id, sources: {goal, backlog, spec, history, prior_artifacts} }
     ↓
-Prepare resources
+GATE: node scripts/context-check.js _workspace/_context-digest.json --run-id <run_id>
+    ✗ FAIL (missing source / stale run_id) → do NOT start; finish reading + rewrite the digest.
+    ✓ PASS → decide execution mode and proceed.
 ```
 
-**Branches:**
-- **Relay resume:** `_workspace/_checkpoint.md` exists + "continue" type command → immediately resume from the checkpoint's next_action/unit (Continuous Relay)
-- **Initial run:** _workspace/ absent → start from stage 1
-- **Re-run:** _workspace/ exists + new user command → move to _workspace_prev/ then from stage 1
-- **Partial fix:** _workspace/ exists + feedback-based fix → re-run only the relevant stage
+**Execution mode (decided only after the gate passes):**
+- **Relay resume:** `_workspace/_checkpoint.md` exists + "continue" type command → resume from the checkpoint's next_action/unit (Continuous Relay).
+- **Initial run:** no prior goal/backlog → decompose _goal→_backlog first, then start unit 1.
+- **Re-run:** prior outputs + a genuinely new goal → move to _workspace_prev/, then restart.
+- **Partial fix:** prior outputs + feedback → re-run only the relevant stage.
+
+> The digest is cheap insurance: a few lines proving the full spec + prior development were actually
+> read, so the next unit builds ON the existing work instead of diverging from it.
 
 ### Phase 1-6: main workflow (agent team)
 

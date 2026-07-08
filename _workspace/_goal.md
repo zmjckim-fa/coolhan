@@ -1,41 +1,47 @@
 # Goal (immutable)
 
-run_id: 20260707-g7-gaterunner
-feature: Gate orchestrator — run G1–G6 in order end-to-end with honest short-circuiting (G7)
+run_id: 20260707-g8-context-completion
+feature: Mandatory context ingestion + 100%-completion enforcement (G8) — fix "stops early" and "acts on latest command only"
 purpose_fit: |
-  G1–G6 each exist as an isolated script (provision-check, exec-runner, trace-check, regression-check,
-  ledger, plan-check) proven in its own track. But nothing runs them together in the correct dependency
-  order against one app with one honest aggregate verdict. Today the ordering lives only as prose in
-  agent .md files — a human/LLM must chain them by hand, and there is no verified guarantee that an
-  upstream NOT_RUN/FAILED correctly stops downstream (instead of a downstream gate fabricating a pass on
-  absent evidence). G7 closes the composition gap: a single orchestrator that runs the pre-deploy gate
-  sequence, short-circuits honestly, records each outcome to the ledger, and emits one verdict.
+  Two recurring, user-reported harness defects:
+  (1) STOPS EARLY — "쿨한으로 작업하라" stops mid-work instead of running until 100% done. Root cause:
+      the working-mode lists "context limit → baton" as a normal outcome, and there is no mechanical
+      check that a "complete" claim actually means the whole backlog is done+validated. So the engine
+      can declare/behave as done, or pause, before the work is finished.
+  (2) ACTS ON LATEST COMMAND ONLY → wrong output. Root cause: Phase 0 "context check" only checks
+      whether _workspace outputs EXIST; it never forces the orchestrator to actually READ and
+      internalize the full spec + prior development (goal, backlog, spec docs, CLAUDE.md history,
+      prior _workspace artifacts, relevant knowledge_base) before acting. So it works from the last
+      message alone and drifts.
 scope_boundary (P0):
-  - G7 ONLY: scripts/gates.js (orchestrate existing gate modules in dependency order) + a test suite +
-    adversarial verify + docs. It REUSES the existing scripts as libraries (require their exported
-    evaluate/run functions) — it must NOT reimplement any gate's logic.
-  - Order (pre-deploy sequence): provision-check → exec-runner → trace-check → regression-check, with
-    each result appended to the ledger (G5). plan-check (G3) is a PRE-dev gate on a plan file, not part
-    of the per-build run sequence, so it is invoked only when a plan file is supplied (separate phase),
-    not inline in the build sequence.
-  - Honest short-circuit (P0): if provision NOT_RUN → stop, downstream = SKIPPED (never run, never
-    faked). If exec FAILED/NOT_RUN → trace + regression = SKIPPED (their evidence would be
-    untrustworthy). A SKIPPED gate is reported as SKIPPED, never as PASS. Aggregate verdict is FAIL if
-    any gate FAILED, NOT_RUN if the sequence couldn't start, else PASS.
-  - No new verification semantics: gates.js decides ordering and aggregation only; each gate's own
-    pass/fail logic is unchanged and owned by its module.
+  - G8 ONLY: two mechanical gates + their wiring into the orchestrator SKILL/agents + tests + adversarial.
+    (A) Context Ingestion Gate: scripts/context-check.js verifies a per-run context digest
+        (_workspace/_context-digest.json) exists and references the required source docs BEFORE any
+        development task runs. SKILL Phase 0 rewritten from "check existence" to "read all + produce
+        digest, or halt".
+    (B) Completion Gate: scripts/completion-check.js parses the backlog and confirms 100%
+        (every unit done AND validated) before a "✅ all complete" declaration is allowed; exit 1 if
+        any unit is todo/in-progress/unvalidated. Working-mode reworded so the ONLY acceptable end
+        states are (a) 100% complete, or (b) a genuine stop condition — a context-limit baton is a
+        CONTINUATION, never a completion, and "pausing at a natural break" is banned.
+  - Does NOT change what the gates downstream (G1-G7) verify; this is about starting fully-informed and
+    not ending early.
+  - Honesty: these gates enforce "read the declared sources" and "backlog is 100% done", not that the
+    digest was deeply understood or that the backlog itself is correct/complete (that is G3/human).
 definition_of_done:
-  - scripts/gates.js: run(targetDir, opts) executes the sequence, returns
-    {gates: [{name, status, reason}], verdict, ledger_written}; honest short-circuit as above; appends
-    each concrete (non-skipped) gate outcome to the ledger via scripts/ledger.js; CLI
-    `node scripts/gates.js <dir> [--plan plan.json] [--json] [--ledger path]`; exit 0 PASS, 1 FAIL,
-    2 NOT_RUN/usage.
-  - Reuses provision-check, exec-runner, trace-check, regression-check, ledger, plan-check as modules
-    (require), not reimplemented.
-  - CLAUDE.md change-history entry; brief note in the orchestrator SKILL that gates.js is the single
-    executable entry point for the gate sequence.
-  - tests: src/__tests__/gates.test.js
-  - adversarial (track19): full happy path (all gates pass) → verdict PASS + each gate PASS in ledger;
-    provision missing → verdict NOT_RUN/FAIL + downstream SKIPPED (not faked); exec FAILED → trace +
-    regression SKIPPED (not faked) + verdict FAIL; a real regression → verdict FAIL named; confirm no
-    SKIPPED gate is ever recorded as PASS; 0 false +/-
+  - scripts/context-check.js: given a digest file + a list of required source keys, verify the digest
+    exists, is fresh (matches current run_id), and references every required source (goal, backlog,
+    spec, history, prior_artifacts); exit 1 + name missing sources otherwise; --json.
+  - scripts/completion-check.js: given a backlog file, parse unit rows + statuses; ok only if every
+    unit is done AND validated (a done-but-unvalidated or todo/in-progress unit → not ok); report
+    remaining units; exit 1 if not 100%; --json.
+  - SKILL.md: Phase 0 rewritten as a Context Ingestion Gate (mandatory full read → _context-digest.json
+    → only then proceed); working-mode "Non-Stop"/"Completion" reworded (baton ≠ done; ban early stop;
+    completion-check must pass before "all complete").
+  - agents: intent-analyzer (or orchestrator note) reads full context first; a short note in
+    self-auditor that completion-check gates the "done" claim.
+  - CLAUDE.md change-history entry.
+  - tests: src/__tests__/context-check.test.js + src/__tests__/completion-check.test.js
+  - adversarial (track20): digest missing a required source → context gate FAIL(named); complete digest
+    → PASS; backlog with any non-done/unvalidated unit → completion FAIL(remaining named); all
+    done+validated → PASS; stale digest (wrong run_id) → FAIL; 0 false +/-

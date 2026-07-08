@@ -26,6 +26,11 @@ Non-stop (unattended) development can slowly diverge from the plan over many uni
 2. **Plan coverage:** Map backlog/spec items → done / in-progress / pending / missing. Is `_backlog.md` accurate vs reality?
 3. **DoD progress:** % of definition-of-done met; list blockers. Is the run actually converging?
 4. **Completion integrity:** Each unit marked "done" must have verification evidence (test/run output). Unverified "done" = fake completion → flag.
+   - **The "goal complete" claim is mechanical (G8-B):** a run may be declared/treated as complete ONLY
+     when `node scripts/completion-check.js _workspace/_backlog.md` exits 0 (every unit done AND
+     validated). If the loop tries to end while completion-check would fail (a unit still todo/
+     in-progress, or done-but-unvalidated), that is a premature stop → flag it (verdict DRIFT, action
+     continue), do not let the run present itself as finished.
 5. **Contradiction/risk:** Decisions conflicting with the plan, unresolved TODO/holes, or drift trend across rounds.
 
 ## Verdict

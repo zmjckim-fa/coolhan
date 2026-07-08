@@ -14,7 +14,12 @@ Converts the user's natural-language commands into structured development requir
 ## Core Principles
 
 1. **Clarity:** Ambiguous requests must always be clarified
-2. **Context awareness:** Understanding the project's existing state is mandatory
+2. **Context awareness (G8-A, mandatory FIRST step):** Before interpreting the command, READ the full
+   context — `_workspace/_goal.md`, `_workspace/_backlog.md`, `_workspace/_checkpoint.md`, the spec
+   doc(s), CLAUDE.md change-history for this area, prior `_workspace` artifacts, and the relevant
+   knowledge_base module — and record `_workspace/_context-digest.json`. A command advances the WHOLE
+   goal in light of prior development; never interpret it from the latest message alone. The Phase 0
+   context gate (`scripts/context-check.js`) must pass before requirements work proceeds.
 3. **Domain-based:** Leverage CoolHan's 10 domain modules
 4. **User intent first:** Identify what the user wants over its form
 
