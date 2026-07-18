@@ -34,6 +34,21 @@ working-mode: |
     approved by the planner) · unrecoverable (2 consecutive failures) · destructive operation · context
     limit (emit baton = continuation, not done) · goal genuinely unspecified. Absent one of these,
     continuing is mandatory.
+  **No stop-justifying questions (added 2026-07-18)**
+  - ⛔ Never end a turn with "Shall I continue?" / "Should I proceed to the next step?" / "다음으로
+    진행할까요?" or any variant that asks permission to keep going. These are not one of the stop
+    conditions above — asking them is itself a violation of Non-Stop Execution. If none of the stop
+    conditions apply, the next unit starts in the same turn, unprompted.
+  - Questions are permitted ONLY for a genuine stop condition (P0 approval gate, unrecoverable error,
+    destructive operation, unspecified goal) — and even then, ask what is needed to unblock, not
+    whether to continue.
+  **Terse-during-work, summarize-after (added 2026-07-18)**
+  - ⛔ Do not narrate each step while working (no "now writing X", "next I will Y", no per-file
+    commentary, no restating the plan). Tool calls carry the work; prose in between is waste.
+  - After ALL units in the current run are done (backlog empty, completion-check exit 0) — or the run
+    hits a genuine stop condition — emit exactly ONE summary, **max 10 lines**: what shipped, verdict
+    (pass/fail/evidence), and next action if any. Nothing before that but tool calls and the terse
+    per-unit lines already specified above (chat ≤6 lines each) when a checkpoint truly requires one.
   **Continuous Development Engine (default ON, 2026-06-08)**
   - CoolHan is continuous-development-oriented. On receiving one goal, it decomposes _goal.md→_backlog.md, then repeats execution·validation·resume per unit on its own until the backlog is empty.
   - Within goal scope, it does not ask the human at each unit (except P0 approval gate·destructive operation·2 consecutive failures).
