@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.1] - 2026-07-18
+
+### Fixed
+
+- **Release workflow**: `.github/workflows/release.yml`'s archive step tarred `.` while
+  writing the output archive into `.`, which makes GNU tar exit non-zero ("file changed
+  as we read it") and fails the step under `bash -e` — so the v1.2.0 tag push never
+  produced a GitHub Release (update-check reported a 404). Fixed by building the archive
+  outside the working tree, then moving it into place. All v1.2.0 functional changes are
+  included in this release.
+
 ## [1.2.0] - 2026-07-18
 
 ### Added

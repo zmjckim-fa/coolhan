@@ -67,7 +67,11 @@ jobs:
       - name: Create release archive
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          tar -czf "coolhan-${VERSION}.tar.gz" \
+          ARCHIVE="coolhan-${VERSION}.tar.gz"
+          # Build outside the working tree first: tar-ing "." while writing the archive
+          # into "." makes GNU tar exit non-zero ("file changed as we read it"), which
+          # fails the step under `bash -e` even though the archive is otherwise fine.
+          tar -czf "/tmp/${ARCHIVE}" \
             --exclude=".git" \
             --exclude="node_modules" \
             --exclude="_workspace" \
@@ -75,7 +79,8 @@ jobs:
             --exclude="coverage" \
             --exclude="*.sqlite" \
             .
-          echo "Archive created: coolhan-${VERSION}.tar.gz"
+          mv "/tmp/${ARCHIVE}" "${ARCHIVE}"
+          echo "Archive created: ${ARCHIVE}"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
