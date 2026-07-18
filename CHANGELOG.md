@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.2.0] - 2026-07-18
 
 ### Added
 
@@ -8,12 +8,41 @@
   verification CLI. Checks CLAUDE.md harness pointers, the 6 core agents, the
   development orchestrator skill, the knowledge-base domain modules, and the Node
   engine; prints per-check pass/warn/fail with fix hints; exits `0` when healthy,
-  `1` on problems. `--json` for CI. Covered by `src/__tests__/doctor.test.js`.
-- **Doctor integration & i18n**
-  - `install.js` runs a non-fatal self-check after install and reports pass/issues
-  - `doctor` localized output (English/Korean) via `--lang ko|en` or `LANG`/`LC_ALL`
-  - CI: `harness-check.yml` adds a CoolHan Doctor job that runs `node doctor.js`
-  - Corrected stale "(5 agents)/(8 hooks)" counts in the installer summary
+  `1` on problems. `--json` for CI. Non-fatal self-check runs automatically after
+  `install.js`. Localized output (English/Korean) via `--lang ko|en` or `LANG`/`LC_ALL`.
+- **G1–G8 closed-loop verification gates** — turn "should pass" into "did pass":
+  - G1 execution substrate (`scripts/exec-runner.js`): real, stack-agnostic install/test/run
+    with captured exit codes/output; missing tool → honest `NOT_RUN`, never a fabricated pass.
+  - G2 requirements traceability (`scripts/trace-check.js`): every requirement bound to a
+    passing acceptance test, backed by G1's real results.
+  - G3 pre-dev plan/spec quality gate (`scripts/plan-check.js` + `agents/plan-reviewer.md`):
+    catches cyclic/missing dependencies, unverifiable units, and uncovered requirements
+    before coding starts.
+  - G4 full regression gate (`scripts/regression-check.js`): blocks deploy on any test that
+    regressed from pass to fail.
+  - G5 run ledger (`scripts/ledger.js`): append-only history of gate outcomes with
+    recurring-failure detection.
+  - G6 environment/secret provisioning gate (`scripts/provision-check.js`): honest `NOT_RUN`
+    for missing required env vars, name-only (never logs values).
+  - G7 gate orchestrator (`scripts/gates.js`): single entry point running G1/G2/G4/G6 in
+    dependency order with correct short-circuiting.
+  - G8 context-ingestion + 100%-completion enforcement (`scripts/context-check.js`,
+    `scripts/completion-check.js`): mandatory full-context read before work starts; "done"
+    is mechanically gated on every backlog unit being done AND validated.
+- **Continuous Self-Audit** (`agents/self-auditor.md`): mid-run, read-only check that
+  non-stop development stays on-plan (scope creep, fake completion, drift).
+- **Security hardening P1–P3**:
+  - P1: `knowledge_base/00_SECURITY_STANDARDS.md` (OWASP/ASVS checklist) +
+    `agents/security-reviewer.md` (threat-model/SAST-style pre-deploy gate).
+  - P2: `scripts/secret-scan.js` (provider-token + entropy detection, pre-commit/CI gate)
+    and stack-agnostic dependency-audit guidance.
+  - P3: prompt-injection defense (untrusted content is data, never instructions) and a
+    least-privilege deny baseline for the harness's own permissions.
+- **Non-stop execution rules**: banned stop-justifying questions ("shall I continue?") and
+  step-by-step narration mid-task — work runs silently to completion (or a genuine stop
+  condition), then reports once in ≤10 lines.
+- Full documentation translation to English across `.claude/`, `knowledge_base/`, and root
+  docs (trigger strings for the 50+ supported languages are preserved as functional data).
 
 ## [1.1.0] - 2026-06-13
 
