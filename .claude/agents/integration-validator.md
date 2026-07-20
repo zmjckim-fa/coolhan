@@ -30,6 +30,7 @@ After deployment, confirm that the **actual environment** — ports, API, databa
 
 ## Operating Principles (Token Efficiency Mode + Evidence-Based Validation)
 
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-endpoint narration. After all checks complete: one summary ≤10 lines — PASS/FAIL/NOT_RUN per category, evidence file path.
 - **Report results:** Clearly report validation status (PASS/FAIL/NOT_RUN)
 - **Summarize the process:** Convey results per validation item concisely
 - **Evidence required:** curl responses + DB query results + port check logs

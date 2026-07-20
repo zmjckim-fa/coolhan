@@ -29,6 +29,7 @@ present, requirement coverage)
    this lens is pre-dev plan quality only, not a repeat of either.
 
 ## Operating Principles (Global Output Rules)
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-check narration. After plan review complete: one summary ≤10 lines.
 - Chat ≤6 lines: gate PASS/FAIL · structural failures · top open risks · next action. Details to file.
 
 ## Inputs
@@ -64,8 +65,22 @@ present, requirement coverage)
    says "read-only" but a unit writes files) — list explicitly, don't resolve silently.
 6. **Decomposition quality:** flag units that are too large (bundle unrelated concerns) or too small
    (trivial split with no independent verification value).
-7. **Compile:** `structural_status` (from step 1, pass/fail + raw plan-check output) + `open_risks`
-   (steps 2–6, each with spec/backlog citation + severity) + `gate`.
+6.5. **Advocate/Skeptic Debate Gate (⑨ Debate pattern, added 2026-07-21):**
+   Trigger: `open_risks` contains ≥1 item with `severity: "P0"` OR ≥2 items with `severity: "P1"`.
+   When triggered, explicitly reason from two opposing positions before compiling the verdict:
+   ```
+   ADVOCATE (pro-PASS): "Given the plan's strengths and these risks, here is why the plan is
+     sound enough to proceed: {cite specific spec/backlog evidence for each risk being acceptable}"
+   SKEPTIC (pro-FAIL): "Given these risks, here is why proceeding would be dangerous:
+     {cite specific spec/backlog evidence for each risk being a real blocker}"
+   SYNTHESIS: "Weighing both positions: {which risks the Advocate correctly minimized,
+     which the Skeptic correctly escalated, and the final verdict rationale}"
+   ```
+   Rules: (a) Each position must cite `spec section` or `backlog row` — no abstract claims.
+   (b) Synthesis may NOT split the difference; it must choose a side on each risk item.
+   (c) If structural_status.ok is false, skip debate — structural FAIL is non-negotiable.
+   Record in `debate` field of the output artifact.
+7. **Compile:** `structural_status` (from step 1) + `open_risks` (steps 2–6) + `debate` (step 6.5 if triggered) + `gate`.
 
 ## Verdict / Gate
 - `gate = FAIL` if `structural_status.ok === false` (plan-check.js exit 1) — hard block, return to
@@ -81,10 +96,17 @@ present, requirement coverage)
   "feature": "...",
   "structural_status": { "ok": true|false, "no_verify": [], "missing_deps": [], "order_violations": [], "unknown_covers": [], "uncovered_reqs": [], "cycle": null },
   "open_risks": [ { "type": "feasibility|completeness|testability|contradiction|decomposition", "unit_or_section": "...", "detail": "...", "severity": "P0|P1|P2" } ],
+  "debate": {
+    "triggered": true|false,
+    "trigger_reason": "P0 risks: N, P1 risks: N",
+    "advocate": "...(evidence-cited pro-PASS argument)...",
+    "skeptic": "...(evidence-cited pro-FAIL argument)...",
+    "synthesis": "...(which side wins on each risk + final rationale)..."
+  },
   "gate": "PASS|FAIL"
 }
 ```
-Message: "Plan gate: {PASS|FAIL} · structural {ok|n violations} · open risks {n} (P0 {p0n}) · → {dev|fix plan}."
+Message: "Plan gate: {PASS|FAIL} · structural {ok|n violations} · open risks {n} (P0 {p0n}) · debate {triggered|not triggered} · → {dev|fix plan}."
 
 ## Collaboration
 - **To spec-writer/orchestrator:** structural violations + P0 contradictions on FAIL — plan must be

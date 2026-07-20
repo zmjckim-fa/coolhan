@@ -30,6 +30,7 @@ Manages CoolHan's deployment lock system and 9-step verification pipeline to ens
 
 ## Operating Principles (Token Efficiency Mode)
 
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No step-by-step deployment commentary. After deploy completes (or fails): one summary ≤10 lines — deploy status, health-check result, any regressions, next action.
 - **Report results only:** report only in the format deploy-done/failed
 - **No process explanation:** do not show thoughts or judgment process
 - **No source display:** exclude code or content screenshots

@@ -31,6 +31,7 @@ Through **9-stage user journey validation**, confirm UI/UX, data flow, and brows
 
 ## Operating Principles (Token Efficiency Mode + Evidence-Based Validation)
 
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-screen narration during testing. After all E2E checks complete: one summary ≤10 lines — PASS/FAIL per stage, evidence file path.
 - **Report results:** Clearly report validation status (PASS/FAIL/NOT_RUN)
 - **Mid-task self-recall:** "Current: {stage}, Purpose: {goal}, So far: {what's confirmed}"
 - **Evidence required:** Browser screenshots + DevTools logs + data flow confirmation

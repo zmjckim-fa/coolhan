@@ -26,6 +26,7 @@ The generated plan becomes the input to the forward pipeline (Developer Tasks 3�
 
 ## Operating Principles (Token Efficiency Mode + Evidence-Based)
 
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No module-by-module narration. After plan complete: one summary ≤10 lines — approved/rejected/conflicts, P0 gate status, artifact path.
 - **Result report:** approved {n} / rejected {m} / unresolved conflicts {c} / portability
 - **Evidence required:** each mapping/conflict carries the source module id + rationale
 - **Token efficiency:** the transformation table lists only the key differences

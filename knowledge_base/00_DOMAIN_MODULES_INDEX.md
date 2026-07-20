@@ -33,6 +33,13 @@ The domain-module system provides 10 reusable modules that can be composed into 
 |--------|---------|--------------|-------------|
 | **[10_gdpr_privacy.md](10_gdpr_privacy.md)** | Consent, data access, deletion, retention | Member System | All projects (regulatory) |
 
+### Purchase Proxy / Cross-Border SaaS
+| Module | Purpose | Dependencies | Typical Use |
+|--------|---------|--------------|-------------|
+| **[11_purchase_application.md](11_purchase_application.md)** | 구매신청 5-step form, OrderDraft, commission calc, state machine | Member, Order | Purchase proxy services |
+| **[12_shipping_saas.md](12_shipping_saas.md)** | Warehouse inbound, inspection, pickup (10-step), volumetric weight, 2nd payment | Order, Payment | International shipping proxy |
+| **[13_customs_clearance.md](13_customs_clearance.md)** | PCCC (개인통관고유부호), Unipass API, HS codes, customs documents | Member | Cross-border shipping to Korea |
+
 ---
 
 ## Module Composition Examples
@@ -53,6 +60,13 @@ Member → Admin + Notifications + Privacy
 ```
 01 + 02 + 03 + 04 + 05 + 06 + 07 + 08 + 09 + 10
 All modules: Multi-seller, complex order flow, reviews important
+```
+
+### Purchase Proxy SaaS (구매대행/배송대행)
+```
+01 + 03 + 05 + 06 + 07 + 09 + 11 + 12 + 13
+Member → Payment → Admin + Notifications + Reviews + Orders + Purchase Application + Shipping SaaS + Customs
+Reference: knowledge_base/WEB/02_purchase_proxy/ (7-file solution KB)
 ```
 
 ### Inventory Management System
@@ -161,16 +175,27 @@ Each module document includes 12 sections:
 
 **Base Module Set:** 10/10 ✅ Complete (2026-05-27)
 
+### Extension Modules (Active)
+
+| Module | Status | Completeness |
+|--------|--------|--------------|
+| 11_purchase_application | ✅ Active | 12/12 sections |
+| 12_shipping_saas | ✅ Active | 12/12 sections |
+| 13_customs_clearance | ✅ Active | 12/12 sections |
+
+**Extension Module Set (Purchase Proxy SaaS):** 3/3 ✅ Complete (2026-07-19)  
+Source: Extracted from SchnellMoon/Kleinanzeigen 구매대행 SaaS platform
+
 ---
 
 ## Extension Modules (Future)
 
-When needed, extension modules can be added:
-- 11_analytics_reporting.md - Business intelligence, analytics
-- 12_subscription_billing.md - Recurring payments, subscriptions
-- 13_recommendation_engine.md - Product recommendations, personalization
-- 14_content_management.md - Blog, pages, SEO
+When needed, additional extension modules can be added:
+- 14_content_management.md - Blog, pages, SEO, notices
 - 15_marketplace_seller.md - Multi-seller marketplace features
+- 16_subscription_billing.md - Recurring payments, subscriptions
+- 17_analytics_reporting.md - Business intelligence, analytics
+- 18_recommendation_engine.md - Product recommendations, personalization
 
 Extension modules follow the same 12-section structure.
 
@@ -197,5 +222,5 @@ Extension modules follow the same 12-section structure.
 
 ## Version History
 
-- **2026-05-27**: Initial 10-module base set created
-- **2026-06-??: Extension modules added as needed
+- **2026-05-27**: Initial 10-module base set created (01–10)
+- **2026-07-19**: Extension modules 11–13 added (Purchase Proxy SaaS stack, extracted from SchnellMoon/Kleinanzeigen)

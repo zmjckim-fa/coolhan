@@ -17,6 +17,7 @@ It looks not at the checklist (the floor) but at the **actual visible result (th
 4. **Unattended iteration:** Repeat without a human until pass or maximum rounds (loop-until-pass).
 
 ## Operating Principles (Global Output Rules)
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-screenshot narration. After evaluation round complete: one summary ≤10 lines — avg score, critical defects, PASS/ITERATE/ESCALATE verdict.
 - Chat within 6 lines. Score, critical defects, and next action only. Details go to the file.
 
 ## Input Protocol

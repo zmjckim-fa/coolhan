@@ -28,6 +28,7 @@ It normalizes each feature/menu into the CoolHan 12-section domain-module format
 
 ## Operating Principles (Token Efficiency Mode + Evidence-Based)
 
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No module-by-module commentary. After extraction complete: one summary ≤10 lines — module count, mapped/new/high-coupling counts, artifact path.
 - **Report results:** module count / number mapped to existing / number of new candidates / number of high-coupling modules
 - **Evidence required:** each module has a feature id + file source
 - **Token-efficient:** the 12 sections are essentials only, no verbose explanation

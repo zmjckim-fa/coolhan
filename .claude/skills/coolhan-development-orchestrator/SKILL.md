@@ -464,6 +464,62 @@ resume_command: "쿨한으로 개발 이어서 진행하라 (체크포인트 _wo
 - Do not emit a baton while validation is incomplete (absolute principle: no completion/hand-off without validation).
 - On full completion, output `✅ 전체 완료` instead of a baton to end the relay.
 
+---
+
+## 🔖 Auto-Handoff (Token Efficiency, added 2026-07-21)
+
+**Trigger conditions (either one fires it):**
+1. A work unit's validation PASSES → feature unit complete
+2. The same error class recurs twice in a row in the same unit → error repeating
+
+**On trigger → write the handoff file then notify:**
+
+```
+_workspace/handoff-{MMDD-HHmm}.md   ← timestamp at moment of trigger
+```
+
+**Handoff file format:**
+```markdown
+# CoolHan Handoff — {MMDD-HHmm}
+
+## Trigger
+{unit_complete: "unit N — {feature}" | error_repeat: "error '{class}' × 2 in unit N"}
+
+## Completed units
+{list from _backlog.md with ✅}
+
+## Pending units
+{list from _backlog.md with todo/doing status}
+
+## Last known state
+- Spec: _workspace/02_specification-{id}.md
+- Checkpoint: _workspace/_checkpoint.md
+- Backlog: _workspace/_backlog.md
+
+## To resume in a new session
+Paste exactly:
+쿨한으로 개발 이어서 진행하라 (_workspace/ 폴더의 가장 최근 handoff 파일 읽고 시작)
+
+## Standing rules (self-propagating — copy this block to every handoff)
+- P0: enforce planner intent, evidence required, truth only
+- No monologue, 6-line chat cap, results only
+- After each unit: write handoff if unit_complete OR error_repeat×2
+- New session start: read most recent handoff file before any work
+```
+
+**After writing the handoff file, notify in chat (1 line):**
+```
+🔖 핸드오프 저장: _workspace/handoff-{MMDD-HHmm}.md — 새 세션을 여세요 (또는 계속 진행 가능).
+```
+
+**Difference from baton:** baton = context-limit hand-off (work MUST continue); handoff = token-efficient clean restart (user chooses). Both can coexist in the same session.
+
+**New session start with handoff:**
+```
+쿨한으로 개발 이어서 진행하라 (_workspace/ 폴더의 가장 최근 handoff 파일 읽고 시작)
+```
+→ Read the most recent `handoff-*.md` → load backlog/checkpoint state → continue from pending units.
+
 ### Optional: fully unattended relay
 If the user wants auto-repeat without pasting the baton each time, guide them to use `/loop` (e.g. `/loop 쿨한으로 개발 이어서 진행하라`). Then even if a session breaks at the limit, the same command is auto-re-issued and resumes from the checkpoint.
 
@@ -827,10 +883,14 @@ Task 2: Write CoolHan spec (Spec Writer)
 │  what `covers` claims?), completeness (DoD ↔ backlog units), testability (no vague/manual
 │  `verifies`), contradiction (spec/goal/backlog mutually exclusive statements), decomposition
 │  quality (units too large/too small).
+├─ **[NEW 2026-07-21] Advocate/Skeptic Debate Gate (⑨):** auto-triggers when open_risks has ≥1 P0
+│  OR ≥2 P1 items. Advocate (pro-PASS) and Skeptic (pro-FAIL) each cite spec/backlog evidence.
+│  Synthesis picks a side on each risk. Skipped if structural_status.ok is false. Output includes
+│  `debate` field. See agents/plan-reviewer.md Step 6.5.
 ├─ Gate: FAIL on structural violation OR a P0-severity contradiction — dev blocked until fixed.
 ├─ Honesty: PASS means the plan is coherent/testable/decomposed — not that it's what the user
 │  ultimately wanted (human judgment).
-└─ Output: _workspace/02b_plan-review-{id}.json (+ .md)
+└─ Output: _workspace/02b_plan-review-{id}.json (+ .md) — includes `debate` field when triggered
 
 **On FAIL:** re-run Spec Writer (Task 2) with the specific violations; re-check before Task 3.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -848,10 +908,14 @@ Task 4: 10-stage source validation (Validator) ⭐ PASS-required gate
 │  └─ Detect endpoints/tables not in the planning doc → FAIL
 │  └─ e.g.: planning doc says "User Feedback" but "Health Check API" implemented → detected!
 ├─ Stages 1-9: spec parsing, code analysis, data model, API, status values, security, business logic, tests, deploy readiness
+├─ **[NEW 2026-07-21] Borderline Vote (⑪):** when a stage result is ambiguous (≤2 minor issues,
+│  no P0), auto-triggers 3-criterion vote: A(Spec Fidelity) / B(Risk Materiality) / C(Reproducibility).
+│  2/3 majority decides PASS/FAIL. Minority criterion recorded. Output includes `borderline_votes`
+│  field. See agents/validator.md Step 2.5.
 ├─ **Stage 10: human-centered (HX) validation ★ NEW — P0 gate.** Check against human-experience-standard checklist. P0 (forms/accessibility/responsive/modularization) unmet → FAIL even if code works.
 ├─ **Evidence required:** include each stage's execution log + result (planning intent + HX validation evidence required)
 ├─ Result: PASS ✅ or FAIL ❌ (NOT_RUN if no evidence)
-└─ Output: validation-report-{id}.json (evidence field required, includes planning_intent_check)
+└─ Output: validation-report-{id}.json (evidence field required, includes planning_intent_check + borderline_votes)
 
 Task 5: Integration testing (QA Tester) ⭐ PASS-required gate
 ├─ Depends: Task 4 complete (includes PASS evidence)
@@ -862,6 +926,13 @@ Task 5: Integration testing (QA Tester) ⭐ PASS-required gate
 
 Task 6: Deployment (DevOps/Deployer) ⭐ deployment-success confirmation required
 ├─ Depends: Task 5 complete (includes PASS evidence)
+├─ **Step 2 — Security Reviewer pre-deploy gate (Security Reviewer agent, evidence required):**
+│  threat-model lite → SAST-style checklist (categories A-D) → negative-case check.
+│  gate = FAIL if any P0 category (A/B/C) fails → return to Developer before deploy.
+│  **[NEW 2026-07-21] Debate Gate (⑨):** auto-triggers when residual_risk has ≥2 P1 items OR
+│  verdict is borderline. Advocate(pro-PASS)·Skeptic(pro-FAIL/heightened-risk) each cite file:line.
+│  Synthesis decides per-finding. P0 hard-fails are NEVER subject to debate. Output includes `debate`.
+│  See agents/security-reviewer.md Step 3.5.
 ├─ Pre-Deploy validation, build, DB migration, deploy
 ├─ **Evidence required:** deploy log + health-check response + app-access confirmation
 ├─ Confirm deployment success

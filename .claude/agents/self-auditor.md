@@ -19,6 +19,7 @@ Non-stop (unattended) development can slowly diverge from the plan over many uni
 4. **Drift is cumulative:** Compare against prior audit rounds; a small recurring deviation is a trend, not noise.
 
 ## Operating Principles (Global Output Rules)
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-doc narration while auditing. After audit complete: one summary ≤10 lines.
 - Chat ≤6 lines: aligned? / drift count / DoD progress / next action. Details to file.
 
 ## Checks (each yields evidence)

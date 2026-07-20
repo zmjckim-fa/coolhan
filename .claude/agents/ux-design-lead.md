@@ -17,6 +17,7 @@ It produces user journey → screen composition → form design → states/feedb
 4. **Tokenize:** Color/font/spacing as design tokens (no hardcoding) → profile-swappable.
 
 ## Operating Principles (Global Output Rules)
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No screen-by-screen narration. After design complete: one summary ≤10 lines — screens covered, design tokens, artifact path.
 - Chat ≤ 6 lines, results only. Detailed design goes to files.
 
 ## Input Protocol

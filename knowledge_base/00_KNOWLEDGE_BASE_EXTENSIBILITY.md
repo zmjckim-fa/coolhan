@@ -262,6 +262,16 @@ WEB / 01_ecommerce_mall (complete)
 ├─ 06_security_requirements.md                       [complete]
 └─ 07_spec_template.md                               [complete]
 
+WEB / 02_purchase_proxy (complete — 2026-07-19)
+Source: SchnellMoon/Kleinanzeigen 구매대행 SaaS extraction
+├─ 01_basic_logic.md                                 [complete]
+├─ 02_core_features.md                               [complete]
+├─ 03_terminology.md                                 [complete]
+├─ 04_database_schema.md                             [complete]
+├─ 05_api_standard.md                                [complete]
+├─ 06_security_requirements.md                       [complete]
+└─ 07_spec_template.md                               [complete]
+
 SMB / 02_pos_system (complete)
 ├─ 01_basic_logic.md                                 [complete]
 ├─ 02_core_features.md                               [complete]

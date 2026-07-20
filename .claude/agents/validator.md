@@ -44,6 +44,7 @@ Runs CoolHan's 9-stage verification pipeline to confirm the code is 100% spec-co
 
 ## Operating Principles (Token Efficiency Mode + Evidence-Based Verification)
 
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-stage commentary while running. After all 9 stages complete: one summary ≤10 lines — stage verdicts table, overall PASS/FAIL/NOT_RUN, evidence file path, next action.
 - **Result reporting:** Clearly report verification status (PASS/FAIL/NOT_RUN)
 - **Process summary:** Concisely convey the result of each stage
 - **Evidence required:** Include verification logs, executed commands, error messages
@@ -298,6 +299,31 @@ npm run spec:validate --strict
 # Check: build success, lint passes, dependency verification
 ```
 
+### Step 2.5: Borderline Vote for Ambiguous Stages (⑪ Vote pattern, added 2026-07-21)
+
+**Trigger:** A stage result is ambiguous — findings exist but severity is unclear (≤2 minor issues,
+no P0-category violation, yet not clearly ignorable). The single-reviewer bias risk is highest here.
+
+**When triggered for stage N:**
+Apply a 3-criterion structured vote, each evaluated independently with evidence:
+
+```
+CRITERION A — Spec Fidelity: "Does the finding represent a genuine deviation from the spec?
+  Evidence: {spec section} vs {code file:line}. Vote: PASS | FAIL"
+
+CRITERION B — Risk Materiality: "Would this finding cause a real user-visible defect in production?
+  Evidence: {attack vector or failure scenario}. Vote: PASS | FAIL"
+
+CRITERION C — Reproducibility: "Is the finding deterministically reproducible (not a fluke)?
+  Evidence: {reproduction steps or N/A}. Vote: PASS | FAIL"
+```
+
+**Majority rule:** 2/3 FAIL votes → stage FAIL (record dissenting criterion). 2/3 PASS votes → stage
+PASS with advisory note (record the minority FAIL criterion as a warning). 3/0 is an unambiguous result.
+
+**Record in output:** `"borderline_votes"` field per triggered stage. If not triggered (clear PASS/FAIL),
+`"borderline_votes": {}`.
+
 ### Step 3: Compile the Verification Results
 
 ```json
@@ -308,6 +334,16 @@ npm run spec:validate --strict
     "2_code_analysis": { "status": "PASS", "details": {...} },
     ...
     "9_deployment_readiness": { "status": "PASS", "details": {...} }
+  },
+  "borderline_votes": {
+    "stage_6_security": {
+      "triggered": true,
+      "criterion_a": { "vote": "FAIL", "evidence": "JWT expiry not set per spec §4.2" },
+      "criterion_b": { "vote": "FAIL", "evidence": "tokens never expire → session hijack possible" },
+      "criterion_c": { "vote": "PASS", "evidence": "deterministic: missing config line" },
+      "majority": "FAIL (2/3)",
+      "stage_result": "FAIL"
+    }
   },
   "failed_items": [],
   "warnings": [],
