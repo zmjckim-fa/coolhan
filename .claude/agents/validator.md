@@ -102,6 +102,11 @@ Runs CoolHan's 9-stage verification pipeline to confirm the code is 100% spec-co
    └─ **Requirements traceability gate (G2):** run `scripts/trace-check.js _workspace/traceability-{id}.json`.
       Every requirement must have ≥1 bound acceptance test that PASSED (results filled from real execution).
       Uncovered / failing / not_run requirement → FAIL. Ref: `references/requirements-traceability.md`.
+   └─ **Auto-Pilot task gate (if `TASKS.md` present):** additionally run
+      `scripts/tasks-check.js TASKS.md`. "implemented" alone does not pass — only `verified`
+      (backed by real execution) counts; any `blocked`/`not-started`/`in-progress` unit → FAIL(named).
+   └─ **No-dead-ends scan:** run `scripts/no-placeholder-check.js` over the changed/covered files.
+      A TODO/FIXME/"coming soon"/placeholder marker in code claimed done → FAIL(file:line).
 
 9️⃣ Deployment Readiness
    └─ Linting, build success, dependency verification

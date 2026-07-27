@@ -1,0 +1,10 @@
+{
+  "scanned": 1,
+  "findings": [
+    {
+      "file": "src_sample\\checkout.js",
+      "line": 2,
+      "rule": "TODO"
+    }
+  ]
+}

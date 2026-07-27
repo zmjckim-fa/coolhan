@@ -433,25 +433,34 @@ Since processing length differs per model, judge by **number of work units + rem
 
 > If precise token measurement is hard, be conservative on a **unit-count basis**: "baton after Large=3 units, Medium=2 units, Small=1 unit complete". 1 unit = 7 files + 1 validation (follow the absolute principle).
 
-### Checkpoint format (`_workspace/_checkpoint.md`)
+### Checkpoint format (`_workspace/_checkpoint.md`) — CoolHan's PROGRESS.md equivalent
+This file is the single source of truth for resuming after a context break; it carries the
+exact fields the Auto-Pilot discipline expects from a "PROGRESS.md":
 ```markdown
-# Checkpoint
+# Checkpoint (= PROGRESS.md)
 run_id: {id}
-feature: {feature name}
-current_phase: Task {N} ({agent})
-completed_units:
+final_goal: {one-line goal, copied from _workspace/_goal.md — never re-derived from guesswork}
+completed_work:
   - unit 1: {files} ✅ (validation: pytest 8 pass)
   - unit 2: {files} ✅ (validation: curl 200)
-pending_units:
+current_work: Task {N} ({agent}) — {what is actively in progress right now}
+remaining_work:
   - unit 3: {files} → validation: {criterion}
   - unit 4: ...
-next_action: {exact next task to do}
+key_decisions: "see docs/DECISIONS.md — do not duplicate here, just point to it"
+how_to_run: "{exact install/run/test commands for this project, e.g. npm install && npm test}"
+test_results: "{last real test-run summary, e.g. 'pytest 12/12 pass, exit 0' — from real execution, never asserted}"
+next_action: {exact next task to do — specific enough to start work with zero re-reading}
 # C6 rule re-injection (block long-session rule dilution) — always include in baton:
-rules_reinjection: "P0=enforce planner intent (no features outside approved scope)·evidence required·truth only / global output=no monologue·6-line cap·results only / no scope drift"
+rules_reinjection: "P0=enforce planner intent (no features outside approved scope)·evidence required·truth only / global output=no monologue·6-line cap·results only / no scope drift / Auto-Pilot: only 4 question conditions, log defaults to docs/DECISIONS.md, no TODO/placeholder left"
 resume_command: "쿨한으로 개발 이어서 진행하라 (체크포인트 _workspace/_checkpoint.md 단위 3부터)"
 ```
 
 > **C6:** baton/checkpoint **must include** `rules_reinjection` (`references/harness-capabilities.md` §C6). This blocks recurrence of scope drift·monologue from P0·global rules being diluted across long sessions·resumes.
+
+> **Recovery instruction (Auto-Pilot):** on resume, re-read `_checkpoint.md` + `_backlog.md`/`TASKS.md` +
+> the spec + current source. **Do not explain or ask — resume immediately from the last incomplete
+> task.** Repeat implement → run → fix → re-verify until every completion condition is met.
 
 ### Baton output rules
 - On nearing the context threshold, safely terminate the current unit **only after finishing validation**.

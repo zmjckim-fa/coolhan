@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.3.0] - 2026-07-19
+
+### Added
+
+- **Full-Completion Auto-Pilot Mode** — operationalizes a strict "never stop, never fake-complete"
+  development discipline as first-class CoolHan artifacts/gates (Claude Code's own Auto mode/
+  `/goal`/`--continue` remain CLI-level features outside CoolHan's control; this makes CoolHan's
+  own agents follow the same discipline regardless of which CLI mode wraps them):
+  - `scripts/tasks-check.js` — a 5-state `TASKS.md` gate (not-started/in-progress/implemented/
+    verified/blocked, Korean labels accepted). "implemented" alone does not pass; only `verified`
+    (backed by real execution) does. Blocked/remaining units are named, never silently dropped.
+  - `scripts/no-placeholder-check.js` — scans for TODO/FIXME/"coming soon"/"준비 중"/placeholder
+    markers; a unit claimed done with a leftover marker fails, named by file:line.
+  - `docs/DECISIONS.md` — the convention for logging an assumed default and continuing without
+    waiting for an answer.
+  - A narrow 4-condition question gate in `CLAUDE.md` (real credentials/payment/irreversible
+    production-data deletion/mutually-incompatible requirements) plus explicit absolute
+    prohibitions (no partial-as-complete, no "later" excuses, no scope shrink for volume).
+  - `_workspace/_checkpoint.md` enriched to carry the exact resume fields requested (goal,
+    completed/current/remaining work, key decisions pointer, how-to-run, real test results,
+    next action) — this file is CoolHan's PROGRESS.md equivalent.
+  - Wired into `agents/developer.md` (log decisions, scan before marking implemented) and
+    `agents/validator.md` (tasks-check + placeholder scan as additional completion sources).
+  - track21 adversarial: all-verified → PASS, blocked/not-started → FAIL(named), TODO left in
+    code → FAIL(file:line); 0 false positive/negative. Full suite 112/112.
+
 ## [1.2.1] - 2026-07-18
 
 ### Fixed

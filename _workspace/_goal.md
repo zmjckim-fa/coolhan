@@ -1,47 +1,41 @@
 # Goal (immutable)
 
-run_id: 20260707-g8-context-completion
-feature: Mandatory context ingestion + 100%-completion enforcement (G8) — fix "stops early" and "acts on latest command only"
+run_id: 20260719-autopilot
+feature: Full-Completion Auto-Pilot Mode — operationalize the "senior full-stack dev, never stop, never ask, never fake-complete" discipline as first-class CoolHan artifacts/gates
 purpose_fit: |
-  Two recurring, user-reported harness defects:
-  (1) STOPS EARLY — "쿨한으로 작업하라" stops mid-work instead of running until 100% done. Root cause:
-      the working-mode lists "context limit → baton" as a normal outcome, and there is no mechanical
-      check that a "complete" claim actually means the whole backlog is done+validated. So the engine
-      can declare/behave as done, or pause, before the work is finished.
-  (2) ACTS ON LATEST COMMAND ONLY → wrong output. Root cause: Phase 0 "context check" only checks
-      whether _workspace outputs EXIST; it never forces the orchestrator to actually READ and
-      internalize the full spec + prior development (goal, backlog, spec docs, CLAUDE.md history,
-      prior _workspace artifacts, relevant knowledge_base) before acting. So it works from the last
-      message alone and drifts.
+  The user pasted a long external prompt pattern (Claude Code Auto mode + /goal + a strict
+  completion-discipline system prompt) and wants CoolHan upgraded so its own agents embody it,
+  regardless of which CLI wrapper (Auto mode/--continue/--resume) is used. Claude Code's Auto
+  mode/`/goal`/`--continue` are CLI-level features outside CoolHan's control (CoolHan is a
+  project-level harness); what CoolHan CAN and should do is give its agents the exact artifacts
+  and gates the prompt describes: TASKS.md (5-state), docs/DECISIONS.md, an enriched resume
+  checkpoint (the PROGRESS.md-equivalent), a narrow 4-condition question gate, a no-dead-code
+  scan (TODO/placeholder/coming-soon), and explicit absolute-prohibitions — reusing G1-G8
+  (execution/traceability/plan/regression/ledger/provision/gates/completion) rather than
+  duplicating them.
 scope_boundary (P0):
-  - G8 ONLY: two mechanical gates + their wiring into the orchestrator SKILL/agents + tests + adversarial.
-    (A) Context Ingestion Gate: scripts/context-check.js verifies a per-run context digest
-        (_workspace/_context-digest.json) exists and references the required source docs BEFORE any
-        development task runs. SKILL Phase 0 rewritten from "check existence" to "read all + produce
-        digest, or halt".
-    (B) Completion Gate: scripts/completion-check.js parses the backlog and confirms 100%
-        (every unit done AND validated) before a "✅ all complete" declaration is allowed; exit 1 if
-        any unit is todo/in-progress/unvalidated. Working-mode reworded so the ONLY acceptable end
-        states are (a) 100% complete, or (b) a genuine stop condition — a context-limit baton is a
-        CONTINUATION, never a completion, and "pausing at a natural break" is banned.
-  - Does NOT change what the gates downstream (G1-G7) verify; this is about starting fully-informed and
-    not ending early.
-  - Honesty: these gates enforce "read the declared sources" and "backlog is 100% done", not that the
-    digest was deeply understood or that the backlog itself is correct/complete (that is G3/human).
+  - THIS RUN ONLY: scripts/tasks-check.js + scripts/no-placeholder-check.js + docs/DECISIONS.md
+    convention + _checkpoint.md field enrichment (PROGRESS.md-equivalent) + tightened 4-condition
+    question gate + absolute-prohibitions list, wired into CLAUDE.md/SKILL.md/developer.md/
+    validator.md, tests, adversarial verification. Does not modify G1-G8 internals or _backlog.md
+    format; TASKS.md is an additional, optional artifact alongside the existing backlog.
+  - Honest bound (unchanged): these gates prove artifacts exist and units are verified/scanned —
+    not that the underlying implementation is correct or is what the user ultimately wanted.
 definition_of_done:
-  - scripts/context-check.js: given a digest file + a list of required source keys, verify the digest
-    exists, is fresh (matches current run_id), and references every required source (goal, backlog,
-    spec, history, prior_artifacts); exit 1 + name missing sources otherwise; --json.
-  - scripts/completion-check.js: given a backlog file, parse unit rows + statuses; ok only if every
-    unit is done AND validated (a done-but-unvalidated or todo/in-progress unit → not ok); report
-    remaining units; exit 1 if not 100%; --json.
-  - SKILL.md: Phase 0 rewritten as a Context Ingestion Gate (mandatory full read → _context-digest.json
-    → only then proceed); working-mode "Non-Stop"/"Completion" reworded (baton ≠ done; ban early stop;
-    completion-check must pass before "all complete").
-  - agents: intent-analyzer (or orchestrator note) reads full context first; a short note in
-    self-auditor that completion-check gates the "done" claim.
-  - CLAUDE.md change-history entry.
-  - tests: src/__tests__/context-check.test.js + src/__tests__/completion-check.test.js
-  - adversarial (track20): digest missing a required source → context gate FAIL(named); complete digest
-    → PASS; backlog with any non-done/unvalidated unit → completion FAIL(remaining named); all
-    done+validated → PASS; stale digest (wrong run_id) → FAIL; 0 false +/-
+  - scripts/tasks-check.js: parses TASKS.md units with 5 states (not-started/in-progress/
+    implemented/verified/blocked); ok only if 0 units are not-started/in-progress/blocked
+    (implemented-but-not-verified also fails); reports remaining/blocked by name; --json.
+  - scripts/no-placeholder-check.js: scans given paths for TODO/FIXME/XXX/"coming soon"/
+    "준비 중"/placeholder markers; exit 1 + name file:line if any found; --json.
+  - docs/DECISIONS.md seeded with the convention + one real example.
+  - CLAUDE.md: 4-condition question gate (credentials/payment/irreversible-prod-deletion/
+    mutually-incompatible-requirements) + absolute-prohibitions list (no partial-as-complete,
+    no "time constraints/later" excuses, no scope reduction for volume, no TODO/placeholder left).
+  - SKILL.md: _checkpoint.md template enriched with the exact requested fields (goal/completed/
+    current/remaining/key decisions/how-to-run/test results/next action); resume wording tightened
+    to "don't explain or ask, resume immediately from the last incomplete task."
+  - agents: developer.md references DECISIONS.md + no-placeholder-check; validator.md references
+    tasks-check.js as an additional completion source when TASKS.md exists.
+  - tests: src/__tests__/(tasks-check, no-placeholder-check).test.js
+  - adversarial (track21): all-verified TASKS.md → PASS; a blocked/not-started unit → FAIL(named);
+    a file with a TODO claimed verified → FAIL(named, location); 0 false +/-

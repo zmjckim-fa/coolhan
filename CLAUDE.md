@@ -16,6 +16,24 @@
 
 > Exception: Be lengthy only when the user explicitly states "in detail / explain / why". Otherwise, always follow the rules above.
 
+### Full-Completion Auto-Pilot Mode (2026-07-19)
+
+**The only 4 conditions that justify a mid-task question.** Outside these, choose the safest
+reasonable default, log it in `docs/DECISIONS.md`, and keep working — never pause to ask:
+1. A real credential/API key/secret is genuinely required and none exists.
+2. The action involves payment, a paid subscription, or any real-world cost.
+3. The action is an irreversible destruction of production data.
+4. Two stated requirements are mutually incompatible, making implementation impossible as specified.
+
+**Absolute prohibitions (completion integrity):**
+- Never present partial work ("some pages built") as the full task being complete.
+- Never stop citing "time constraints", "the rest later", or "next phase" — finish or name the
+  genuine stop condition (one of the 4 above, or a harness-defined P0 gate).
+- Never shrink scope because the remaining work is large — the goal's scope stands.
+- Never leave TODO/FIXME/"coming soon"/placeholder markers or dead buttons in code claimed as
+  done — verify with `node scripts/no-placeholder-check.js <paths>` before calling a unit verified.
+- Never claim "verified" without a captured execution result (reuses G1's no-simulation rule).
+
 ---
 
 ## Harness: CoolHan Research & Verification
@@ -188,6 +206,7 @@ Analyze an existing site → modularize → apply to another site or continue de
 | **2026-07-21** | **AI 통신 패턴 참조 문서 (12-pattern gap analysis)** | skills/coolhan-development-orchestrator/references/ai-communication-patterns.md (신규) | 12 패턴 CoolHan 구현 현황 매핑. 구현 10/미구현 2(②A2A·④메시지큐, 외부 인프라 필요)/부분 1(⑤API). 각 패턴별 상태·위치·대안 문서화. |
 | **2026-07-19** | **Work-silently rule injected into all 17 agents** | agents/(developer, intent-analyzer, spec-writer, validator, qa-tester, devops-deployer, execution-runner, security-reviewer, plan-reviewer, self-auditor, site-analyzer, module-extractor, cross-site-adapter, ux-design-lead, integration-validator, e2e-tester, hx-vision-critic) | Global output rules 8–9 (no narration during work, one summary ≤10 lines after) existed only in CLAUDE.md/SKILL.md. Injected as first bullet in each agent's Operating Principles so the rule is agent-local and survives cold-start delegation. |
 | **2026-07-07** | **G8 Context-ingestion + 100%-completion enforcement — fix "stops early" and "acts on latest command only"** | scripts/(context-check.js, completion-check.js) + skills/coolhan-development-orchestrator (Phase 0 = Context Ingestion Gate; working-mode: baton≠done, ban early stop, completion-check before "all complete"; engine-loop completion gate) + agents/(intent-analyzer, self-auditor) + CLAUDE.md + src/__tests__/(context-check, completion-check).test.js + _harness_test/track20-context-completion/ | Two user-reported defects. (1) STOPS EARLY: nothing mechanically defined "done" as "whole backlog done+validated", and the working-mode listed context-limit baton as a normal outcome — so runs paused/behaved-as-done before finishing. Fix: completion-check.js parses the backlog and permits "✅ 전체 완료" only when every unit is done AND names a validation (exit 1 + remaining/unvalidated named otherwise); working-mode reworded so a baton is a CONTINUATION never a completion, "natural pause" is banned, and the engine loop exits only when completion-check exits 0 or a real stop condition fires. (2) ACTS ON LATEST COMMAND ONLY → wrong output: Phase 0 only checked whether outputs EXISTED. Fix: Phase 0 rewritten as a Context Ingestion Gate — read _goal/_backlog/_checkpoint/spec/CLAUDE.md-history/prior artifacts/knowledge_base, write _context-digest.json, and context-check.js must pass (covers every required source + fresh run_id) before any task work. intent-analyzer now reads full context first; self-auditor flags a premature "done" that completion-check would reject. Honest: enforces "declared sources recorded as read" and "backlog 100% done", not deep understanding or that the backlog is the right decomposition (G3/human). Tests 16/16 (total 101/101), track20 adversarial: digest missing a source→FAIL(named), complete→PASS, stale run_id→FAIL, backlog with any todo/unvalidated unit→FAIL(remaining named), all done+validated→PASS, 0 false +/- |
+| **2026-07-19** | **Full-Completion Auto-Pilot Mode** | scripts/(tasks-check.js, no-placeholder-check.js) + docs/DECISIONS.md + CLAUDE.md (4-condition question gate + absolute prohibitions) + SKILL.md (checkpoint = PROGRESS.md-equivalent, tightened resume wording) + agents/(developer, validator) + src/__tests__/(tasks-check, no-placeholder-check) + _harness_test/track21-autopilot/ | Operationalized a user-supplied "senior dev, never stop, never fake-complete" discipline as CoolHan artifacts/gates rather than duplicating Claude Code's own Auto mode/`/goal`/`--continue` (CLI-level, outside CoolHan's control). Adds: TASKS.md 5-state gate (implemented≠verified; blocked/not-started fails), a TODO/placeholder/"coming soon" scanner, docs/DECISIONS.md convention (log assumed defaults, never wait), an enriched `_checkpoint.md` matching the requested PROGRESS.md fields, and a narrow 4-condition question gate (credentials/payment/irreversible-prod-deletion/incompatible-requirements) + explicit prohibitions (no partial-as-complete, no "later" excuses, no scope shrink, no dead code). Reuses G1-G8 rather than replacing them. Track 21 adversarial: all-verified→PASS, blocked/not-started→FAIL(named), TODO left in verified code→FAIL(file:line), 0 false +/- |
 | 2026-05-27 | **Initial Release Engineering harness setup** | agents/, skills/, CLAUDE.md | Build a complete agent team system for CoolHan deployment automation |
 | 2026-05-27 | **Phase 2 complete: 11 architecture conflicts resolved** | knowledge_base/ | Domain module synchronization and architectural consistency |
 | **2026-05-28** | **Development Harness build (Phases 0-4)** | agents/ (6) + skills/coolhan-development-orchestrator + CLAUDE.md | A complete agent team system that automates specification-driven development via natural Korean commands |

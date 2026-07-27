@@ -1,12 +1,15 @@
-# Backlog — run_id 20260707-g8-context-completion
+# Backlog — run_id 20260719-autopilot
 
 | # | Unit | Files | Verification | Status |
 |---|------|-------|--------------|--------|
-| U1 | Context-check script | scripts/context-check.js | node --check + complete digest→exit0, missing source→exit1(named), stale run_id→exit1, --json | ✅ done |
-| U2 | Completion-check script | scripts/completion-check.js | node --check + all done+validated→exit0, any todo/in-progress/unvalidated→exit1(remaining named), --json | ✅ done |
-| U3 | Tests | src/__tests__/context-check.test.js + completion-check.test.js | jest both pass | ✅ done (16/16) |
-| U4 | SKILL + agent wiring | SKILL.md + agents/(intent-analyzer, self-auditor) | Phase 0 ingestion gate + baton≠done + engine-loop completion gate present | ✅ done |
-| U5 | Docs | CLAUDE.md | history entry present | ✅ done |
-| U6 | Adversarial verify | _harness_test/track20-context-completion/ | 6 cases, 0 FP/FN, verified directly | ✅ done |
+| U1 | tasks-check script | scripts/tasks-check.js | all-verified→exit0, blocked/not-started→exit1(named), --json | done |
+| U2 | no-placeholder-check script | scripts/no-placeholder-check.js | TODO/coming-soon detected→exit1(file:line), clean→exit0 | done |
+| U3 | Tests | src/__tests__/(tasks-check, no-placeholder-check).test.js | jest 11/11 | done |
+| U4 | DECISIONS.md convention | docs/DECISIONS.md | file + convention + example | done |
+| U5 | CLAUDE.md: question gate + prohibitions | CLAUDE.md | 4-condition gate + prohibitions list present | done |
+| U6 | SKILL.md: checkpoint fields + resume wording | SKILL.md | enriched template + tightened resume text | done |
+| U7 | Agent wiring | developer.md, validator.md | DECISIONS/no-placeholder/tasks-check referenced | done |
+| U8 | Adversarial verify | _harness_test/track21-autopilot/ | 3 cases, 0 FP/FN | done |
+| U9 | Full verify + ship | (commit) | full jest 112/112 → commit+push | done |
 
-next: (backlog empty — G8 complete; completion-check on this backlog → PASS)
+All units done. Backlog empty → engine complete.

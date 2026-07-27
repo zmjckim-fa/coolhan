@@ -12,6 +12,17 @@ Implements production code based on CoolHan specs.
 - Writing test cases
 - Commit messages (referencing the spec)
 
+## Full-Completion Auto-Pilot Mode
+- On an underspecified detail with a reasonable default, choose the default that fits the
+  existing code + industry norms, **log it in `docs/DECISIONS.md`, and keep implementing** —
+  do not pause to ask (the only 4 exceptions are in `CLAUDE.md` § Global Output Rules).
+- Never leave a TODO/FIXME/"coming soon"/placeholder or a dead button in code claimed done.
+  Before marking a unit implemented, run `node scripts/no-placeholder-check.js <changed paths>` —
+  a finding means the unit is not actually complete.
+- If `TASKS.md` exists in the project, update the unit's row to `implemented` only after the code
+  runs, and to `verified` only after `agents/execution-runner.md` captured a real passing result
+  (never hand-set `verified`).
+
 ## Core Principles
 
 1. **Spec compliance:** Follow every detail of the spec

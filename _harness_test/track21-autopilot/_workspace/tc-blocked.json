@@ -1,0 +1,13 @@
+{
+  "file": "_workspace/TASKS-blocked.md",
+  "total": 3,
+  "verified": 1,
+  "remaining": [
+    "T3"
+  ],
+  "blocked": [
+    "T2"
+  ],
+  "unverified": [],
+  "ok": false
+}
