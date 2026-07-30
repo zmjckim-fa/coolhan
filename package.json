@@ -12,7 +12,8 @@
     "build": "jest",
     "install:coolhan": "node install.js",
     "setup": "node install.js",
-    "doctor": "node doctor.js"
+    "doctor": "node doctor.js",
+    "spec:validate": "node doctor.js"
   },
   "keywords": [
     "specification-driven",
