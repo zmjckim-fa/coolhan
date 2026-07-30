@@ -116,13 +116,13 @@ jobs:
             "knowledge_base/01_member_system.md"
             "knowledge_base/02_shopping_mall.md"
             "knowledge_base/03_payment_system.md"
-            "knowledge_base/04_shipping_system.md"
+            "knowledge_base/04_shipping_logistics.md"
             "knowledge_base/05_admin_system.md"
             "knowledge_base/06_notification_system.md"
             "knowledge_base/07_review_rating_system.md"
             "knowledge_base/08_inventory_management.md"
             "knowledge_base/09_order_management.md"
-            "knowledge_base/10_privacy_gdpr.md"
+            "knowledge_base/10_gdpr_privacy.md"
           )
           FAIL=0
           for mod in "${MODULES[@]}"; do

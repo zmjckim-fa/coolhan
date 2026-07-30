@@ -57,7 +57,7 @@ describe('provision-check (environment/secret readiness gate)', () => {
 
   test('never includes an actual value anywhere in the result', () => {
     fs.writeFileSync(path.join(dir, '.env.example'), 'SECRET=\n');
-    const ev = evaluate(dir, { SECRET: 'super-secret-value-12345' });
+    const ev = evaluate(dir, { SECRET: 'super-secret-value-12345' }); // secret-scan:allow test fixture, not a real secret
     const serialized = JSON.stringify(ev);
     expect(serialized).not.toContain('super-secret-value-12345');
   });
