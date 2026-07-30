@@ -27,3 +27,16 @@ equivalents (not-started/in-progress/implemented/verified/blocked).
 **Rationale:** Matches the existing `_backlog.md` table convention already used by
 `scripts/plan-check.js`/`scripts/completion-check.js`, so agents don't learn two formats.
 **Reversible:** yes — `tasks-check.js`'s `STATUS_MAP` can be extended without changing callers.
+
+## 2026-07-31 — npm publish blocked, needs user credential (not auto-resolved)
+**Context:** `publish.yml` fails at the "Publish to npm" step on every push that changes
+package.json/install*/.claude/**/knowledge_base/** (`coolhan-builder` has never appeared on
+the npm registry — confirmed via `registry.npmjs.org/coolhan-builder` → "Not found" — so this
+is the first-ever publish attempt, which needs a valid `NPM_TOKEN` repo secret with publish
+scope).
+**Decision:** Not auto-resolved. This is condition 1 of the CLAUDE.md question gate (a real
+credential is genuinely required and none exists/works) — flagged for the user to add/fix
+`NPM_TOKEN` in GitHub repo Settings → Secrets → Actions, rather than guessed at.
+**Rationale:** No token value can be fabricated or inferred; publishing is also a
+side-effectful action on a shared registry, out of scope for unattended auto-fix.
+**Reversible:** n/a — informational gate, not a code decision.
