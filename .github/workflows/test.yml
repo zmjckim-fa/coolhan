@@ -324,27 +324,27 @@ jobs:
             });
           "
 
-status-check:
-  runs-on: ubuntu-latest
-  needs: [validate, security, compatibility]
-  if: always()
+  status-check:
+    runs-on: ubuntu-latest
+    needs: [validate, security, compatibility]
+    if: always()
 
-  steps:
-    - name: Check test results
-      run: |
-        if [ "${{ needs.validate.result }}" != "success" ]; then
-          echo "❌ Validation failed"
-          exit 1
-        fi
+    steps:
+      - name: Check test results
+        run: |
+          if [ "${{ needs.validate.result }}" != "success" ]; then
+            echo "❌ Validation failed"
+            exit 1
+          fi
 
-        if [ "${{ needs.security.result }}" != "success" ]; then
-          echo "❌ Security check failed"
-          exit 1
-        fi
+          if [ "${{ needs.security.result }}" != "success" ]; then
+            echo "❌ Security check failed"
+            exit 1
+          fi
 
-        if [ "${{ needs.compatibility.result }}" != "success" ]; then
-          echo "❌ Compatibility check failed"
-          exit 1
-        fi
+          if [ "${{ needs.compatibility.result }}" != "success" ]; then
+            echo "❌ Compatibility check failed"
+            exit 1
+          fi
 
-        echo "✅ All tests passed"
+          echo "✅ All tests passed"

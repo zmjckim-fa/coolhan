@@ -53,49 +53,51 @@ jobs:
           # Build discussion body
           DISCUSSION_BODY="## 🚀 CoolHan ${VERSION} Released
 
-> **This is an automatic update notification.** To receive this message, set this repository to **Watch → All Activity or Discussions**.
+          > **This is an automatic update notification.** To receive this message, set this repository to **Watch → All Activity or Discussions**.
 
----
+          ---
 
-### How to Update
+          ### How to Update
 
-\`\`\`bash
-# Linux / macOS
-curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | bash
+          \`\`\`bash
+          # Linux / macOS
+          curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | bash
 
-# Windows (PowerShell)
-iwr https://raw.githubusercontent.com/${{ github.repository }}/main/install.ps1 | iex
+          # Windows (PowerShell)
+          iwr https://raw.githubusercontent.com/${{ github.repository }}/main/install.ps1 | iex
 
-# npm
-npm install -g coolhan-builder
+          # npm
+          npm install -g coolhan-builder
 
-# Check for updates
-node scripts/check-update.js
-\`\`\`
+          # Check for updates
+          node scripts/check-update.js
+          \`\`\`
 
-### Or in Claude Code:
-\`\`\`
-쿨한 업데이트 확인해
-CoolHan check for updates
-\`\`\`
+          ### Or in Claude Code:
+          \`\`\`
+          쿨한 업데이트 확인해
+          CoolHan check for updates
+          \`\`\`
 
----
+          ---
 
-### What's New
+          ### What's New
 
-${BODY}
+          ${BODY}
 
----
+          ---
 
-### Full Release Notes
-🔗 ${URL}
+          ### Full Release Notes
+          🔗 ${URL}
 
----
+          ---
 
-> **Subscribe to Updates:**
-> - Click the **Watch** button at the top of GitHub
-> - Select **All Activity** or **Releases**
-> - You will receive automatic email notifications when a new version is released"
+          > **Subscribe to Updates:**
+          > - Click the **Watch** button at the top of GitHub
+          > - Select **All Activity** or **Releases**
+          > - You will receive automatic email notifications when a new version is released"
+
+          DISCUSSION_BODY=$(printf '%s\n' "$DISCUSSION_BODY" | sed 's/^          //')
 
           # Post to GitHub Discussions via GraphQL
           # First get the repo ID and a discussion category ID
@@ -119,19 +121,8 @@ ${BODY}
 
           REPO_ID=$(echo "$REPO_DATA" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['data']['repository']['id'])" 2>/dev/null || echo "")
 
-          # Get announcements or general category
-          CATEGORY_ID=$(echo "$REPO_DATA" | python3 -c "
-import json, sys
-d = json.load(sys.stdin)
-cats = d['data']['repository']['discussionCategories']['nodes']
-for cat in cats:
-    if cat['name'].lower() in ('announcements', '공지', 'releases', 'general', '일반'):  # category names may be localized
-        print(cat['id'])
-        break
-else:
-    if cats:
-        print(cats[0]['id'])
-" 2>/dev/null || echo "")
+          # Get announcements or general category (category names may be localized)
+          CATEGORY_ID=$(echo "$REPO_DATA" | python3 -c "import json,sys; d=json.load(sys.stdin); cats=d['data']['repository']['discussionCategories']['nodes']; names=('announcements','공지','releases','general','일반'); match=next((c['id'] for c in cats if c['name'].lower() in names), None); print(match if match else (cats[0]['id'] if cats else ''))" 2>/dev/null || echo "")
 
           if [ -z "$REPO_ID" ] || [ -z "$CATEGORY_ID" ]; then
             echo "⚠️  Could not get repo/category IDs. Discussions may not be enabled."
