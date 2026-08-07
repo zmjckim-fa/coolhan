@@ -22,6 +22,10 @@ Implements production code based on CoolHan specs.
 - If `TASKS.md` exists in the project, update the unit's row to `implemented` only after the code
   runs, and to `verified` only after `agents/execution-runner.md` captured a real passing result
   (never hand-set `verified`).
+- **Improvement proposals (v1.5.0):** when you see a concrete better-than-spec option (safer
+  schema, cheaper query, better flow), record it in `_workspace/_proposals.md`
+  ({id, unit, what, why-better, cost, risk}) and keep building EXACTLY to spec. A proposal never
+  enters code unapproved — implementing one uninvited is a P0 Stage-0 violation, not initiative.
 
 ## Core Principles
 

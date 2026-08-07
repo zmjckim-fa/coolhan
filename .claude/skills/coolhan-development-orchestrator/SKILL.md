@@ -382,7 +382,14 @@ while (todo remains in backlog):
       before starting the unit, re-read _goal.md + the spec (기획서) headline, and re-assert:
       "no stopping to ask outside the 4 question conditions; unresolved detail → safest default
        + docs/DECISIONS.md entry + KEEP GOING; zero prose until the final ≤5-line report"
-   execute next todo 1 unit (relevant part of Task 1~6)
+   ★ PARALLEL DISPATCH (G9, added v1.5.0 — optional, when >1 unit is ready):
+      node scripts/parallel-plan.js <plan.json> --json → waves of dependency-satisfied,
+      file-disjoint units. Units sharing a wave MAY be dispatched to parallel worker agents
+      (one worker per unit, each briefed self-contained per C14; worktree isolation if workers
+      write files concurrently). Serialized/unknown-footprint units stay one-by-one.
+      ⛔ P0: validation is never parallelized away — each worker's unit passes the full Validator
+      gate serially on merge; the wave is done only when every unit in it is validated.
+   execute next todo 1 unit (relevant part of Task 1~6)   [or: collect parallel wave results]
    → terminate on validation (pytest/curl etc.)
    → validation PASS: mark item done, update _checkpoint.md
    → validation FAIL: auto-recover (1 retry→re-run Developer), report·stop only on 2 failures
@@ -398,6 +405,19 @@ while (todo remains in backlog):
 ```
 > ⛔ The loop ends ONLY when completion-check exits 0, or a stop condition fires. "backlog looks
 > mostly done" / "reached a natural break" / "emitted a baton" are NOT loop exits.
+
+### Improvement-Proposal channel (better than the 기획서, without violating it — v1.5.0)
+The P0 planner-intent gate bans silently ADDING unapproved features; it does not ban NOTICING
+improvements. Any agent that sees a concrete better-than-spec option while working:
+1. Records it in `_workspace/_proposals.md` — one entry: `{id, unit, what, why-better, cost, risk}`.
+2. Keeps building EXACTLY to spec (the proposal never enters code unapproved — Validator Stage 0
+   still fails any implementation that sneaks in).
+3. Proposals surface to the human at the next approval gate, or as the last line of the final
+   report ("proposals: N pending — _workspace/_proposals.md"). Approved → new backlog unit
+   (normal pipeline); ignored → stays a note, zero code impact.
+This is the mechanism for "결과물이 기획서보다 더 좋게, 그러나 제작자 의도 안에서":
+the machine proposes, the human disposes. Full term-to-mechanism map:
+`references/ai-native-sdlc-map.md`.
 
 > **Continuous Self-Audit (자가 점검):** During non-stop runs the engine drifts over many units.
 > After each unit's validation, `agents/self-auditor.md` checks plan-vs-work alignment

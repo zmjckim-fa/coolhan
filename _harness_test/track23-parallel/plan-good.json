@@ -1,0 +1,9 @@
+{
+  "feature": "sample",
+  "units": [
+    { "id": "U1", "deps": [], "files": ["src/db.js"], "verifies": "jest db" },
+    { "id": "U2", "deps": [], "files": ["src/api.js"], "verifies": "jest api" },
+    { "id": "U3", "deps": [], "files": ["src/api.js", "src/util.js"], "verifies": "jest util" },
+    { "id": "U4", "deps": ["U1", "U2"], "verifies": "jest e2e" }
+  ]
+}

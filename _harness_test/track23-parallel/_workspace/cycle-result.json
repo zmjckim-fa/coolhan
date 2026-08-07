@@ -1,0 +1,8 @@
+{
+  "ok": false,
+  "waves": [],
+  "serialized": [],
+  "errors": [
+    "dependency cycle among: U1, U2"
+  ]
+}

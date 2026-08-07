@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.5.0] - 2026-08-07
+
+### Added
+
+- **G9 Parallel Agent Development** — `scripts/parallel-plan.js` computes mechanically-safe
+  parallel execution waves from the plan: units whose dependencies are satisfied AND whose
+  declared file sets are disjoint may be dispatched to parallel worker agents; file-overlapping
+  or unknown-footprint units are serialized (unsafe default). Wired into the engine loop as an
+  optional PARALLEL DISPATCH step; validation is never parallelized away — every worker's unit
+  still passes the full Validator gate serially. Tests 8/8; track23 adversarial: mixed plan →
+  correct waves + named serializations, cycle → FAIL named, 0 false +/-.
+- **Improvement-Proposal channel** — the mechanism for "build better than the 기획서 without
+  violating it": agents record concrete better-than-spec ideas in `_workspace/_proposals.md`
+  ({id, unit, what, why-better, cost, risk}) and keep building exactly to spec; proposals surface
+  at the next approval gate / final report; approved → new backlog unit, unapproved → never
+  touches code (Validator Stage 0 unchanged — an implemented-uninvited proposal is still a P0
+  FAIL). Wired into developer.md + validator.md + SKILL.md.
+- **`references/ai-native-sdlc-map.md`** — industry-term → CoolHan-mechanism map (agentic dev,
+  multi-agent orchestration, generator–evaluator, eval-driven, context/harness engineering,
+  HITL, CI/CD…): shows what already existed, what v1.5.0 adds (parallel dispatch, proposals),
+  and what is deliberately rejected (vibe coding).
+
 ## [1.4.1] - 2026-08-07
 
 ### Changed

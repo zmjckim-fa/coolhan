@@ -195,6 +195,11 @@ npm run env:validate
 
 **Compare the features the planner wanted against the actual implementation:**
 
+> **Proposals vs violations (v1.5.0):** an entry in `_workspace/_proposals.md` is a legitimate
+> better-than-spec note — it is NOT scope creep as long as it stayed out of the code. The same
+> idea IMPLEMENTED without planner approval is a Stage-0 FAIL exactly as before. Proposals file
+> present → mention its pending count in the report; never treat it as evidence for a PASS/FAIL.
+
 ```bash
 # 1. Read requirements-{id}.md
 #    └─ Check the [Planner Intent] section

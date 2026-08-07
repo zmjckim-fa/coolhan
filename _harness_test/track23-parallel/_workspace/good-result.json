@@ -1,0 +1,28 @@
+{
+  "ok": true,
+  "waves": [
+    [
+      "U1",
+      "U2"
+    ],
+    [
+      "U3"
+    ],
+    [
+      "U4"
+    ]
+  ],
+  "serialized": [
+    {
+      "unit": "U3",
+      "with": "U2",
+      "reason": "file-overlap"
+    },
+    {
+      "unit": "U4",
+      "with": "U3",
+      "reason": "unknown-footprint"
+    }
+  ],
+  "errors": []
+}
