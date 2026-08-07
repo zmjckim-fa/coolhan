@@ -22,7 +22,7 @@
 
 ### What is it?
 
-**CoolHan** is a **Specification-Driven Development Framework** in which a team of 6 AI specialists takes a single natural-language command in the user's own language and automates the entire process: planning → specification → code → validation → testing → deployment.
+**CoolHan** is a **Specification-Driven Development Framework** in which a team of 25 AI role agents (7-member core pipeline) takes a single natural-language command in the user's own language and automates the entire process: planning → specification → code → validation → testing → deployment.
 
 ```
 CoolHan add user login feature (in Korean)
@@ -38,7 +38,8 @@ CoolHan add user login feature (in Korean)
 | Feature | Description |
 |------|------|
 | 🌍 **50+ language support** | Auto-detects Korean, English, Japanese, Chinese, and more |
-| 🤖 **6-member AI team** | Intent analysis → spec → development → validation → QA → deployment, auto-collaborating |
+| 🤖 **25-agent AI team** | Core pipeline (intent→UX→spec→dev→validate→QA→deploy) + reviewers (security/plan/self-audit/HX) + reverse-engineering trio, auto-collaborating |
+| 🚦 **G1–G9 mechanical gates** | Real execution (no simulation), requirement traceability, plan quality, regression, run ledger, env readiness, gate orchestrator, context/completion enforcement, parallel dispatch |
 | 🛡️ **Planner intent enforcement** | Blocks arbitrary AI feature additions at the source (Phase D-4 verified) |
 | 📏 **10-stage validation** | Includes Stage 0 planning intent check, evidence-based |
 | 🔒 **Safe deployment** | Deploy locks, validation gates, automatic rollback |
@@ -50,7 +51,7 @@ CoolHan add user login feature (in Korean)
 
 ### What is CoolHan?
 
-**CoolHan** is a Specification-Driven Development Framework where a team of 6 AI specialists automatically handles the entire software development lifecycle from a single natural-language command.
+**CoolHan** is a Specification-Driven Development Framework where a team of 25 AI role agents (7-member core pipeline) automatically handles the entire software development lifecycle from a single natural-language command.
 
 ```
 "CoolHan add user login feature"
