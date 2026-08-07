@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.3.1] - 2026-08-07
+
+### Changed
+
+- **Model-generation modernization** — the harness's relay/baton design assumed the 200K-context
+  Claude era (baton after 3–4 units). Current Claude models (Fable 5 / Opus 5 / Opus 4.6+ /
+  Sonnet 5 / Sonnet 4.6) carry 1M context; Haiku 4.5 carries 200K.
+  - `SKILL.md` § Continuous Relay: context-budget table rebuilt around the 2026 lineup —
+    1M-class → 10–15 units per session, baton at ~15% remaining; 200K-class → 3–4 units;
+    plus an explicit "do not fire the baton early out of habit" rule (a baton after 3 units
+    on a 1M-class model wastes sessions).
+  - New `references/model-capability-map.md` — cached model lineup (IDs, context, output caps)
+    with the C12 freshness guardrail (recorded ≠ current; verify the running model when it
+    matters), and 5 documented behavior shifts that affect how agent definitions should be
+    worded on current models (literal instruction-following, default self-verification,
+    long single turns are normal, severity-filtered review depresses recall).
+  - `SKILL.md` Non-Stop Execution: long single turns are judged stalled by absence of tool
+    activity, not wall-clock.
+  - No gate logic changed — G1–G8 verdicts, completion-check, and the baton mechanism itself
+    are untouched; only calibration and guidance.
+
 ## [1.3.0] - 2026-07-19
 
 ### Added

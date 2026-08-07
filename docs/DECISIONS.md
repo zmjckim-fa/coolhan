@@ -40,3 +40,17 @@ credential is genuinely required and none exists/works) — flagged for the user
 **Rationale:** No token value can be fabricated or inferred; publishing is also a
 side-effectful action on a shared registry, out of scope for unattended auto-fix.
 **Reversible:** n/a — informational gate, not a code decision.
+
+## 2026-08-07 — Model-modernization scope: calibration + reference map, not a 25-agent prompt rewrite
+**Context:** "Upgrade the harness to match the new Claude models" is open-ended. Two candidate
+scopes: (a) update the mechanically-stale artifacts (context-budget table built for the 200K era,
+missing model map) and document the behavior shifts that affect agent wording; (b) additionally
+re-tune all 25 agent .md prompts line-by-line for literal-instruction-following models.
+**Decision:** Ship (a) now (v1.3.1). Defer (b) — a full prompt audit of 25 agents is a separate
+unit of work that needs adversarial re-verification per agent (tracks), and doing it untested in
+one pass risks regressing gates that currently verify 0-false-positive/negative.
+**Rationale:** (a) is provably stale (no current Claude model has a 100K or 32–64K context;
+1M-class models were mis-budgeted at 3 units/session). (b) changes behavior of verified gates and
+must go through the same track-based adversarial verification as every prior harness change.
+**Reversible:** yes — (b) can be run later as a dedicated prompt-audit track using
+`references/model-capability-map.md` §2–5 as the checklist.

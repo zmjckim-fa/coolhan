@@ -20,6 +20,7 @@ working-mode: |
   - All automatic decisions are recorded in _workspace/ (audit trail).
   **Non-Stop Execution (reinforced 2026-06-09; completion-gated 2026-07-07 / G8-B)**
   - **Process multiple units consecutively** in a single turn. No "wait after 1 minute of work". Stop only at stop conditions.
+  - Long single turns (several minutes) are normal on current 1M-class models — judge a stall by absence of tool activity, not wall-clock (`references/model-capability-map.md` §4).
   - Do not insert human approval at every step. HX iterates unattended via the vision critic (below); the human reviews once at the end (or auto-approve).
   - No mid-process questions (within goal scope). When stuck, don't stop — continue via baton/checkpoint.
   - ⛔ **"Done" is mechanical, not a feeling.** Never declare/behave as complete until
@@ -423,15 +424,16 @@ Session N: ... → on full completion output "✅ all complete" instead of baton
 ```
 
 ### Per-model context budget (threshold trigger)
-Since processing length differs per model, judge by **number of work units + remaining ratio, not absolute tokens**.
+Since processing length differs per model, judge by **number of work units + remaining ratio, not absolute tokens**. Current model lineup + freshness rule: `references/model-capability-map.md` (C12: recorded ≠ current — verify the running model when it matters).
 
-| Model tier | Approx. context | Safe work units per session | Baton threshold |
+| Model tier (2026 lineup) | Approx. context | Safe work units per session | Baton threshold |
 |----------|--------------|--------------------|----------|
-| Large (200K class) | ~200K | 3~4 units | ~25% remaining |
-| Medium (100K class) | ~100K | 2 units | ~30% remaining |
-| Small (32~64K class) | ~32-64K | 1 unit | ~35% remaining |
+| 1M-class (Fable 5 / Opus 5 / Opus 4.6+ / Sonnet 5 / Sonnet 4.6) | ~1M | 10~15 units | ~15% remaining |
+| 200K-class (Haiku 4.5, legacy 200K models) | ~200K | 3~4 units | ~25% remaining |
+| Small/legacy (non-Claude or ≤100K runtimes) | ≤100K | 1~2 units | ~30% remaining |
 
-> If precise token measurement is hard, be conservative on a **unit-count basis**: "baton after Large=3 units, Medium=2 units, Small=1 unit complete". 1 unit = 7 files + 1 validation (follow the absolute principle).
+> If precise token measurement is hard, be conservative on a **unit-count basis**: "baton after 1M-class=10 units, 200K-class=3 units, small=1 unit complete". 1 unit = 7 files + 1 validation (follow the absolute principle).
+> ⚠️ Do NOT fire the baton early out of habit on a 1M-class model — a baton after 3 units there wastes sessions. The baton is for genuine context pressure, never a scheduled stop (completion rules unchanged: only completion-check exit 0 ends the run).
 
 ### Checkpoint format (`_workspace/_checkpoint.md`) — CoolHan's PROGRESS.md equivalent
 This file is the single source of truth for resuming after a context break; it carries the
