@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.6.0] - 2026-08-07
+
+### Added
+
+- **G10 Agent Loop / Feedback Loop / Long-Running Agent** — `scripts/agent-loop.js` makes the
+  iterate cycle mechanical instead of prose:
+  - **Agent Loop**: one call = one real cycle — runs the unit's verify command as a captured
+    child process (C10 no-simulation), observes exit/output, returns DONE (exit 0) /
+    ITERATE (exit 3, retries left) / ESCALATE (exit 1, max exhausted).
+  - **Feedback Loop**: every failing iteration records structured feedback (iteration #, exit
+    code, raw stdout/stderr tails) in `_workspace/_loop-state.json` and optionally the G5
+    ledger — the next fix attempt starts from evidence, not memory.
+  - **Long-Running Agent**: loop state persists across sessions — after a baton/handoff the
+    loop resumes at iteration N+1 with full history, never restarts blind. ESCALATE is
+    terminal until a human/orchestrator resets the unit (re-running grants no silent extra
+    iterations — defect caught and fixed during track24 scenario C).
+  - Wired into the engine loop (replaces the prose "1 retry" rule with exit-code-driven
+    DONE/ITERATE/ESCALATE handling); division of labor unchanged — the model fixes, the gate
+    evaluates and bookkeeps (executable Generator–Evaluator).
+  - Tests 9/9 (total 139/139); track24 adversarial with real processes: iterate→fix→DONE,
+    never-fixed→ESCALATE, terminal re-entry, cross-session resume; 0 false +/-.
+
 ## [1.5.0] - 2026-08-07
 
 ### Added

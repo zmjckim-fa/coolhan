@@ -11,7 +11,7 @@
 | Multi-Agent Orchestration (orchestrator–worker) | Development orchestrator SKILL + 25 role agents (.claude/agents/) | ✅ |
 | Spec-Driven Development | Requirements IDs → spec → planner-approval P0 gate → Validator Stage 0 | ✅ (core identity) |
 | Generator–Evaluator Loop (Maker–Checker) | Developer↔Validator, HX render↔vision-critic auto-loop, Debate/Vote gates | ✅ |
-| Continuous Agent Loop / Long-Running Agent | Continuous engine + baton relay + completion-check (G8-B) + UNIT PREAMBLE (v1.4.1) | ✅ |
+| Continuous Agent Loop / Long-Running Agent / Feedback Loop | **G10 `scripts/agent-loop.js` (v1.6.0)**: mechanical run→observe→feedback→re-run cycle, per-iteration ledgered feedback, resumable _loop-state.json across sessions + continuous engine + baton relay + completion-check (G8-B) + UNIT PREAMBLE (v1.4.1) | ✅ upgraded |
 | Iterative Development | engine loop: dev→validate→fix→revalidate per unit | ✅ |
 | Eval-Driven Development | G2 acceptance-test-first (tests bound to requirement IDs, results from real execution) + G4 regression baseline + G5 lessons ledger | ✅ |
 | CI/CD | GitHub Actions: test.yml, harness-check.yml, release.yml, publish.yml | ✅ |

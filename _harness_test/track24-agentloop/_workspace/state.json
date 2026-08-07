@@ -1,0 +1,77 @@
+{
+  "units": {
+    "UX1": {
+      "iterations": [
+        {
+          "n": 1,
+          "exit": 1,
+          "passed": false,
+          "timed_out": false,
+          "duration_ms": 93,
+          "feedback": {
+            "stdout_tail": "",
+            "stderr_tail": "FAIL: feature broken (marker absent)\n"
+          }
+        },
+        {
+          "n": 2,
+          "exit": 1,
+          "passed": false,
+          "timed_out": false,
+          "duration_ms": 118,
+          "feedback": {
+            "stdout_tail": "",
+            "stderr_tail": "FAIL: feature broken (marker absent)\n"
+          }
+        },
+        {
+          "n": 3,
+          "exit": 0,
+          "passed": true,
+          "timed_out": false,
+          "duration_ms": 96,
+          "feedback": null
+        }
+      ],
+      "status": "done"
+    },
+    "UX2": {
+      "iterations": [
+        {
+          "n": 1,
+          "exit": 1,
+          "passed": false,
+          "timed_out": false,
+          "duration_ms": 111,
+          "feedback": {
+            "stdout_tail": "",
+            "stderr_tail": "FAIL: feature broken (marker absent)\n"
+          }
+        },
+        {
+          "n": 2,
+          "exit": 1,
+          "passed": false,
+          "timed_out": false,
+          "duration_ms": 108,
+          "feedback": {
+            "stdout_tail": "",
+            "stderr_tail": "FAIL: feature broken (marker absent)\n"
+          }
+        },
+        {
+          "n": 3,
+          "exit": 1,
+          "passed": false,
+          "timed_out": false,
+          "duration_ms": 80,
+          "feedback": {
+            "stdout_tail": "",
+            "stderr_tail": "FAIL: feature broken (marker absent)\n"
+          }
+        }
+      ],
+      "status": "escalated"
+    }
+  }
+}

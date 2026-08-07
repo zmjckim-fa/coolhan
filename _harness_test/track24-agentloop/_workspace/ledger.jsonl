@@ -1,0 +1,6 @@
+{"run_id":"track24","unit":"UX1","gate":"G10-agent-loop","status":"FAIL","reason":"ITERATE at iteration 1 (exit 1)"}
+{"run_id":"track24","unit":"UX1","gate":"G10-agent-loop","status":"FAIL","reason":"ITERATE at iteration 2 (exit 1)"}
+{"run_id":"track24","unit":"UX1","gate":"G10-agent-loop","status":"PASS","reason":"passed at iteration 3"}
+{"run_id":"track24","unit":"UX2","gate":"G10-agent-loop","status":"FAIL","reason":"ITERATE at iteration 1 (exit 1)"}
+{"run_id":"track24","unit":"UX2","gate":"G10-agent-loop","status":"FAIL","reason":"ESCALATE at iteration 2 (exit 1)"}
+{"run_id":"track24","unit":"UX2","gate":"G10-agent-loop","status":"FAIL","reason":"ESCALATE at iteration 3 (exit 1)"}

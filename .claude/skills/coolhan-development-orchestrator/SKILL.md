@@ -391,8 +391,15 @@ while (todo remains in backlog):
       gate serially on merge; the wave is done only when every unit in it is validated.
    execute next todo 1 unit (relevant part of Task 1~6)   [or: collect parallel wave results]
    → terminate on validation (pytest/curl etc.)
-   → validation PASS: mark item done, update _checkpoint.md
-   → validation FAIL: auto-recover (1 retry→re-run Developer), report·stop only on 2 failures
+   → ★ G10 AGENT LOOP (v1.6.0 — the iterate cycle is mechanical, not prose):
+      node scripts/agent-loop.js <unit> --cmd "<verify>" --max 5 --state _workspace/_loop-state.json --ledger _workspace/_ledger.jsonl
+        exit 0 DONE     → mark item done, update _checkpoint.md
+        exit 3 ITERATE  → hand the recorded feedback (state file: exit code + output tails) to
+                          Developer for the fix, then call agent-loop again — same unit, same turn
+        exit 1 ESCALATE → max iterations exhausted; terminal until human/orchestrator resets —
+                          surface with the full iteration history, never retry silently
+      Long-running: _loop-state.json persists across sessions — after a baton, the loop resumes
+      at iteration N+1 with all prior feedback (never restarts blind).
    → ★ Self-Audit (self-auditor): re-read plan docs (_goal/spec/_backlog) vs work
         ALIGNED  → continue
         DRIFT    → feed re-alignment items to Developer, fix before next todo
