@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.0] - 2026-08-07
+
+### Added
+
+- **Prompt-modernization lint (G-track, completes the v1.3.1 deferred item)** —
+  `scripts/prompt-modernization-check.js` keeps agent/skill definitions free of prompting
+  patterns written for older Claude generations, per `references/model-capability-map.md` §2–5:
+  - Rules: ALL-CAPS pressure language outside P0/C10 lines (over-triggers on
+    literal-instruction models), `budget_tokens`/"think step by step"/scratchpad scaffolds
+    (removed API surface), "double-check your answer" prose (causes over-verification),
+    "only report high-severity" filters (depresses reviewer recall), stale claude-2/3 model IDs.
+  - Deliberate hard gates keep their emphasis: lines tagged `P0`/`C10` are exempt;
+    `modernization:allow` marks intentional quoted examples.
+  - Audit result: all 25 agent files already clean; 12 findings in skill/reference files fixed
+    (2 reworded, 7 Locked-Mode rules tagged `(P0)`, 2 allowlisted quoted examples, 1 spec-first
+    line reworded — enforcement of those rules is mechanical, so prose emphasis was redundant).
+  - Tests 10/10 (suite total 122/122); track22 adversarial: dated agent → FAIL (all 5 rule
+    families named), clean agent with P0 emphasis → PASS, repo-wide → clean; 0 false +/-.
+
 ## [1.3.1] - 2026-08-07
 
 ### Changed

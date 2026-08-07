@@ -1,0 +1,30 @@
+{
+  "scanned": 1,
+  "findings": [
+    {
+      "file": "_harness_test/track22-modernization/dated-agent.md",
+      "line": 3,
+      "rule": "pressure-language"
+    },
+    {
+      "file": "_harness_test/track22-modernization/dated-agent.md",
+      "line": 4,
+      "rule": "dated-thinking"
+    },
+    {
+      "file": "_harness_test/track22-modernization/dated-agent.md",
+      "line": 5,
+      "rule": "over-verification"
+    },
+    {
+      "file": "_harness_test/track22-modernization/dated-agent.md",
+      "line": 6,
+      "rule": "severity-filter"
+    },
+    {
+      "file": "_harness_test/track22-modernization/dated-agent.md",
+      "line": 7,
+      "rule": "stale-model-ref"
+    }
+  ]
+}

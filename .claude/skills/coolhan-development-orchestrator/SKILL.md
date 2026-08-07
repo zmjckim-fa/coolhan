@@ -523,7 +523,7 @@ Paste exactly:
 🔖 핸드오프 저장: _workspace/handoff-{MMDD-HHmm}.md — 새 세션을 여세요 (또는 계속 진행 가능).
 ```
 
-**Difference from baton:** baton = context-limit hand-off (work MUST continue); handoff = token-efficient clean restart (user chooses). Both can coexist in the same session.
+**Difference from baton:** baton = context-limit hand-off (the work continues next session — a baton is never a completion, per G8-B); handoff = token-efficient clean restart (user chooses). Both can coexist in the same session.
 
 **New session start with handoff:**
 ```
@@ -720,7 +720,7 @@ _workspace/
 ### Phase 0: Context Ingestion Gate (G8-A) ★ mandatory — read the whole picture before acting
 
 > **A command is an instruction to advance the WHOLE goal, not to act on the last message in isolation.**
-> Before any task work, the orchestrator MUST read and internalize the full context, then record a
+> Before any task work, the orchestrator reads and internalizes the full context (mechanically enforced by context-check.js — not optional), then records a
 > digest. Skipping this is the root cause of "acted on the latest command only → wrong output".
 
 ```

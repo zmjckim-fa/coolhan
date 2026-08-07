@@ -32,13 +32,14 @@ non-Claude or legacy runtimes.
    correct hand-off for genuinely long runs — but firing it after 3 units on a 1M-class model
    wastes sessions. Use the updated table in SKILL.md § Continuous Relay.
 2. **Newer models follow instructions more literally.** Pressure language written to overcome
-   old-model reluctance ("CRITICAL: YOU MUST...", "If in doubt, do X") now over-triggers.
+   old-model reluctance ("CRITICAL: YOU MUST...", "If in doubt, do X") now over-triggers. <!-- modernization:allow — quoted example of the dated pattern -->
+
    When editing agent definitions, state instructions plainly; reserve emphasis for the few
    genuinely non-negotiable P0 gates (planner intent, no-simulation/C10, evidence-required).
 3. **Self-verification is now default model behavior.** Newest-generation models verify their
    own work unprompted. CoolHan's *mechanical* gates (G1–G8, tasks-check, no-placeholder-check)
    stay — they are evidence-producing artifacts, not prompts — but avoid adding new
-   prose-level "double-check your answer" instructions to agents; they cause over-verification
+   prose-level "double-check your answer" instructions to agents; they cause over-verification <!-- modernization:allow — quoted example of the dated pattern -->
    on current models without adding evidence.
 4. **Long single turns are normal.** Current top-tier models routinely run many minutes in one
    turn. The working-mode rule "no waiting after 1 minute" should not be read as "a long turn
@@ -48,6 +49,14 @@ non-Claude or legacy runtimes.
    Reviewer) must ask for *coverage first* — report every finding with confidence + severity,
    filter downstream — which is already their two-layer-verdict design; do not add
    conservative-reporting language to them.
+
+## Enforcement
+
+`node scripts/prompt-modernization-check.js .claude/agents .claude/skills` lints every
+agent/skill .md for the dated patterns in §2–5 (pressure language outside P0/C10 lines,
+thinking-budget/step-by-step scaffolds, over-verification prose, severity filters, stale model
+IDs). Run it after editing any agent definition; verified adversarially in
+`_harness_test/track22-modernization/`.
 
 ## Honesty bound
 

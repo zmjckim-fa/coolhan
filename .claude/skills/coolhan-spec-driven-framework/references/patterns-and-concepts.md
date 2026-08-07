@@ -370,34 +370,34 @@ Define strict operational rules that AI CANNOT deviate from.
 ## Locked Mode Rules (ABSOLUTE - AI CANNOT DEVIATE)
 
 ### Database Rules (Category: DATA_INTEGRITY)
-1. NEVER delete from production database without backup
+1. (P0) NEVER delete from production database without backup
    - Enforcement: Code analysis checks for DELETE statements in PRODUCTION
    - Action on violation: DEPLOYMENT BLOCKED
    
-2. NEVER modify status value enumeration after production release
+2. (P0) NEVER modify status value enumeration after production release
    - Enforcement: Status registry changes in PRODUCTION flagged
    - Action on violation: DEPLOYMENT BLOCKED
 
 ### Security Rules (Category: SECURITY)
-3. NEVER commit .env.production file
+3. (P0) NEVER commit .env.production file
    - Enforcement: Pre-commit hook checks for .env.* files
    - Action on violation: COMMIT BLOCKED
    
-4. NEVER expose API keys in code or commits
+4. (P0) NEVER expose API keys in code or commits
    - Enforcement: Pre-commit hook scans for common key patterns
    - Action on violation: COMMIT BLOCKED
 
 ### File Naming Rules (Category: INTEGRITY)
-5. NEVER rename files after they're committed
+5. (P0) NEVER rename files after they're committed
    - Enforcement: FILE_MANIFEST tracks all filenames
    - Action on violation: COMMIT BLOCKED (file not in manifest)
 
-6. NEVER change module file structure
+6. (P0) NEVER change module file structure
    - Enforcement: File structure validated against manifest
    - Action on violation: COMMIT BLOCKED
 
 ### Deployment Rules (Category: STABILITY)
-7. NEVER skip pre-deploy validation
+7. (P0) NEVER skip pre-deploy validation
    - Enforcement: Pre-deploy hooks are mandatory
    - Action on violation: DEPLOYMENT BLOCKED
 ```
@@ -488,4 +488,4 @@ ACTION: Alert deployment team, rollback may be required
 ```
 
 ### Prevention
-Specifications MUST be updated BEFORE code changes, validated during pre-commit, and verified during post-deploy.
+Specifications are updated before code changes (enforced at pre-commit), validated during pre-commit, and verified during post-deploy.

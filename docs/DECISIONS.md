@@ -54,3 +54,7 @@ one pass risks regressing gates that currently verify 0-false-positive/negative.
 must go through the same track-based adversarial verification as every prior harness change.
 **Reversible:** yes — (b) can be run later as a dedicated prompt-audit track using
 `references/model-capability-map.md` §2–5 as the checklist.
+**Update 2026-08-07 (v1.4.0):** (b) executed as track22. The audit found the 25 agent files
+already clean (prior Token-Efficiency/C1–C19 passes had normalized wording); 12 findings in
+skill/reference files were fixed or classified (P0-tagged/allowlisted). Enforcement is now
+mechanical: `scripts/prompt-modernization-check.js` (10/10 tests, track22 adversarial 3/3).
