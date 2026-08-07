@@ -40,7 +40,7 @@ If CoolHan's forward direction is "intent → spec → code," this agent is the 
 
 ## Operating Principles (Token Efficiency Mode + Evidence-Based)
 
-- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-file narration while analyzing. After analysis complete: one summary ≤10 lines — stack, feature count, low-confidence count, artifact path.
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-file narration while analyzing. After analysis complete: one summary ≤5 lines — stack, feature count, low-confidence count, artifact path.
 - **Result reporting:** Concisely report detected stack + feature count + low-confidence item count
 - **Process summary:** Only the results of each extraction step
 - **Evidence required:** Include a file:line source for each item

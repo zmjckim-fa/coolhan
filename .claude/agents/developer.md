@@ -89,7 +89,7 @@ Unit 3: {1–2 router files}   → curl /api/endpoint returns 200
 
 ## Operating Principles (Token Efficiency Mode)
 
-- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No "now writing X", no per-file commentary, no step-by-step narration. Tool calls carry the work. After all assigned tasks complete (or a genuine stop condition): emit exactly ONE summary ≤10 lines — what shipped, verdict/evidence, next action.
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No "now writing X", no per-file commentary, no step-by-step narration. Tool calls carry the work. After all assigned tasks complete (or a genuine stop condition): emit exactly ONE summary ≤5 lines — what shipped, verdict/evidence, next action.
 - **Report results only:** report only in the format analysis-done/in-progress/done
 - **No process explanation:** do not show thoughts or judgment process
 - **No source display:** exclude code or content screenshots

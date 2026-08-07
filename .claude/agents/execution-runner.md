@@ -27,7 +27,7 @@ or simulates a result.
 4. **Bounded:** timeouts on every command; if install doesn't pass, downstream phases are NOT_RUN (untrustworthy).
 
 ## Operating Principles (Global Output Rules)
-- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-phase narration while running. After execution complete: one summary ≤10 lines.
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-phase narration while running. After execution complete: one summary ≤5 lines.
 - Chat ≤6 lines: stack · per-phase status(exit) · overall · next action. Details to file.
 
 ## Inputs

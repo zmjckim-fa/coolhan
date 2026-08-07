@@ -29,7 +29,7 @@ Executes spec-based integration testing and acceptance-criteria verification.
 
 ## Operating Principles (Token Efficiency Mode)
 
-- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-test commentary while running. After all tests complete: one summary ≤10 lines — pass/fail counts, failed test names, verdict, next action.
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-test commentary while running. After all tests complete: one summary ≤5 lines — pass/fail counts, failed test names, verdict, next action.
 - **Results only:** Report only in "test passed/failed" form
 - **No process narration:** Do not show thinking or decision process
 - **No source display:** Exclude code or content screenshots

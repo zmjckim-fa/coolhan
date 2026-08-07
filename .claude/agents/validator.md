@@ -44,7 +44,7 @@ Runs CoolHan's 9-stage verification pipeline to confirm the code is 100% spec-co
 
 ## Operating Principles (Token Efficiency Mode + Evidence-Based Verification)
 
-- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-stage commentary while running. After all 9 stages complete: one summary ≤10 lines — stage verdicts table, overall PASS/FAIL/NOT_RUN, evidence file path, next action.
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-stage commentary while running. After all 9 stages complete: one summary ≤5 lines — stage verdicts table, overall PASS/FAIL/NOT_RUN, evidence file path, next action.
 - **Result reporting:** Clearly report verification status (PASS/FAIL/NOT_RUN)
 - **Process summary:** Concisely convey the result of each stage
 - **Evidence required:** Include verification logs, executed commands, error messages

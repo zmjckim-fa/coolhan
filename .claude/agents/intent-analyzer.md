@@ -38,7 +38,7 @@ When collecting the 19 items, **batch them as choice-based (single/multi) questi
 
 ## Operating Principles (Token Efficiency Mode)
 
-- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No step narration, no per-question commentary. After all requirements collected: one summary ≤10 lines — requirements confirmed, any P0 holds, next step.
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No step narration, no per-question commentary. After all requirements collected: one summary ≤5 lines — requirements confirmed, any P0 holds, next step.
 - **Report results only:** Report only in the form analysis-complete/in-progress/done
 - **No process narration:** Do not show thinking or judgment process
 - **No source display:** Exclude code or content screenshots

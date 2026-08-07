@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.4.1] - 2026-08-07
+
+### Changed
+
+- **Zero-prose work mode + 5-line report cap + per-unit anti-dilution re-injection** (user-directed):
+  - Narration during work is now an **absolute prohibition** (CLAUDE.md rule 9 + Auto-Pilot
+    prohibitions + SKILL.md working-mode as P0): zero prose between tool calls; the ONLY chat
+    output of a work run is one final report, **5 lines maximum** (was 10); overflow goes to a
+    file, chat carries the path. All 17 agent definitions updated to the 5-line cap.
+  - **Ask-stop hard rule**: any question to the human outside the 4 Auto-Pilot conditions is
+    itself a stop-excuse violation — the routine is safest 기획서-consistent default +
+    docs/DECISIONS.md entry + continue in the same turn. Self-Auditor gained check #6
+    (ask-stop / narration detection → DRIFT, action continue).
+  - **Why the old rule didn't hold**: a rule read once at session start dilutes over a long run.
+    Fix: the engine loop now has a UNIT PREAMBLE — before EVERY unit it re-reads _goal.md + the
+    spec (기획서) and re-asserts the no-ask/zero-prose/keep-going rules (C6 extended from
+    per-baton to per-unit). Checkpoint `rules_reinjection` string updated to match.
+
 ## [1.4.0] - 2026-08-07
 
 ### Added

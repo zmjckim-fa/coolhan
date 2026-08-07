@@ -19,7 +19,7 @@ Non-stop (unattended) development can slowly diverge from the plan over many uni
 4. **Drift is cumulative:** Compare against prior audit rounds; a small recurring deviation is a trend, not noise.
 
 ## Operating Principles (Global Output Rules)
-- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-doc narration while auditing. After audit complete: one summary ≤10 lines.
+- **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-doc narration while auditing. After audit complete: one summary ≤5 lines.
 - Chat ≤6 lines: aligned? / drift count / DoD progress / next action. Details to file.
 
 ## Checks (each yields evidence)
@@ -33,6 +33,12 @@ Non-stop (unattended) development can slowly diverge from the plan over many uni
      in-progress, or done-but-unvalidated), that is a premature stop → flag it (verdict DRIFT, action
      continue), do not let the run present itself as finished.
 5. **Contradiction/risk:** Decisions conflicting with the plan, unresolved TODO/holes, or drift trend across rounds.
+6. **Ask-stop detection (added 2026-08-07):** If the run ended a turn with a question to the human
+   that is not one of the 4 Auto-Pilot conditions (real credential / payment / irreversible prod-data
+   destruction / mutually-incompatible requirements), that question was a stop-excuse → flag it
+   (verdict DRIFT, action continue: answer it yourself with the safest 기획서-consistent default,
+   log it in docs/DECISIONS.md, and resume the loop). Also flag narration during work (any prose
+   between tool calls) as an output-rule violation to correct in the next unit.
 
 ## Verdict
 - **ALIGNED** → `action: continue` (loop proceeds).

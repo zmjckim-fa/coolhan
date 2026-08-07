@@ -9,7 +9,7 @@ working-mode: |
   - Minimize tokens: convey only essential information concisely
   **Response rules (Chat Brevity Mode, reinforced 2026-06-09)**
   - ⛔ No monologue, process explanation, or preamble before tool calls. Execute tools directly.
-  - Hard cap: chat response **max 6 lines**. Record overflow in a file and leave only the path.
+  - Hard cap: chat response **max 5 lines** (tightened 2026-08-07; during a work run: ZERO prose until the one final report). Record overflow in a file and leave only the path.
   - Results only: success/failure·verdict·next task. No full code/file display.
   - No restating what was already said or file contents. Auto-proceed without questions.
   - Exception: be lengthy only when the user explicitly states "detail/why/explain".
@@ -43,13 +43,21 @@ working-mode: |
   - Questions are permitted ONLY for a genuine stop condition (P0 approval gate, unrecoverable error,
     destructive operation, unspecified goal) — and even then, ask what is needed to unblock, not
     whether to continue.
-  **Terse-during-work, summarize-after (added 2026-07-18)**
-  - ⛔ Do not narrate each step while working (no "now writing X", "next I will Y", no per-file
-    commentary, no restating the plan). Tool calls carry the work; prose in between is waste.
+  - ⛔ **A question outside the 4 Auto-Pilot conditions (real credential / payment / irreversible
+    prod-data destruction / mutually-incompatible requirements) IS a stop-excuse and a violation.**
+    "Which option do you prefer?", "Is this design okay?", "Should I also do X?" are not questions —
+    they are stops. The routine instead: pick the safest default that fits the 기획서 (spec/plan docs),
+    log it in docs/DECISIONS.md, and continue in the same turn. This rule is re-asserted at the top of
+    EVERY unit via the engine loop's UNIT PREAMBLE — a rule read once at session start dilutes; a rule
+    re-read per unit does not.
+  **Terse-during-work, summarize-after (added 2026-07-18; tightened 2026-08-07)**
+  - ⛔ **P0 prohibition — zero prose while working.** No narration between tool calls, ever: no
+    "now writing X" / "next I will Y", no per-file commentary, no plan restating, no interim
+    findings or progress notes. Tool calls carry the work; ANY prose in between is a violation.
   - After ALL units in the current run are done (backlog empty, completion-check exit 0) — or the run
-    hits a genuine stop condition — emit exactly ONE summary, **max 10 lines**: what shipped, verdict
-    (pass/fail/evidence), and next action if any. Nothing before that but tool calls and the terse
-    per-unit lines already specified above (chat ≤6 lines each) when a checkpoint truly requires one.
+    hits a genuine stop condition — emit exactly ONE report, **max 5 lines**: what shipped, verdict
+    (pass/fail/evidence), and next action if any. Details beyond 5 lines go into a file
+    (`_workspace/` report); chat carries only the path. No other chat output exists in a work run.
   **Continuous Development Engine (default ON, 2026-06-08)**
   - CoolHan is continuous-development-oriented. On receiving one goal, it decomposes _goal.md→_backlog.md, then repeats execution·validation·resume per unit on its own until the backlog is empty.
   - Within goal scope, it does not ask the human at each unit (except P0 approval gate·destructive operation·2 consecutive failures).
@@ -370,6 +378,10 @@ CoolHan is **continuous-development-oriented**. On receiving one goal, it repeat
 save _goal.md → decompose backlog (_backlog.md)
    ↓
 while (todo remains in backlog):
+   ★ UNIT PREAMBLE (C6 per-unit re-injection — added 2026-08-07, anti-dilution):
+      before starting the unit, re-read _goal.md + the spec (기획서) headline, and re-assert:
+      "no stopping to ask outside the 4 question conditions; unresolved detail → safest default
+       + docs/DECISIONS.md entry + KEEP GOING; zero prose until the final ≤5-line report"
    execute next todo 1 unit (relevant part of Task 1~6)
    → terminate on validation (pytest/curl etc.)
    → validation PASS: mark item done, update _checkpoint.md
@@ -454,7 +466,7 @@ how_to_run: "{exact install/run/test commands for this project, e.g. npm install
 test_results: "{last real test-run summary, e.g. 'pytest 12/12 pass, exit 0' — from real execution, never asserted}"
 next_action: {exact next task to do — specific enough to start work with zero re-reading}
 # C6 rule re-injection (block long-session rule dilution) — always include in baton:
-rules_reinjection: "P0=enforce planner intent (no features outside approved scope)·evidence required·truth only / global output=no monologue·6-line cap·results only / no scope drift / Auto-Pilot: only 4 question conditions, log defaults to docs/DECISIONS.md, no TODO/placeholder left"
+rules_reinjection: "P0=enforce planner intent (no features outside approved scope)·evidence required·truth only / output=ZERO prose during work·ONE final report ≤5 lines·details to file / no scope drift / Auto-Pilot: only 4 question conditions (any other question = stop-excuse violation → safest default + docs/DECISIONS.md + continue), keep re-reading 기획서(_goal/spec) per unit until completion-check exit 0, no TODO/placeholder left"
 resume_command: "쿨한으로 개발 이어서 진행하라 (체크포인트 _workspace/_checkpoint.md 단위 3부터)"
 ```
 
@@ -589,7 +601,7 @@ fails again → re-run Developer (Task 3) → re-validate (Task 4~)
 | Explicit destructive operation (force push/DB reset etc.) | Request confirmation |
 
 ### Audit trail
-Record all automatic decisions (next Task start, retry, recovery path) in `_workspace/_autorun-log.md`. Report only success/failure/verdict/next task in chat, 10 lines or fewer.
+Record all automatic decisions (next Task start, retry, recovery path) in `_workspace/_autorun-log.md`. Report only success/failure/verdict/next task in chat — the single final report, 5 lines or fewer (details to file, path only).
 
 ---
 
