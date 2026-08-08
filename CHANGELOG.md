@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.7.0] - 2026-08-07
+
+### Added
+
+- **Design Excellence Standard — breaking the AI house style** (user-reported: "always the same
+  design, always pastel, text-only pages"):
+  - `references/design-excellence-standard.md` — diagnosis (models have a default house style;
+    generic instructions shift it, not vary it; text is free while imagery is work) + 5 rules:
+    banned defaults (Inter/system-only stacks, reflexive hero+3-cards), **no washed-out
+    palettes by default** (accent saturation ≥50% or declared `"muted":"intentional"` with a
+    brief-tied rationale; ≥1 of the proposed directions must be bold), **4 distinct visual
+    directions before building** (human picks; unattended → HX Vision Critic picks with
+    recorded rationale), **design-diversity ledger** (`_workspace/_design-history.md` — new
+    direction must differ from the last 3 projects in ≥2 of palette/typeface/layout),
+    **imagery as a requirement** (per-section imagery decision; text-only pages must be
+    declared; inline SVG always in scope; production placeholders are deploy blockers).
+  - `scripts/design-quality-check.js` — mechanical gate for the three measurable failure
+    modes: house-style-repeat, washed-out-palette (real HSL saturation math), text-wall
+    (zero visual elements without a `design:text-only` declaration).
+  - Wired into ux-design-lead.md (4-direction step + gate), developer.md (build from chosen
+    tokens, draw inline SVGs, gate before implemented), SKILL.md Task 1.5.
+  - Tests 12/12 (total 151/151); track25 adversarial: pastel+text-wall → FAIL(named),
+    house-style repeat → FAIL, intentional-muted + distinct + visual → PASS; 0 false +/-.
+
 ## [1.6.0] - 2026-08-07
 
 ### Added

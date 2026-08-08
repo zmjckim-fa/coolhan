@@ -913,8 +913,16 @@ Task 1.5: UX/design (UX Design Lead) ★ NEW — human-centered injection
 ├─ Depends: Task 1 complete (requirements' [Human-Centered] section)
 ├─ Design user journey·screens (IA)·forms (items/order/validation/error-resolution)·states·design tokens·responsive/accessibility
 ├─ Standards: references/human-experience-standard.md + 00_DESIGN_PARAMETERIZATION_SYSTEM.md
+│            + references/design-excellence-standard.md (v1.7.0 — anti-house-style)
+├─ Design Excellence: propose 4 distinct visual directions (≥1 bold/high-saturation; no
+│  Inter/pastel/hero+3-cards defaults) → human picks at gate (unattended: HX critic picks,
+│  rationale recorded) → chosen direction must differ from last 3 projects in ≥2 axes →
+│  per-section imagery plan (text-only must be declared, never accidental)
+├─ Gate: node scripts/design-quality-check.js --tokens <tokens.json> --history
+│        _workspace/_design-history.json --html <pages>   (house-style repeat /
+│        washed-out palette / text-wall → FAIL)
 ├─ No arbitrary addition of screens outside planning scope (P0)
-└─ Output: _workspace/01b_ux-design-{id}.md (+ 01b_design-tokens-{id}.json)
+└─ Output: _workspace/01b_ux-design-{id}.md (+ 01b_design-tokens-{id}.json + _design-history append)
 
 Task 2: Write CoolHan spec (Spec Writer)
 ├─ Depends: Task 1.5 complete (includes UX spec)

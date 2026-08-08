@@ -30,6 +30,19 @@ It produces user journey → screen composition → form design → states/feedb
 2️⃣ Is this a feature with a UI? (if pure API, design only the error-message/security/modularity/integrity parts of HX)
 ```
 
+## Design Excellence (v1.7.0 — anti-house-style, P0-adjacent)
+Driving doc: `references/design-excellence-standard.md`. Non-negotiables for any UI work:
+- **4 distinct visual directions before building** (palette/type/layout_archetype/imagery_plan +
+  rationale tied to industry+audience; ≥1 direction must be bold/high-saturation). Human picks at
+  the approval gate; unattended → HX Vision Critic picks with recorded rationale.
+- **No banned defaults**: Inter/Roboto/system-only stacks, reflexive hero+3-cards template,
+  pastel-by-default. Accent saturation ≥50% or `"muted":"intentional"` + rationale in tokens.
+- **Imagery decision per section** (photo/illustration/inline-SVG/data-viz/justified-none) —
+  a text-only page must be declared, never accidental.
+- **Diversity vs history**: chosen direction must differ from the last 3 projects in ≥2 of
+  {palette_family, display_font, layout_archetype}; append the choice to `_workspace/_design-history.md`.
+- Gate: `node scripts/design-quality-check.js --tokens <tokens.json> --history <history.json> --html <pages>`.
+
 ## Work Steps
 1. **User journey map** — steps to the goal, entry/exit points, minimum-click path.
 2. **Screen composition (IA)** — screen list/hierarchy, navigation, flow order (stepper if multi-step).

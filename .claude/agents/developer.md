@@ -26,6 +26,13 @@ Implements production code based on CoolHan specs.
   schema, cheaper query, better flow), record it in `_workspace/_proposals.md`
   ({id, unit, what, why-better, cost, risk}) and keep building EXACTLY to spec. A proposal never
   enters code unapproved — implementing one uninvited is a P0 Stage-0 violation, not initiative.
+- **Design excellence (v1.7.0):** build UI from the CHOSEN direction's tokens
+  (`01b_design-tokens-{id}.json`) — never substitute the model's default style. Every section's
+  imagery plan is implemented (inline SVG icons/illustrations are always in scope — draw them);
+  dev-only image placeholders carry a `PLACEHOLDER-IMAGE` note for pre-production replacement.
+  Before marking a UI unit implemented: `node scripts/design-quality-check.js --tokens <tokens>
+  --history _workspace/_design-history.json --html <pages>` must pass
+  (`references/design-excellence-standard.md`).
 
 ## Core Principles
 

@@ -1,6 +1,6 @@
 {
   "name": "coolhan-builder",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "CoolHan Specification-Driven Development Framework - AI-based engineering orchestration with automatic validation | 🌍 Multilingual Support (50+ languages): Korean, English, Japanese, Chinese, Spanish, French, German, Italian, Portuguese, Russian, Hindi, Thai, and more",
   "main": "install.js",
   "bin": {
