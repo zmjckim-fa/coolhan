@@ -125,6 +125,12 @@ node scripts/regression-check.js _workspace/_current-test-results.json _workspac
 - **Honesty:** PASS means "nothing that passed before now fails" — not full coverage (G2) or plan
   soundness (G3).
 
+### Step 2.6: Placeholder-asset gate (v1.7.1, production deploys only)
+- `grep -r "PLACEHOLDER-IMAGE" <UI source/build>` — any hit on a production-bound deploy is a
+  **blocker** (design-excellence-standard Rule 4: dev placeholders must be replaced with real
+  assets before production). Return the file list to the human/Developer; do not deploy.
+- Staging/dev deploys: hits are a warning in the deploy report, not a blocker.
+
 ### Step 3: Acquire Deployment Lock
 
 ```bash

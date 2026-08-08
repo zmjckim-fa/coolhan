@@ -17,6 +17,7 @@ Through **9-stage user journey validation**, confirm UI/UX, data flow, and brows
 8. CSS integrity (styles, colors, fonts)
 9. Browser compatibility (Chrome, Firefox, Safari, Edge)
 10. **HX acceptance criteria check (NEW, 2026-06-09)** — Measure every item of the UX Design Lead's HX acceptance criteria + the `references/human-experience-standard.md` checklist against actuals. FAIL if P0 (forms/accessibility/responsive/modularity) is unmet. Attach evidence (screenshots/contrast measurements/DevTools).
+11. **Design Excellence check (v1.7.1)** — Verify the rendered pages against `references/design-excellence-standard.md`: the CHOSEN direction's tokens are actually applied (accent color + display font visible in the rendered page, not model-default styling); every section follows its imagery plan (no accidental text-walls — run `node scripts/design-quality-check.js --html <pages>` on rendered output); no unreplaced `PLACEHOLDER-IMAGE` assets on a production-bound build. Deviations = FAIL with screenshot evidence.
 
 **Timing:** After Integration Validator completes, or immediately after deployment (optional)
 **Artifact:** e2e-validation-report-{id}.json

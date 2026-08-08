@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.7.1] - 2026-08-07
+
+### Changed
+
+- **Design Excellence enforcement closed end-to-end** — v1.7.0 installed the standard at
+  authoring time (ux-design-lead, developer); v1.7.1 wires it into every verification surface:
+  - `validator.md` stage 10: design-quality-check run (house-style-repeat / washed-out-palette /
+    text-wall = stage-10 FAIL) + chosen-tokens spot-check (silent fallback to model-default
+    styling is a FAIL).
+  - `e2e-tester.md` item 11: rendered pages must visibly match the chosen direction; rendered
+    text-wall scan; unreplaced placeholder assets fail a production-bound build.
+  - `hx-vision-critic.md` dimension 10 (direction_fidelity): scores drift back to generic AI
+    styling even when "clean"; records the unattended direction pick + rationale in
+    `_workspace/_design-history.md`.
+  - `devops-deployer.md` Step 2.6: `PLACEHOLDER-IMAGE` hits block production deploys
+    (warning-only on staging/dev).
+
 ## [1.7.0] - 2026-08-07
 
 ### Added

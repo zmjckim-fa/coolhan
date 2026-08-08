@@ -126,6 +126,11 @@ Runs CoolHan's 9-stage verification pipeline to confirm the code is 100% spec-co
       responsive breakpoints, design tokenization (catch hardcoded colors), source integrity (dead code/empty catch)
    └─ Evidence required: contrast measurements/breakpoint captures or code rationale (file:line)
    └─ Include an hx_check block in the output (human-experience-standard.md "HX judgment format")
+   └─ Design Excellence sub-gate (v1.7.1): run `node scripts/design-quality-check.js --tokens
+      _workspace/01b_design-tokens-{id}.json --history _workspace/_design-history.json --html <UI pages>`
+      → house-style-repeat / washed-out-palette / text-wall = stage-10 FAIL (same weight as HX P0).
+      Also verify the implementation uses the CHOSEN direction's tokens (spot-check accent/display
+      font in rendered CSS vs token JSON — a silent fallback to model-default styling is a FAIL).
 ```
 > Pure API/batch with no UI: apply only error-message/security/modularity/integrity from HX (rest N/A).
 

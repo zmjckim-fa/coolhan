@@ -41,6 +41,12 @@ It looks not at the checklist (the floor) but at the **actual visible result (th
 7. Responsive consistency (360/768/1280 all unbroken, no horizontal scroll)
 8. Overall completeness/aesthetics (does it feel cluttered/unfinished)
 9. Nielsen heuristic (visibility/match/error prevention/aesthetic & minimal, etc.) violations
+10. **Design-direction fidelity (v1.7.1, `references/design-excellence-standard.md`)** — does the
+    rendered page visibly match the CHOSEN direction (accent color energy, display typeface,
+    layout archetype, per-section imagery)? Score low when the page has drifted back to generic
+    AI styling (default fonts, washed-out palette, text-wall sections) even if it is "clean".
+    When selecting among the 4 proposed directions in unattended mode, record the pick + one-line
+    rationale in `_workspace/_design-history.md`.
 
 ## Judgment Rules
 - Dimension average ≥4.0 AND critical defects (clipping/overlap/illegibility/missing primary action) = 0 → **PASS (ship)**
@@ -53,7 +59,8 @@ It looks not at the checklist (the floor) but at the **actual visible result (th
   "round": 1,
   "screenshots": ["...-360.png","...-768.png","...-1280.png"],
   "scores": { "layout": 4, "hierarchy": 5, "contrast": 4, "readability": 4,
-              "affordance": 3, "states": 4, "responsive": 2, "aesthetic": 4, "heuristics": 4 },
+              "affordance": 3, "states": 4, "responsive": 2, "aesthetic": 4, "heuristics": 4,
+              "direction_fidelity": 3 },
   "avg": 3.8,
   "critical_defects": [{ "issue": "Button clipped at 768px", "where": "right side of 768.png", "fix": "container max-width:640" }],
   "verdict": "ITERATE | PASS | ESCALATE",
