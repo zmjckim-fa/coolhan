@@ -453,6 +453,14 @@ the machine proposes, the human disposes. Full term-to-mechanism map:
 - **Within session:** if context has room, immediately continue to the next unit (auto-chain).
 - **Session boundary:** on nearing threshold, save `_checkpoint.md` + emit baton. The next session resumes via the baton.
 - **Fully unattended:** setting `/loop 쿨한으로 개발 이어서 진행하라` once means the same command is auto-re-issued even across session breaks, self-proceeding indefinitely until the backlog is empty. (The engine outputs the baton as a fixed phrase, so it aligns with loop.)
+- **Fully unattended, OUTSIDE Claude (G13, v2.0.0 — the strongest form):** run the supervisor
+  process once from a terminal:
+  `node scripts/nonstop.js` (defaults: relaunches `claude -p "쿨한으로 개발 이어서 진행하라" --permission-mode bypassPermissions` until completion-check exits 0).
+  Sessions die (context exhausted/crash) → the supervisor relaunches automatically; state
+  carries via _checkpoint/_loop-state/_backlog. Stops ONLY on: COMPLETE(0) ·
+  STOP_APPROVED(3, human decision recorded) · NO_PROGRESS(4, 3 sessions changed nothing) ·
+  MAX_SESSIONS(5, default 50) · CMD_ERROR(2). Per-session evidence in _workspace/_nonstop-log.jsonl;
+  completion auto-generates the G12 run report.
 
 ### How to start
 ```

@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.0.0] - 2026-08-07
+
+### Added
+
+- **G13 Nonstop supervisor — the outer loop that makes 무중단 개발 literal**: G10 loops within
+  a unit and G11 stops a session from quitting early, but when a session genuinely ends
+  (context exhausted, crash, process exit) continuing still required a human to paste the
+  baton. `scripts/nonstop.js` removes that last human step: run it once from a terminal and it
+  relaunches headless Claude Code sessions (`claude -p "쿨한으로 개발 이어서 진행하라"
+  --permission-mode bypassPermissions`, template configurable) until completion-check exits 0.
+  - Stops ONLY on named conditions with distinct exit codes: COMPLETE(0, auto-generates the
+    G12 run report) · CMD_ERROR(2) · STOP_APPROVED(3, a recorded human-decision stop) ·
+    NO_PROGRESS(4, 3 consecutive sessions changed nothing — never spins on a wedged run) ·
+    MAX_SESSIONS(5, default 50 cost valve).
+  - Per-session evidence (exit code + output tail) appended to `_workspace/_nonstop-log.jsonl`;
+    progress measured by real backlog diffs, never by session exit codes alone; stale
+    stop-approvals honored (a recorded ESCALATE launches zero sessions).
+  - Tests 9/9 (total 182/182); track29 real-process adversarial: 3-unit backlog driven to
+    COMPLETE in exactly 3 sessions, broken session command → NO_PROGRESS halt with raw error
+    tails, pre-recorded ESCALATE → zero launches; 0 false +/-.
+
+
 ## [1.9.0] - 2026-08-07
 
 ### Added
