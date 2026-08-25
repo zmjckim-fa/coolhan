@@ -1,0 +1,20 @@
+{
+  "A_no_run": {
+    "suppressOutput": true
+  },
+  "B_incomplete": {
+    "decision": "block",
+    "reason": "CoolHan run t26 is active and the backlog is NOT complete (remaining: completion-check: 1/2 units done |   ✗ not done: U2 | ✗ NOT complete — keep going (a baton/pause is not a completion); finish every unit before declaring done). Per the Non-Stop Execution rules: do not end the turn to ask — questions outside the 4 Auto-Pilot conditions are stop-excuses; pick the safest 기획서-consistent default, log it in docs/DECISIONS.md, and continue the next unit NOW (re-read _workspace/_goal.md + _backlog.md; zero prose until the final ≤5-line report). If a GENUINE stop condition applies (real credential / payment / irreversible prod-data destruction / incompatible requirements / P0 gate / ESCALATE), write _workspace/_stop-approved.json {\"reason\": \"...\"} first — then stopping is permitted."
+  },
+  "C_counter": {
+    "run_id": "t26",
+    "blocks": 3
+  },
+  "D_approved": {
+    "suppressOutput": true
+  },
+  "E_complete": {
+    "suppressOutput": true
+  },
+  "E_marker_retired": true
+}

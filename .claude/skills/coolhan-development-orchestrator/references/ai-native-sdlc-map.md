@@ -21,6 +21,7 @@
 | **Parallel Agent Development** | **G9 `scripts/parallel-plan.js` + SKILL.md § Parallel dispatch (v1.5.0)** | ✅ NEW |
 | **Better-than-spec with intent safety** | **Improvement-Proposal channel `_workspace/_proposals.md` (v1.5.0)** | ✅ NEW |
 | **Design excellence (anti-house-style)** | **references/design-excellence-standard.md + `scripts/design-quality-check.js` (v1.7.0)**: 4-direction proposal, diversity ledger, palette-energy + imagery gates | ✅ NEW |
+| **Loop enforcement (harness-level)** | **G11 `.claude/hooks/stop-guard.js` Stop hook (v1.8.0)**: blocks turn-end while backlog incomplete; _stop-approved.json = legitimate-stop path; fail-open + safety valve | ✅ NEW |
 | Agent Swarm | marketing synonym of the above — no separate mechanism needed | n/a |
 | Vibe Coding | intentionally NOT adopted — conflicts with spec-driven P0 | rejected |
 

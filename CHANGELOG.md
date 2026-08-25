@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.8.0] - 2026-08-07
+
+### Added
+
+- **G11 Stop-Guard hook — harness-level loop enforcement** (user-reported: "루프 안 돌고 계속
+  멈춰서 물어본다"): every prior countermeasure (rule 8, the 4-condition gate, the v1.4.1 UNIT
+  PREAMBLE) was prose the model had to voluntarily follow. `.claude/hooks/stop-guard.js` is a
+  Claude Code `Stop` hook that runs OUTSIDE the model whenever a turn tries to end:
+  - During an active CoolHan run (`_workspace/_run-active.json`, armed at Phase 0) with an
+    incomplete backlog (completion-check ≠ 0), the stop is **blocked** and the continue
+    instruction (remaining units + no-ask rules + the legitimate-stop path) is re-injected.
+  - Legitimate stops stay possible: writing `_workspace/_stop-approved.json {"reason"}` (the
+    4 Auto-Pilot conditions, P0 gate, ESCALATE, destructive-op confirmation) allows the stop;
+    completion auto-retires the run marker; a 25-block safety valve and fail-open error
+    handling guarantee the guard can never trap a user; sessions without the marker are
+    completely untouched.
+  - `settings.json` `hooks` key restructured to Claude Code's real hook schema (the previous
+    doc-style metadata preserved under `coolhanHooksDoc`) — CoolHan's hook block was never
+    actually executed by Claude Code before this.
+  - Tests 9/9 (total 160/160); track26 real-invocation adversarial: ordinary session
+    untouched, incomplete-run stop blocked with counter, approved stop allowed, completion
+    retires marker; 0 false +/-.
+  - Honest bound: enforces "turn does not end while units remain"; work quality stays with
+    G1–G10, and mid-turn tool-permission prompts are Claude Code permission settings, not
+    stoppable by this hook.
+
 ## [1.7.1] - 2026-08-07
 
 ### Changed
