@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.8.1] - 2026-08-07
+
+### Added
+
+- **G11b Ask-Guard + G11c Run-Armer — the two gaps that kept "stopping to ask" alive even with
+  bypassPermissions** (user-reported): permission mode was never the cause — the model itself
+  asks, and two paths escaped v1.8.0's Stop hook:
+  - `.claude/hooks/ask-guard.js` (PreToolUse, matcher AskUserQuestion): an AskUserQuestion call
+    does NOT end the turn — the session parks awaiting input, invisible to the Stop hook. During
+    an active run with an incomplete backlog and no recorded stop condition, the question is
+    **denied** with the standing instruction (safest 기획서-consistent default + DECISIONS.md +
+    continue; `_stop-approved.json` remains the legitimate path for the 4 conditions/P0/ESCALATE).
+    Shares stop-guard's decision matrix, safety valve, and fail-open behavior.
+  - `.claude/hooks/run-armer.js` (UserPromptSubmit): arming `_run-active.json` was itself a
+    prose instruction — a run that never armed was never guarded. Now the harness arms it
+    mechanically when the user's own prompt is a CoolHan continuous-dev command (conservative
+    trigger; inspection/ops prompts like "쿨한 업데이트 확인해" never arm), clears stale
+    stop-approvals from previous runs, and injects the loop-contract context line.
+  - Tests 7/7 (total 167/167); track27 real-invocation adversarial: arm-on-command,
+    deny-mid-run, allow-after-approval, stale-approval-cleared, inspection-never-arms;
+    0 false +/-.
+
 ## [1.8.0] - 2026-08-07
 
 ### Added

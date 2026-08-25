@@ -375,12 +375,17 @@ CoolHan is **continuous-development-oriented**. On receiving one goal, it repeat
 ```
 [Goal received] → Context Ingestion Gate (Phase 0: read all + _context-digest.json + context-check PASS)
    ↓
-★ G11 STOP-GUARD ARM (v1.8.0): write _workspace/_run-active.json {run_id, started}
-   — from this moment the Claude Code Stop hook (.claude/hooks/stop-guard.js) BLOCKS any
-   turn-end while the backlog is incomplete (harness-level; prose rules no longer the only line
-   of defense). To stop legitimately (4-condition question / P0 gate / ESCALATE / destructive-op
-   confirmation), FIRST write _workspace/_stop-approved.json {"reason": "..."} — then stop.
-   Completion (completion-check exit 0) auto-retires the marker.
+★ G11 STOP-GUARD ARM (v1.8.0; auto-armed v1.8.1): _workspace/_run-active.json {run_id}
+   — usually already written BY THE HARNESS (run-armer UserPromptSubmit hook fires on CoolHan
+   continuous-dev commands); if absent (novel phrasing), write it now as backup. From this
+   moment, harness-level enforcement is live:
+     · Stop hook (stop-guard.js) blocks any turn-end while the backlog is incomplete
+     · AskUserQuestion is DENIED mid-run (ask-guard.js PreToolUse) — asking parks the session
+       without ending the turn, which the Stop hook cannot see; hence its own guard
+   To stop or ask legitimately (4-condition / P0 gate / ESCALATE / destructive-op confirmation),
+   FIRST write _workspace/_stop-approved.json {"reason": "..."} — then stop/ask.
+   Completion (completion-check exit 0) auto-retires the marker; a new run command clears any
+   stale stop-approval.
    ↓
 save _goal.md → decompose backlog (_backlog.md)
    ↓

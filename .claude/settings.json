@@ -26,6 +26,29 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/ask-guard.js",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/run-armer.js",
+            "timeout": 30
+          }
+        ]
+      }
     ]
   },
   "enforcementRules": {

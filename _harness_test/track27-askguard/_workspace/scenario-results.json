@@ -1,0 +1,30 @@
+{
+  "A_arm": {
+    "hookSpecificOutput": {
+      "hookEventName": "UserPromptSubmit",
+      "additionalContext": "[CoolHan G11] Run run-mt91l9o3 ARMED by the harness. The Stop hook will block turn-ends and AskUserQuestion is denied while the backlog is incomplete — outside the 4 Auto-Pilot conditions, choose safest defaults, log to docs/DECISIONS.md, and keep working until completion-check exits 0 (or write _workspace/_stop-approved.json {\"reason\"} for a genuine stop)."
+    }
+  },
+  "A_marker": true,
+  "B_ask": {
+    "hookSpecificOutput": {
+      "hookEventName": "PreToolUse",
+      "permissionDecision": "deny",
+      "permissionDecisionReason": "CoolHan run active with an incomplete backlog — asking the human here is a stop-excuse (rule 8 / Auto-Pilot). Choose the safest 기획서-consistent default, log it in docs/DECISIONS.md, and continue the next unit. If this is genuinely one of the 4 conditions (credential/payment/irreversible prod-data destruction/incompatible requirements) or a P0/ESCALATE stop, write _workspace/_stop-approved.json {\"reason\":\"...\"} first — the question will then be permitted."
+    }
+  },
+  "C_ask": {
+    "suppressOutput": true
+  },
+  "D_rearm": {
+    "hookSpecificOutput": {
+      "hookEventName": "UserPromptSubmit",
+      "additionalContext": "[CoolHan G11] Run run-mt91la0j ARMED by the harness. The Stop hook will block turn-ends and AskUserQuestion is denied while the backlog is incomplete — outside the 4 Auto-Pilot conditions, choose safest defaults, log to docs/DECISIONS.md, and keep working until completion-check exits 0 (or write _workspace/_stop-approved.json {\"reason\"} for a genuine stop)."
+    }
+  },
+  "D_stale_cleared": true,
+  "E_inspect": {
+    "suppressOutput": true
+  },
+  "E_not_armed": true
+}
