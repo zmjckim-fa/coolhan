@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.9.0] - 2026-08-07
+
+### Added
+
+- **G12 Run Observability Report** — the Foundation/Observability layer of the agent-loop
+  roadmap: `scripts/run-report.js` composes the artifacts that each recorded one slice of a run
+  (G5 ledger, G10 loop state, G8-B backlog, improvement proposals, design history) into one
+  readable report (`_workspace/run-report.md` + `--json`):
+  - backlog completion % with remaining/unvalidated units named; per-gate PASS/FAIL/NOT_RUN
+    counts (filterable by `--run-id`); per-unit loop iterations, escalations, and last raw
+    failure tail; recurring failure lessons (≥2× same gate+reason); pending proposal count.
+  - Observer only — never changes a verdict, never blocks; an empty workspace produces an
+    honest "nothing recorded — not proof of completion" report.
+  - Wired into the engine loop's completion gate (generate + cite the path in the final
+    ≤5-line report) and recommended for mid-run "지금 어디까지 됐어?" asks — hand the path
+    instead of narrating.
+  - Tests 6/6 (total 173/173); track28 adversarial: realistic mid-run state → correct
+    completion/filtering/lessons/escalation/proposal counts (a separator-row over-count was
+    caught and fixed during the track); empty workspace → honest caveat; 0 false +/-.
+
 ## [1.8.1] - 2026-08-07
 
 ### Added

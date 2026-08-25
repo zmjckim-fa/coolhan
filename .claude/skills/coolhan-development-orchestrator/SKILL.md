@@ -419,6 +419,11 @@ while (todo remains in backlog):
    → context near threshold? → emit baton (CONTINUATION, not done) / else continue to next todo
    ↓
 [COMPLETION GATE — G8-B] node scripts/completion-check.js _workspace/_backlog.md
+   + G12 OBSERVABILITY (v1.9.0): node scripts/run-report.js --run-id <run_id>
+     → _workspace/run-report.md (backlog %, per-gate outcomes, loop iterations/escalations,
+       recurring lessons, pending proposals) — cite this path in the final ≤5-line report.
+       Observer only: never changes a verdict. Also useful MID-run whenever the human asks
+       "지금 어디까지 됐어?" — generate and hand the path instead of narrating.
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)
 ```

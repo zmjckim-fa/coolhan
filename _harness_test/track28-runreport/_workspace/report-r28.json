@@ -1,0 +1,64 @@
+{
+  "run_id": "r28",
+  "generated_from": "C:\\Users\\kimzu\\AppData\\Local\\Temp\\track28-N0f5vm\\_workspace",
+  "sections": {
+    "backlog": {
+      "total": 3,
+      "done_and_validated": 1,
+      "remaining": [
+        "U2",
+        "U3"
+      ],
+      "unvalidated": [],
+      "complete": false
+    },
+    "gates": {
+      "entries": 4,
+      "by_gate": {
+        "G1-exec": {
+          "PASS": 1,
+          "FAIL": 0,
+          "NOT_RUN": 0,
+          "other": 0
+        },
+        "G2-trace": {
+          "PASS": 1,
+          "FAIL": 0,
+          "NOT_RUN": 0,
+          "other": 0
+        },
+        "G10-agent-loop": {
+          "PASS": 0,
+          "FAIL": 2,
+          "NOT_RUN": 0,
+          "other": 0
+        }
+      }
+    },
+    "lessons": [
+      {
+        "gate": "G10-agent-loop",
+        "reason": "ITERATE at iteration 1 (exit 1)",
+        "count": 2
+      }
+    ],
+    "loop": {
+      "units": [
+        {
+          "unit": "U2",
+          "status": "escalated",
+          "iterations": 2,
+          "last_feedback": "TypeError: still cannot read x"
+        }
+      ],
+      "escalated": [
+        "U2"
+      ]
+    },
+    "proposals": {
+      "pending_entries": 2,
+      "file": "C:\\Users\\kimzu\\AppData\\Local\\Temp\\track28-N0f5vm\\_workspace\\_proposals.md"
+    },
+    "design_history": null
+  }
+}
