@@ -419,6 +419,10 @@ while (todo remains in backlog):
    → context near threshold? → emit baton (CONTINUATION, not done) / else continue to next todo
    ↓
 [COMPLETION GATE — G8-B] node scripts/completion-check.js _workspace/_backlog.md
+   + G14 COMMERCIAL GATE (v2.1.0, 배포된 웹서비스 한정 — trigger: "상용화 판정해"/"상용화 가능?"):
+     agents/commercial-readiness-auditor.md → node scripts/commercial-gate.js <config>
+     → _workspace/COMMERCIAL_VERDICT_<date>.md (①가부 ②차단 ③미측정 NOT_RUN 정직 신고).
+     운영 실측만 증거·측정≠결함·지킴이 필수·백업→배포→재측정→롤백 (agent 정의의 P0 규칙).
    + G12 OBSERVABILITY (v1.9.0): node scripts/run-report.js --run-id <run_id>
      → _workspace/run-report.md (backlog %, per-gate outcomes, loop iterations/escalations,
        recurring lessons, pending proposals) — cite this path in the final ≤5-line report.

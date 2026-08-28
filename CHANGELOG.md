@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.1.0] - 2026-08-07
+
+### Added
+
+- **G14 Commercial-Readiness Gate (상용화 판정)** — judges whether a deployed web service is
+  commercially shippable by 5 user-facing criteria (NOT by integration presence): 항목(fields
+  save+reload), 저장(partial/dup/concurrent integrity), 전송(publish/send/export arrives +
+  failure explains next action), 텍스트(DE/EN/KO coverage), 디자인(real-browser
+  overlap/clip/h-scroll/tap-targets).
+  - `scripts/commercial-gate.js`: per-project config declares a permanent **keeper**
+    (repeatable script/test) per criterion; keepers run as real child processes against the
+    PRODUCTION base_url (reachability probed by real HTTP and recorded). Keeper-less criterion
+    = NOT_RUN, never PASS. Verdict artifact `_workspace/COMMERCIAL_VERDICT_<date>.md` with
+    ①가부+이유 ②차단 항목(evidence tails + "측정≠결함, 소스 확인" rule embedded) ③미측정 칸
+    정직 신고. Exit codes: READY 0 / BLOCKED 1 / NOT_READY 4.
+  - `agents/commercial-readiness-auditor.md`: the audit discipline as P0 rules — 운영 실측만
+    증거(로컬 통과 불인정), 측정≠결함(소스 판독 후 판별), 백업→배포→운영 재측정→실패 시 롤백,
+    운영 테스트데이터 금지(지킴이 자체 정리), 금지구역(nginx/docker compose/SECRET_KEY/타
+    서비스) 접촉 시 STOP, 종료 시 전체 스위트+production_gates.sh 실행(부재 시 정직 NOT_RUN).
+  - Tests 7/7 (total 189/189); track30 adversarial with real keeper processes + a real HTTP
+    probe of coolhanx.com (HTTP 302 recorded): mixed state → BLOCKED with evidence + NOT_RUN
+    honesty, full coverage → READY; 0 false +/-.
+
+
 ## [2.0.0] - 2026-08-07
 
 ### Added

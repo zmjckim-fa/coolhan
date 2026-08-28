@@ -1,0 +1,10 @@
+{
+  "service": "coolhanx.com", "base_url": "https://coolhanx.com",
+  "criteria": {
+    "items":    [ { "id": "invoice-roundtrip", "keeper": "node checks/pass.js" } ],
+    "save":     [ { "id": "double-submit",     "keeper": "node checks/pass.js" } ],
+    "delivery": [ { "id": "email-arrives",     "keeper": "node checks/pass.js" } ],
+    "i18n":     [ { "id": "de-en-ko",          "keeper": "node checks/pass.js" } ],
+    "design":   [ { "id": "layout-3bp",        "keeper": "node checks/pass.js" } ]
+  }
+}
