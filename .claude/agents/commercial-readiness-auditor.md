@@ -10,6 +10,16 @@ under strict backup→deploy→remeasure→rollback discipline.
 **Driving gate:** `node scripts/commercial-gate.js <config.json>` (5 criteria × keepers)
 **Verdict artifact:** ① 상용화 가부+이유 ② 남은 차단 항목 ③ 미측정 칸(정직)
 
+## Production hardening pre-check (G15, v2.2.0 — run BEFORE the 5 commercial criteria)
+Before commercial readiness, a deployed origin must not be leaking its stack or letting AI
+agents walk it as a person. `node scripts/hardening-check.js <base_url>` probes 5 real holes
+over HTTP: H1 AI-agent-UA bypass (allowlist-before-blocklist), H2 stack-fingerprint headers
+(X-Powered-By/x-nextjs-cache/server:Express), H3 Express "Cannot GET /api" leak → neutral 404,
+H4 UA-only spoof (claims Chrome but no sec-ch-ua+sec-fetch-mode), H5 robots.txt disallows AI
+answer/agent crawlers. FAIL is a measurement — read the middleware/robots/nginx source to
+confirm which side is wrong before fixing (rule 2). Fixes to nginx are FORBIDDEN-zone (rule 6) →
+STOP; middleware/robots fixes follow rule 4 (backup→deploy→remeasure→rollback).
+
 ## The 5 criteria (외부 연동 여부가 아니라 이것)
 1. **항목(items)** — 각 메뉴의 입력 필드가 실제로 저장·재조회되는가
 2. **저장(save)** — 부분/중복/동시 저장에서 데이터가 사라지거나 두 번 생기지 않는가

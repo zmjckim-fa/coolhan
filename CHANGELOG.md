@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.2.0] - 2026-08-29
+
+### Added
+
+- **G15 Production edge/bot hardening probe** — turns 5 real user-reported production holes into
+  a repeatable gate measured over real HTTP (`node scripts/hardening-check.js <base_url>`): H1
+  AI-agent-UA bypass (allowlist-before-blocklist served ChatGPT-User/Claude-User/PerplexityBot a
+  200 HTML page — API was locked, web layer was not), H2 stack-fingerprint headers
+  (X-Powered-By/x-nextjs-cache/server:Express), H3 framework 404 leak (Express "Cannot GET /api"
+  → neutral 404), H4 UA coherence (claims Chrome but no sec-ch-ua+sec-fetch-mode → block), H5
+  robots.txt disallows AI answer/agent crawlers. Each check PASS/FAIL/NOT_RUN; a FAIL is a
+  measurement (read middleware/robots/nginx source before fixing); unreachable origin → NOT_RUN,
+  never a false PASS. Wired into security KB §7, agents/security-reviewer.md (step 3.6) and
+  agents/commercial-readiness-auditor.md (pre-check before the 5 commercial criteria). nginx
+  stays a forbidden zone for automated fixes. Tests 10/10 (total 199/199); track31 adversarial
+  with real HTTP servers: vulnerable origin → FAIL naming all 5, hardened origin → PASS; 0 false
+  +/-.
+
+
 ## [2.1.0] - 2026-08-07
 
 ### Added

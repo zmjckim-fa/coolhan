@@ -1,0 +1,43 @@
+{
+  "base_url": "http://127.0.0.1:61578",
+  "verdict": "FAIL",
+  "checks": {
+    "H2_stack_fingerprint": {
+      "status": "FAIL",
+      "detail": "stack fingerprint leaked in headers: x-powered-by: Next.js · x-nextjs-cache: HIT"
+    },
+    "H1_ai_agent_bypass": {
+      "status": "FAIL",
+      "detail": "AI agent UAs served a 200 HTML page (allowlist-before-blocklist?): ChatGPT-User, Claude-User, PerplexityBot",
+      "results": [
+        {
+          "ua": "ChatGPT-User",
+          "status": 200,
+          "served_html": true
+        },
+        {
+          "ua": "Claude-User",
+          "status": 200,
+          "served_html": true
+        },
+        {
+          "ua": "PerplexityBot",
+          "status": 200,
+          "served_html": true
+        }
+      ]
+    },
+    "H3_express_404_leak": {
+      "status": "FAIL",
+      "detail": "Express default 404 body leaked: \"Cannot GET /api/__coolhan_probe_xyz\""
+    },
+    "H4_ua_consistency": {
+      "status": "FAIL",
+      "detail": "UA claims Chrome but sec-ch-ua + sec-fetch-mode both absent, yet served 200 HTML (200) — UA-only spoofing passes"
+    },
+    "H5_robots_ai_blocked": {
+      "status": "FAIL",
+      "detail": "robots.txt does not disallow AI crawlers: GPTBot, ChatGPT-User, ClaudeBot, Claude-User, anthropic-ai, PerplexityBot, Google-Extended, CCBot, Bytespider, Amazonbot"
+    }
+  }
+}

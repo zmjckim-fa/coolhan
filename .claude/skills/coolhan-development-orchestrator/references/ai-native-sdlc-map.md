@@ -25,6 +25,7 @@
 | **Observability (Foundation layer)** | **G12 `scripts/run-report.js` (v1.9.0)**: one artifact composing backlog %, per-gate ledger outcomes, G10 loop iterations/escalations, recurring lessons, pending proposals — observer only, never a verdict | ✅ NEW |
 | **Non-stop supervisor (outer loop)** | **G13 `scripts/nonstop.js` (v2.0.0)**: relaunches headless sessions until completion-check exits 0 — closes the last human step (baton pasting) of 무중단 개발; 5 named stop conditions, per-session log, wedged-run valve | ✅ NEW |
 | **Commercial readiness (production evals)** | **G14 `scripts/commercial-gate.js` + agents/commercial-readiness-auditor.md (v2.1.0)**: 5 user-facing criteria × real-HTTP keepers against production; keeper-less = NOT_RUN; ①가부②차단③미측정 verdict artifact | ✅ NEW |
+| **Production edge/bot hardening** | **G15 `scripts/hardening-check.js` (v2.2.0)**: 5 real-HTTP holes (AI-agent bypass, stack-fingerprint headers, framework-404 leak, UA coherence, robots AI-crawler block); probe is the regression guard; FAIL=measurement→source-read first | ✅ NEW |
 | Agent Swarm | marketing synonym of the above — no separate mechanism needed | n/a |
 | Vibe Coding | intentionally NOT adopted — conflicts with spec-driven P0 | rejected |
 

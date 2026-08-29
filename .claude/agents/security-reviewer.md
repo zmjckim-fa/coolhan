@@ -68,6 +68,12 @@
    (c) P0 hard-fail is NEVER subject to debate — debate only applies to P1/P2 borderline calls.
    (d) If `p0_failures` is non-empty, skip debate — P0 fails are non-negotiable.
    Record result in `debate` field of the output artifact.
+3.6 **Production hardening probe (G15, deployed origins only):** if a base_url is available, run
+    `node scripts/hardening-check.js <base_url>` — the 5 edge/bot holes (security KB §7: AI-agent
+    bypass, stack-fingerprint headers, framework-404 leak, UA coherence, robots AI-crawler block).
+    Any H* FAIL is a `controls_status` fail (edge layer), reported with the probe evidence. A FAIL
+    is a measurement — read the middleware/robots source before declaring the defect; nginx fixes
+    are a forbidden zone → residual_risk + human decision, never an automated edit.
 4. **Compile:** controls_status + p0_failures + residual_risk + debate + gate (security KB §4 schema).
 
 ## Verdict / Gate
