@@ -1,0 +1,61 @@
+{
+  "base_url": "http://127.0.0.1:50355",
+  "verdict": "PASS",
+  "checks": {
+    "H2_stack_fingerprint": {
+      "status": "PASS",
+      "detail": "no known stack-fingerprint headers"
+    },
+    "H1_ai_agent_bypass": {
+      "status": "PASS",
+      "detail": "AI agent UAs not served plain HTML",
+      "results": [
+        {
+          "ua": "ChatGPT-User",
+          "status": 403,
+          "served_html": false
+        },
+        {
+          "ua": "Claude-User",
+          "status": 403,
+          "served_html": false
+        },
+        {
+          "ua": "PerplexityBot",
+          "status": 403,
+          "served_html": false
+        },
+        {
+          "ua": "OAI-SearchBot",
+          "status": 403,
+          "served_html": false
+        },
+        {
+          "ua": "GPTBot",
+          "status": 403,
+          "served_html": false
+        }
+      ]
+    },
+    "H3_express_404_leak": {
+      "status": "PASS",
+      "detail": "neutral 403 on bogus /api path (no \"Cannot GET\" body)"
+    },
+    "H4_ua_consistency": {
+      "status": "PASS",
+      "detail": "incoherent Chrome header set not served plain HTML (403)"
+    },
+    "H5_robots_ai_blocked": {
+      "status": "PASS",
+      "detail": "robots.txt disallows the AI crawlers (10/10)"
+    },
+    "H6_automation_tools": {
+      "status": "PASS",
+      "detail": "automation clients (python-requests/HeadlessChrome/curl/Go/Scrapy) not served plain HTML"
+    },
+    "H7_search_index_preserved": {
+      "status": "PASS",
+      "detail": "search/social crawlers (Googlebot/Bingbot/Yeti/Daum/facebookexternalhit) stay 200"
+    }
+  }
+}

@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.2.1] - 2026-08-30
+
+### Changed
+
+- **G15 hardening probe extended from a real coolhanx.com run (5 → 7 checks + honesty on the
+  one remaining item):**
+  - **H6 automation tools** — python-requests/HeadlessChrome/curl/Go-http-client/Scrapy must be
+    blocked (matches the field run).
+  - **H7 search-index preserved** — Googlebot/Bingbot/Yeti(Naver)/Daum/facebookexternalhit must
+    stay 200; blocking declared indexers is a FAIL (SEO regression) — the balance counter-weight
+    to H1 so hardening does not silently kill search.
+  - **H2 fingerprint fix reclassified as operator-approval:** X-Powered-By/x-nextjs-cache are
+    re-attached by the framework/server after app middleware, so app-level deletes and repo
+    next.config.js do not take effect if the deploy script does not ship the server config; the
+    durable fix is a server-file change (web-server Header unset OR server next.config.js) =
+    forbidden zone. The finding now carries a fix_class saying so, plus an honest note that
+    /_next/ asset paths reveal Next.js anyway (finishing work, not concealment). This encodes the
+    exact coolhanx.com limitation so no future run misreads a header PASS as "framework hidden".
+  - AI-agent UA list extended with OAI-SearchBot + GPTBot. Tests 14/14 (total 203/203); track31
+    re-run: vulnerable origin → FAIL (with fix_class + /_next note), hardened 7/7 → PASS; 0 false +/-.
+
+
 ## [2.2.0] - 2026-08-29
 
 ### Added

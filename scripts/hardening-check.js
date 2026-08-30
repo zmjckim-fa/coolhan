@@ -42,10 +42,30 @@ const { URL } = require('url');
 const AI_AGENT_UAS = [
   'Mozilla/5.0 (compatible; ChatGPT-User/1.0; +https://openai.com/bot)',
   'Mozilla/5.0 (compatible; Claude-User/1.0; +https://anthropic.com)',
-  'Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/bot)'
+  'Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/bot)',
+  'Mozilla/5.0 (compatible; OAI-SearchBot/1.0; +https://openai.com/searchbot)',
+  'Mozilla/5.0 (compatible; GPTBot/1.1; +https://openai.com/gptbot)'
+];
+// Automation/scraping clients (H6) — expected to be blocked on a hardened origin.
+const AUTOMATION_UAS = [
+  'python-requests/2.31.0',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/120.0.0.0 Safari/537.36',
+  'curl/8.4.0',
+  'Go-http-client/2.0',
+  'Scrapy/2.11 (+https://scrapy.org)'
+];
+// Legitimate search/indexing/social crawlers (H7) — MUST stay 200 (over-blocking breaks SEO).
+const SEARCH_UAS = [
+  { name: 'Googlebot', ua: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)' },
+  { name: 'Bingbot', ua: 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)' },
+  { name: 'Yeti', ua: 'Mozilla/5.0 (compatible; Yeti/1.1; +http://naver.me/spd)' },
+  { name: 'Daum', ua: 'Mozilla/5.0 (compatible; Daum/4.1; +http://cs.daum.net/faq/15/4118.html)' },
+  { name: 'facebookexternalhit', ua: 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)' }
 ];
 const LEAK_HEADERS = ['x-powered-by', 'x-nextjs-cache', 'x-vercel-cache', 'x-vercel-id', 'x-aspnet-version', 'x-generator'];
 const LEAK_SERVER_RE = /express|next\.?js|php\/|apache\/[\d.]+ \(|werkzeug|gunicorn\/[\d.]+/i;
+// Framework still inferable from asset paths even after headers are stripped (honest note, not a FAIL).
+const FRAMEWORK_ASSET_RE = /\/_next\/|\/_nuxt\/|\/__nuxt|wp-content\/|wp-includes\//i;
 const ROBOTS_AI_BOTS = ['GPTBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-User', 'anthropic-ai', 'PerplexityBot', 'Google-Extended', 'CCBot', 'Bytespider', 'Amazonbot'];
 const CHROME_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
@@ -71,7 +91,8 @@ async function checkAiAgentBypass(base) {
     const r = await request(base, { headers: { 'user-agent': ua, accept: 'text/html' } });
     if (r.error) return { status: 'NOT_RUN', detail: `probe error: ${r.error}` };
     const served = r.status === 200 && /text\/html/i.test(r.headers['content-type'] || '');
-    results.push({ ua: ua.match(/(ChatGPT-User|Claude-User|PerplexityBot)/)[0], status: r.status, served_html: served });
+    const nameMatch = ua.match(/(ChatGPT-User|Claude-User|PerplexityBot|OAI-SearchBot|GPTBot)/);
+    results.push({ ua: nameMatch ? nameMatch[0] : ua.slice(0, 24), status: r.status, served_html: served });
   }
   const leaked = results.filter(x => x.served_html);
   return leaked.length
@@ -79,13 +100,54 @@ async function checkAiAgentBypass(base) {
     : { status: 'PASS', detail: 'AI agent UAs not served plain HTML', results };
 }
 
-function checkStackFingerprint(headers) {
+function checkStackFingerprint(headers, body) {
   const leaks = [];
   for (const h of LEAK_HEADERS) if (headers[h]) leaks.push(`${h}: ${headers[h]}`);
   if (headers.server && LEAK_SERVER_RE.test(headers.server)) leaks.push(`server: ${headers.server}`);
-  return leaks.length
-    ? { status: 'FAIL', detail: `stack fingerprint leaked in headers: ${leaks.join(' · ')}` }
-    : { status: 'PASS', detail: 'no known stack-fingerprint headers' };
+  // Framework is often still inferable from asset paths — record it so a header PASS is not
+  // misread as "framework hidden" (finishing work, not concealment).
+  const assetInference = body && FRAMEWORK_ASSET_RE.test(body)
+    ? ' (note: framework still inferable from asset paths e.g. /_next/ — removing the header is finishing work, not concealment)'
+    : '';
+  if (leaks.length) {
+    return {
+      status: 'FAIL',
+      detail: `stack fingerprint leaked in headers: ${leaks.join(' · ')}${assetInference}`,
+      // These headers are frequently re-attached by the framework/server AFTER app middleware
+      // (Next.js poweredByHeader, etc.); the durable fix is a server-file change (server
+      // next.config.js or web-server `Header unset`) that deploy scripts usually don't touch →
+      // operator approval + forbidden-zone (nginx/apache) discipline applies.
+      fix_class: 'operator-approval (server-file: web-server Header unset OR server next.config.js; app middleware delete is re-attached downstream)'
+    };
+  }
+  return { status: 'PASS', detail: `no known stack-fingerprint headers${assetInference}` };
+}
+
+async function checkAutomationTools(base) {
+  const served = [];
+  for (const ua of AUTOMATION_UAS) {
+    const r = await request(base, { headers: { 'user-agent': ua, accept: 'text/html' } });
+    if (r.error) return { status: 'NOT_RUN', detail: `probe error: ${r.error}` };
+    if (r.status === 200 && /text\/html/i.test(r.headers['content-type'] || '')) {
+      served.push(ua.split('/')[0].split(' ')[0].replace('Mozilla', 'HeadlessChrome-UA'));
+    }
+  }
+  return served.length
+    ? { status: 'FAIL', detail: `automation clients served 200 HTML: ${served.join(', ')}` }
+    : { status: 'PASS', detail: 'automation clients (python-requests/HeadlessChrome/curl/Go/Scrapy) not served plain HTML' };
+}
+
+async function checkSearchIndexPreserved(base) {
+  // The BALANCE check: hardening must not break legitimate search/social crawlers.
+  const blocked = [];
+  for (const s of SEARCH_UAS) {
+    const r = await request(base, { headers: { 'user-agent': s.ua, accept: 'text/html' } });
+    if (r.error) return { status: 'NOT_RUN', detail: `probe error: ${r.error}` };
+    if (r.status !== 200) blocked.push(`${s.name}(${r.status})`);
+  }
+  return blocked.length
+    ? { status: 'FAIL', detail: `legitimate search/social crawlers wrongly blocked (SEO regression): ${blocked.join(', ')}` }
+    : { status: 'PASS', detail: 'search/social crawlers (Googlebot/Bingbot/Yeti/Daum/facebookexternalhit) stay 200' };
 }
 
 async function checkExpress404(base) {
@@ -128,11 +190,13 @@ async function checkRobotsAi(base) {
 async function evaluate(base) {
   const root = await request(base, { headers: { 'user-agent': CHROME_UA, accept: 'text/html' } });
   const checks = {};
-  checks.H2_stack_fingerprint = root.error ? { status: 'NOT_RUN', detail: `probe error: ${root.error}` } : checkStackFingerprint(root.headers);
+  checks.H2_stack_fingerprint = root.error ? { status: 'NOT_RUN', detail: `probe error: ${root.error}` } : checkStackFingerprint(root.headers, root.body);
   checks.H1_ai_agent_bypass = await checkAiAgentBypass(base);
   checks.H3_express_404_leak = await checkExpress404(base);
   checks.H4_ua_consistency = await checkUaConsistency(base);
   checks.H5_robots_ai_blocked = await checkRobotsAi(base);
+  checks.H6_automation_tools = await checkAutomationTools(base);
+  checks.H7_search_index_preserved = await checkSearchIndexPreserved(base);
 
   const vals = Object.values(checks);
   const verdict = vals.some(c => c.status === 'FAIL') ? 'FAIL' : vals.some(c => c.status === 'NOT_RUN') ? 'NOT_RUN' : 'PASS';
@@ -143,6 +207,7 @@ function render(r) {
   const L = [`# Production Hardening Probe — ${r.base_url} — verdict: ${r.verdict}`, ''];
   for (const [k, v] of Object.entries(r.checks)) {
     L.push(`- ${v.status === 'PASS' ? '✅' : v.status === 'FAIL' ? '❌' : '⬜'} ${k}: ${v.detail}`);
+    if (v.fix_class) L.push(`    ↳ fix: ${v.fix_class}`);
   }
   L.push('');
   L.push('> A FAIL is a measurement — read the middleware/robots/nginx source to confirm which side');
@@ -169,4 +234,4 @@ async function main(argv) {
 
 if (require.main === module) { main(process.argv).then(c => process.exit(c)); }
 
-module.exports = { checkStackFingerprint, checkAiAgentBypass, checkExpress404, checkUaConsistency, checkRobotsAi, evaluate, render, AI_AGENT_UAS, ROBOTS_AI_BOTS };
+module.exports = { checkStackFingerprint, checkAiAgentBypass, checkExpress404, checkUaConsistency, checkRobotsAi, checkAutomationTools, checkSearchIndexPreserved, evaluate, render, AI_AGENT_UAS, AUTOMATION_UAS, SEARCH_UAS, ROBOTS_AI_BOTS };

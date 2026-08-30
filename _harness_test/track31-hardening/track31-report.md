@@ -30,3 +30,29 @@ regression guard).
 site is secure. A FAIL is a measurement: read the middleware/robots/nginx source to confirm which
 side is wrong before fixing (G14 discipline). New bot UAs, new leak headers, and logic bugs
 behind auth are out of scope; the auditor extends the UA/header lists as new ones appear.
+
+---
+
+## v2.2.1 extension (from a real coolhanx.com hardening run)
+
+Two things that field run taught, now encoded:
+
+1. **H2 fingerprint-header fix is operator-approval, not auto-fix.** X-Powered-By / x-nextjs-cache
+   are re-attached by the framework/server AFTER app middleware (Next.js `poweredByHeader`,
+   etc.) — app-level `res.headers.delete()` and even `next.config.js` in the repo don't take
+   effect if the deploy script doesn't ship the server's config. The durable fix is a server-file
+   change (web-server `Header unset` or the server's `next.config.js`) = forbidden-zone +
+   operator approval. The gate now reports this as a `fix_class` on the finding, and adds an
+   honest note that **/_next/ asset paths reveal Next.js anyway** — removing the header is
+   finishing work, not concealment. (New unit tests assert both.)
+2. **Balance checks so hardening doesn't over-block** (the failure mode where you block AI agents
+   AND accidentally kill SEO):
+   - **H6 automation tools** — python-requests / HeadlessChrome / curl / Go-http-client / Scrapy
+     must be blocked (matches the field run's ✅).
+   - **H7 search-index preserved** — Googlebot / Bingbot / Yeti(Naver) / Daum / facebookexternalhit
+     must stay **200**; blocking them is a FAIL (SEO regression). This is the counter-weight to
+     H1: block impersonators, keep declared indexers.
+   AI-agent UA list also extended with OAI-SearchBot + GPTBot.
+
+Gate is now 7 checks (H1–H7). The remaining coolhanx.com X-Powered-By item is correctly
+**operator-approval-pending** — a server-file change the harness must not make unattended.
