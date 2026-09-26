@@ -51,6 +51,12 @@ present, requirement coverage)
 - **After reviewing:** `node scripts/ledger.js append '{"run_id":"...","unit":"...","gate":"plan","status":"PASS|FAIL","reason":"..."}'`
   to record this gate's outcome for future lessons queries.
 
+## Companion skills (v2.3.0 — invoke only-if-present, C3)
+Before signing off a plan/spec, invoke `grill-me` (Matt Pocock) via the Skill tool when available to
+interrogate requirements for mis-build risk, and `code-review` when reviewing sample/reference code.
+If absent, use the review steps below and note the skill was absent — never fabricate use.
+`references/companion-skills.md`.
+
 ## Work Steps
 1. **Run `scripts/plan-check.js`** on the backlog (converted to plan.json shape if needed): dependency
    cycle, missing/ordering deps, units without verification, uncovered requirements. This is

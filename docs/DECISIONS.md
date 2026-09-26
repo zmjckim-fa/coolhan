@@ -58,3 +58,19 @@ must go through the same track-based adversarial verification as every prior har
 already clean (prior Token-Efficiency/C1–C19 passes had normalized wording); 12 findings in
 skill/reference files were fixed or classified (P0-tagged/allowlisted). Enforcement is now
 mechanical: `scripts/prompt-modernization-check.js` (10/10 tests, track22 adversarial 3/3).
+
+## 2026-09-26 — Companion skills (v2.3.0) + Self-Growth Engine scope (v2.4.0)
+**Context:** (1) User: install the skills.sh top coding/design skills into CoolHan's base. (2) User:
+"analyze ALL conversations/MDs/skills/DB/sources across all sessions & applied sites; make CoolHan
+self-growing (자기성장형) for agent-driven + loop solution development."
+**Decision (1):** Vendor 11 real skill dirs from ~/.claude/skills into CoolHan `.claude/skills/`
+(shipped by install.js) + wire agents to invoke them only-if-present (C3) + G16 presence probe.
+**Decision (2):** "Read every session across every account" is not feasible/verifiable in-session
+(no cross-account transcript access) — fabricating it would violate C10. Instead build the
+mechanical, honest core of self-growth: G17 Self-Growth Engine that mines CoolHan's OWN durable
+evidence already on disk (G5 ledger lessons, docs/DECISIONS, run-reports, _harness_test track
+outcomes, and an operator-pointed sites root for applied-site outcomes) and emits a prioritized
+`_workspace/_self-growth-backlog.md` that feeds the non-stop loop — CoolHan proposing its own next
+enhancements, gated by G1–G16.
+**Rationale:** delivers "self-developing" as a repeatable mechanism, not a one-off unverifiable claim.
+**Reversible:** yes — evidence-source list is configurable; backlog is advisory input to the loop.

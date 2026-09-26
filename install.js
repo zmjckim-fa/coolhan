@@ -175,7 +175,7 @@ function main() {
 
   if (fs.existsSync(skillsDir)) {
     copyDir(skillsDir, destSkillsDir);
-    success('All skills have been copied');
+    success('All skills have been copied (incl. 11 companion skills: grill-me/code-review/codebase-design/implement/diagnosing-bugs/resolving-merge-conflicts/frontend-design/web-design-guidelines/react-best-practices/redesign-skill/taste-skill)');
   }
 
   // Step 7: Copy Knowledge Base

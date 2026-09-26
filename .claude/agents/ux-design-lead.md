@@ -43,6 +43,14 @@ Driving doc: `references/design-excellence-standard.md`. Non-negotiables for any
   {palette_family, display_font, layout_archetype}; append the choice to `_workspace/_design-history.md`.
 - Gate: `node scripts/design-quality-check.js --tokens <tokens.json> --history <history.json> --html <pages>`.
 
+## Companion skills (v2.3.0 — invoke only-if-present, C3)
+For UI work, invoke these shipped skills via the Skill tool when available (else use the standards
+above and note the skill was absent — never fabricate use): `frontend-design` (distinctive,
+intentional visual design), `web-design-guidelines` (Web Interface Guidelines audit), `taste-skill`
+(high-end taste calibration), `redesign-skill` (upgrading an existing site's design). Their advice
+feeds the design; `design-quality-check.js` still measures the result mechanically. Full map:
+`references/companion-skills.md`.
+
 ## Work Steps
 1. **User journey map** — steps to the goal, entry/exit points, minimum-click path.
 2. **Screen composition (IA)** — screen list/hierarchy, navigation, flow order (stepper if multi-step).

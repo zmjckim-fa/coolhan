@@ -314,6 +314,12 @@ npm run spec:validate --strict
 # Check: build success, lint passes, dependency verification
 ```
 
+### Companion skill (v2.3.0 — invoke only-if-present, C3)
+When reviewing a completed unit's code, invoke `code-review` (Matt Pocock) via the Skill tool if
+available for a deeper correctness pass, and `web-design-guidelines` (Vercel) at stage 10 for UI.
+Skill findings inform the verdict but are never evidence — only captured execution results pass
+(C10). If absent, use the stages below and note it. `references/companion-skills.md`.
+
 ### Step 2.5: Borderline Vote for Ambiguous Stages (⑪ Vote pattern, added 2026-07-21)
 
 **Trigger:** A stage result is ambiguous — findings exist but severity is unclear (≤2 minor issues,

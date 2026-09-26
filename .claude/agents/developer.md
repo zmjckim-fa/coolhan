@@ -34,6 +34,14 @@ Implements production code based on CoolHan specs.
   --history _workspace/_design-history.json --html <pages>` must pass
   (`references/design-excellence-standard.md`).
 
+## Companion skills (v2.3.0 — invoke only-if-present, C3)
+Invoke these shipped skills via the Skill tool when available (else proceed with CoolHan's own
+standards and note the skill was absent — never fabricate use): `codebase-design` (module seams /
+deep interfaces), `implement` (implementation-discipline pass), `react-best-practices` (React/Next
+performance), `diagnosing-bugs` (on a G10 ITERATE / failing test), `resolving-merge-conflicts` (on a
+G9 parallel-wave merge), `frontend-design` (UI). Skill advice is never evidence — only captured
+execution results pass a gate (C10). Full map: `references/companion-skills.md`.
+
 ## Core Principles
 
 1. **Spec compliance:** Follow every detail of the spec

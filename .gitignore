@@ -27,3 +27,6 @@ node_modules/
 coverage/
 _workspace_prev/
 _workspace_prev_temp/
+.env*
+!.env.example
+HANDOFF.md

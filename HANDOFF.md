@@ -144,3 +144,44 @@ node doctor.js
 
 If those four agree (version = v2.2.1, tests green, doctor healthy), the handoff is intact and you
 may proceed from § Next actions.
+
+
+---
+## 인수인계 보강 (2026-09-25)
+
+> 위 본문(2026-09-12, v2.2.1)에 없는 내용만 보강. 비밀값은 기록하지 않음(위치·변수명만).
+
+### 현재 상태 (2026-09-25 확인)
+- 워킹트리 clean, `main` = `931685e`(HANDOFF.md 추가), 최신 태그 `v2.2.1`. 9/12 이후 코드 변경·커밋 없음 → 위 §7 Next actions 그대로 유효.
+- 로컬 git 커밋 identity: `CoolHan Builder <dev@coolhanbuilder.com>` (repo 로컬 설정).
+
+### "배포"의 의미 (이 repo는 서버 배포 없음)
+- 이 repo 배포 = **GitHub에 태그 push → Actions가 GitHub Release 생성**. 서버/SSH/scp/pm2 없음. `Dockerfile`·`docker-compose.yml`·`python-api.yml`은 샘플 Python API용이며 실제 운영 배포 경로 아님.
+- 절차(§5-7 요약): `git add -A && node scripts/secret-scan.js --staged` → 커밋 → `git tag -a vX.Y.Z -m "..."` → `git push origin main --follow-tags`
+- 워크플로 (`.github/workflows/`):
+  - `release.yml` — 트리거 `v*.*.*` 태그 push(또는 수동) → `softprops/action-gh-release`로 릴리스 + `coolhan-vX.Y.Z.tar.gz` 첨부. 시크릿: 기본 `GITHUB_TOKEN`만.
+  - `publish.yml` — main push(package.json/install.*/.claude/**/knowledge_base/** 변경 시) → `npm publish --access public`. 시크릿 `NPM_TOKEN` 필요(**미설정 → 실패가 정상**). 패키지명 `coolhan-builder`(미배포 상태).
+  - `notify-release.yml`, `test.yml`, `harness-check.yml` — `GITHUB_TOKEN`만 사용.
+- 검증(네트워크): `https://api.github.com/repos/zmjckim-fa/coolhan/releases/latest` 의 tag_name = 새 태그인지, Actions 탭에서 release/test/harness-check 녹색인지.
+- 사용자 측 확인: 다른 Claude 세션에서 `쿨한 업데이트 확인해` → 새 버전 감지(`scripts/check-update.js`).
+
+### 접속정보 위치 (값 미기재)
+| 용도 | 위치 | 이름 |
+|---|---|---|
+| GitHub push (`zmjckim-fa/coolhan`) | Windows 자격 증명 관리자 (git `credential.helper=manager`, 시스템 gitconfig) 또는 `gh auth login` | git:https://github.com 항목 |
+| npm publish | GitHub repo → Settings → Secrets → Actions | `NPM_TOKEN` (미설정) |
+| 로컬 샘플 API | `C:\sites\CoolHan builder\.env` | `DATABASE_URL`, `API_HOST`, `API_PORT`, `ENVIRONMENT`, `DEBUG`, `ECHO_SQL`, `API_TITLE`, `API_VERSION` (비밀 없음) |
+| docker 샘플 | 환경변수 (미설정 시 compose 기본값 사용) | `POSTGRES_PASSWORD`, `SECRET_KEY` |
+| coolhanx.com 서버 | 이 repo 밖 (해당 사이트 repo의 `deploy.py`) | — |
+- `~/.ssh` 키(cleanlab_ed25519, cleanwine_deploy, id_ed25519, id_rsa, sk24_deploy)는 **이 repo 배포에 사용되지 않음**. 트랜스크립트의 `~/.ssh/id_staging`, `id_prod`, `staging.kleinanzeigen.co.kr:2222` 는 문서 샘플(가상 예시)이며 실제 서버 아님.
+
+### 함정
+- 전체 jest(~6분)는 반드시 백그라운드 실행(도구 타임아웃).
+- 커밋 메시지는 heredoc `-F` 사용, PowerShell `@'...'@` 금지(§5).
+- `publish.yml` 실패 알림은 `NPM_TOKEN` 설정 전까지 무시 가능.
+- `coolhan.db`, `.env`는 .gitignore 대상(커밋 금지).
+
+### 확인 필요
+- 새 계정의 GitHub 사용자가 `zmjckim-fa/coolhan`에 write 권한이 있는지 (없으면 collaborator 추가 또는 fork 후 remote 변경).
+- coolhanx.com 사이트의 로컬 repo 경로·서버 host/user/SSH 키 — 트랜스크립트에 기록 없음. 해당 사이트 폴더의 자체 인수인계 문서/`deploy.py` 확인 필요.
+- npm 배포를 실제로 할지 여부 및 `NPM_TOKEN` 발급 주체.

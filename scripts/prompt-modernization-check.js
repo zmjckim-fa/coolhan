@@ -35,7 +35,12 @@ const fs = require('fs');
 const path = require('path');
 
 const SKIP_DIRS = new Set(['node_modules', '.git', 'coverage', 'dist', 'build',
-  '_workspace_prev', '_workspace_prev_temp', '_harness_test']);
+  '_workspace_prev', '_workspace_prev_temp', '_harness_test',
+  // Vendored third-party companion skills (v2.3.0) — authored upstream, not CoolHan agent/skill
+  // prose; treated as third-party (do not hand-edit), so the modernization lint skips them.
+  'grill-me', 'codebase-design', 'implement', 'diagnosing-bugs', 'code-review',
+  'resolving-merge-conflicts', 'frontend-design', 'web-design-guidelines',
+  'react-best-practices', 'redesign-skill', 'taste-skill']);
 const MD_EXT = /\.md$/i;
 
 const RULES = [

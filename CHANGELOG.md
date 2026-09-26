@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.4.0] - 2026-09-26
+
+### Added
+
+- **Companion skills shipped in CoolHan base (v2.3.0)** — vendored 11 best-in-class Claude Code
+  skills into `.claude/skills/` so `install.js` ships them, and wired the agents to invoke them
+  only-if-present (C3): grill-me, codebase-design, implement, diagnosing-bugs, code-review,
+  resolving-merge-conflicts (Matt Pocock); frontend-design (Anthropic); web-design-guidelines +
+  react-best-practices (Vercel Labs); redesign-skill, taste-skill. `references/companion-skills.md`
+  maps each to its CoolHan agent; `scripts/companion-skills-check.js` (G16) is the honest presence
+  probe (shipped vs global; a dir without SKILL.md is ABSENT). Skill advice improves the maker side
+  but is never gate evidence (C10). Tests 5/5; track32.
+- **G17 Self-Growth Engine — CoolHan becomes 자기성장형 (v2.4.0)** — `scripts/self-growth.js` mines
+  CoolHan's OWN durable evidence (G5 ledger recurrences, docs/DECISIONS deferrals, run-report
+  escalations/unvalidated units, pending proposals, and applied-site verdicts via `--sites <dir>`)
+  into a ranked `_workspace/_self-growth-backlog.md` that feeds the non-stop loop — the harness
+  proposing its own next enhancements, each still run through the full per-feature ritual
+  (tests + adversarial track + G1–G16). Wired into the engine completion gate. Honest bound (C10):
+  proposes from RECORDED on-disk evidence, not from un-accessible cross-account transcripts;
+  cross-session growth accrues because every run appends to the artifacts it reads. Advisory,
+  never edits the harness itself. Tests 8/8; track33 (0 false +/-); live mine of this repo found
+  4 real candidates.
+
+
 ## [2.2.1] - 2026-08-30
 
 ### Changed

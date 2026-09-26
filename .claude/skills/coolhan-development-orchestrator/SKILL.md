@@ -428,6 +428,12 @@ while (todo remains in backlog):
        recurring lessons, pending proposals) — cite this path in the final ≤5-line report.
        Observer only: never changes a verdict. Also useful MID-run whenever the human asks
        "지금 어디까지 됐어?" — generate and hand the path instead of narrating.
+   + G17 SELF-GROWTH (v2.4.0, 자기성장): node scripts/self-growth.js [--sites <dir>]
+     → _workspace/_self-growth-backlog.md — mines CoolHan's OWN evidence (G5 ledger recurrences,
+       docs/DECISIONS deferrals, run-report escalations/unvalidated, pending proposals, and
+       applied-site verdicts under --sites) into a ranked self-improvement backlog. Advisory input
+       to the loop: each item still runs the full per-feature ritual (tests + adversarial track +
+       G1–G16). Companion skills (references/companion-skills.md) improve the maker side.
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)
 ```

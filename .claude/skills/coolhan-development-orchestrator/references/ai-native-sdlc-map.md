@@ -26,6 +26,8 @@
 | **Non-stop supervisor (outer loop)** | **G13 `scripts/nonstop.js` (v2.0.0)**: relaunches headless sessions until completion-check exits 0 — closes the last human step (baton pasting) of 무중단 개발; 5 named stop conditions, per-session log, wedged-run valve | ✅ NEW |
 | **Commercial readiness (production evals)** | **G14 `scripts/commercial-gate.js` + agents/commercial-readiness-auditor.md (v2.1.0)**: 5 user-facing criteria × real-HTTP keepers against production; keeper-less = NOT_RUN; ①가부②차단③미측정 verdict artifact | ✅ NEW |
 | **Production edge/bot hardening** | **G15 `scripts/hardening-check.js` (v2.2.0)**: 5 real-HTTP holes (AI-agent bypass, stack-fingerprint headers, framework-404 leak, UA coherence, robots AI-crawler block); probe is the regression guard; FAIL=measurement→source-read first | ✅ NEW |
+| **Companion skills (maker-side quality)** | **11 shipped skills in .claude/skills + G16 companion-skills-check.js + references/companion-skills.md (v2.3.0)**: grill-me/codebase-design/implement/diagnosing-bugs/code-review/resolving-merge-conflicts/frontend-design/web-design-guidelines/react-best-practices/redesign-skill/taste-skill, agent-invoked only-if-present (C3) | ✅ NEW |
+| **Self-growth (자기성장형)** | **G17 scripts/self-growth.js (v2.4.0)**: mines own ledger/decisions/run-reports/proposals + applied-site verdicts → ranked _self-growth-backlog.md feeding the loop; advisory, honest bound (recorded evidence, not cross-account transcripts) | ✅ NEW |
 | Agent Swarm | marketing synonym of the above — no separate mechanism needed | n/a |
 | Vibe Coding | intentionally NOT adopted — conflicts with spec-driven P0 | rejected |
 
