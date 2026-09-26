@@ -20,13 +20,22 @@ describe('self-growth (G17 — self-developing engine)', () => {
     fs.rmSync(d, { recursive: true, force: true });
   });
 
-  test('decisions: deferred/later lines surface', () => {
+  test('decisions: a real deferral in a Decision/Update line surfaces; template + Reversible noise does not (v2.4.1 precision)', () => {
     const d = tmp(); fs.mkdirSync(path.join(d, 'docs'), { recursive: true });
-    fs.writeFileSync(path.join(d, 'docs', 'DECISIONS.md'),
-      '## X\n**Decision:** deferred to a later track\n**Reversible:** yes — do it later\nplain line\n');
+    fs.writeFileSync(path.join(d, 'docs', 'DECISIONS.md'), [
+      '## Format',
+      '**Reversible:** yes/no — how to change it later if wrong',   // template line — must NOT flag
+      '## Real',
+      '**Decision:** Ship (a) now. Defer (b) to a dedicated track', // real deferral — MUST flag
+      '**Reversible:** yes — (b) can be run later',                 // reversible field, not actionable — must NOT flag
+      '**Update:** the prompt re-tune is deferred to track22',      // actionable deferral — MUST flag
+      'plain prose mentioning later but no field',                  // no actionable field — must NOT flag
+      ''
+    ].join('\n'));
     const items = fromDecisions(d);
-    expect(items.length).toBeGreaterThanOrEqual(1);
-    expect(items[0].source).toBe('decisions');
+    expect(items).toHaveLength(2);
+    expect(items[0].candidate).toMatch(/Defer \(b\)/);
+    expect(items[1].candidate).toMatch(/track22/);
     fs.rmSync(d, { recursive: true, force: true });
   });
 

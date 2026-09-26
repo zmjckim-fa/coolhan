@@ -53,15 +53,22 @@ function fromLedger(ws, minCount = 2) {
   });
 }
 
-/** DECISIONS.md → deferred/later items. */
+/** DECISIONS.md → genuinely deferred items (precision-tuned v2.4.1).
+ * Only an actionable field line (Decision/Update/Next) that expresses a real deferral counts.
+ * Excludes the format-template/convention lines and the Reversible: field (reversibility is
+ * how-to-undo, not a deferral) — those produced false candidates the loop would chase. */
+const DEFERRAL = /\b(defer(?:red|ral)?|not (?:yet )?(?:feasible|implemented)|TODO|추후|이연|나중에?)\b/i; // no-placeholder-check:allow — TODO is a detection token, not a placeholder
+const ACTIONABLE_FIELD = /^\s*(?:[-*]\s*)?\**\s*(decision|update|next(?:[ _-]?action)?)\b/i;
+const TEMPLATE_NOISE = /yes\/no|how to change it later if wrong|<[^>]+>|\{[^}]+\}/i; // format template / placeholders
 function fromDecisions(root) {
   const lines = readLines(path.join(root, 'docs', 'DECISIONS.md'));
   const out = [];
   lines.forEach((l, i) => {
-    if (/defer(red)?|later|not (yet )?(feasible|implemented)|TODO|추후|이연|나중/i.test(l) && /decision|reversible|update|:/i.test(l)) { // no-placeholder-check:allow — TODO here is a detection pattern, not a placeholder
-      out.push({ source: 'decisions', priority: 'medium', evidence: `DECISIONS.md:${i + 1}`,
-        candidate: `Revisit deferred decision: ${l.trim().slice(0, 160)}` });
-    }
+    if (!ACTIONABLE_FIELD.test(l)) return;      // only Decision/Update/Next lines
+    if (TEMPLATE_NOISE.test(l)) return;          // skip the convention template / placeholders
+    if (!DEFERRAL.test(l)) return;               // require a genuine deferral token (word-bounded)
+    out.push({ source: 'decisions', priority: 'medium', evidence: `DECISIONS.md:${i + 1}`,
+      candidate: `Revisit deferred decision: ${l.trim().slice(0, 160)}` });
   });
   return out;
 }

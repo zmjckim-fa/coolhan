@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.4.1] - 2026-09-27
+
+### Fixed
+
+- **G17 self-growth precision — false positives found by dogfooding the engine on CoolHan itself.**
+  Per the user's "스킬들을 이용해서 이 쿨한솔루션을 분석하여... 고도화하라", ran `scripts/self-growth.js`
+  against this repo (the self-analysis the engine exists for). It surfaced 4 DECISIONS candidates of
+  which the format-template line (`**Reversible:** yes/no — how to change it later if wrong`) and the
+  `**Reversible:** yes — … later` field were NOISE — a self-growth backlog listing non-work makes the
+  loop chase phantoms. Tightened `fromDecisions()`: a candidate now requires (1) an actionable field
+  line (Decision/Update/Next — not Reversible, not the template), (2) no template/placeholder noise
+  (`yes/no`, the template phrase, `<…>`/`{…}`), and (3) a word-bounded genuine deferral token. Real
+  deferrals still surface (re-mine: 4 noisy → 2 genuine). Tests 8/8 (decisions case now asserts 2
+  real / 3 noise); track33 addendum. The self-growth engine analyzing itself found and fixed its own
+  correctness defect — self-growth working as intended.
+
 ## [2.4.0] - 2026-09-26
 
 ### Added

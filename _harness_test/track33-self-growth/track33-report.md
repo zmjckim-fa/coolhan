@@ -26,3 +26,29 @@ next self-improvement backlog for the loop to execute (gated by G1–G16, per-fe
 across all sessions/accounts" (not accessible/verifiable). Cross-session growth accrues because
 every run appends to the artifacts it reads; `--sites <dir>` folds applied-project verdicts in. It
 is advisory: a human/orchestrator sets scope, and it never edits the harness itself.
+
+---
+## v2.4.1 — precision fix found by dogfooding (self-analysis)
+
+Running G17 on CoolHan itself (the very "use the harness on the harness" the self-growth engine is
+for) exposed a false-positive: `fromDecisions()` flagged DECISIONS.md's format-template line
+(`**Reversible:** yes/no — how to change it later if wrong`) and the `**Reversible:** yes — … later`
+field as "deferred decisions". A self-growth backlog that lists noise makes the loop chase
+non-work — a correctness bug in the growth engine itself.
+
+Fix (precision-tuned): a candidate now requires (1) an actionable field line — Decision/Update/Next
+(not Reversible, not the template), (2) no template/placeholder noise (`yes/no`, the template
+phrase, `<…>`/`{…}`), and (3) a word-bounded genuine deferral token. Real deferrals still surface.
+
+| Case | Before | After |
+|---|---|---|
+| `**Decision:** … Defer (b) to a track` | flagged ✓ | flagged ✓ |
+| `**Update:** … deferred to track22` | flagged ✓ | flagged ✓ |
+| `**Reversible:** yes/no — how to change it later` (template) | ❌ flagged (noise) | ✅ not flagged |
+| `**Reversible:** yes — (b) can be run later` | ❌ flagged (noise) | ✅ not flagged |
+| plain prose mentioning "later", no field | (matched `:`) | ✅ not flagged |
+
+Repo re-mine after fix: DECISIONS candidates dropped from 4 (2 real + 2 template-noise... net all
+4 were the loose `:`-matched Reversible/Decision lines) to only the genuinely-deferred ones. Tests
+updated (self-growth 8/8, the decisions case now asserts 2 real / 3 noise). This is self-growth
+working as intended: the harness analyzing itself found and fixed its own defect.
