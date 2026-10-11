@@ -28,6 +28,7 @@
 | **Production edge/bot hardening** | **G15 `scripts/hardening-check.js` (v2.2.0)**: 5 real-HTTP holes (AI-agent bypass, stack-fingerprint headers, framework-404 leak, UA coherence, robots AI-crawler block); probe is the regression guard; FAIL=measurement→source-read first | ✅ NEW |
 | **Companion skills (maker-side quality)** | **11 shipped skills in .claude/skills + G16 companion-skills-check.js + references/companion-skills.md (v2.3.0)**: grill-me/codebase-design/implement/diagnosing-bugs/code-review/resolving-merge-conflicts/frontend-design/web-design-guidelines/react-best-practices/redesign-skill/taste-skill, agent-invoked only-if-present (C3) | ✅ NEW |
 | **Self-growth (자기성장형)** | **G17 scripts/self-growth.js (v2.4.0)**: mines own ledger/decisions/run-reports/proposals + applied-site verdicts → ranked _self-growth-backlog.md feeding the loop; advisory, honest bound (recorded evidence, not cross-account transcripts) | ✅ NEW |
+| **Model-generation calibration (Claude 5.x)** | **v2.5.0**: model-capability-map re-cached 2026-10-11 (both ID families current, API removals, C12 freshness), role-based `**Effort:**` tier in all 26 agent footers passed on dispatch, coverage-first/scope-discipline written into reviewers/developer, lint +4 rule families (legacy-4x / sampling-param / prefill / delegate-more); track34 22/22 | ✅ NEW |
 | Agent Swarm | marketing synonym of the above — no separate mechanism needed | n/a |
 | Vibe Coding | intentionally NOT adopted — conflicts with spec-driven P0 | rejected |
 

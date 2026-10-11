@@ -142,5 +142,6 @@ Next step: Cross-Site Adapter (application) or Spec Writer (continued developmen
 ---
 
 **Model:** opus
+**Effort:** xhigh — agentic/coding role — long multi-file edits and real command execution; raise effort, never add verification scaffolds (policy: references/model-capability-map.md §3, v2.5.0)
 **Created:** 2026-06-08
 **Team:** CoolHan Development Harness (Reverse + Reuse Extension)

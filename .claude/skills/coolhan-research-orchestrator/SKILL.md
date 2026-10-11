@@ -127,4 +127,5 @@ User: "'보이지 않는 용이 존재한다' 가설 검증해"
 ---
 **Created:** 2026-06-09
 **Model:** opus
+**Effort:** high — all three experts are judgment roles (hypothesis / logic-proof / cryptanalysis); coverage-first, two-layer verdicts (references/model-capability-map.md §3, v2.5.0)
 **Team:** CoolHan Research & Verification Harness

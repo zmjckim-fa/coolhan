@@ -74,3 +74,23 @@ outcomes, and an operator-pointed sites root for applied-site outcomes) and emit
 enhancements, gated by G1–G16.
 **Rationale:** delivers "self-developing" as a repeatable mechanism, not a one-off unverifiable claim.
 **Reversible:** yes — evidence-source list is configurable; backlog is advisory input to the loop.
+
+## 2026-10-11 — Model-generation upgrade (v2.5.0): effort tiers by role, both ID families current, no pricing, no direct-API guard
+**Context:** User: "클로드 모델들이 업그레이드 되고있다. 이에 맞게 쿨한 하네스의 소스와 방식을 고도화해야한다."
+Two facts had to be reconciled without stopping to ask: the claude-api reference (cached 2026-06-24) names
+`claude-fable-5 / claude-opus-5 / claude-sonnet-5 / claude-haiku-4-5`, while the live Claude Code session
+names `claude-fable-5-1 / claude-opus-5-5 / claude-sonnet-5-5 / claude-haiku-5-5`.
+**Decision:** (1) Record BOTH ID families as current in the map and the lint; dispatch stays by tier alias,
+never by dated ID. (2) Assign the Agent-tool `effort` per role — xhigh for agentic/coding roles, high for
+judgment/spec roles, medium for marketing-lead, max reserved for a C11-flagged unit — written into every
+agent footer so it survives cold-start delegation. (3) Do not record pricing in the map. (4) Keep Haiku 5.5 at
+the 200K relay tier until its window is verified via the Models API (observed only in a session prompt).
+(5) Enforce the API-surface removals (budget_tokens/sampling/prefill/refusal/fallbacks) as lint rules and a
+reference checklist, not as a runtime guard — the harness runs inside Claude Code and makes no direct
+Messages API call today.
+**Rationale:** (1) a lint that flags the session's own model ID as "stale" would be wrong on day one;
+(2) adaptive thinking leaves effort as the only calibration knob, and footers are the one place every agent
+is guaranteed to read; (3) prices change faster than this file and a stale number gets used as true;
+(4) C12/C10 — an unverified window must not widen a budget; (5) a guard with nothing to guard is dead code.
+**Reversible:** yes — tiers are one footer line per agent; the ID list and Haiku tier are table rows;
+a direct-API guard can be added the day a script calls the API.

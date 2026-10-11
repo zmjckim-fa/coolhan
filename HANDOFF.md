@@ -17,11 +17,11 @@
 CoolHan — a specification-driven, multi-agent, **non-stop** development harness that runs inside
 Claude Code. It is the *product* (the harness itself), not an app built with it. Forward pipeline
 (intent→spec→code→validate→QA→deploy) + reverse/reuse (analyze→modularize→reapply) + 15 mechanical
-gates (G1–G15) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
+gates (G1–G17) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.2.1` (package.json = git tag `v2.2.1` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **203 tests, 24 suites, all pass** (~6 min; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.5.0` (package.json = git tag `v2.5.0` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **226 tests, 26 suites, all pass** (~6 min; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -43,7 +43,7 @@ but they are restated here so nothing is missed:
    compose, `SECRET_KEY`, other services, and any coolhanx.com **server file** the deploy script
    doesn't ship.
 
-## 3. The gates (G1–G15) — what already exists
+## 3. The gates (G1–G17) — what already exists
 
 Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-orchestrator/references/ai-native-sdlc-map.md`.
 
@@ -64,8 +64,12 @@ Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-or
 | G13 nonstop supervisor | `scripts/nonstop.js` | relaunches headless sessions until complete |
 | G14 commercial readiness | `scripts/commercial-gate.js` + `agents/commercial-readiness-auditor.md` | 5 user-facing criteria × real-HTTP keepers |
 | G15 edge/bot hardening | `scripts/hardening-check.js` | 7 real-HTTP holes (AI-agent/fingerprint/404/UA/robots/automation/search-preserve) |
+| G16 companion skills | `scripts/companion-skills-check.js` | presence probe for the 11 vendored maker-side skills (advice ≠ gate evidence) |
+| G17 self-growth | `scripts/self-growth.js` | mines own ledger/decisions/run-reports/tracks → ranked self-growth backlog feeding the loop |
 
-Also: prompt-modernization lint (`scripts/prompt-modernization-check.js`), design-excellence gate
+Also: prompt-modernization lint (`scripts/prompt-modernization-check.js`, 9 rule families incl. the Claude-5-era
+ones added in v2.5.0; agent footers carry a role-based `**Effort:**` tier — see
+`references/model-capability-map.md` §3), design-excellence gate
 (`scripts/design-quality-check.js`), secret-scan (`scripts/secret-scan.js`), doctor (`doctor.js`).
 Adversarial verification for each gate lives in `_harness_test/trackNN-*/` (all 0 false +/-).
 
@@ -97,8 +101,8 @@ Three layers, all mechanical:
    never the `@'...'@` construct) → `git tag -a vX.Y.Z -m "..."` → `git push origin main --follow-tags`.
 8. Confirm via GitHub API: release.yml success + `releases/latest` = new tag + harness-check/test green.
 
-Commit attribution line to use: `Co-Authored-By: Claude <noreply@anthropic.com>` (match the
-session's stated attribution).
+Commit attribution line to use: the trailer the running session states (e.g.
+`Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>` on 2026-10-11) — match the session, do not hardcode.
 
 ## 6. Credentials & server access — what must be re-supplied in the new account
 
@@ -142,7 +146,7 @@ npx jest --ci   # background it; expect 203 passed / 24 suites
 node doctor.js
 ```
 
-If those four agree (version = v2.2.1, tests green, doctor healthy), the handoff is intact and you
+If those four agree (version = v2.5.0, tests green, doctor healthy), the handoff is intact and you
 may proceed from § Next actions.
 
 
@@ -185,3 +189,15 @@ may proceed from § Next actions.
 - 새 계정의 GitHub 사용자가 `zmjckim-fa/coolhan`에 write 권한이 있는지 (없으면 collaborator 추가 또는 fork 후 remote 변경).
 - coolhanx.com 사이트의 로컬 repo 경로·서버 host/user/SSH 키 — 트랜스크립트에 기록 없음. 해당 사이트 폴더의 자체 인수인계 문서/`deploy.py` 확인 필요.
 - npm 배포를 실제로 할지 여부 및 `NPM_TOKEN` 발급 주체.
+
+---
+## 인수인계 보강 (2026-10-11, v2.5.0)
+
+- 위 본문의 v2.2.1 수치는 이 보강으로 대체됨: 현재 `2.5.0`, jest **226 tests / 26 suites**, 게이트 G1–G17.
+- v2.3.0~v2.5.0 요약: 11개 동반 스킬 벤더링 + G16 존재 프로브 / G17 자기성장 엔진(+v2.4.1 정밀도 수정) /
+  **v2.5.0 모델 세대 업그레이드** — `references/model-capability-map.md` 재캐시(2026-10-11, 카탈로그·세션 두 ID 계열 모두 현행,
+  API 제거 항목, 역할별 effort 정책), 26개 에이전트 footer에 `**Effort:**` 계층(xhigh/high/medium) 추가 — 오케스트레이터는
+  Agent 도구 `effort`로 전달, 리뷰어 3종 coverage-first·developer scope-discipline 문장 삽입, 린트 +4 규칙군, track34 22/22.
+- 모델 ID는 게이트 로직에 하드코딩하지 않는다(별칭 opus/sonnet/haiku/fable로 디스패치). 새 세대가 나오면
+  map §1 표 + SKILL.md 릴레이 표 + 린트의 "current ID" 주석만 갱신하면 된다(C12: recorded ≠ current).
+- 커밋 트레일러는 실행 중인 세션이 명시한 것을 그대로 쓴다(2026-10-11 세션: `Claude Fable 5.1`).

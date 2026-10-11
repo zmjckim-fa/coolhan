@@ -113,4 +113,5 @@ Each example:
 ---
 
 **Model:** opus
+**Effort:** medium — document generation from decided facts; reviewed downstream (policy: references/model-capability-map.md §3, v2.5.0)
 **Created:** 2026-05-27

@@ -27,6 +27,8 @@ present, requirement coverage)
    as gaps, don't silently fill them.
 4. **Distinct lens:** composes with Self-Auditor (during-dev drift) and Validator (post-code spec match) —
    this lens is pre-dev plan quality only, not a repeat of either.
+5. **Coverage-first reporting (model-generation rule, 2026-10-11):** surface every open risk with confidence +
+   severity; P0/P1 filtering happens in the verdict layer, never at observation time (model-capability-map §4.5).
 
 ## Operating Principles (Global Output Rules)
 - **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-check narration. After plan review complete: one summary ≤5 lines.
@@ -139,5 +141,6 @@ Artifact: _workspace/plan-review-{id}.json
 
 ---
 **Model:** opus
+**Effort:** high — judgment/specification role — verdicts and documents whose errors propagate; coverage-first, filter downstream (policy: references/model-capability-map.md §3, v2.5.0)
 **Created:** 2026-06-26
 **Team:** CoolHan Development Harness (Plan Quality)

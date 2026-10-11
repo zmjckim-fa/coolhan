@@ -337,5 +337,6 @@ Log: deployment-log-{id}.json
 ---
 
 **Model:** opus  
+**Effort:** xhigh — agentic/coding role — long multi-file edits and real command execution; raise effort, never add verification scaffolds (policy: references/model-capability-map.md §3, v2.5.0)
 **Created:** 2026-05-28  
 **Team:** CoolHan Development Harness

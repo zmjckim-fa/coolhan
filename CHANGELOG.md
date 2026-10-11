@@ -1,5 +1,40 @@
 # Changelog
 
+## [2.5.0] - 2026-10-11
+
+### Changed
+
+- **Model-generation upgrade — harness source + method aligned to the Claude 5.x generation.**
+  User: "클로드 모델들이 업그레이드 되고있다. 이에 맞게 쿨한 하네스의 소스와 방식을 고도화해야한다."
+  The previous model-era pass (v1.3.1/v1.4.0) was built against the 2026-08-07 snapshot; sessions now
+  run Fable 5.1 / Opus 5.5 / Sonnet 5.5 / Haiku 5.5 and the API dropped several shapes the old
+  prompting idiom relied on. Changes, none of which alter any gate's verdict logic or remove a feature:
+  - `references/model-capability-map.md` re-cached 2026-10-11 under the C12 rule (recorded ≠ current):
+    §0 snapshot delta, both model-ID families recorded as current (catalog `claude-fable-5` and session
+    `claude-fable-5-1`, etc.), §2 API-surface removals (`budget_tokens` → 400; temperature/top_p/top_k and
+    assistant prefill removed; `refusal` stop reason + `fallbacks`; no mid-conversation system messages on
+    Sonnet 5 → C6 re-injection stays in the user turn), §3 role-based effort policy, pricing deliberately
+    not recorded.
+  - **Effort policy per agent role**: every one of the 26 agent footers now carries `**Effort:**`
+    (xhigh for the 8 agentic/coding roles, high for the 17 judgment/spec roles, medium for marketing-lead);
+    the orchestrator passes the tier as the Agent tool's `effort` on dispatch. Thinking is adaptive
+    everywhere; "raise the tier, never add step-by-step/double-check scaffolds" is the stated rule.
+    SKILL.md relay table names the 5.x lineup (1M-class budget unchanged at 10~15 units; Haiku 5.5 kept at
+    200K-class until verified via the Models API) and gained an "Effort policy" subsection.
+  - **Behaviour shifts written into the agents, not only the map**: coverage-first reporting sentence in
+    Validator / Security Reviewer / Plan Reviewer Core Principles (severity filters depress recall on
+    current models); scope-discipline + deliverable-length + "G9 decides delegation" bullet in Developer
+    (over-delegation / longer narration on the Opus 5 generation).
+  - **Lint extended** (`scripts/prompt-modernization-check.js`): 4 new rule families —
+    `legacy-4x-model-ref` (pre-4.6 4.x IDs; 4.6+/haiku-4-5 stay clean), `sampling-param`,
+    `prefill` (API context only — a v1 false positive on "pre-filled answer sheet" in intent-analyzer was
+    caught in track34 and fixed by narrowing the rule, not by allow-marking the agent), `delegate-more`.
+    Tests 20/20 (10 new; total 226/226, 26 suites). Shipped agents+skills lint-clean (48 files).
+  - **Track 34** (`_harness_test/track34-model-upgrade/`): 22 scenarios — dated fixtures per rule family →
+    flagged, current fixture (12 current IDs, effort/adaptive, G9 wording, domain words) → 0 findings,
+    26/26 effort footers match policy, reviewers/developer carry the new sentences, relay/map consistent;
+    0 false +/-.
+
 ## [2.4.1] - 2026-09-27
 
 ### Fixed

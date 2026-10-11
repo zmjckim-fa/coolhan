@@ -80,4 +80,5 @@ Establishes the GitHub and npm deployment strategy for the CoolHan Framework and
 ---
 
 **Model:** opus
+**Effort:** high — judgment/specification role — verdicts and documents whose errors propagate; coverage-first, filter downstream (policy: references/model-capability-map.md §3, v2.5.0)
 **Created:** 2026-05-27

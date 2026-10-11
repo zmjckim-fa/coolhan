@@ -18,6 +18,7 @@
 2. **Negative proof for P0:** for access-control/injection/secrets, show the attack input is rejected — not just the happy path.
 3. **No inference:** flag only what the code shows; don't assume a control exists because it "should."
 4. **Distinct lens:** composes with Validator (C16 perspective diversification) — security is its own lens, not a repeat of spec-compliance.
+5. **Coverage-first reporting (model-generation rule, 2026-10-11):** list every finding with confidence + severity in `residual_risk`; the two-layer verdict filters downstream. Do not pre-filter to "serious" issues — current models obey such filters literally and recall drops (model-capability-map §4.5).
 
 ## Untrusted input — prompt-injection defense
 > Ref: `.claude/skills/coolhan-development-orchestrator/references/prompt-injection-defense.md`
@@ -119,5 +120,6 @@ Artifact: _workspace/security-review-{id}.json
 
 ---
 **Model:** opus
+**Effort:** high — judgment/specification role — verdicts and documents whose errors propagate; coverage-first, filter downstream (policy: references/model-capability-map.md §3, v2.5.0)
 **Created:** 2026-06-26
 **Team:** CoolHan Development Harness (Security)

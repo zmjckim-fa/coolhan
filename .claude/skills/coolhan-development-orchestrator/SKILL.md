@@ -502,12 +502,26 @@ Since processing length differs per model, judge by **number of work units + rem
 
 | Model tier (2026 lineup) | Approx. context | Safe work units per session | Baton threshold |
 |----------|--------------|--------------------|----------|
-| 1M-class (Fable 5 / Opus 5 / Opus 4.6+ / Sonnet 5 / Sonnet 4.6) | ~1M | 10~15 units | ~15% remaining |
-| 200K-class (Haiku 4.5, legacy 200K models) | ~200K | 3~4 units | ~25% remaining |
+| 1M-class (Fable 5.1/5 · Opus 5.5/5 · Opus 4.6+ · Sonnet 5.5/5 · Sonnet 4.6) | ~1M | 10~15 units | ~15% remaining |
+| 200K-class (Haiku 4.5; Haiku 5.5 until its window is verified via the Models API; legacy 200K models) | ~200K | 3~4 units | ~25% remaining |
 | Small/legacy (non-Claude or ≤100K runtimes) | ≤100K | 1~2 units | ~30% remaining |
 
 > If precise token measurement is hard, be conservative on a **unit-count basis**: "baton after 1M-class=10 units, 200K-class=3 units, small=1 unit complete". 1 unit = 7 files + 1 validation (follow the absolute principle).
 > ⚠️ Do NOT fire the baton early out of habit on a 1M-class model — a baton after 3 units there wastes sessions. The baton is for genuine context pressure, never a scheduled stop (completion rules unchanged: only completion-check exit 0 ends the run).
+
+### Effort policy per agent role (v2.5.0 — Claude 5 generation)
+Thinking is adaptive on every current model; the one knob the orchestrator sets is **effort**. Each agent footer carries `**Effort:**` (xhigh / high / medium); pass that value as the Agent tool's `effort` on dispatch. Full table + rationale: `references/model-capability-map.md` §3.
+
+| Tier | Roles (summary) | Orchestrator rule |
+|---|---|---|
+| xhigh | developer, execution-runner, devops-deployer, site-analyzer, module-extractor, cross-site-adapter, development-lead, devops-lead | agentic/coding — under-thinking here is caught late and expensively |
+| high | validator, security-reviewer, plan-reviewer, qa-tester, qa-lead, integration-validator, e2e-tester, hx-vision-critic, self-auditor, commercial-readiness-auditor, intent-analyzer, spec-writer, ux-design-lead, planning-lead, research experts | judgment/spec — floor is high; two-layer verdicts already force coverage |
+| medium | marketing-lead | documents from decided facts |
+| max | none at rest | C11 may raise a single high-risk × high-complexity unit to max; never the default |
+
+- Raise the tier for a hard unit; do not add "think step by step / double-check" prose — the lint rejects it and current models get worse with it. <!-- modernization:allow — names the rejected pattern -->
+- Delegation is decided by G9 (`scripts/parallel-plan.js`) and the per-unit Validator stays serial; no agent is told to use subagents freely. <!-- modernization:allow — names the rejected pattern -->
+- API-surface facts the harness must not contradict (budget_tokens 400, sampling params and prefill removed, refusal/fallbacks stop reasons, mid-conversation system messages unsupported on Sonnet 5): `references/model-capability-map.md` §2. C6 rule re-injection therefore always travels in the **user** turn (baton / UNIT PREAMBLE), never as an injected system message. <!-- modernization:allow — names the removed shapes -->
 
 ### Checkpoint format (`_workspace/_checkpoint.md`) — CoolHan's PROGRESS.md equivalent
 This file is the single source of truth for resuming after a context break; it carries the
@@ -1341,4 +1355,5 @@ When the user enters the following commands, run only the update check and exit:
 
 **Created:** 2026-05-28  
 **Model:** opus  
+**Effort:** per-role — each agent footer carries its tier (xhigh / high / medium); the orchestrator passes it on dispatch (references/model-capability-map.md §3, v2.5.0)  
 **Team:** CoolHan Development Harness

@@ -117,4 +117,5 @@ npm install @coolhan/spec-driven-framework --no-save
 ---
 
 **Model:** general-purpose (not read-only - test execution required)
+**Effort:** high — judgment/specification role — verdicts and documents whose errors propagate; coverage-first, filter downstream (policy: references/model-capability-map.md §3, v2.5.0)
 **Created:** 2026-05-27

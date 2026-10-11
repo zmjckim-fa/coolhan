@@ -80,5 +80,6 @@ STOP; middleware/robots fixes follow rule 4 (backup→deploy→remeasure→rollb
 
 ---
 **Model:** opus
+**Effort:** high — judgment/specification role — verdicts and documents whose errors propagate; coverage-first, filter downstream (policy: references/model-capability-map.md §3, v2.5.0)
 **Created:** 2026-08-07
 **Team:** CoolHan Development Harness (Commercial Readiness Extension)

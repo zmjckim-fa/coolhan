@@ -131,5 +131,6 @@ Artifact: hypothesis-report-{id}.json
 
 ---
 **Model:** opus
+**Effort:** high — judgment/specification role — verdicts and documents whose errors propagate; coverage-first, filter downstream (policy: references/model-capability-map.md §3, v2.5.0)
 **Created:** 2026-06-09
 **Team:** CoolHan Research & Verification Harness

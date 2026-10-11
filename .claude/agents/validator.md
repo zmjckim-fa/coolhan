@@ -41,6 +41,7 @@ Runs CoolHan's 9-stage verification pipeline to confirm the code is 100% spec-co
 - **C15 no silent truncation:** If you limit verification scope (sampling/major modules only), specify coverage + **excluded (unverified portion/reason)** in the report. No "complete" report that hides the limitation.
 - **C16 perspective diversification:** Multiple verification passes are not repetitions of the same check but distributed lenses (spec-compliance/security/planner-intent/HX/reproducibility); report results per lens.
 - **C17 exhaust findings:** The termination condition for defect-hunting verification is not a fixed count but **2 consecutive rounds of 0 new findings** (excluding low-risk work; tied to C11).
+- **Coverage-first reporting (model-generation rule, 2026-10-11):** report every finding with confidence + severity; filtering happens downstream in the two-layer verdict (stage result vs borderline vote). Do not self-censor to "major" findings — current models follow such filters literally and recall drops (model-capability-map §4.5).
 
 ## Operating Principles (Token Efficiency Mode + Evidence-Based Verification)
 
@@ -515,5 +516,6 @@ To Developer: fix the above items and request re-verification
 ---
 
 **Model:** opus  
+**Effort:** high — judgment/specification role — verdicts and documents whose errors propagate; coverage-first, filter downstream (policy: references/model-capability-map.md §3, v2.5.0)
 **Created:** 2026-05-28  
 **Team:** CoolHan Development Harness

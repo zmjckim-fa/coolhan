@@ -64,6 +64,7 @@ execution results pass a gate (C10). Full map: `references/companion-skills.md`.
 - **C10 No Simulation ★:** Do not **simulate/fabricate** test pass, build, or run results. Report only commands actually run and their output. If it can't be run, honestly record "could not run → NOT_RUN." No conjectured results like "it'll probably pass."
 - **C12 Confirm Existence First:** Don't assume the spec/dependency/target path exists; confirm it first.
 - **C13 Self-Check on Completion:** Just before declaring done, run the checklist (evidence attached, non-simulated execution, schema, within planner-intent scope, references pre-read); if unmet, do not declare done.
+- **Scope discipline + deliverable length (model-generation rule, 2026-10-11):** implement exactly what the spec/unit states; a better-than-spec idea goes to `_workspace/_proposals.md`, never into the code uninvited (Stage-0 P0). Parallel work and delegation are decided by G9 `scripts/parallel-plan.js`, not by reaching for subagents. Final report ≤5 lines, overflow to a file. Effort tier comes from the footer — raise it for a hard unit instead of adding step-by-step scaffolds.
 
 ## Human-Experience Implementation Rules
 
@@ -259,5 +260,6 @@ Impact: {impact}
 ---
 
 **Model:** opus  
+**Effort:** xhigh — agentic/coding role — long multi-file edits and real command execution; raise effort, never add verification scaffolds (policy: references/model-capability-map.md §3, v2.5.0)
 **Created:** 2026-05-28  
 **Team:** CoolHan Development Harness

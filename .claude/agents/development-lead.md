@@ -83,4 +83,5 @@ Prepares the CoolHan Framework as an npm package and ensures a deployable code s
 ---
 
 **Model:** opus
+**Effort:** xhigh — agentic/coding role — long multi-file edits and real command execution; raise effort, never add verification scaffolds (policy: references/model-capability-map.md §3, v2.5.0)
 **Created:** 2026-05-27
