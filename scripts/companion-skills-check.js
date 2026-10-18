@@ -25,7 +25,8 @@ const os = require('os');
 const EXPECTED = [
   'grill-me', 'codebase-design', 'implement', 'diagnosing-bugs', 'code-review',
   'resolving-merge-conflicts', 'frontend-design', 'web-design-guidelines',
-  'react-best-practices', 'redesign-skill', 'taste-skill'
+  'react-best-practices', 'redesign-skill', 'taste-skill',
+  'web-clone' // v2.5.1 — Jane (xiaoer) MIT; reverse/reuse: real-source-first site reproduction
 ];
 
 function hasSkill(dir, name) {

@@ -50,7 +50,7 @@ const SKIP_DIRS = new Set(['node_modules', '.git', 'coverage', 'dist', 'build',
   // prose; treated as third-party (do not hand-edit), so the modernization lint skips them.
   'grill-me', 'codebase-design', 'implement', 'diagnosing-bugs', 'code-review',
   'resolving-merge-conflicts', 'frontend-design', 'web-design-guidelines',
-  'react-best-practices', 'redesign-skill', 'taste-skill']);
+  'react-best-practices', 'redesign-skill', 'taste-skill', 'web-clone']);
 const MD_EXT = /\.md$/i;
 
 const RULES = [

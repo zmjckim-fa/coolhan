@@ -20,6 +20,7 @@ step. They are not a replacement for CoolHan's own gates (G1–G15) — they rai
 | `react-best-practices` | Vercel Labs | Developer | React/Next.js performance patterns |
 | `redesign-skill` | community | UX Design Lead | upgrading an existing site's design (reverse/reuse) |
 | `taste-skill` | community | UX Design Lead, HX Vision Critic | high-end visual-design taste calibration |
+| `web-clone` (v2.5.1) | Jane / xiaoer (MIT) | Site Analyzer (reverse R1), Cross-Site Adapter | reproducing an existing site/effect: real-source-first recon (sourcemap/asset/network/route scripts), path triage (static / React-Vue-Next / WebGL-Canvas), visual-diff audit. Its own iron rule — never trust AI-guessed code, fetch the real source — matches CoolHan C10/C3. Scope boundary: only for sites the planner approved (P0 Stage-0); never ships third-party copyrighted assets/content into a deliverable — structure, interaction and technique are what gets reproduced; content is replaced |
 
 ## Invocation rule (C3 — never pretend a skill is present)
 
@@ -40,7 +41,7 @@ fabricates having used it. `node scripts/companion-skills-check.js` reports whic
 
 ## Attribution & licensing
 
-These skills are authored by Anthropic, Vercel Labs, Matt Pocock, and the community; they are
+These skills are authored by Anthropic, Vercel Labs, Matt Pocock, Jane (xiaoer, web-clone, MIT), and the community; they are
 vendored here for CoolHan's own use with their own licenses retained where present (e.g.
 `frontend-design/LICENSE.txt`). Update them by re-copying from their upstream registries; do not
 hand-edit vendored skill files (treat as third-party).

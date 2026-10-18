@@ -20,7 +20,7 @@ Claude Code. It is the *product* (the harness itself), not an app built with it.
 gates (G1–G17) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.5.0` (package.json = git tag `v2.5.0` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Current version:** `2.5.1` (package.json = git tag `v2.5.1` = CHANGELOG top = GitHub releases/latest, all aligned)
 - **Test suite:** `npx jest` → **226 tests, 26 suites, all pass** (~6 min; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
@@ -64,7 +64,7 @@ Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-or
 | G13 nonstop supervisor | `scripts/nonstop.js` | relaunches headless sessions until complete |
 | G14 commercial readiness | `scripts/commercial-gate.js` + `agents/commercial-readiness-auditor.md` | 5 user-facing criteria × real-HTTP keepers |
 | G15 edge/bot hardening | `scripts/hardening-check.js` | 7 real-HTTP holes (AI-agent/fingerprint/404/UA/robots/automation/search-preserve) |
-| G16 companion skills | `scripts/companion-skills-check.js` | presence probe for the 11 vendored maker-side skills (advice ≠ gate evidence) |
+| G16 companion skills | `scripts/companion-skills-check.js` | presence probe for the 12 vendored maker-side skills (web-clone added v2.5.1) (advice ≠ gate evidence) |
 | G17 self-growth | `scripts/self-growth.js` | mines own ledger/decisions/run-reports/tracks → ranked self-growth backlog feeding the loop |
 
 Also: prompt-modernization lint (`scripts/prompt-modernization-check.js`, 9 rule families incl. the Claude-5-era
@@ -146,7 +146,7 @@ npx jest --ci   # background it; expect 203 passed / 24 suites
 node doctor.js
 ```
 
-If those four agree (version = v2.5.0, tests green, doctor healthy), the handoff is intact and you
+If those four agree (version = v2.5.1, tests green, doctor healthy), the handoff is intact and you
 may proceed from § Next actions.
 
 

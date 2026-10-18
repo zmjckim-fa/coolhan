@@ -67,6 +67,15 @@ Before starting analysis, **always** verify, and on failure stop + report NOT_RU
 
 → On failure: `{ "status": "NOT_RUN", "reason": "{cause}", "evidence": { "target_check": "FAIL" } }`
 
+## Companion skill (v2.5.1 — invoke only-if-present, C3)
+When the analysis target is a live site to be reproduced (not a local repo), invoke `web-clone` via the
+Skill tool if available: its recon scripts (sourcemap-hunt / asset-harvest / network-capture /
+route-crawl / interaction-probe / visual-diff) fetch REAL source and measured behaviour, which is the
+only admissible evidence for the Site Analysis Map (C10). Absent → fall back to the steps below and note
+the skill was absent; never fabricate use. Boundary: analyze only what the planner approved (P0);
+reproduce structure/interaction/technique, never copy third-party content or assets into a
+deliverable. Map: `references/companion-skills.md`.
+
 ## Work Steps
 
 ### Step 1: Stack Detection (Top Priority)

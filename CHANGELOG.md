@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.5.1] - 2026-10-18
+
+### Added
+
+- **12th companion skill: `web-clone`** (Jane/xiaoer, MIT, upstream v1.6.0). User: "쿨한에도 설치해" — it
+  existed only in this machine's `~/.claude/skills`, so no project installing CoolHan received it.
+  Vendored into `.claude/skills/web-clone` (SKILL.md/LICENSE/README/references/scripts; upstream
+  `.git` and promo image not shipped). Wired the same way as the other 11: G16 `EXPECTED` +1
+  (12/12 shipped), lint `SKIP_DIRS` +1, install.js message, companion-skills.md row + attribution,
+  SDLC-map row, and a Site Analyzer only-if-present section (reverse R1): its real-source recon
+  scripts produce C10-admissible evidence; boundary written in — planner-approved targets only
+  (P0), reproduce structure/interaction/technique, never copy third-party content/assets. Tests:
+  companion 5/5; track32 addendum.
+
 ## [2.5.0] - 2026-10-11
 
 ### Changed

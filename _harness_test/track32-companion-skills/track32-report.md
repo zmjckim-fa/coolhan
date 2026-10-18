@@ -18,3 +18,21 @@ skill that isn't installed.
 **Honest bound:** these are third-party skills vendored with their own licenses retained; skill
 advice improves the maker side but is never accepted as gate evidence (C10 — only captured
 execution results pass). Update by re-copying from upstream registries.
+
+---
+## v2.5.1 addendum — 12th companion skill: `web-clone`
+
+User: "쿨한에도 설치해" (web-clone was only in `~/.claude/skills`, i.e. this machine/account only).
+Vendored `web-clone` (Jane/xiaoer, MIT, upstream v1.6.0 @0269e0e) into `.claude/skills/web-clone`
+(SKILL.md + LICENSE + README + references/ + scripts/; the upstream `.git` and the WeChat QR image
+are not shipped). Wiring: G16 `EXPECTED` +1, lint `SKIP_DIRS` +1 (third-party, not hand-edited),
+install.js message 11→12, companion-skills.md row + attribution, SDLC-map row, Site Analyzer
+only-if-present section (reverse R1 — real-source recon is C10-admissible evidence; P0 scope +
+no third-party content/asset copying).
+
+| Check | Expected | Actual |
+|---|---|---|
+| G16 `companion-skills-check` | 12/12 shipped, exit 0 | see run log below |
+| G16 synthetic repo lacking web-clone | shipped=false (no false present) | covered by existing "shipped vs global" test |
+| lint over `.claude/skills` | web-clone skipped (third-party), repo clean | see run log |
+| jest companion-skills suite | 5/5 | see run log |
