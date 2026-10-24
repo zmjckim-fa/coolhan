@@ -1,7 +1,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { fromLedger, fromDecisions, fromRunReports, fromProposals, fromSites, evaluate, render } = require('../../scripts/self-growth');
+const { fromLedger, fromDecisions, fromRunReports, fromProposals, fromLearned, fromSites, evaluate, render } = require('../../scripts/self-growth');
 
 function tmp() { return fs.mkdtempSync(path.join(os.tmpdir(), 'sg-')); }
 
@@ -89,6 +89,27 @@ describe('self-growth (G17 — self-developing engine)', () => {
     const r = evaluate(d, { workspace: path.join(d, '_workspace') });
     expect(r.items).toEqual([]);
     expect(render(r)).toMatch(/nothing to mine|clean or not yet accumulated/i);
+    fs.rmSync(d, { recursive: true, force: true });
+  });
+
+  test('learned (G18): repeated imperative directives, incident load and security lines become candidates; sparse data does not', () => {
+    const d = tmp(); const dir = path.join(d, '.coolhan-private', 'learned'); fs.mkdirSync(dir, { recursive: true });
+    const m = (i, themes, imperative) => JSON.stringify({ id: String(i), themes, imperative, text: 'x' });
+    const rows = [];
+    for (let i = 0; i < 20; i++) rows.push(m(i, ['verify-before-done'], true));
+    for (let i = 20; i < 24; i++) rows.push(m(i, ['brevity'], true));            // below threshold
+    fs.writeFileSync(path.join(dir, 'human-messages.jsonl'), rows.join('\n') + '\n');
+    const lessons = [];
+    for (let i = 0; i < 6; i++) lessons.push(JSON.stringify({ id: 'i' + i, kind: 'incident', project: 'P1', text: 't' }));
+    lessons.push(JSON.stringify({ id: 's1', kind: 'security', project: 'P1', text: 't' }));
+    fs.writeFileSync(path.join(dir, 'lessons.jsonl'), lessons.join('\n') + '\n');
+    const items = fromLearned(d);
+    expect(items.some((x) => /verify-before-done/.test(x.candidate))).toBe(true);
+    expect(items.some((x) => /brevity/.test(x.candidate))).toBe(false);
+    expect(items.some((x) => /6 incident/.test(x.evidence))).toBe(true);
+    expect(items.some((x) => /security lines/.test(x.evidence))).toBe(true);
+    expect(evaluate(d, { workspace: path.join(d, '_workspace') }).sources_scanned.learned).toBe(true);
+    expect(fromLearned(tmp())).toEqual([]);
     fs.rmSync(d, { recursive: true, force: true });
   });
 });

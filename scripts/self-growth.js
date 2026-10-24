@@ -13,7 +13,9 @@
  *   2. DECISIONS log     `docs/DECISIONS.md`          — deferred items / "reversible: yes … later".
  *   3. Run reports       `_workspace/run-report*.md`  — escalations, unvalidated units, pending proposals.
  *   4. Proposals         `_workspace/_proposals.md`   — better-than-spec ideas awaiting a decision.
- *   5. Applied-site outcomes (operator-pointed --sites <dir>) — COMMERCIAL_VERDICT_*.md /
+ *   5. Session learning (G18, v2.6.0)  `.coolhan-private/learned/` — what the operator keeps repeating,
+ *      incidents and security lines distilled from every session by scripts/harvest-sessions.js.
+ *   6. Applied-site outcomes (operator-pointed --sites <dir>) — COMMERCIAL_VERDICT_*.md /
  *      hardening / a11y reports under other repos: BLOCKED/NOT_RUN/FAIL rows become harness gaps.
  *
  * Output: `_workspace/_self-growth-backlog.md` — ranked candidate improvements, each with
@@ -24,10 +26,10 @@
  * Usage: node scripts/self-growth.js [--workspace DIR] [--sites DIR] [--out FILE] [--json]
  * Exit: 0 always (an observer/planner; an empty evidence set yields an honest "nothing to mine yet").
  *
- * Honesty: this proposes from RECORDED evidence on disk — not from "all conversations across all
- * sessions/accounts" (not accessible/verifiable). Cross-session growth accrues because every run
- * appends to the ledger/decisions/reports this engine reads; point --sites at applied projects to
- * fold their verdict artifacts in.
+ * Honesty: this proposes from RECORDED evidence on disk. Since v2.6.0 that includes this account's own
+ * session records on this machine (harvested by G18, masked, kept in a git-ignored private folder) —
+ * still NOT other accounts/devices. Growth accrues because every session appends to what this reads;
+ * point --sites at applied projects to fold their verdict artifacts in.
  */
 
 const fs = require('fs');
@@ -116,6 +118,36 @@ function fromSites(sitesDir) {
   return out;
 }
 
+/** G18 session learning → repeated operator directives, per-project incident load, security-hardening lines. */
+function fromLearned(root) {
+  const dir = path.join(root, '.coolhan-private', 'learned');
+  const rows = (f) => readLines(path.join(dir, f)).filter(Boolean).map((l) => { try { return JSON.parse(l); } catch (_) { return null; } }).filter(Boolean);
+  const msgs = rows('human-messages.jsonl');
+  const lessons = rows('lessons.jsonl');
+  const out = [];
+  const theme = {};
+  for (const m of msgs) for (const t of m.themes || []) { const s = (theme[t] ||= { n: 0, imp: 0 }); s.n++; if (m.imperative) s.imp++; }
+  for (const [t, s] of Object.entries(theme)) {
+    if (s.imp < 15) continue;
+    out.push({ source: 'learned', priority: s.imp >= 60 ? 'high' : 'medium', evidence: `${s.n}× in operator messages (${s.imp}× imperative)`,
+      candidate: `Operator keeps instructing "${t}" — if it is still a reminder in agent prose, make it a mechanical gate/rule so it stops needing repetition.` });
+  }
+  const inc = {};
+  for (const l of lessons) if (l.kind === 'incident') inc[l.project] = (inc[l.project] || 0) + 1;
+  for (const [proj, n] of Object.entries(inc)) {
+    if (n < 5) continue;
+    out.push({ source: 'learned', priority: 'medium', evidence: `${n} incident lines in ${proj}`,
+      candidate: `Project "${proj}" documents ${n} incident/regression lines — do the harness gates cover those failure classes (deploy, partial-file deploys, silent API errors)?` });
+  }
+  const sec = lessons.filter((l) => l.kind === 'security');
+  if (sec.length) {
+    const projects = new Set(sec.map((l) => l.project)).size;
+    out.push({ source: 'learned', priority: 'medium', evidence: `${sec.length} security lines across ${projects} project(s)`,
+      candidate: 'Review the DIGEST security list against knowledge_base/00_SECURITY_STANDARDS.md and the security-reviewer checklist — promote recurring items to checks.' });
+  }
+  return out;
+}
+
 function rank(items) {
   const order = { high: 0, medium: 1, low: 2 };
   return items.slice().sort((a, b) => (order[a.priority] ?? 9) - (order[b.priority] ?? 9));
@@ -125,17 +157,18 @@ function evaluate(root, opts = {}) {
   const ws = opts.workspace || path.join(root, '_workspace');
   const items = rank([
     ...fromLedger(ws), ...fromDecisions(root), ...fromRunReports(ws),
-    ...fromProposals(ws), ...fromSites(opts.sites)
+    ...fromProposals(ws), ...fromLearned(root), ...fromSites(opts.sites)
   ]);
   return { generated_at: new Date().toISOString(), root, sources_scanned: {
     ledger: fs.existsSync(path.join(ws, '_ledger.jsonl')),
     decisions: fs.existsSync(path.join(root, 'docs', 'DECISIONS.md')),
     proposals: fs.existsSync(path.join(ws, '_proposals.md')),
+    learned: fs.existsSync(path.join(root, '.coolhan-private', 'learned', 'human-messages.jsonl')),
     sites: !!opts.sites }, items };
 }
 
 function render(r) {
-  const L = ['# CoolHan Self-Growth Backlog (G17)', '', `> Generated ${r.generated_at}. Advisory input to the non-stop loop — every item still goes`, '> through the full per-feature ritual (tests + adversarial track + G1–G16). Mines recorded', '> evidence on disk, not un-accessible cross-account transcripts (honest bound).', ''];
+  const L = ['# CoolHan Self-Growth Backlog (G17)', '', `> Generated ${r.generated_at}. Advisory input to the non-stop loop — every item still goes`, '> through the full per-feature ritual (tests + adversarial track + G1–G16). Mines recorded', '> evidence on disk, incl. the harvested session learning of this account (G18) — not other accounts/devices (honest bound).', ''];
   const scanned = Object.entries(r.sources_scanned).filter(([, v]) => v).map(([k]) => k).join(', ') || 'none';
   L.push(`Sources present: ${scanned}`); L.push('');
   if (!r.items.length) { L.push('No self-growth candidates found yet — evidence trail is clean or not yet accumulated.'); return L.join('\n') + '\n'; }
@@ -160,4 +193,4 @@ function main(argv) {
 
 if (require.main === module) process.exit(main(process.argv));
 
-module.exports = { fromLedger, fromDecisions, fromRunReports, fromProposals, fromSites, evaluate, render, main };
+module.exports = { fromLedger, fromDecisions, fromRunReports, fromProposals, fromLearned, fromSites, evaluate, render, main };

@@ -1,5 +1,21 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- **G18 session learning** — `scripts/harvest-sessions.js` distills every session of this account on this machine
+  (curated memories · human utterances only · incident/security lines of each project's docs) into a masked,
+  append-only store under git-ignored `.coolhan-private/learned/` plus a regenerated `DIGEST.md` (≤16KB) and a
+  ≈4KB `--brief` for session start. `self-growth.js` (G17) reads it as a new evidence source (`learned`:
+  repeated imperative directives, per-project incident load, security lines). Automatic via a SessionEnd hook
+  (incremental harvest) and a SessionStart hook (brief). First real run: 12 projects, 2,919 human messages, 774
+  lessons, 20 s, zero secret-pattern hits in the output. Private by construction (harness repo has a public
+  remote): `.gitignore` entry + test that git ignores it and `package.json files` never lists it.
+  Tests: harvest-sessions 11/11 (masking · human filter · incremental · partial line · rebuild · digest cap ·
+  brief · gitignore/npm guard) + self-growth `learned` case. Bounds: this account/PC only, keyword
+  classification, known-pattern masking, advisory not a gate. Plan: `docs/SESSION_LEARNING_PLAN.md`.
+
 ## [2.5.1] - 2026-10-18
 
 ### Added

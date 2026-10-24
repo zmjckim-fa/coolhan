@@ -822,6 +822,7 @@ READ ALL (not just "check exists"):
   • CLAUDE.md change-history       (prior development on this area — do not re-do or contradict it)
   • prior _workspace artifacts     (requirements/spec/validation/test outputs already produced)
   • relevant knowledge_base module(s) for the domain
+  • .coolhan-private/learned/DIGEST.md (if present — G18 session learning: operator command patterns, rules, incidents, security list distilled from ALL sessions; advisory, never a gate; refresh with `node scripts/harvest-sessions.js`)
     ↓
 WRITE _workspace/_context-digest.json  { run_id, sources: {goal, backlog, spec, history, prior_artifacts} }
     ↓

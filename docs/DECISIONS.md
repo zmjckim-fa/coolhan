@@ -94,3 +94,11 @@ is guaranteed to read; (3) prices change faster than this file and a stale numbe
 (4) C12/C10 — an unverified window must not widen a budget; (5) a guard with nothing to guard is dead code.
 **Reversible:** yes — tiers are one footer line per agent; the ID list and Haiku tier are table rows;
 a direct-API guard can be added the day a script calls the API.
+
+## 2026-10-24 — G18 세션 누적 학습 (operator order: 모든 세션의 작업을 하네스에 주입해 스스로 성장)
+- Decision: `scripts/harvest-sessions.js` 가 이 PC·이 계정의 세션 기록(메모리 · 사람 발화 · 프로젝트 문서의 사고/보안 줄)을 마스킹해 `.coolhan-private/learned/`(**git 무시**, 하네스 저장소는 공개 원격)에 누적하고 `DIGEST.md` 를 재생성한다. `self-growth.js`(G17)가 이 저장소를 새 증거원(`learned`)으로 읽는다. 자동 적용: 전역 SessionEnd 훅(증분 수집) + SessionStart 훅(`--brief` ≈4KB 주입) + 오케스트레이터 Phase 0 읽을 목록.
+- Rationale: 규칙·명령 패턴·사고·보안 조치가 세션마다 흩어져 같은 지시를 반복해야 했다(예: 완료 선언 검증, 작업 중 글쓰기 금지, 배포 절차). 실데이터 첫 실행: 12개 프로젝트, 사람 발화 2,919건, 교훈 774건, 20초.
+- Bounds (honest): 이 계정·이 PC 만 · 키워드 분류(의도 이해 아님) · 마스킹은 알려진 패턴만(고유명사 불가 → 비공개 폴더) · 조언이지 게이트가 아니다.
+- Reversible: yes — 훅 두 줄 삭제, `.coolhan-private/` 삭제.
+- Next: DIGEST 의 반복 지시가 에이전트 프롬프트 산문에만 있고 게이트가 없으면 G17 백로그 후보로 올라온다(그때 시험+적대 트랙으로 게이트화).
+

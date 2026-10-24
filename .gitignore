@@ -30,3 +30,6 @@ _workspace_prev_temp/
 .env*
 !.env.example
 HANDOFF.md
+
+# 세션 누적 학습(G18, 2026-10-24) — 운영자 명령·사고·보안 목록이 들어 있는 비공개 데이터. 공개 원격에 절대 올리지 않는다.
+.coolhan-private/
