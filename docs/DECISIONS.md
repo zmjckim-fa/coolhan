@@ -103,3 +103,11 @@ a direct-API guard can be added the day a script calls the API.
 - Next: 새 세션에서 브리핑이 실제로 주입되는지 확인.
 - Next: DIGEST 의 반복 지시가 에이전트 프롬프트 산문에만 있고 게이트가 없으면 G17 백로그 후보로 올라온다(그때 시험+적대 트랙으로 게이트화).
 
+
+## 2026-10-29 — G19 AI 아키텍처 원칙: KB 문서 + 정적 게이트로 설치 (user doctrine "right brain for the right task")
+- Decision: 사용자가 붙여넣은 18개 항 원칙을 `knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md`(구동 문서, 쿨한 집행 지점 부록 포함)로 설치하고, 정적으로 검사 가능한 부분집합만 `scripts/ai-arch-check.js`(G19, 8규칙)로 기계화했다. 판단이 필요한 부분(§13 "정말 AI가 필요한가", 모델 적합성, 임계 보정)은 Plan Reviewer §13/§17 + 사람에게 남긴다. 상태는 PASS / FAIL / NOT_APPLICABLE — 모델 호출이 없는 프로젝트를 통과로 꾸미지 않는다(C10).
+- Decision (2): Jev·Clef·Clef-flash는 세션 지식에 없는 개체라 C3 규칙대로 웹에서 확인했다(2026-10-29: Jev = TypeSafe AI 2026-09, Clef/Clef-flash = Cloudflare 2026-10-01 open-weight, `@cf/cloudflare/clef`). 게이트 로직은 "Decision Model"을 추상으로 다루고 모델명은 탐지 토큰일 뿐이다(C12 recorded ≠ current); 가격은 기록하지 않는다. 채택은 프로젝트 라벨 세트로 정확도·ECE·지연을 실측한 뒤에만(§12, C10).
+- Decision (3): 쿨한 자체에는 Decision Model을 지금 도입하지 않는다 — 하네스는 모델 호출이 없고(게이트 = 결정적 코드, 에이전트 = LLM) 이미 원칙에 부합. 후보(HX Vision Critic의 PASS/ITERATE 분류, 의도 라우팅)는 측정 후 G17 백로그로.
+- Rationale: 원칙을 산문으로만 두면 희석된다(v1.4.1 교훈) — 기계 검사 가능한 부분은 게이트, 나머지는 에이전트 체크리스트로 분리하는 것이 쿨한의 기존 패턴(G3 structural vs open_risks)과 같다.
+- Reversible: yes — KB 문서·스크립트·에이전트 5개 섹션 삭제; 규칙 8개는 각각 독립.
+- Next: 첫 AI 사용 프로젝트에서 G19를 실제 실행해 false positive(특히 provider 탐지 토큰)를 track으로 재측정.

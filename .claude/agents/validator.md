@@ -94,6 +94,10 @@ Runs CoolHan's 9-stage verification pipeline to confirm the code is 100% spec-co
 
 7️⃣ Business Logic Validation
    └─ Consistency between the spec's behavior definitions and the code
+   └─ **AI architecture gate (G19):** `node scripts/ai-arch-check.js <root>` — model calls only in the AI
+      service layer, structured output + schema validation, a §14 record per AI feature, threshold in
+      application code, AI service never executes the action (`knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md`).
+      FAIL (named file:line / record:line) → stage-7 FAIL; NOT_APPLICABLE (no model usage) is recorded as such.
 
 8️⃣ Test Coverage Validation
    └─ Number of test cases, coverage, execution success rate
@@ -293,6 +297,7 @@ npm run code:analyze
 ```
 
 #### 7️⃣ Business Logic Validation
+- G19: run `node scripts/ai-arch-check.js <root>`; cite its findings verbatim (rule + where) in the stage-7 result.
 ```javascript
 // What it does:
 // - Read the spec's business logic definitions (Sections 4-5)

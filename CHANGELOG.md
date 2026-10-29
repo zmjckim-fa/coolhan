@@ -1,9 +1,29 @@
 # Changelog
 
-## [Unreleased]
+## [2.6.0] - 2026-10-29
 
 ### Added
 
+- **G19 AI Agent architecture principles — "right brain for the right task" installed as KB + gate.**
+  User supplied a standing architecture doctrine (LLM = reasoning brain; Decision Model (Jev / Cloudflare
+  Clef / Clef-flash) = fast bounded decisions; Vision Decision Model for images; deterministic code for
+  deterministic rules; Application Code always owns the final action; structured output + schema
+  validation; thresholds are business rules in code; §13 five questions before any AI feature; §14
+  ten-field Architecture Decision record; §15/§16 `services/ai` abstraction, no vendor lock-in; §17
+  review checklist; §18 "explain first, then deviate"). Installed as
+  `knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md` (full doctrine + CoolHan enforcement map + C3-verified
+  facts on Jev/Clef dated 2026-10-29 under C12) and made the statically checkable subset mechanical in
+  `scripts/ai-arch-check.js` (8 rules: ai-call-outside-service-layer · ai-service-executes-action ·
+  no-schema-validation · no-architecture-decision-record · record-incomplete/invalid ·
+  deterministic-not-code · llm-for-bounded-decision (no Rationale) · threshold-not-in-code; PASS / FAIL /
+  NOT_APPLICABLE, `--service-dirs`, `--records`, `ai-arch-check:allow`). Wired: Spec Writer (§13 answers +
+  §14 record in `docs/AI_DECISIONS.md`), Plan Reviewer step 2.5 (script + §13/§17 judgment, P1/P0 open
+  risks), Developer (layering rules, pre-commit run), Validator stage 7 (FAIL → stage FAIL), Security
+  Reviewer step 3.7 (AI-result-to-action boundary), engine loop. Honest bound: the gate proves no
+  checkable violation, not that AI was truly needed or the model is best — that stays with Plan Reviewer +
+  human. Tests 12/12 (total 250/250, 28 suites); track35 adversarial (compliant → PASS, 5 violation fixtures → every rule FAIL named,
+  no-AI → NOT_APPLICABLE, 0 false +/-). Self-run on this repo: NOT_APPLICABLE (the harness makes no model
+  call; gates are deterministic code, agents are the LLM — already conformant).
 - **G18 session learning** — `scripts/harvest-sessions.js` distills every session of this account on this machine
   (curated memories · human utterances only · incident/security lines of each project's docs) into a masked,
   append-only store under git-ignored `.coolhan-private/learned/` plus a regenerated `DIGEST.md` (≤16KB) and a

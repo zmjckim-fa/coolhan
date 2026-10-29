@@ -1,0 +1,35 @@
+### A-compliant
+✔ ai-arch-check: PASS — 1 AI call site(s) in the service layer, 1 decision record(s), 2 file(s)
+exit=0
+### B-call-in-domain
+✗ ai-arch-check: FAIL — 2 finding(s) (3 AI call site(s), 1 record(s))
+  [ai-call-outside-service-layer] domain/refund.js:1 — anthropic call outside services/ai|src/services/ai|app/services/ai|lib/ai|src/ai|ai (§15/§16)
+  [ai-call-outside-service-layer] domain/refund.js:2 — llm-call call outside services/ai|src/services/ai|app/services/ai|lib/ai|src/ai|ai (§15/§16)
+  Driving doc: knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md
+exit=1
+### C-service-acts
+✗ ai-arch-check: FAIL — 1 finding(s) (1 AI call site(s), 1 record(s))
+  [ai-service-executes-action] services/ai/decision.service.js:1 — AI service imports a DB/payment/mail client — return a structured result, let Application Code act (§3)
+  Driving doc: knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md
+exit=1
+### D-no-record-no-schema
+✗ ai-arch-check: FAIL — 2 finding(s) (2 AI call site(s), 0 record(s))
+  [no-schema-validation] services/ai|src/services/ai|app/services/ai|lib/ai|src/ai|ai — no schema validation (zod/ajv/pydantic/json_schema/output_config…) in the AI service layer (§4)
+  [no-architecture-decision-record] docs/AI_DECISIONS.md — AI calls exist but no Architecture Decision record (10 fields, §14)
+  Driving doc: knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md
+exit=1
+### E-wrong-brain
+✗ ai-arch-check: FAIL — 2 finding(s) (1 AI call site(s), 2 record(s))
+  [llm-for-bounded-decision] docs/AI_DECISIONS.md:1 — bounded classification decided by an LLM with no Rationale: line — explain why a Decision Model is unsuitable first (§6/§18)
+  [deterministic-not-code] docs/AI_DECISIONS.md:12 — Deterministic decision selected "Jev (DecisionService provider)" — code decides deterministic rules (§9/§10)
+  Driving doc: knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md
+exit=1
+### F-threshold-placeholder
+✗ ai-arch-check: FAIL — 2 finding(s) (1 AI call site(s), 1 record(s))
+  [record-incomplete] docs/AI_DECISIONS.md:1 — record #1 "route support tickets to a team" missing/placeholder: fallback (§14)
+  [threshold-not-in-code] C:\sites\CoolHan builder\_harness_test\track35-ai-arch\fixtures\F-threshold-placeholder — a record needs confidence but no numeric threshold constant/comparison exists in code — thresholds are Application Code business rules, not AI output (§5)
+  Driving doc: knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md
+exit=1
+### G-no-ai
+○ ai-arch-check: NOT_APPLICABLE — no AI provider call and no AI decision record found — gate not applicable (1 file(s))
+exit=0

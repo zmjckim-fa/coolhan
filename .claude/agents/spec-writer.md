@@ -31,6 +31,17 @@ The spec for any feature with a UI **must include** the sections below (based on
 - Seed `_workspace/traceability-{id}.json` `requirements[]` (id, text, code targets) so QA can bind an
   acceptance test to each ID and the Validator can gate "done" on every requirement having a passing test.
 
+## AI Architecture Decision (G19 — `knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md`)
+For every requirement that uses a model (LLM, Decision Model, Vision), answer the §13 five questions in the
+spec (can code decide it? bounded choice → Decision Model? image → Vision model? reasoning → LLM? does the
+result change the system?) and write the §14 ten-field record — Feature / Input / Decision type / Selected
+model / Expected output / Confidence / Threshold / Fallback / Human escalation / Final action, plus
+`Rationale:` whenever a bounded Classification/Vision decision is given to an LLM — into
+`docs/AI_DECISIONS.md`. Deterministic rules (`payment_status === "paid"`) are specified as code, not as a
+model call. The spec names the structured output schema, where the threshold lives (application code) and
+which Application Code step performs the final action — the model only returns a result.
+`node scripts/ai-arch-check.js` reads these records at Task 2.5 and Validator stage 7.
+
 ## Core Principles
 
 1. **100% spec-based:** All development starts from the spec

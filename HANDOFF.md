@@ -16,12 +16,12 @@
 
 CoolHan — a specification-driven, multi-agent, **non-stop** development harness that runs inside
 Claude Code. It is the *product* (the harness itself), not an app built with it. Forward pipeline
-(intent→spec→code→validate→QA→deploy) + reverse/reuse (analyze→modularize→reapply) + 15 mechanical
-gates (G1–G17) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
+(intent→spec→code→validate→QA→deploy) + reverse/reuse (analyze→modularize→reapply) + 19 mechanical
+gates (G1–G19) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.5.1` (package.json = git tag `v2.5.1` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **226 tests, 26 suites, all pass** (~6 min; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.6.0` (package.json = git tag `v2.6.0` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **250 tests, 28 suites, all pass** (~6 min; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -43,7 +43,7 @@ but they are restated here so nothing is missed:
    compose, `SECRET_KEY`, other services, and any coolhanx.com **server file** the deploy script
    doesn't ship.
 
-## 3. The gates (G1–G17) — what already exists
+## 3. The gates (G1–G19) — what already exists
 
 Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-orchestrator/references/ai-native-sdlc-map.md`.
 
@@ -66,6 +66,8 @@ Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-or
 | G15 edge/bot hardening | `scripts/hardening-check.js` | 7 real-HTTP holes (AI-agent/fingerprint/404/UA/robots/automation/search-preserve) |
 | G16 companion skills | `scripts/companion-skills-check.js` | presence probe for the 12 vendored maker-side skills (web-clone added v2.5.1) (advice ≠ gate evidence) |
 | G17 self-growth | `scripts/self-growth.js` | mines own ledger/decisions/run-reports/tracks → ranked self-growth backlog feeding the loop |
+| G18 session learning | `scripts/harvest-sessions.js` | this account's sessions → masked private store + DIGEST/brief (SessionStart/End hooks); G17 reads it |
+| G19 AI architecture | `scripts/ai-arch-check.js` + `knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md` | right brain for the right task: code → Decision Model → LLM → human; calls only in services/ai, schema-validated output, §14 record, threshold in code, AI never acts |
 
 Also: prompt-modernization lint (`scripts/prompt-modernization-check.js`, 9 rule families incl. the Claude-5-era
 ones added in v2.5.0; agent footers carry a role-based `**Effort:**` tier — see
@@ -142,11 +144,11 @@ provide its own credentials in its own environment — they do NOT travel in thi
 ```bash
 git log --oneline -3
 node -e "console.log('pkg', require('./package.json').version)" && git describe --tags --abbrev=0
-npx jest --ci   # background it; expect 203 passed / 24 suites
+npx jest --ci   # background it; expect 250 passed / 28 suites
 node doctor.js
 ```
 
-If those four agree (version = v2.5.1, tests green, doctor healthy), the handoff is intact and you
+If those four agree (version = v2.6.0, tests green, doctor healthy), the handoff is intact and you
 may proceed from § Next actions.
 
 

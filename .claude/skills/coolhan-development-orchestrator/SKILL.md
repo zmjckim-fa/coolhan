@@ -434,6 +434,12 @@ while (todo remains in backlog):
        applied-site verdicts under --sites) into a ranked self-improvement backlog. Advisory input
        to the loop: each item still runs the full per-feature ritual (tests + adversarial track +
        G1–G16). Companion skills (references/companion-skills.md) improve the maker side.
+   + G19 AI ARCHITECTURE (v2.6.0, knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md):
+     node scripts/ai-arch-check.js <root> — per unit inside Validator stage 7 (and on the plan at
+       Task 2.5 by the Plan Reviewer): right brain for the right task — deterministic code →
+       Decision Model → LLM → human; model calls only in services/ai, structured output + schema
+       validation, §14 decision record, threshold in application code, Application Code owns the
+       final action. FAIL blocks the unit; NOT_APPLICABLE (no model usage) is honest, not a pass.
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)
 ```

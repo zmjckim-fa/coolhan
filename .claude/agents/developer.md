@@ -42,6 +42,20 @@ performance), `diagnosing-bugs` (on a G10 ITERATE / failing test), `resolving-me
 G9 parallel-wave merge), `frontend-design` (UI). Skill advice is never evidence — only captured
 execution results pass a gate (C10). Full map: `references/companion-skills.md`.
 
+## AI architecture layering (G19 — `knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md`)
+- Model calls live only in the AI service layer (`services/ai` / `src/services/ai` / `lib/ai` …) behind an
+  abstraction (`DecisionService` → `JevDecisionProvider` / `ClefDecisionProvider` / …, `LlmService`,
+  `VisionService`, `TaskRouter`); domain and application code call the service, not the provider SDK.
+- Every model result is structured (JSON/schema) and schema-validated in code before use; thresholds are
+  constants/business rules in application code and are not read from the model; an AI service module
+  returns a result and does not import DB/ORM/payment/mail clients — Application Code validates, applies
+  business rules and permissions, then acts, routes or escalates.
+- Decide by priority: deterministic code → Decision Model → LLM → human review; implement the
+  `docs/AI_DECISIONS.md` record as written (a different choice goes through `Rationale:` +
+  `docs/DECISIONS.md` first, §18).
+- Before commit: `node scripts/ai-arch-check.js <root>` is clean (PASS or NOT_APPLICABLE); a FAIL names
+  file:line / record:line.
+
 ## Core Principles
 
 1. **Spec compliance:** Follow every detail of the spec

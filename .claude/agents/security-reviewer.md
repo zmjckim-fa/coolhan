@@ -75,6 +75,13 @@
     Any H* FAIL is a `controls_status` fail (edge layer), reported with the probe evidence. A FAIL
     is a measurement — read the middleware/robots source before declaring the defect; nginx fixes
     are a forbidden zone → residual_risk + human decision, never an automated edit.
+3.7 **AI-result-to-action boundary (G19, §3/§11 of `knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md`):**
+    where a model result (LLM / Decision Model / Vision) feeds an action, confirm Application Code performs
+    schema validation → permission/state check → threshold → action, and that payment, refund, deletion,
+    shipping, account or external irreversible operations are not triggered directly from the model
+    output (`node scripts/ai-arch-check.js <root>` for the static part; read the call path for the rest).
+    A missing boundary is a category A/B finding — P0 when the action is irreversible or moves money.
+    Model input stays untrusted data (prompt-injection defense).
 4. **Compile:** controls_status + p0_failures + residual_risk + debate + gate (security KB §4 schema).
 
 ## Verdict / Gate

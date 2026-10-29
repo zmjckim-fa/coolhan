@@ -65,6 +65,14 @@ If absent, use the review steps below and note the skill was absent — never fa
    `structural_status` — mechanical, exit-code driven, cannot be waived.
 2. **Feasibility review:** does each unit's `verifies` command plausibly test what `covers` claims? Flag
    mismatches (e.g., a unit claims to cover auth but verifies only a lint pass).
+2.5. **AI architecture review (G19):** run `node scripts/ai-arch-check.js <root>` (mechanical: provider
+   calls outside the service layer, AI service importing action clients, missing schema validation,
+   missing/incomplete §14 records, Deterministic-by-model, LLM-for-bounded-decision without Rationale,
+   threshold absent from code → FAIL, named). Then judge what the script cannot: the §13 five questions
+   per AI-using unit and the §17 checklist of `knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md`. A bounded
+   decision handed to an LLM with no measured reason, or a model result that triggers payment / refund /
+   delete / ship without an Application Code validation step, is a P1 open risk — P0 when the action is
+   irreversible or moves money (§11).
 3. **Completeness review:** does the spec's definition_of_done map fully onto backlog units? List any
    DoD line with no corresponding unit.
 4. **Testability review:** flag units whose `verifies` is vague/non-automatable (e.g., "looks good",
