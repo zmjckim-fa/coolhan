@@ -13,10 +13,10 @@
 | 2 | 원칙 KB 문서 + 에이전트·SKILL·SDLC 지도 배선 (developer · validator · self-auditor · spec-writer · Phase 0 · UNIT PREAMBLE) | 완료 | prompt-modernization-check clean 48 files | - |
 | 3 | 이 저장소 자기 적용: `docs/CHECKS.md` · `docs/SINGLE_SOURCE_MAP.md` · 기준선 · 이 원장 | 완료 | single-source ratchet PASS {dup 3, sentences 95}; no-placeholder clean 36 files | - |
 | 4 | 적대 검증 track36 (적합 PASS / 위반 FAIL 명명 / 원장 거짓 FAIL / 고정 목록 3수치 / 래칫 증가·감소 / 자기 실행) | 완료 | 시나리오 7/7 일치, 0 false +/- (`_harness_test/track36-minimal-source/run-log.txt`); 전체 jest 279/279 (31 suites) | - |
-| 5 | 릴리스 v2.7.0 (CHANGELOG · CLAUDE.md 행 · HANDOFF · DECISIONS · 전체 jest · secret-scan · 커밋·태그·푸시 · CI 녹색) | 진행 중 | | 커밋·태그·푸시 · CI 녹색 확인 · 이 행 갱신 |
+| 5 | 릴리스 v2.7.0 (CHANGELOG · CLAUDE.md 행 · HANDOFF · DECISIONS · 전체 jest · secret-scan · 커밋·태그·푸시 · CI 녹색) | 완료 | 커밋 3285544, 태그 v2.7.0 = releases/latest; CI Release·Test·Harness-check·Python API success (npm publish은 NPM_TOKEN 미설정으로 예상 실패); checks-run 통과 9 · 실패 0 · 확인 안 함 0 | - |
 
 ## 현재 위치
-5번 — 문서 갱신 끝, 커밋·태그·푸시 → CI 확인 단계. (이 단위가 목표에 속하는가: 예 — 설치의 배포가 목표의 마지막 조건.)
+5번 완료 — 목표의 작업 5개 모두 완료. 다음 단위는 사용자가 목표 줄을 바꾸거나 D-2~D-4(손대는 날 이행)를 지정할 때 시작한다.
 
 ## 가정 목록
 
@@ -36,3 +36,4 @@
 | D-2 | C7 | scripts/agent-loop.js:106 외 7파일 | 같은 본문의 `get` 인자 도우미가 8개 스크립트에 복제됨 (S8 부재). `scripts/lib/cli.js` 신설; 기존 파일은 손대는 날 이행(§4-d), 기준선에 기록 | 열림 |
 | D-3 | C7 | scripts/context-check.js:58, gates.js:137, ledger.js:74 | 같은 본문의 `parseFlags` 3곳 복제 — D-2와 같은 처방 | 열림 |
 | D-4 | C7 | scripts/ai-arch-check.js:73, self-growth.js:38 | 같은 본문의 `readText` 2곳 복제 — `lib/fs.js` 신설 시 이행 | 열림 |
+| D-5 | C8 | scripts/progress-check.js:38 | 완료 증거 칸에 적은 checks-run 3수치 «확인 안 함 0»을 헤지(«확인 안 함»)로 오인 → 정직한 보고가 FAIL. «확인 안 함 0»만 제외하도록 1곳 수정, 시험 1건 추가(progress-check 11/11) | 닫힘 |

@@ -36,7 +36,8 @@ const STATUS = {
   '진행 중': 'in-progress', '진행중': 'in-progress', 'in-progress': 'in-progress', 'in progress': 'in-progress',
   '완료': 'done', 'done': 'done', 'complete': 'done', 'completed': 'done'
 };
-const HEDGE = /확인\s*안\s*됨|확인\s*안\s*함|추가\s*작업\s*필요|대부분|사실상|\bmostly\b|\bessentially\b|\bpartially\b|\bnot\s+verified\b/i;
+// "확인 안 함 0" is the third number of a checks-run report (nothing unverified) — not a hedge (D-5)
+const HEDGE = /확인\s*안\s*됨|확인\s*안\s*함(?!\s*0\b)|추가\s*작업\s*필요|대부분|사실상|\bmostly\b|\bessentially\b|\bpartially\b|\bnot\s+verified\b/i;
 const EVIDENCE = /\b\d+\s*\/\s*\d+\b|\b\d+\s*(?:passed|pass|tests?|통과|건)\b|\b[0-9a-f]{7,40}\b|exit\s*=?\s*0|\bPASS\b|\bclean\b|\b0\s*findings?\b/i;
 const DEFECT_STATE = { '열림': 'open', 'open': 'open', '닫힘': 'closed', 'closed': 'closed' };
 const NONE = /^(?:-|—|없음|none|n\/a)$/i;

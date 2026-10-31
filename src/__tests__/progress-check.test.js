@@ -43,6 +43,11 @@ describe('progress-check (G20-A — progress ledger gate, §9/§10)', () => {
     expect(rules(GOOD.replace('| 1 | 취소 API | 완료 |', '| 1 | 취소 API (대부분 완료) | 완료 |'))).toContain('done-with-hedge');
   });
 
+  test('a checks-run report "확인 안 함 0" inside the evidence cell is not a hedge (D-5), "확인 안 함 2" is', () => {
+    expect(rules(GOOD.replace('jest 12/12, 커밋 a1b2c3d', 'jest 12/12; checks-run 통과 9 · 실패 0 · 확인 안 함 0'))).not.toContain('done-with-hedge');
+    expect(rules(GOOD.replace('jest 12/12, 커밋 a1b2c3d', 'jest 12/12; checks-run 통과 7 · 실패 0 · 확인 안 함 2'))).toContain('done-with-hedge');
+  });
+
   test('완료 with 남은 항목 filled → done-with-remaining; 진행 중 with none → in-progress-without-remaining', () => {
     expect(rules(GOOD.replace('| jest 12/12, 커밋 a1b2c3d | - |', '| jest 12/12, 커밋 a1b2c3d | 문서 갱신 |'))).toContain('done-with-remaining');
     expect(rules(GOOD.replace('| 진행 중 | | 버튼 상태·오류 문구 |', '| 진행 중 | | |'))).toContain('in-progress-without-remaining');
