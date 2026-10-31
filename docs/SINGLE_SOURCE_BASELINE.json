@@ -1,0 +1,436 @@
+{
+  "written": "2026-10-31",
+  "root": "CoolHan builder",
+  "counts": {
+    "files": 79,
+    "max_file_lines": 405,
+    "duplicate_helpers": 3,
+    "inline_styles": 0,
+    "hardcoded_sentences": 95,
+    "target_literals": 0
+  },
+  "max_file": {
+    "path": "scripts/harvest-sessions.js",
+    "lines": 405
+  },
+  "duplicate_helpers": [
+    {
+      "name": "get",
+      "hash": "ceb2058a5f8d",
+      "chars": 89,
+      "files": [
+        "scripts/agent-loop.js:106",
+        "scripts/ai-arch-check.js:202",
+        "scripts/commercial-gate.js:144",
+        "scripts/design-quality-check.js:89",
+        "scripts/hardening-check.js:221",
+        "scripts/nonstop.js:112",
+        "scripts/run-report.js:144",
+        "scripts/self-growth.js:182"
+      ]
+    },
+    {
+      "name": "readText",
+      "hash": "5fb71aa23ae9",
+      "chars": 94,
+      "files": [
+        "scripts/ai-arch-check.js:73",
+        "scripts/self-growth.js:38"
+      ]
+    },
+    {
+      "name": "parseFlags",
+      "hash": "7271688f1cf0",
+      "chars": 254,
+      "files": [
+        "scripts/context-check.js:58",
+        "scripts/gates.js:137",
+        "scripts/ledger.js:74"
+      ]
+    }
+  ],
+  "inline_styles": [],
+  "hardcoded_sentences": [
+    {
+      "where": "doctor.js:68",
+      "text": "Re-run the installer or add the harness section."
+    },
+    {
+      "where": "doctor.js:81",
+      "text": "Reinstall to restore missing agents."
+    },
+    {
+      "where": "doctor.js:107",
+      "text": "Reinstall to restore the full domain-module set."
+    },
+    {
+      "where": "doctor.js:137",
+      "text": "CoolHan Doctor (설치 점검)"
+    },
+    {
+      "where": "doctor.js:138",
+      "text": "▲ 정상 (경고 있음)"
+    },
+    {
+      "where": "install.js:156",
+      "text": "All hooks have been copied"
+    },
+    {
+      "where": "install.js:167",
+      "text": "All agents have been copied"
+    },
+    {
+      "where": "install.js:189",
+      "text": "Knowledge base has been copied"
+    },
+    {
+      "where": "install.js:259",
+      "text": "Git is not installed"
+    },
+    {
+      "where": "scripts/check-update.js:75",
+      "text": "Failed to parse GitHub API response"
+    },
+    {
+      "where": "scripts/check-update.js:141",
+      "text": "Install info not found. Please reinstall CoolHan."
+    },
+    {
+      "where": "scripts/check-update.js:156",
+      "text": "Unable to read release information"
+    },
+    {
+      "where": "scripts/commercial-gate.js:54",
+      "text": "전송(도착+실패 안내)"
+    },
+    {
+      "where": "scripts/commercial-gate.js:108",
+      "text": "# 상용화 판정 (Commercial Verdict) — ${r.service} — ${dateStr}"
+    },
+    {
+      "where": "scripts/commercial-gate.js:110",
+      "text": "- 운영 도달성: ${r.probe.reachable ?"
+    },
+    {
+      "where": "scripts/commercial-gate.js:112",
+      "text": "## ① 상용화 가부: **${r.verdict === 'READY' ? '가 (READY)' : r.ver"
+    },
+    {
+      "where": "scripts/commercial-gate.js:122",
+      "text": "## ② 남은 차단 항목"
+    },
+    {
+      "where": "scripts/commercial-gate.js:126",
+      "text": "- [${LABELS[c]}] ${k.id} (exit ${k.exit}) — 측정값이 곧 결함은 아님: 소"
+    },
+    {
+      "where": "scripts/commercial-gate.js:132",
+      "text": "## ③ 측정되지 않은 칸 (정직 신고)"
+    },
+    {
+      "where": "scripts/commercial-gate.js:134",
+      "text": "- 없음 — 5개 기준 모두 지킴이가 존재하고 실행됨"
+    },
+    {
+      "where": "scripts/commercial-gate.js:135",
+      "text": "- ${LABELS[c]}: 지킴이 미선언 → NOT_RUN (통과 아님). 지킴이 스크립트를 만들어 con"
+    },
+    {
+      "where": "scripts/commercial-gate.js:137",
+      "text": "> READY의 의미: 선언된 모든 지킴이가 지금 운영에 대해 통과했고 5개 기준 전부에 지킴이가 있다는 것"
+    },
+    {
+      "where": "scripts/commercial-gate.js:138",
+      "text": "> 지킴이가 덮지 않는 결함까지 없다는 증명이 아니다 — 지킴이 커버리지 확장이 계속되는 일이다."
+    },
+    {
+      "where": "scripts/design-quality-check.js:46",
+      "text": "no accent color declared in tokens"
+    },
+    {
+      "where": "scripts/harvest-sessions.js:256",
+      "text": "# CoolHan 세션 누적 학습 DIGEST (G18)"
+    },
+    {
+      "where": "scripts/harvest-sessions.js:257",
+      "text": "> 자동 생성 ${meta.generatedAt} · 비공개(.coolhan-private, git 무시) "
+    },
+    {
+      "where": "scripts/harvest-sessions.js:258",
+      "text": "> 조언이지 게이트가 아니다. 한계: 이 계정·이 PC 기록만, 키워드 분류, 알려진 패턴만 마스킹."
+    },
+    {
+      "where": "scripts/harvest-sessions.js:266",
+      "text": "## 1. 운영자 명령 패턴 (많이 반복된 순)"
+    },
+    {
+      "where": "scripts/harvest-sessions.js:276",
+      "text": "## 2. 지켜야 할 규칙 (운영자가 정한 것 — feedback 메모리)"
+    },
+    {
+      "where": "scripts/harvest-sessions.js:280",
+      "text": "## 3. 반복 실패·사고와 해결 (문서 근거)"
+    },
+    {
+      "where": "scripts/harvest-sessions.js:284",
+      "text": "## 4. 보안 강화 목록 (조치한 것만, 중복 제거, 프로젝트별 고르게)"
+    },
+    {
+      "where": "scripts/harvest-sessions.js:304",
+      "text": "[CoolHan 세션 학습 브리핑 — 운영자 규칙·보안 목록 요약, 전체는"
+    },
+    {
+      "where": "scripts/harvest-sessions.js:305",
+      "text": "운영자가 반복해 명령한 것(명령형 횟수): ${top || '아직 없음'}"
+    },
+    {
+      "where": "scripts/harvest-sessions.js:307",
+      "text": "보안 강화 목록:"
+    },
+    {
+      "where": "scripts/harvest-sessions.js:323",
+      "text": "another harvest is running"
+    },
+    {
+      "where": "scripts/init_db.py:75",
+      "text": "Administrator with full access"
+    },
+    {
+      "where": "scripts/nonstop.js:90",
+      "text": "session command failed to start"
+    },
+    {
+      "where": "scripts/parallel-plan.js:41",
+      "text": "no units in plan"
+    },
+    {
+      "where": "scripts/regression-check.js:101",
+      "text": "regression-check: refusing to update baseline while regressi"
+    },
+    {
+      "where": "src/auth.py:56",
+      "text": "Invalid or expired token"
+    },
+    {
+      "where": "src/crud/admin.py:1",
+      "text": "Admin System CRUD Operations"
+    },
+    {
+      "where": "src/crud/inventory.py:1",
+      "text": "Inventory Management CRUD Operations"
+    },
+    {
+      "where": "src/crud/member.py:11",
+      "text": "CRUD operations for member system"
+    },
+    {
+      "where": "src/crud/member.py:15",
+      "text": "Create a new user"
+    },
+    {
+      "where": "src/crud/member.py:29",
+      "text": "Get user by ID"
+    },
+    {
+      "where": "src/crud/member.py:34",
+      "text": "Get user by username"
+    },
+    {
+      "where": "src/crud/member.py:39",
+      "text": "Get user by email"
+    },
+    {
+      "where": "src/crud/member.py:44",
+      "text": "List all users with pagination"
+    },
+    {
+      "where": "src/crud/member.py:71",
+      "text": "Create a new role"
+    },
+    {
+      "where": "src/crud/member.py:80",
+      "text": "Get role by ID"
+    },
+    {
+      "where": "src/crud/member.py:85",
+      "text": "Assign role to user"
+    },
+    {
+      "where": "src/crud/notification.py:1",
+      "text": "Notification System CRUD Operations"
+    },
+    {
+      "where": "src/crud/order.py:12",
+      "text": "CRUD operations for order management"
+    },
+    {
+      "where": "src/crud/order.py:16",
+      "text": "Create a new order"
+    },
+    {
+      "where": "src/crud/order.py:30",
+      "text": "Get order by ID"
+    },
+    {
+      "where": "src/crud/order.py:35",
+      "text": "Get order by order number"
+    },
+    {
+      "where": "src/crud/order.py:40",
+      "text": "Get all orders for a user"
+    },
+    {
+      "where": "src/crud/order.py:59",
+      "text": "Add item to order"
+    },
+    {
+      "where": "src/crud/order.py:80",
+      "text": "Get all items in an order"
+    },
+    {
+      "where": "src/crud/payment.py:12",
+      "text": "CRUD operations for payment system"
+    },
+    {
+      "where": "src/crud/payment.py:16",
+      "text": "Create a new payment"
+    },
+    {
+      "where": "src/crud/payment.py:36",
+      "text": "Get payment by ID"
+    },
+    {
+      "where": "src/crud/payment.py:41",
+      "text": "Get payment by transaction ID"
+    },
+    {
+      "where": "src/crud/payment.py:46",
+      "text": "Get payment by idempotency key"
+    },
+    {
+      "where": "src/crud/payment.py:51",
+      "text": "Get all payments for an order"
+    },
+    {
+      "where": "src/crud/payment.py:71",
+      "text": "Mark payment as completed"
+    },
+    {
+      "where": "src/crud/payment.py:76",
+      "text": "Mark payment as failed"
+    },
+    {
+      "where": "src/crud/shopping.py:1",
+      "text": "Shopping Mall CRUD Operations"
+    },
+    {
+      "where": "src/database.py:41",
+      "text": "Database session dependency for FastAPI"
+    },
+    {
+      "where": "src/features/feedback/routes.js:292",
+      "text": "You do not have permission to access this feedback"
+    },
+    {
+      "where": "src/models/admin.py:13",
+      "text": "Admin action type enumeration"
+    },
+    {
+      "where": "src/models/member.py:81",
+      "text": "Get user's full name"
+    },
+    {
+      "where": "src/routes/admin.py:1",
+      "text": "Admin System API Routes"
+    },
+    {
+      "where": "src/routes/auth.py:36",
+      "text": "Register a new user and return access token"
+    },
+    {
+      "where": "src/routes/auth.py:70",
+      "text": "Incorrect username or password"
+    },
+    {
+      "where": "src/routes/auth.py:86",
+      "text": "Get current authenticated user info"
+    },
+    {
+      "where": "src/routes/gdpr.py:21",
+      "text": "Data subject not found"
+    },
+    {
+      "where": "src/routes/inventory.py:1",
+      "text": "Inventory Management API Routes"
+    },
+    {
+      "where": "src/routes/inventory.py:24",
+      "text": "Inventory item not found"
+    },
+    {
+      "where": "src/routes/inventory.py:31",
+      "text": "Inventory not found for product"
+    },
+    {
+      "where": "src/routes/member.py:39",
+      "text": "Create a new user"
+    },
+    {
+      "where": "src/routes/member.py:57",
+      "text": "Get user by ID"
+    },
+    {
+      "where": "src/routes/notification.py:1",
+      "text": "Notification System API Routes"
+    },
+    {
+      "where": "src/routes/order.py:36",
+      "text": "Serialize order ORM object to dict."
+    },
+    {
+      "where": "src/routes/order.py:49",
+      "text": "Create a new order"
+    },
+    {
+      "where": "src/routes/order.py:80",
+      "text": "Get order by ID"
+    },
+    {
+      "where": "src/routes/order.py:89",
+      "text": "List orders for a user"
+    },
+    {
+      "where": "src/routes/payment.py:26",
+      "text": "Serialize payment ORM object to dict."
+    },
+    {
+      "where": "src/routes/payment.py:55",
+      "text": "Get payment by ID"
+    },
+    {
+      "where": "src/routes/payment.py:64",
+      "text": "List payments for an order"
+    },
+    {
+      "where": "src/routes/payment.py:71",
+      "text": "Mark payment as completed"
+    },
+    {
+      "where": "src/routes/payment.py:80",
+      "text": "Mark payment as failed"
+    },
+    {
+      "where": "src/routes/shipping.py:32",
+      "text": "Tracking number not found"
+    },
+    {
+      "where": "src/routes/shopping.py:1",
+      "text": "Shopping Mall API Routes"
+    },
+    {
+      "where": "src/__init__.py:7",
+      "text": "Production-ready domain module implementation with comprehen"
+    }
+  ],
+  "target_literals": []
+}

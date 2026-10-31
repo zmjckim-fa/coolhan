@@ -42,6 +42,14 @@ model call. The spec names the structured output schema, where the threshold liv
 which Application Code step performs the final action — the model only returns a result.
 `node scripts/ai-arch-check.js` reads these records at Task 2.5 and Validator stage 7.
 
+## Single-source map (G20 — `knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md` §1/§4-b)
+The spec names, for this project, where each of the eight single sources lives or will live (S1 design
+tokens · S2 text dictionary · S3 external-target registry · S4 derived-table function · S5 settings catalog ·
+S6 entitlements · S7 menu/screen map · S8 shared library) — existing path, "partial", or "n/a (why)". A
+target-specific exception is specified as a registry cell (§3), human-facing text as S2 keys, and the
+derived capability table (feature × target × entitlement) as a function over S3 — never as a hand-written
+table. The Developer's `docs/SINGLE_SOURCE_MAP.md` is seeded from this section.
+
 ## Core Principles
 
 1. **100% spec-based:** All development starts from the spec

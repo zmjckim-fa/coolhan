@@ -393,7 +393,9 @@ while (todo remains in backlog):
    ★ UNIT PREAMBLE (C6 per-unit re-injection — added 2026-08-07, anti-dilution):
       before starting the unit, re-read _goal.md + the spec (기획서) headline, and re-assert:
       "no stopping to ask outside the 4 question conditions; unresolved detail → safest default
-       + docs/DECISIONS.md entry + KEEP GOING; zero prose until the final ≤5-line report"
+       + docs/DECISIONS.md entry + KEEP GOING; zero prose until the final ≤5-line report";
+      when docs/PROGRESS.md exists (G20 §9): re-read its goal line and write one line in the ledger —
+      "이 단위가 목표에 속하는가" — a unit outside the goal is not done and is recorded as 범위 밖.
    ★ PARALLEL DISPATCH (G9, added v1.5.0 — optional, when >1 unit is ready):
       node scripts/parallel-plan.js <plan.json> --json → waves of dependency-satisfied,
       file-disjoint units. Units sharing a wave MAY be dispatched to parallel worker agents
@@ -440,6 +442,15 @@ while (todo remains in backlog):
        Decision Model → LLM → human; model calls only in services/ai, structured output + schema
        validation, §14 decision record, threshold in application code, Application Code owns the
        final action. FAIL blocks the unit; NOT_APPLICABLE (no model usage) is honest, not a pass.
+   + G20 MINIMAL SOURCE · SINGLE SOURCE · LEDGER (v2.7.0, knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md):
+     node scripts/single-source-check.js <root> --baseline docs/SINGLE_SOURCE_BASELINE.json — per unit
+       inside Validator stage 7 (ratchet: duplicate helpers / inline styles / hardcoded sentences /
+       external-target literals may shrink, never grow; strict mode for a new project; --measure for §4-a
+       numbers; --write-baseline once per migration unit). FAIL blocks the unit.
+     node scripts/progress-check.js docs/PROGRESS.md — the ledger is the truth, not the chat: goal line,
+       tasks with 대기/진행 중/완료 only, 완료 needs captured evidence, no hedges, 현재 위치, 가정, 결함 D-n.
+     node scripts/checks-run.js — the project's fixed list (docs/CHECKS.md) executed in full; report the three
+       numbers 통과 n · 실패 m(D-번호) · 확인 안 함 k(이유). A defect no check caught → D-n + a new check row.
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)
 ```
@@ -828,6 +839,9 @@ READ ALL (not just "check exists"):
   • CLAUDE.md change-history       (prior development on this area — do not re-do or contradict it)
   • prior _workspace artifacts     (requirements/spec/validation/test outputs already produced)
   • relevant knowledge_base module(s) for the domain
+  • docs/PROGRESS.md + docs/CHECKS.md (if present — G20 ledger + fixed verification list: the ledger's goal line,
+    current position, assumptions and open D-numbers override anything remembered from chat; a completed task
+    number is re-verified from file state, never rebuilt)
   • .coolhan-private/learned/DIGEST.md (if present — G18 session learning: operator command patterns, rules, incidents, security list distilled from ALL sessions; advisory, never a gate; refresh with `node scripts/harvest-sessions.js`)
     ↓
 WRITE _workspace/_context-digest.json  { run_id, sources: {goal, backlog, spec, history, prior_artifacts} }

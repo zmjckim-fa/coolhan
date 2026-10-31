@@ -298,6 +298,11 @@ npm run code:analyze
 
 #### 7️⃣ Business Logic Validation
 - G19: run `node scripts/ai-arch-check.js <root>`; cite its findings verbatim (rule + where) in the stage-7 result.
+- G20 (`knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md`): run
+  `node scripts/single-source-check.js <root> --baseline docs/SINGLE_SOURCE_BASELINE.json` (strict mode when no
+  baseline exists yet) and `node scripts/progress-check.js docs/PROGRESS.md`; any FAIL → stage FAIL with the
+  findings verbatim. The project's fixed list (`docs/CHECKS.md`) is executed with `node scripts/checks-run.js`
+  and its three numbers (통과·실패(D)·확인 안 함) are cited in §8 — 확인 안 함 is never a pass.
 ```javascript
 // What it does:
 // - Read the spec's business logic definitions (Sections 4-5)

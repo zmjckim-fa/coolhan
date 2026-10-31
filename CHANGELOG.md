@@ -1,5 +1,40 @@
 # Changelog
 
+## [2.7.0] - 2026-10-31
+
+### Added
+
+- **G20 Minimal source · single source of truth · progress ledger — user doctrine installed as KB + three gates.**
+  User supplied a standing development doctrine (§0 제0 규칙: the fewest lines that implement the feature, 중복 0;
+  §1 eight single sources S1 design tokens / S2 text dictionary / S3 external-target registry / S4 derived-table
+  function / S5 settings catalog / S6 entitlements / S7 menu map / S8 shared library; §2 five questions before any
+  new file; §3 exceptions as registry cells not `if`; §4 incremental migration order with a behaviour-invariance
+  gate first and new-code-first rules; §5 invariance proof; §9 `docs/PROGRESS.md` is the truth, not the chat;
+  §10 only two words — 완료 with evidence or 진행 중(남은 항목); §11 verification = the fixed list in
+  `docs/CHECKS.md` run in full, reported as 통과 n · 실패 m(D-번호) · 확인 안 함 k(이유); §12 fix only by
+  defect number; §13 ask vs decide). Installed as `knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md` (full
+  doctrine + CoolHan enforcement map + harness self-conformance) and made mechanical where checkable:
+  `scripts/progress-check.js` (goal line · 대기/진행 중/완료 only · 완료 needs test numbers or a commit hash ·
+  hedges forbidden · 현재 위치 must name a task · 가정 · 결함 D-n with 열림/닫힘), `scripts/checks-run.js`
+  (every CHECKS.md command as a real child process; failures bound to the ledger's open D-numbers or flagged
+  미등록; manual / tool-missing / timeout = 확인 안 함 with reason, exit 4, never a pass) and
+  `scripts/single-source-check.js` (`--measure` numbers per §4-a: files, max file, duplicate helpers by
+  name+normalized body, inline styles, hardcoded human-language strings outside dictionary dirs, external-target
+  literals via `--targets`; strict mode for new projects; `--write-baseline` / `--baseline` ratchet — counts
+  may shrink, never grow). Wired: Developer (제0 규칙, 5 questions, ratchet pre-commit, ledger-in-place,
+  fix-by-D-number), Validator stage 7 (both gates + the three checks-run numbers in §8), Self-Auditor check 7
+  (ledger truth, scope line per unit), Spec Writer (single-source map section), orchestrator Phase 0 (reads
+  PROGRESS/CHECKS) and UNIT PREAMBLE ("이 단위가 목표에 속하는가" line). Harness self-applied under §4-d: new S8
+  `scripts/lib/` (md-table · cli) and S2 `scripts/messages/` used by the three new scripts; legacy duplicates
+  (3 pairs) and inline strings (95) frozen in `docs/SINGLE_SOURCE_BASELINE.json`; this repo's ledger
+  `docs/PROGRESS.md`, fixed list `docs/CHECKS.md` (C1–C9) and map `docs/SINGLE_SOURCE_MAP.md`. The gates
+  found and closed their first defect on the harness itself (D-1: no-placeholder-check reported its own pattern
+  table — now skips its own file) and registered three open ones (D-2..D-4 legacy helper duplicates). Tests
+  29/29 (total 279/279, 31 suites); track36 adversarial: compliant → PASS, violations → every rule FAIL named
+  at file:line, fake ledger → 4 findings, fixed list → 통과 2 · 실패 1(D-1) · 확인 안 함 1, ratchet grow → FAIL /
+  shrink → PASS, 0 false +/-. Honest bound: textual heuristics — renamed duplicates, hand-made derived tables,
+  scattered settings and one-off files are not detected; a ledger PASS proves evidence text, not its truth.
+
 ## [2.6.0] - 2026-10-29
 
 ### Added

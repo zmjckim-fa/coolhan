@@ -56,6 +56,21 @@ execution results pass a gate (C10). Full map: `references/companion-skills.md`.
 - Before commit: `node scripts/ai-arch-check.js <root>` is clean (PASS or NOT_APPLICABLE); a FAIL names
   file:line / record:line.
 
+## Minimal source · single source of truth · ledger (G20 — `knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md`)
+- §0 제0 규칙: a new feature is (1) lines that call an existing module/function/setting/registry, then (2) the
+  smallest remaining lines. 중복 0 — the same logic is never written twice; one function does one job.
+- §2 before creating any file/folder, answer the 5 questions (same-role file exists → add there; new
+  value/text/shape → S1–S8 by name; external target as a literal → S3/S4 only; human sentence in code → S2
+  key; one-off → outside the repo). §3 per-target exceptions are registry cells, never `if`.
+- §4-d new code obeys the rules; legacy code migrates only in files you touch. Pre-commit:
+  `node scripts/single-source-check.js <root> --baseline docs/SINGLE_SOURCE_BASELINE.json` is clean
+  (ratchet: no count may grow); a FAIL names file:line.
+- §9/§10 update `docs/PROGRESS.md` in place when the unit ends (never batched later); 완료 only with
+  captured evidence (test numbers / commit hash) — otherwise 진행 중(남은 항목). §12 "fix" without a D-number
+  or symptom → ask what; with one → change only that defect's cause, register anything else as a new D-number.
+- §11 verification = `node scripts/checks-run.js` over the project's `docs/CHECKS.md`, reported as
+  통과 n · 실패 m(D-번호) · 확인 안 함 k(이유); a defect no check caught → register D-n AND add the check.
+
 ## Core Principles
 
 1. **Spec compliance:** Follow every detail of the spec

@@ -39,6 +39,11 @@ Non-stop (unattended) development can slowly diverge from the plan over many uni
    (verdict DRIFT, action continue: answer it yourself with the safest 기획서-consistent default,
    log it in docs/DECISIONS.md, and resume the loop). Also flag narration during work (any prose
    between tool calls) as an output-rule violation to correct in the next unit.
+7. **Ledger truth (G20, added 2026-10-31):** when `docs/PROGRESS.md` exists it is the source of truth over the
+   conversation. Run `node scripts/progress-check.js docs/PROGRESS.md`; a 완료 row without evidence, a hedge
+   ("대부분/사실상/확인 안 됨") on a 완료 row, a unit started without its one-line "이 단위가 목표에 속하는가"
+   note, or a ledger not updated at the end of the unit it describes → DRIFT (action correct). A unit outside
+   the goal line that was done anyway → VIOLATION (scope creep, §13).
 
 ## Verdict
 - **ALIGNED** → `action: continue` (loop proceeds).

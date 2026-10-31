@@ -1,0 +1,101 @@
+### A-compliant single-source (strict)
+$ node C:\sites\CoolHan builder\scripts\single-source-check.js . --targets ebay,amazon
+✔ single-source-check: PASS (strict) — {"files":6,"max_file_lines":6,"duplicate_helpers":0,"inline_styles":0,"hardcoded_sentences":0,"target_literals":0}
+exit=0
+
+### A-compliant progress-check
+$ node C:\sites\CoolHan builder\scripts\progress-check.js docs/PROGRESS.md
+✔ progress-check: PASS — docs/PROGRESS.md: 1/2 완료 · 진행 중 2 · 대기 0 · 열린 결함 D-1
+  현재 위치: 2번 — 내보내기 구현 중
+exit=0
+
+### A-compliant checks-run
+$ node C:\sites\CoolHan builder\scripts\checks-run.js docs/CHECKS.md
+checks-run: docs/CHECKS.md
+  ✔ C1 단위 시험 — exit 0 0.1s
+  ✔ C2 단일 원천 (strict) — exit 0 0.2s
+  ✔ C3 원장 — exit 0 0.1s
+  ○ C4 화면 검수 — 확인 안 함(manual)
+통과 3 · 실패 0 · 확인 안 함 1(C4:manual)
+exit=4
+
+### B-violations single-source (strict, --targets ebay)
+$ node C:\sites\CoolHan builder\scripts\single-source-check.js . --targets ebay
+✗ single-source-check: FAIL (strict) — {"files":4,"max_file_lines":6,"duplicate_helpers":1,"inline_styles":1,"hardcoded_sentences":0,"target_literals":1}
+  [duplicate-helper] app/export.js:1 = lib/text.js:1 — 같은 함수 "slugify" 본문이 2곳 — 한 곳(S8/모듈)에 두고 부른다 (§0 중복 0)
+  [inline-style] views/export.html:1 — 화면은 클래스 이름만 쓴다 — 토큰·공통 스타일(S1)로 (§1)
+  [target-literal] app/export.js:5 — 외부 대상 "ebay"이 코드 리터럴로 — 레지스트리(S3)·파생 표(S4) 경유만 (§2-③)
+  Driving doc: knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md
+exit=1
+
+### C-ledger-fake progress-check
+$ node C:\sites\CoolHan builder\scripts\progress-check.js docs/PROGRESS.md
+✗ progress-check: FAIL — docs/PROGRESS.md: 2/2 완료 · 진행 중 - · 대기 0 · 열린 결함 -
+  [done-without-evidence] task 1 (line 8) — 완료 증거가 없다(시험 수치 n/m·"n passed"·커밋 해시 중 하나 필요) — cell: "구현함"
+  [done-with-hedge] task 2 (line 9) — 완료에 "확인 안 됨/추가 작업 필요/대부분/사실상"을 붙일 수 없다 — 그것은 진행 중 (§10)
+  [position-not-in-table] ledger — 현재 위치가 작업 목록의 번호를 가리키지 않는다
+  [no-defects-section] ledger — "결함 목록" 절이 없다 (§9/§11 — D-번호·발견한 검사·파일:줄·상태)
+  현재 위치: 5번
+exit=1
+
+### D-checks checks-run (C2 fails → bound to open D-1; C4 manual → 확인 안 함)
+$ node C:\sites\CoolHan builder\scripts\checks-run.js docs/CHECKS.md
+checks-run: docs/CHECKS.md
+  ✔ C1 단위 시험 — exit 0 0.1s
+  ✗ C2 단일 원천 (strict) — exit 1 0.1s
+  ✔ C3 원장 — exit 0 0.2s
+  ○ C4 화면 검수 — 확인 안 함(manual)
+  --- C2 tail ---
+    ✗ single-source-check: FAIL (strict) — {"files":2,"max_file_lines":6,"duplicate_helpers":0,"inline_styles":0,"hardcoded_sentences":1,"target_literals":0}
+      [hardcoded-sentence] app/export.js:2 — 사람 언어 문장이 코드에 있다: "Your listing was exported and will appear soon" — 문구 사전(S2) 키로 (§2-④)
+      Driving doc: knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md
+통과 2 · 실패 1(D-1) · 확인 안 함 1(C4:manual)
+exit=1
+
+### D-checks checks-run --only C1
+$ node C:\sites\CoolHan builder\scripts\checks-run.js docs/CHECKS.md --only C1
+checks-run: docs/CHECKS.md
+  ✔ C1 단위 시험 — exit 0 0.1s
+통과 1 · 실패 0 · 확인 안 함 0
+exit=0
+
+### E-ratchet measure
+$ node C:\sites\CoolHan builder\scripts\single-source-check.js . --measure
+single-source-check --measure (E-ratchet): {"files":3,"max_file_lines":6,"duplicate_helpers":1,"inline_styles":0,"hardcoded_sentences":1,"target_literals":0}
+  max file: legacy/old.js (6 lines)
+  dup slugify: legacy/old.js:1 = lib/text.js:1
+exit=0
+
+### E-ratchet write-baseline
+$ node C:\sites\CoolHan builder\scripts\single-source-check.js . --write-baseline --baseline docs/BASE.json
+single-source-check: baseline written → docs\BASE.json {"files":3,"max_file_lines":6,"duplicate_helpers":1,"inline_styles":0,"hardcoded_sentences":1,"target_literals":0}
+exit=0
+
+### E-ratchet unchanged → PASS
+$ node C:\sites\CoolHan builder\scripts\single-source-check.js . --baseline docs/BASE.json
+✔ single-source-check: PASS (ratchet) — {"files":3,"max_file_lines":6,"duplicate_helpers":1,"inline_styles":0,"hardcoded_sentences":1,"target_literals":0}
+exit=0
+
+### E-ratchet after new duplicate + new sentence → FAIL
+$ node C:\sites\CoolHan builder\scripts\single-source-check.js . --baseline docs/BASE.json
+✗ single-source-check: FAIL (ratchet) — {"files":5,"max_file_lines":6,"duplicate_helpers":2,"inline_styles":0,"hardcoded_sentences":2,"target_literals":0}
+  [new-duplicate-helper] app/b.js:1 = legacy/old2.js:1 — 기준선에 없던 중복 "slugKey" (§0)
+  [hardcoded-sentence-grew] app/b.js:5 — 하드코딩 문구 1 → 2 (§2-④ S2)
+  Driving doc: knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md
+exit=1
+
+### E-ratchet after removing the legacy duplicate (shrink) → PASS
+$ node C:\sites\CoolHan builder\scripts\single-source-check.js . --baseline docs/BASE.json
+✔ single-source-check: PASS (ratchet) — {"files":2,"max_file_lines":6,"duplicate_helpers":0,"inline_styles":0,"hardcoded_sentences":1,"target_literals":0}
+exit=0
+
+### Self-run: harness ratchet
+$ node C:\sites\CoolHan builder\scripts\single-source-check.js . --baseline docs/SINGLE_SOURCE_BASELINE.json
+✔ single-source-check: PASS (ratchet) — {"files":79,"max_file_lines":405,"duplicate_helpers":3,"inline_styles":0,"hardcoded_sentences":95,"target_literals":0}
+exit=0
+
+### Self-run: harness ledger
+$ node C:\sites\CoolHan builder\scripts\progress-check.js docs/PROGRESS.md
+✔ progress-check: PASS — docs/PROGRESS.md: 3/5 완료 · 진행 중 4,5 · 대기 0 · 열린 결함 D-2,D-3,D-4
+  현재 위치: 4번 — track36 실행 → 5번 릴리스. (이 단위가 목표에 속하는가: 예 — 원칙의 기계 집행 증명과 설치 완료 자체.)
+exit=0

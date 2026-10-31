@@ -1,0 +1,35 @@
+{
+  "written": "2026-10-31",
+  "root": "E-ratchet",
+  "counts": {
+    "files": 3,
+    "max_file_lines": 6,
+    "duplicate_helpers": 1,
+    "inline_styles": 0,
+    "hardcoded_sentences": 1,
+    "target_literals": 0
+  },
+  "max_file": {
+    "path": "legacy/old.js",
+    "lines": 6
+  },
+  "duplicate_helpers": [
+    {
+      "name": "slugify",
+      "hash": "472c62aff5dd",
+      "chars": 147,
+      "files": [
+        "legacy/old.js:1",
+        "lib/text.js:1"
+      ]
+    }
+  ],
+  "inline_styles": [],
+  "hardcoded_sentences": [
+    {
+      "where": "app/a.js:1",
+      "text": "This legacy message is already in the baseline"
+    }
+  ],
+  "target_literals": []
+}

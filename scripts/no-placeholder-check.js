@@ -68,7 +68,8 @@ function main(argv) {
 
   const files = [];
   targets.forEach(t => walk(t, files));
-  const findings = files.flatMap(scanFile);
+  const self = path.resolve(__filename); // the detector's own pattern table is not a placeholder (D-1, 2026-10-31)
+  const findings = files.filter(f => path.resolve(f) !== self).flatMap(scanFile);
 
   if (json) {
     console.log(JSON.stringify({ scanned: files.length, findings }, null, 2));

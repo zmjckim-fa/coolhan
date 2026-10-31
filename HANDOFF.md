@@ -17,11 +17,11 @@
 CoolHan — a specification-driven, multi-agent, **non-stop** development harness that runs inside
 Claude Code. It is the *product* (the harness itself), not an app built with it. Forward pipeline
 (intent→spec→code→validate→QA→deploy) + reverse/reuse (analyze→modularize→reapply) + 19 mechanical
-gates (G1–G19) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
+gates (G1–G20) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.6.0` (package.json = git tag `v2.6.0` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **250 tests, 28 suites, all pass** (~6 min; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.7.0` (package.json = git tag `v2.7.0` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **279 tests, 31 suites, all pass** (~6 min; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -43,7 +43,7 @@ but they are restated here so nothing is missed:
    compose, `SECRET_KEY`, other services, and any coolhanx.com **server file** the deploy script
    doesn't ship.
 
-## 3. The gates (G1–G19) — what already exists
+## 3. The gates (G1–G20) — what already exists
 
 Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-orchestrator/references/ai-native-sdlc-map.md`.
 
@@ -68,6 +68,7 @@ Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-or
 | G17 self-growth | `scripts/self-growth.js` | mines own ledger/decisions/run-reports/tracks → ranked self-growth backlog feeding the loop |
 | G18 session learning | `scripts/harvest-sessions.js` | this account's sessions → masked private store + DIGEST/brief (SessionStart/End hooks); G17 reads it |
 | G19 AI architecture | `scripts/ai-arch-check.js` + `knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md` | right brain for the right task: code → Decision Model → LLM → human; calls only in services/ai, schema-validated output, §14 record, threshold in code, AI never acts |
+| G20 minimal source · single source · ledger | `scripts/progress-check.js` + `scripts/checks-run.js` + `scripts/single-source-check.js` + `knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md` | 제0 규칙 중복 0 · S1–S8 one place each · `docs/PROGRESS.md` is the truth (완료 only with evidence) · `docs/CHECKS.md` fixed list run in full (통과·실패(D)·확인 안 함) · ratchet baseline `docs/SINGLE_SOURCE_BASELINE.json` |
 
 Also: prompt-modernization lint (`scripts/prompt-modernization-check.js`, 9 rule families incl. the Claude-5-era
 ones added in v2.5.0; agent footers carry a role-based `**Effort:**` tier — see
@@ -126,6 +127,9 @@ provide its own credentials in its own environment — they do NOT travel in thi
 
 ## 7. Next actions (resume here)
 
+0. **Read `docs/PROGRESS.md` first (G20 §9)** — its goal line, current position, assumptions and open D-numbers
+   are the truth over this file's prose; this repo's own work now moves through that ledger and `docs/CHECKS.md`.
+
 1. **(Optional) npm publish** — set `NPM_TOKEN` (§6), then the next tag push publishes; or run
    the publish workflow manually. Until then the publish.yml failure is expected and non-blocking.
 2. **(Operator-gated) coolhanx.com X-Powered-By** — pick web-server vs server next.config.js, apply
@@ -144,11 +148,13 @@ provide its own credentials in its own environment — they do NOT travel in thi
 ```bash
 git log --oneline -3
 node -e "console.log('pkg', require('./package.json').version)" && git describe --tags --abbrev=0
-npx jest --ci   # background it; expect 250 passed / 28 suites
+npx jest --ci   # background it; expect 279 passed / 31 suites
+node scripts/checks-run.js   # the fixed list (docs/CHECKS.md) — the G20 way to "verify"; C1 is the slow one
+node scripts/progress-check.js docs/PROGRESS.md   # this repo's ledger: current position + open D-numbers
 node doctor.js
 ```
 
-If those four agree (version = v2.6.0, tests green, doctor healthy), the handoff is intact and you
+If those agree (version = v2.7.0, tests green, doctor healthy, ledger PASS), the handoff is intact and you
 may proceed from § Next actions.
 
 

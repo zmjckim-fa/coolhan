@@ -111,3 +111,16 @@ a direct-API guard can be added the day a script calls the API.
 - Rationale: 원칙을 산문으로만 두면 희석된다(v1.4.1 교훈) — 기계 검사 가능한 부분은 게이트, 나머지는 에이전트 체크리스트로 분리하는 것이 쿨한의 기존 패턴(G3 structural vs open_risks)과 같다.
 - Reversible: yes — KB 문서·스크립트·에이전트 5개 섹션 삭제; 규칙 8개는 각각 독립.
 - Next: 첫 AI 사용 프로젝트에서 G19를 실제 실행해 false positive(특히 provider 탐지 토큰)를 track으로 재측정.
+
+## 2026-10-29 — 00Module_site 모듈 명세 연속개발 run 20261029-00module-specs
+- **Decision:** B03~B26(22유닛)을 B01·B02·B05·B15와 같은 절차(사이트 코드 검증 에이전트 ≥3 → 주장 5건 원문 대조 → `_specs/Bnn-*.md` + `modules.json` v2 칸 → `check-specs` 오류 0 → 커밋)로 진행. 묶음당 에이전트 2~3개(사이트 묶어서)로 줄여 토큰 절약, 질문지는 묶음별 1개.
+- **Default chosen without asking:** 00Module_site의 내 작업이 아닌 변경 5파일(.gitignore 등)은 건드리지 않음; 외부 호출·테스트 실행 금지(파일만 집계); 비밀값은 줄 번호만.
+- **Reversible:** yes — 각 묶음은 독립 커밋이라 되돌릴 수 있음.
+
+## 2026-10-31 — G20 최소 소스·단일 원천·진행 원장 원칙: KB 문서 + 게이트 3종으로 설치 (user doctrine, v2.7.0)
+- Decision: 사용자가 붙여넣은 §0–§13 원칙을 `knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md`(구동 문서 + 집행 지점 부록)로 설치하고, 기계 검사 가능한 부분만 세 게이트로 기계화했다 — `progress-check.js`(§9/§10 원장 형식·완료 정의), `checks-run.js`(§11 고정 목록 전부 실행, 통과·실패(D)·확인 안 함 3수치, 확인 안 함≠통과), `single-source-check.js`(§0/§1/§2 중복 도우미·인라인 스타일·하드코딩 문구·외부 대상 리터럴 측정 + 기준선 래칫). 판단 영역(검문 5문 ①⑤, 손 표 S4, 설정 산재 S5)은 탐지 불가로 명시하고 Plan Reviewer·Validator·사람에게 남긴다(C10).
+- Decision (2): 하네스 자신에게 같은 규칙을 새 코드부터 적용했다(§4-d) — S8 `scripts/lib/`(md-table·cli), S2 `scripts/messages/`를 신설해 새 스크립트 3종이 쓰고, 기존 스크립트의 중복 3쌍·인라인 문구 95건은 `docs/SINGLE_SOURCE_BASELINE.json`에 고정(증가 금지). 이 저장소의 원장은 `docs/PROGRESS.md`, 고정 목록은 `docs/CHECKS.md`(C1–C9). 엔진 런의 `_workspace/_backlog.md`(G8)와는 합치지 않았다(훅·엔진이 읽는 파일 — 동작 변경은 범위 밖).
+- Default chosen without asking: 붙여넣은 템플릿의 «작업:» 줄이 비어 있어 G19 때와 같은 해석(원칙 설치)으로 진행; 동작 불변 스냅샷 도구(§4-c)는 서버가 없는 이 저장소에선 C1 jest가 대신하므로 만들지 않음; 가정 전부는 `docs/PROGRESS.md` 가정 목록 A-1~A-5.
+- Rationale: 원칙을 산문으로만 두면 희석된다(v1.4.1 교훈) — G19와 같은 «KB + 기계 게이트 + 에이전트 배선» 패턴. 자기 실행이 첫 결함(D-1 no-placeholder 자기 탐지, 원장 증거 형식)을 바로 잡아냈다 — 게이트가 자기 저장소에서 먼저 유효함을 증명.
+- Reversible: yes — KB 문서·스크립트 3종·lib/messages·docs 4장·에이전트 4절·SKILL 3곳 삭제; 각 게이트는 독립.
+- Next: 쿨한이 만드는 첫 프로젝트에서 `--targets`(S3 대상명)와 hardcoded-sentence 휴리스틱의 false positive를 track으로 재측정; 기존 스크립트의 `get`/`parseFlags`/`readText`는 손대는 날 `lib/cli.js`로 이행(D-2~D-4).
