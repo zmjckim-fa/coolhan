@@ -199,6 +199,75 @@ may proceed from § Next actions.
 - npm 배포를 실제로 할지 여부 및 `NPM_TOKEN` 발급 주체.
 
 ---
+## 인수인계 보강 (2026-11-10) — Globe Cam PRD v2 세션 컨텍스트
+
+### Globe Cam 프로젝트 개요
+3D 글로브 + 공개 CCTV/웹캠 플랫폼. 환경음·여행·발견 시청 목적의 ambient 서비스.
+
+**아티팩트 URL:** `https://claude.ai/artifact/27RwSqy3bvuSvYzpPaq8tg` (Version 4, `1793911707-e448`)
+**스크래치패드 파일:** `C:\Users\CleanLAB\AppData\Local\Temp\claude\4e9a0f613a734e62\1aeb3fc2-f963-4e42-a49c-dbcd16386e2a\scratchpad\channel-plan-v2.html`
+
+### PRD v2 탭 구성 (11개)
+| 탭 | 내용 |
+|---|---|
+| p0 개요 | 마케팅 랜딩 — 히어로·3단 카드·CTA |
+| p1 플레이어 UX | 9-state 상태머신 (idle/loading/playing/prebuffering/transitioning/paused/skipped/cam_offline/queue_empty) |
+| p2 채널 시스템 | 큐 스코어링: 태그 Jaccard 0.40 + 연속성 0.25 + 무드 0.20 + 신선도 0.10 + 인기 0.05 |
+| p3 포인트 경제 | append-only point_ledger, 5계층 어뷰징 차단, 100P=$0.10 할인(최대 50%) |
+| p4 크리에이터 | World Pass 전용 채널 생성, 트렌딩: Wilson Score×0.6 + watch_min×0.3 + subscribers×0.1 |
+| p5 데이터 모델 | PostgreSQL 스키마: users/subscriptions/channels/channel_queue/webcam_sources/point_ledger 등 |
+| p6 API 명세 | REST + SSE 엔드포인트, JWT 프록시 토큰(30s TTL) 아키텍처 |
+| p7 상업 전략 | Free/Explorer $2.99/mo/World Pass $5.99/mo, Stripe Billing |
+| p8 글로벌·법무 | 다국어 i18n, GDPR/CCPA, 저작권 |
+| p9 기술 아키텍처 | Next.js 15 + Vercel Edge + Supabase + Vercel Blob, Aurora UI 디자인 토큰 |
+| p10 광고 시스템 | Google AdSense + GAM 직접 배너, 유료 완전 광고 없음 |
+
+### 핵심 하드 제약 (다음 세션에서 반드시 유지)
+1. **한국 특화 (TOPIS·날씨누리·ITS) 하지 않는다** — 글로벌 소스만
+2. **여러 나라 국가 언어로 만든다** — 완전 다국어/글로벌
+3. **웹캠 소스 URL이 방문자에게 절대 노출되면 안 된다** — 서버사이드 JWT 토큰(30s TTL)으로만 제공
+
+### URL 프록시 보안 아키텍처 (핵심)
+```
+// GET /api/session → ad_eligible: !session || session.user.tier === 'free'
+// GET /api/stream-token?channel_id=xxx
+//   - 서버가 source_url 조회 → JWT {source_url, exp: now+30} 서명 → 토큰만 반환
+//   - 클라이언트는 /api/proxy?token=xxx 로 스트리밍 (source_url 미노출)
+```
+
+### 광고 시스템 아키텍처 (p10)
+```typescript
+// 서버 → 클라이언트 ad_eligible 필드
+// app/layout.tsx: 유료 사용자면 AdSense 스크립트 로드 자체 안 함
+{user.ad_eligible && <Script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" strategy="afterInteractive" />}
+
+// 플레이어 광고 형식:
+// - Pre-roll: 세션 최대 2회, 30분 간격, 5초 스킵 가능 (IMA SDK)
+// - Mid-roll: 채널 전환 5회마다 3초 오버레이
+// - L-Banner: 하단 20% 오버레이, opacity 0.85, 15초
+```
+
+### DB 스키마 추가분 (p10)
+```sql
+CREATE TABLE ad_impressions (id BIGSERIAL, slot_id TEXT, page_type TEXT, country_code CHAR(2), channel_id UUID, date DATE, hour SMALLINT, impressions INT, clicks INT);
+CREATE TABLE consent_records (user_id UUID, region TEXT, personalized BOOLEAN DEFAULT false, consented_at TIMESTAMPTZ, PRIMARY KEY(user_id, region));
+```
+
+### 웹캠 리서치 파일
+- `docs/world-webcam-research/sources-db.json` — 30개 웹캠 소스, 9개 카테고리 (빈 디렉토리; 파일은 이전 세션 스크래치패드에 생성됐으나 프로젝트에 저장 안 됨)
+- `docs/world-webcam-research/webcam-taxonomy.json` — 10차원 D1–D10, 109개 분류 태그 (동일)
+
+### 다음 세션 작업 후보
+1. **Globe Cam 실제 구현 시작** — `C:\sites\cctv` 디렉토리에서 작업 (`git init` 또는 Next.js 프로젝트 생성)
+   - 우선순위: 플레이어 컴포넌트 + JWT 프록시 API
+2. **웹캠 소스 JSON 재생성** — 이전 세션에서 만든 sources-db.json(30개) + taxonomy.json을 새 세션에서 재생성해 `docs/world-webcam-research/`에 저장
+3. PRD artifact는 위 URL에서 계속 열람 가능
+
+### 커밋 정보
+- 커밋 `0073f6b`: docs 디렉토리 + backlog 업데이트 (2026-11-10, Sonnet 4.6)
+- 이 세션 커밋 트레일러: `Claude Sonnet 4.6 <noreply@anthropic.com>`
+
+---
 ## 인수인계 보강 (2026-10-11, v2.5.0)
 
 - 위 본문의 v2.2.1 수치는 이 보강으로 대체됨: 현재 `2.5.0`, jest **226 tests / 26 suites**, 게이트 G1–G17.
