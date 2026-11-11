@@ -24,10 +24,10 @@
 | 13 | 기획 단계 집행: 기획서의 실패 방지 대응표 검사 (`plan-doc-check --lessons`) + `[결정필요]` 기본값 | 완료 | jest plan-doc-check 17/17 + 대응표 시험 4/4 | - |
 | 14 | 현장 모듈 카탈로그(레지스트리의 modules, 같은 문서에 파생) + 에이전트 17개·SKILL·SDLC 지도 배선 | 완료 | prompt-modernization-check clean 48 files; 배선 17/17 | - |
 | 15 | 적대 검증 track38 | 완료 | 시나리오 19/19 일치, 0 false +/- (`_harness_test/track38-field-lessons/run-log.txt`); 전체 jest 317/317 (33 suites) | - |
-| 16 | 릴리스 v2.9.0 (문서 · 전체 jest · checks-run · 커밋·태그·푸시 · CI) | 진행 중 | | 커밋·태그·푸시 · CI 녹색 확인 · 이 행 갱신 |
+| 16 | 릴리스 v2.9.0 (문서 · 전체 jest · checks-run · 커밋·태그·푸시 · CI) | 완료 | 커밋 5c7ea8f, 태그 v2.9.0 = releases/latest; CI Release·Test·Harness-check·Python API success (npm publish은 NPM_TOKEN 미설정으로 예상 실패); jest 317/317 (33 suites); checks-run 통과 12 · 실패 0 · 확인 안 함 0 | - |
 
 ## 현재 위치
-16번 — 구현·검증 끝, 커밋·태그·푸시 → CI 확인 단계. (이 단위가 목표에 속하는가: 예. 흡수한 교훈의 배포가 목표의 마지막 조건.)
+16번 완료 — 목표의 작업 16개 모두 완료. 다음 단위는 사용자가 목표 줄을 바꾸거나 열린 결함(D-2~D-4, D-8)을 지정할 때, 또는 새 프로젝트·사고의 교훈을 레지스트리에 더할 때 시작한다.
 
 ## 가정 목록
 
