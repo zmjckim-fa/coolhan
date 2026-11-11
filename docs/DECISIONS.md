@@ -124,3 +124,12 @@ a direct-API guard can be added the day a script calls the API.
 - Rationale: 원칙을 산문으로만 두면 희석된다(v1.4.1 교훈) — G19와 같은 «KB + 기계 게이트 + 에이전트 배선» 패턴. 자기 실행이 첫 결함(D-1 no-placeholder 자기 탐지, 원장 증거 형식)을 바로 잡아냈다 — 게이트가 자기 저장소에서 먼저 유효함을 증명.
 - Reversible: yes — KB 문서·스크립트 3종·lib/messages·docs 4장·에이전트 4절·SKILL 3곳 삭제; 각 게이트는 독립.
 - Next: 쿨한이 만드는 첫 프로젝트에서 `--targets`(S3 대상명)와 hardcoded-sentence 휴리스틱의 false positive를 track으로 재측정; 기존 스크립트의 `get`/`parseFlags`/`readText`는 손대는 날 `lib/cli.js`로 이행(D-2~D-4).
+
+## 2026-11-11 — G21 기획서 제작 표준: 마스터 프롬프트를 KB 문서 + 정적 게이트로 설치 (user: "이게 좋다. 적용하라", v2.8.0)
+- Decision: `C:\sites\MUSIC_APP\docs\plan\MASTER_PROMPT.md`를 `knowledge_base/00_PLANNING_DOC_STANDARD.md`로 일반화해 설치했다(§1~§8 구조 유지, 음악 서비스 전용 부분은 `{{ }}` 슬롯 + 원문 예시). §7 문서 완료의 정의를 `scripts/plan-doc-check.js`(G21, 14규칙, PASS/FAIL/exit 2)로 기계화하고 Intent Analyzer · Spec Writer · Plan Reviewer 0단계 · UX Design Lead · SKILL.md Task 2.5 · 엔진 루프에 배선했다. 사실의 진위, 도식을 눈으로 확인했는가, 의도 일치는 게이트가 못 본다(Plan Reviewer + 사람, 문서 부록 C).
+- Decision (2): 충돌 처리. 마스터 §2-4(일반 파일명 `services` 금지)와 G19(`services/ai`)는 프로젝트가 §2-4를 채택하면 `ai-arch-check --service-dirs`로 계층 이름만 바꾼다(계층 규칙 유지). 마스터 §8의 6줄 보고는 CLAUDE.md 5줄 상한이 우선. 마스터 §2-8 번역 모듈은 G20 S2와 같은 원칙으로 연결.
+- Decision (3): 단일 원천 래칫에 `--skip-dirs` 추가 + C7 명령에 `--skip-dirs docs`. 다른 세션이 커밋한 docs/ 연구 산출물 스크립트가 하네스 소스가 아닌데 기준선을 부풀렸다(D-6). 기본 동작은 그대로다.
+- Default chosen without asking: «적용하라»의 구체 작업 줄이 없어 G19, G20과 같은 해석(설치). 원본 프롬프트 파일은 읽기만 했고, MUSIC_APP의 다른 문서에는 게이트를 돌리지 않았다(세션 격리, 검증은 자체 fixture).
+- Rationale: G19, G20과 같은 «KB + 기계 게이트 + 에이전트 배선» 패턴. 게이트 자기 점검이 라벨 하드코딩과 금지한 줄표를 스스로 쓴 결함(D-7)을 출고 전에 잡았다.
+- Reversible: yes — KB 문서, 스크립트 1개, lib/fs.js, messages 키, 에이전트 4개 절, SKILL 3곳 삭제; `--skip-dirs`는 옵션이라 기본 동작 불변.
+- Next: 실제 기획서 작업(쿨한으로 기획서 만들어)에서 휴리스틱(어절 수, 필수 항목 정규식)의 false positive를 재측정.

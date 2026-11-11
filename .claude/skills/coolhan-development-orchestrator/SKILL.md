@@ -213,6 +213,7 @@ The 4 core capabilities shared by all agents. Authoritative spec: `references/ha
 |--------|------|----------|
 | "쿨한으로 개발해" (all languages) | New feature development | 1️⃣→2️⃣→3️⃣→4️⃣→5️⃣→6️⃣ (full) |
 | "쿨한으로 {목표} 연속개발해" | Decompose goal into backlog then self-proceed | 🔄 Continuous Development Engine (auto-repeat until backlog empty) |
+| "쿨한으로 기획서 만들어" / "CoolHan write the planning document" | Planning-document set per `knowledge_base/00_PLANNING_DOC_STANDARD.md` | 1️⃣→1.5→2️⃣ then Task 2.5 with the G21 gate (`scripts/plan-doc-check.js`) before G3 |
 | "쿨한으로 {기능} 추가해" | Add a specific feature | 1️⃣→2️⃣→3️⃣→4️⃣→5️⃣→6️⃣ (full) |
 | "쿨한으로 검증해" | Source code validation | 4️⃣ (source validation only) |
 | "쿨한으로 테스트해" | Run tests | 5️⃣ (testing only) |
@@ -451,6 +452,12 @@ while (todo remains in backlog):
        tasks with 대기/진행 중/완료 only, 완료 needs captured evidence, no hedges, 현재 위치, 가정, 결함 D-n.
      node scripts/checks-run.js — the project's fixed list (docs/CHECKS.md) executed in full; report the three
        numbers 통과 n · 실패 m(D-번호) · 확인 안 함 k(이유). A defect no check caught → D-n + a new check row.
+   + G21 PLANNING DOCUMENT (v2.8.0, knowledge_base/00_PLANNING_DOC_STANDARD.md):
+     node scripts/plan-doc-check.js <docs> --required "<items>" — a work unit that produces or changes 기획서
+       documents is done only when this passes: 추적표 with no blank location, no blank table cell, no deferral
+       word outside [결정필요], every [미검증] with a method, tooltips ≤10 어절, no em dash / hype word, diagram
+       files exist, no ID with two names, all §4.2 items and success criteria (≥3) present. FAIL blocks the unit;
+       form only — facts and diagrams still need the Plan Reviewer and the human eye.
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)
 ```
@@ -1004,6 +1011,8 @@ Task 2: Write CoolHan spec (Spec Writer)
 🛑 Task 2.5: Plan/Spec quality gate (Plan Reviewer) ★ NEW (G3) — PASS-required, before any coding
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ├─ Depends: Task 2 complete (spec) + backlog decomposed (_workspace/_backlog.md or plan.json)
+├─ **Planning-document gate (G21, when the plan is 기획서 documents):** `node scripts/plan-doc-check.js <docs> --required "<items>"`
+│  — form of the document itself (§7 of the standard); FAIL blocks Task 3 before G3 runs.
 ├─ **Structural gate (mechanical, non-waivable):** `node scripts/plan-check.js <plan.json>` —
 │  dependency graph acyclic + deps exist, ordering respects deps, every unit has a `verifies`
 │  command, every requirement covered by ≥1 unit. Exit 1 → hard FAIL, return to spec-writer.

@@ -46,4 +46,31 @@ function parseTable(lines, wanted, min = 2) {
   return { rows, header: idx };
 }
 
-module.exports = { cellsOf, isSeparator, sections, findSection, parseTable };
+/**
+ * Every table in `lines` ([{n,text}]) as { header: [cells], headerLine, rows: [{ n, cells }] }.
+ * A table is a run of consecutive `|` lines; its first row is the header. Lines inside ``` fences
+ * are expected to be removed by the caller.
+ */
+function tablesIn(lines) {
+  const out = []; let cur = null;
+  for (const { n, text } of lines) {
+    if (!text.trim().startsWith('|')) { cur = null; continue; }
+    if (isSeparator(text)) continue;
+    const cells = cellsOf(text);
+    if (!cur) { cur = { header: cells, headerLine: n, rows: [] }; out.push(cur); continue; }
+    cur.rows.push({ n, cells });
+  }
+  return out;
+}
+
+/** Lines of a markdown text as [{n,text}] with fenced code blocks (```) removed. */
+function proseLines(md) {
+  const out = []; let fenced = false;
+  md.split(/\r?\n/).forEach((text, i) => {
+    if (/^\s*(?:```|~~~)/.test(text)) { fenced = !fenced; return; }
+    if (!fenced) out.push({ n: i + 1, text });
+  });
+  return out;
+}
+
+module.exports = { cellsOf, isSeparator, sections, findSection, parseTable, tablesIn, proseLines };

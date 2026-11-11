@@ -1,0 +1,73 @@
+### A compliant → PASS
+$ node C:\sites\CoolHan builder\scripts\plan-doc-check.js C:\sites\CoolHan builder\_harness_test\track37-plan-doc\fixtures\A-compliant --required ERD,메뉴 구성도
+✔ plan-doc-check: PASS: 문서 1 · 표 3 · 풍선말 1 · [미검증] 1 · [결정필요] 1
+exit=0
+
+### B violations → every per-line rule FAIL named at file:line
+$ node C:\sites\CoolHan builder\scripts\plan-doc-check.js C:\sites\CoolHan builder\_harness_test\track37-plan-doc\fixtures\B-violations
+✗ plan-doc-check: FAIL: 문서 1 · 표 3 · 풍선말 3 · [미검증] 1 · [결정필요] 1
+  [em-dash] plan.md:29 · 줄표 문자가 있다. 문장은 직접적으로 쓴다 (§2-10)
+  [hype-word] plan.md:29 · 과장어 "혁신적": 구체적 사실로 바꾼다 (§2-10)
+  [decision-without-reason] plan.md:32 · [결정필요]에 이유가 없다 (같은 줄에 "이유: …") (§7)
+  [unverified-without-method] plan.md:33 · [미검증]에 확인 방법이 없다 (같은 줄에 "확인 방법: …") (§2-9, §7)
+  [diagram-missing] plan.md:35 · 도식 파일이 없다: missing-diagram.svg (§5 도식은 그림 파일로)
+  [trace-unlocated] plan.md:14 · 요구 항목 "메뉴 구성도"의 위치가 비어 있다 (§7 추적표에 빈 항목 없음)
+  [tooltip-too-long] plan.md:25 · 풍선말 11어절: 10어절 이내 (§2-2, §7): "하나 둘 셋 넷 다섯 여섯 일곱 여덟 아홉 열 열하나"
+  [table-blank-cell] plan.md:26 · 표의 빈칸 (열 "비고"): 해당 없음은 "해당 없음"으로 쓴다 (§5)
+  [deferred-marker] plan.md:27 · 표에 "추후" 표기: 미정은 [결정필요]로 이유와 함께 쓴다 (§7)
+  [id-conflict] plan.md:19 ≠ plan.md:20 · 식별자 M-1에 이름이 둘 이상: "전환율" / "이탈률" (§6-4, §7 충돌 0건)
+  [missing-section] (docs) · 필수 항목 "비즈니스(가격·결제·정산)"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "법무와 약관"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "운영"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "품질 목표"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "도메인 품질 관리"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "알림"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "테스트와 배포"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "위험 관리"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "용어집"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "단계 계획"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [success-criteria-count] plan.md:6 · 성공 기준 2개: 측정 가능한 문장 3개 이상 (§1)
+  Driving doc: knowledge_base/00_PLANNING_DOC_STANDARD.md
+exit=1
+
+### C no trace table → FAIL
+$ node C:\sites\CoolHan builder\scripts\plan-doc-check.js C:\sites\CoolHan builder\_harness_test\track37-plan-doc\fixtures\C-no-trace
+✗ plan-doc-check: FAIL: 문서 1 · 표 0 · 풍선말 0 · [미검증] 0 · [결정필요] 0
+  [no-traceability-table] (docs) · 요구 항목 추적표가 없다 (열: 요구 항목 · 위치) (§6-5, §7)
+  [missing-section] (docs) · 필수 항목 "비즈니스(가격·결제·정산)"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "법무와 약관"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "운영"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "품질 목표"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "도메인 품질 관리"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "데이터와 분석"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "알림"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "테스트와 배포"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "위험 관리"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "결정 로그와 오픈 이슈"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "용어집"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  [missing-section] (docs) · 필수 항목 "단계 계획"이 문서에 없다 (§4.2 / §1): 해당 없으면 제목에 "해당 없음: 이유"
+  Driving doc: knowledge_base/00_PLANNING_DOC_STANDARD.md
+exit=1
+
+### D multi-file → id-conflict across files + trace-missing-item
+$ node C:\sites\CoolHan builder\scripts\plan-doc-check.js C:\sites\CoolHan builder\_harness_test\track37-plan-doc\fixtures\D-multi --required ERD,소스 복사방지
+✗ plan-doc-check: FAIL: 문서 2 · 표 4 · 풍선말 1 · [미검증] 1 · [결정필요] 1
+  [trace-missing-item] (docs) · 요구 항목 "소스 복사방지"이 추적표에 없다 (--required)
+  [id-conflict] main.md:20 ≠ screens.md:4 · 식별자 M-1에 이름이 둘 이상: "전환율" / "이탈률" (§6-4, §7 충돌 0건)
+  Driving doc: knowledge_base/00_PLANNING_DOC_STANDARD.md
+exit=1
+
+### E fenced + allow-marker → PASS
+$ node C:\sites\CoolHan builder\scripts\plan-doc-check.js C:\sites\CoolHan builder\_harness_test\track37-plan-doc\fixtures\E-fenced-allow
+✔ plan-doc-check: PASS: 문서 1 · 표 3 · 풍선말 1 · [미검증] 1 · [결정필요] 1
+exit=0
+
+### F empty dir → exit 2
+$ node C:\sites\CoolHan builder\scripts\plan-doc-check.js C:\sites\CoolHan builder\_harness_test\track37-plan-doc\fixtures\F-empty
+plan-doc-check: no .md planning document under C:\sites\CoolHan builder\_harness_test\track37-plan-doc\fixtures\F-empty
+exit=2
+
+### Usage (no argument) → exit 2
+$ node C:\sites\CoolHan builder\scripts\plan-doc-check.js
+usage: plan-doc-check.js <file.md|dir> [--required "a,b"] [--json]
+exit=2

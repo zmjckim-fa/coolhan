@@ -7,12 +7,12 @@
 
 | ID | 검사 | 명령 | 비고 |
 |---|---|---|---|
-| C1 | 전체 단위 시험 (jest, 31 suites) | `npx jest --ci` | 느림(~6분) |
+| C1 | 전체 단위 시험 (jest, 32 suites) | `npx jest --ci` | 느림(~6분) |
 | C2 | 프롬프트 현대화 린트 (에이전트·스킬) | `node scripts/prompt-modernization-check.js .claude/agents .claude/skills` | |
 | C3 | 플레이스홀더·TODO 잔존 | `node scripts/no-placeholder-check.js scripts src/health.js src/server.js doctor.js install.js` | |
 | C4 | 비밀값 스캔 (스테이징 전 전체) | `node scripts/secret-scan.js` | 커밋 직전엔 `--staged`로 한 번 더 |
 | C5 | 동반 스킬 존재 프로브 (G16) | `node scripts/companion-skills-check.js` | |
 | C6 | AI 아키텍처 게이트 자기 실행 (G19) | `node scripts/ai-arch-check.js .` | 하네스는 NOT_APPLICABLE이 정상(모델 호출 없음) |
-| C7 | 단일 원천 래칫 (G20-C, 기준선 대비 증가 금지) | `node scripts/single-source-check.js . --baseline docs/SINGLE_SOURCE_BASELINE.json` | 기준선 갱신은 감소했을 때만 `--write-baseline` |
+| C7 | 단일 원천 래칫 (G20-C, 기준선 대비 증가 금지) | `node scripts/single-source-check.js . --baseline docs/SINGLE_SOURCE_BASELINE.json --skip-dirs docs` | 기준선 갱신은 감소했을 때만 `--write-baseline` |
 | C8 | 진행 원장 형식·완료 정의 (G20-A) | `node scripts/progress-check.js docs/PROGRESS.md` | |
 | C9 | 설치 상태 점검 (doctor) | `node doctor.js` | |

@@ -60,6 +60,12 @@ If absent, use the review steps below and note the skill was absent — never fa
 `references/companion-skills.md`.
 
 ## Work Steps
+0. **Planning-document gate (G21):** when the plan consists of 기획서 documents, run
+   `node scripts/plan-doc-check.js <plan docs> --required "<user's required items>"` first. Any finding (blank
+   cell, deferral word, [미검증] without a method, tooltip over 10 어절, ID conflict, missing §4.2 item, missing
+   trace row, missing diagram file) is a hard FAIL that blocks Task 3 and returns to the spec-writer with the
+   findings verbatim. Then judge what the script cannot (`knowledge_base/00_PLANNING_DOC_STANDARD.md` Appendix C):
+   whether [관찰]/[실측] claims have a stated basis, and whether diagrams were opened and checked by eye.
 1. **Run `scripts/plan-check.js`** on the backlog (converted to plan.json shape if needed): dependency
    cycle, missing/ordering deps, units without verification, uncovered requirements. This is
    `structural_status` — mechanical, exit-code driven, cannot be waived.

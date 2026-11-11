@@ -1,5 +1,37 @@
 # Changelog
 
+## [2.8.0] - 2026-11-11
+
+### Added
+
+- **G21 Planning-document standard: the user's 기획서 제작 마스터 프롬프트 installed as KB + gate.**
+  User pointed at `MASTER_PROMPT.md` (a senior-planner prompt: product definition with out-of-scope list and
+  measurable success criteria; ten principles incl. no explanatory sentences on screen with `?` tooltips of at
+  most 10 어절, domain-derived colors, no AI-looking design or generic file names, zero-dependency default,
+  threat-model-first security, per-layer copy protection, key-based translation, evidence tags
+  [관찰]/[실측]/[추론]/[미검증]/[결정필요], no hype words or em dashes; required deliverables plus twelve
+  commonly forgotten items; minimum specs per item; parallel work split with one authority per identifier;
+  completion definition; short report) and said "이게 좋다. 적용하라". Installed as
+  `knowledge_base/00_PLANNING_DOC_STANDARD.md` (the prompt generalized with `{{ }}` slots so §1-§8 are kept
+  and the music-specific parts become examples, plus the gate's notation rules, relations to G19/G20/G9 and
+  the honest bounds) and made mechanical in `scripts/plan-doc-check.js` (14 rules: no-traceability-table ·
+  trace-unlocated · trace-missing-item (`--required`) · table-blank-cell · deferred-marker ·
+  unverified-without-method · decision-without-reason · tooltip-too-long · em-dash · hype-word ·
+  diagram-missing · id-conflict (across tables and files) · missing-section (the §4.2 twelve items, scope-out
+  list, success criteria) · success-criteria-count; fenced code skipped, `plan-doc-check:allow`; exit 0/1/2).
+  Wired: Intent Analyzer (evidence tags, required-items list), Spec Writer (§4.2/§5/추적표, run the gate), Plan
+  Reviewer step 0 (FAIL blocks Task 3 before G3), UX Design Lead (screen text discipline, exception list),
+  SKILL.md (trigger "쿨한으로 기획서 만들어", Task 2.5, engine-loop G21 block), SDLC map row. New S8
+  `scripts/lib/fs.js` (`listFiles`) and `md-table` helpers (`tablesIn`, `proseLines`); gate messages in the S2
+  dictionary. Documented relation: the prompt's "no generic file names" and G19's `services/ai` layer are
+  reconciled by renaming the layer through `ai-arch-check --service-dirs`; CoolHan's 5-line report cap wins
+  over the prompt's 6 lines. G20 ratchet gained `--skip-dirs` (research or deliverable folders such as
+  `docs/` are not project source; D-6) and the gate's own first self-run removed three hardcoded labels and its
+  own em dash (D-7). Tests 17/17 new (plan-doc-check 16, single-source --skip-dirs 1; total 297, 32 suites); track37 adversarial: compliant → PASS, one defect per rule → each FAIL named at
+  file:line, cross-file ID conflict, empty folder → exit 2, 0 false +/-. Honest bound: the gate proves the form
+  of the document; whether a fact tagged [관찰]/[실측] was observed, whether a diagram was looked at, and
+  whether the plan matches the user's intent remain with the Plan Reviewer and the human.
+
 ## [2.7.0] - 2026-10-31
 
 ### Added

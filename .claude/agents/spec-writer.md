@@ -50,6 +50,21 @@ target-specific exception is specified as a registry cell (§3), human-facing te
 derived capability table (feature × target × entitlement) as a function over S3 — never as a hand-written
 table. The Developer's `docs/SINGLE_SOURCE_MAP.md` is seeded from this section.
 
+## Planning-document standard (G21 — `knowledge_base/00_PLANNING_DOC_STANDARD.md`)
+When the deliverable is a 기획서 or a design/specification set:
+- Cover the user's required items (§4.1) and the twelve must-have items of §4.2 (business, legal, operations,
+  quality targets, domain quality control, data and analytics, notifications, test and deploy, risk, decision
+  log, glossary, phase plan). An item that does not apply gets a heading marked `해당 없음: <reason>`.
+- Meet the §5 minimum for each item (tables with no blank cell, table spec with every column attribute, feature
+  definition with ID/screen/trigger/API/tables/permission/result/error/acceptance, screen spec with states,
+  diagrams as image files that exist). Fix identifiers, names and status values in one common-rules document
+  and give each identifier a single authority section (§6-2, §6-3).
+- Write the 추적표 (columns `요구 항목` and `위치`) mapping every required item to where it lives (§6-5).
+  Unknowns are `[결정필요] … 이유: …`; unconfirmed facts are `[미검증] … 확인 방법: …`; tooltips stay within
+  10 어절; no deferral words, no em dash, no hype words.
+- Run `node scripts/plan-doc-check.js <doc dir> --required "<items>"` and fix every finding before handing the
+  documents to the Plan Reviewer.
+
 ## Core Principles
 
 1. **100% spec-based:** All development starts from the spec

@@ -43,6 +43,14 @@ Driving doc: `references/design-excellence-standard.md`. Non-negotiables for any
   {palette_family, display_font, layout_archetype}; append the choice to `_workspace/_design-history.md`.
 - Gate: `node scripts/design-quality-check.js --tokens <tokens.json> --history <history.json> --html <pages>`.
 
+## Screen text discipline (G21 — `knowledge_base/00_PLANNING_DOC_STANDARD.md` §2-2, applies when the project adopts it)
+- The screen carries no explanatory sentence: only menu, title, label, value and button text. Every
+  explanation is a `?` tooltip next to the title or label, one line, at most 10 어절.
+- Define the exception list that tooltips cannot replace (consent to terms, payment amount and refund
+  conditions, error resolution guidance, legal notices) in the UX spec, and keep it short.
+- Colors come from the project's domain object, one accent, one corner radius; a color is never the only
+  signal. In the spec every tooltip sits in a `풍선말` column so `plan-doc-check.js` can count it.
+
 ## Companion skills (v2.3.0 — invoke only-if-present, C3)
 For UI work, invoke these shipped skills via the Skill tool when available (else use the standards
 above and note the skill was absent — never fabricate use): `frontend-design` (distinctive,

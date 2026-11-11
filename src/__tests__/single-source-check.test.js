@@ -121,6 +121,14 @@ describe('single-source-check (G20-C — minimal source / single source of truth
     expect(py).toHaveLength(1); expect(py[0].name).toBe('slugify');
   });
 
+  test('--skip-dirs excludes a directory name from the walk (research/deliverable folders that are not project source)', () => {
+    const d = cleanApp();
+    write(d, 'docs/research/a.js', HELPER + 'module.exports = { slugify };\n');
+    expect(measure(d).counts.duplicate_helpers).toBe(1);
+    expect(measure(d, { skipDirs: ['docs'] }).counts.duplicate_helpers).toBe(0);
+    fs.rmSync(d, { recursive: true, force: true });
+  });
+
   test('main: --measure exit 0, strict FAIL exit 1, --write-baseline then --baseline PASS exit 0', () => {
     const d = cleanApp();
     write(d, 'app/orders.js', HELPER + 'module.exports = { slugify };\n');

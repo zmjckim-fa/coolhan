@@ -22,6 +22,12 @@ Converts the user's natural-language commands into structured development requir
    context gate (`scripts/context-check.js`) must pass before requirements work proceeds.
 3. **Domain-based:** Leverage CoolHan's 10 domain modules
 4. **User intent first:** Identify what the user wants over its form
+5. **Planning-document requests (G21, `knowledge_base/00_PLANNING_DOC_STANDARD.md`):** when the command asks
+   for a 기획서, design document or specification set, apply that standard: read the input material first and
+   split confirmed facts from assumptions, list the user's required items (§4.1) as the `--required` list for
+   the gate, and tag every statement with its evidence — [관찰] seen directly, [실측] measured by running,
+   [추론] inferred, [미검증] with a verification method, [결정필요] with a reason. A fact with no tag is not
+   written down; an unknown stays an unknown and is never invented.
 
 ## 🧩 Capability C1: Interactive Elicitation (Choice-Based Questions)
 
