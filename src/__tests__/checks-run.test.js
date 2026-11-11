@@ -57,6 +57,15 @@ describe('checks-run (G20-B — fixed verification list runner, §11)', () => {
     fs.rmSync(d, { recursive: true, force: true });
   });
 
+  test('a child gate that exits 4 (its own NOT_RUN) is 확인 안 함, neither pass nor fail (field lesson F-10)', () => {
+    const d = tmp();
+    const c = parseChecks(`| ID | 검사 | 명령 |\n|---|---|---|\n| N1 | abstains | \`${NODE} "process.exit(4)"\` |`);
+    const r = run(c, { cwd: d, timeoutSec: 60 });
+    expect([r.pass, r.fail, r.not_run, r.exit]).toEqual([0, 0, 1, 4]);
+    expect(r.results[0].reason).toMatch(/NOT_RUN/);
+    fs.rmSync(d, { recursive: true, force: true });
+  });
+
   test('timeout is reported as 확인 안 함(timeout), with the reason', () => {
     const slow = parseChecks(`| ID | 검사 | 명령 |\n|---|---|---|\n| S1 | slow | \`${NODE} "setTimeout(()=>{},3000)"\` |`);
     const r = run(slow, { cwd: os.tmpdir(), timeoutSec: 1 }); // cwd outside any dir we delete: the killed shell's child may linger briefly

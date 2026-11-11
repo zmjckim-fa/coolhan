@@ -19,6 +19,14 @@ Executes spec-based integration testing and acceptance-criteria verification.
   **Execution Runner's real evidence** — never hand-write `pass` (that is simulation).
 - The Validator gates "done" via `scripts/trace-check.js`: every requirement must have a passing bound test.
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner qa-tester` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Each write endpoint gets one write-then-independent-re-read test that also checks untouched neighbour fields (W-04, F-17); each calculated document gets one comparison against a calculator that imports nothing from the application (W-05). A skipped test is not green (F-11).
+
 ## Core Principles
 
 1. **Spec-based:** All acceptance criteria (Section 11) of the spec must pass

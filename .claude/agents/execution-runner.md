@@ -19,6 +19,14 @@ or simulates a result.
 - Missing tool / unprovisionable env → **NOT_RUN** with the reason. NOT_RUN is honest; a fake PASS is a violation.
 - Evidence = captured stdout/stderr/exit/timing, not a narrative.
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner execution-runner` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Child processes that boot the application run with side-effect keys (mail, SMS, payment, paid APIs) blanked, and overrides that point at fake external servers are accepted only for local addresses (W-18, F-20). Record the environment manifest result before unit 1: each tool, database, cache and device is present or named as missing (F-33).
+
 ## Core Principles
 1. **Stack-agnostic:** detect the stack (package.json/requirements.txt/go.mod/… — no npm assumption);
    run the matching install/test/run commands.

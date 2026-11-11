@@ -98,12 +98,35 @@ describe('single-source-check (G20-C — minimal source / single source of truth
     fs.rmSync(d, { recursive: true, force: true });
   });
 
-  test('ratchet mode: shrinking is PASS (old code migrates when touched, §4-d)', () => {
+  test('ratchet mode: fixing in place is PASS (old code migrates when touched, §4-d)', () => {
     const d = cleanApp();
     write(d, 'app/orders.js', HELPER + 'module.exports = { slugify };\n');
     const baseline = measure(d);
-    fs.unlinkSync(path.join(d, 'app/orders.js'));
-    expect(evaluate(d, { baseline }).status).toBe('PASS');
+    write(d, 'app/orders.js', "const { slugify } = require('../lib/text');\nmodule.exports = { slugify };\n");   // duplicate removed, file kept
+    const r = evaluate(d, { baseline });
+    expect(r.status).toBe('PASS');
+    expect(r.counts.duplicate_helpers).toBe(0);
+    fs.rmSync(d, { recursive: true, force: true });
+  });
+
+  test('ratchet mode: a smaller scanned set is scan-scope-shrunk until explicitly accepted (field lesson F-23)', () => {
+    const d = cleanApp();
+    write(d, 'app/orders.js', HELPER + 'module.exports = { slugify };\n');
+    const baseline = measure(d);
+    fs.unlinkSync(path.join(d, 'app/orders.js'));                       // the number fell because the file left the scan
+    const r = evaluate(d, { baseline });
+    expect(r.status).toBe('FAIL');
+    expect(r.findings.map(f => f.rule)).toEqual(['scan-scope-shrunk']);
+    expect(evaluate(d, { baseline, allowScopeShrink: true }).status).toBe('PASS');
+    fs.rmSync(d, { recursive: true, force: true });
+  });
+
+  test('main: an empty project is NOT_RUN (exit 4), never PASS (field lesson F-10)', () => {
+    const d = tmp();
+    const orig = { log: console.log, error: console.error }; console.log = () => {}; console.error = () => {};
+    const code = main(['node', 'single-source-check.js', d]);
+    console.log = orig.log; console.error = orig.error;
+    expect(code).toBe(4);
     fs.rmSync(d, { recursive: true, force: true });
   });
 

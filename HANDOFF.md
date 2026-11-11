@@ -16,12 +16,12 @@
 
 CoolHan — a specification-driven, multi-agent, **non-stop** development harness that runs inside
 Claude Code. It is the *product* (the harness itself), not an app built with it. Forward pipeline
-(intent→spec→code→validate→QA→deploy) + reverse/reuse (analyze→modularize→reapply) + 21 mechanical
-gates (G1–G21) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
+(intent→spec→code→validate→QA→deploy) + reverse/reuse (analyze→modularize→reapply) + 22 mechanical
+gates (G1–G22) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.8.0` (package.json = git tag `v2.8.0` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **297 tests, 32 suites, all pass** (~6 min; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.9.0` (package.json = git tag `v2.9.0` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **317 tests, 33 suites, all pass** (~6 min; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -43,7 +43,7 @@ but they are restated here so nothing is missed:
    compose, `SECRET_KEY`, other services, and any coolhanx.com **server file** the deploy script
    doesn't ship.
 
-## 3. The gates (G1–G21) — what already exists
+## 3. The gates (G1–G22) — what already exists
 
 Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-orchestrator/references/ai-native-sdlc-map.md`.
 
@@ -69,6 +69,7 @@ Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-or
 | G18 session learning | `scripts/harvest-sessions.js` | this account's sessions → masked private store + DIGEST/brief (SessionStart/End hooks); G17 reads it |
 | G19 AI architecture | `scripts/ai-arch-check.js` + `knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md` | right brain for the right task: code → Decision Model → LLM → human; calls only in services/ai, schema-validated output, §14 record, threshold in code, AI never acts |
 | G20 minimal source · single source · ledger | `scripts/progress-check.js` + `scripts/checks-run.js` + `scripts/single-source-check.js` + `knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md` | 제0 규칙 중복 0 · S1–S8 one place each · `docs/PROGRESS.md` is the truth (완료 only with evidence) · `docs/CHECKS.md` fixed list run in full (통과·실패(D)·확인 안 함) · ratchet baseline `docs/SINGLE_SOURCE_BASELINE.json` (C7 runs with `--skip-dirs docs`) |
+| G22 field lessons | `scripts/field-lessons.js` + `knowledge_base/field-lessons.json` → `knowledge_base/00_FIELD_LESSONS.md` | one registry of failure patterns and working practices from every project built: derived doc, per-agent list, plan-time 실패 방지 대응표 (`plan-doc-check --lessons`), data-driven code scan with ratchet; exit 4 = nothing scanned |
 | G21 planning document | `scripts/plan-doc-check.js` + `knowledge_base/00_PLANNING_DOC_STANDARD.md` | the user's 기획서 제작 마스터 프롬프트 (generalized, `{{ }}` slots): §7 completion definition mechanical — 추적표 no blank, no blank cell, no deferral word outside [결정필요], [미검증] with method, tooltip ≤10 어절, no em dash/hype word, diagram files exist, no ID with two names, §4.2 twelve items, success criteria ≥3; form only |
 
 Also: prompt-modernization lint (`scripts/prompt-modernization-check.js`, 9 rule families incl. the Claude-5-era
@@ -101,7 +102,8 @@ Three layers, all mechanical:
 5. Write an adversarial track under `_harness_test/trackNN-<name>/` proving 0 false +/-.
 6. Bump `package.json` version + add a `CHANGELOG.md` entry + a `CLAUDE.md` Change History row +
    the SDLC-map row if it's a new capability.
-7. `git add -A && node scripts/secret-scan.js --staged` (must be clean) → commit (heredoc `-F`,
+7. `git add <your own paths> && node scripts/secret-scan.js --staged` (must be clean; stage by path, never the
+   whole tree: other sessions work in this folder too, field lesson F-09) → commit (heredoc `-F`,
    never the `@'...'@` construct) → `git tag -a vX.Y.Z -m "..."` → `git push origin main --follow-tags`.
 8. Confirm via GitHub API: release.yml success + `releases/latest` = new tag + harness-check/test green.
 
@@ -149,13 +151,13 @@ provide its own credentials in its own environment — they do NOT travel in thi
 ```bash
 git log --oneline -3
 node -e "console.log('pkg', require('./package.json').version)" && git describe --tags --abbrev=0
-npx jest --ci   # background it; expect 297 passed / 32 suites
+npx jest --ci   # background it; expect 317 passed / 33 suites
 node scripts/checks-run.js   # the fixed list (docs/CHECKS.md) — the G20 way to "verify"; C1 is the slow one
 node scripts/progress-check.js docs/PROGRESS.md   # this repo's ledger: current position + open D-numbers
 node doctor.js
 ```
 
-If those agree (version = v2.8.0, tests green, doctor healthy, ledger PASS), the handoff is intact and you
+If those agree (version = v2.9.0, tests green, doctor healthy, ledger PASS), the handoff is intact and you
 may proceed from § Next actions.
 
 
@@ -170,7 +172,7 @@ may proceed from § Next actions.
 
 ### "배포"의 의미 (이 repo는 서버 배포 없음)
 - 이 repo 배포 = **GitHub에 태그 push → Actions가 GitHub Release 생성**. 서버/SSH/scp/pm2 없음. `Dockerfile`·`docker-compose.yml`·`python-api.yml`은 샘플 Python API용이며 실제 운영 배포 경로 아님.
-- 절차(§5-7 요약): `git add -A && node scripts/secret-scan.js --staged` → 커밋 → `git tag -a vX.Y.Z -m "..."` → `git push origin main --follow-tags`
+- 절차(§5-7 요약): `git add <내 경로> && node scripts/secret-scan.js --staged` → 커밋 → `git tag -a vX.Y.Z -m "..."` → `git push origin main --follow-tags`
 - 워크플로 (`.github/workflows/`):
   - `release.yml` — 트리거 `v*.*.*` 태그 push(또는 수동) → `softprops/action-gh-release`로 릴리스 + `coolhan-vX.Y.Z.tar.gz` 첨부. 시크릿: 기본 `GITHUB_TOKEN`만.
   - `publish.yml` — main push(package.json/install.*/.claude/**/knowledge_base/** 변경 시) → `npm publish --access public`. 시크릿 `NPM_TOKEN` 필요(**미설정 → 실패가 정상**). 패키지명 `coolhan-builder`(미배포 상태).

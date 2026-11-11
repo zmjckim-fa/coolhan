@@ -1,5 +1,46 @@
 # Changelog
 
+## [2.9.0] - 2026-11-11
+
+### Added
+
+- **G22 Field lessons: every project already built, mined into one registry that plans and code are checked against.**
+  Operator order: absorb what the sites under the workspace taught (methods that made development fast and
+  error-free, and the failures) so future sites inherit the first and are kept from repeating the second; the
+  builder's purpose is a correct 기획서 with no human command and a result that matches it with no further command.
+  Eight analysis agents read the eight project families read-only (decision logs, handoffs, ledgers, commit
+  subjects, self-written check scripts; coverage stated per family; per-project evidence kept in git-ignored
+  `.coolhan-private/site-lessons/`). The generalized result is `knowledge_base/field-lessons.json`: 40 failure
+  patterns and 24 working practices, each with tags, owners, the project families it was seen in, and how it is
+  enforced, plus a field module catalog (26 bundle specs and 7 checker families). `scripts/field-lessons.js`
+  derives everything from that one file: `validate` (ids, fields, every failure enforced by plan, gate or detector,
+  no e-mail or URL in a public registry), `render` → `knowledge_base/00_FIELD_LESSONS.md` (`--check` fails on a
+  hand-edited doc), `list --owner/--tags/--kind` (the checklist an agent reads), and `check <root>` (detectors
+  are registry data: swallowed errors, numeric fallbacks for rates and amounts, fake data in product code,
+  skipped tests, client-sent amounts on payment paths, ad-hoc money rounding, request-derived absolute URLs,
+  client-exposed secrets and unverified token decode, internal keys in screen text, tree-wide git commands in
+  scripts; strict or ratchet against a baseline; `field-lessons:allow`).
+  Plan time: `plan-doc-check --lessons <registry> [--tags]` requires a line `교훈 태그: …` and a 실패 방지 대응표
+  with a row for every applicable failure pattern (`no-lesson-table`, `lesson-unanswered`).
+- **Lesson-driven hardening of existing gates.** A check that scanned nothing is NOT_RUN, never a pass (the
+  most widespread failure, seen in all eight families): `field-lessons check`, `single-source-check` and
+  `no-placeholder-check` exit 4 on an empty scan and `checks-run` reports a child's exit 4 as 확인 안 함.
+  `progress-check` rejects duplicate task numbers and duplicate D-numbers. `single-source-check` ratchet fails
+  `scan-scope-shrunk` when the scanned file count fell below the baseline's (numbers must fall by fixing, not
+  by moving code out of scope; `--allow-scope-shrink` to accept a real deletion). `plan-doc-check` adds
+  `decision-without-default`: a `[결정필요]` states the default the work proceeds on, so planning does not stop
+  to ask.
+- Wired into 17 agents (one derived-checklist section each plus one role line), the orchestrator (Phase 0 read
+  list, engine loop G22 block, Task 2.5 gate command), the SDLC map and `HANDOFF.md`; the release ritual now
+  stages by path instead of the whole tree. Self-applied: `docs/CHECKS.md` C10–C12 and
+  `docs/FIELD_LESSONS_BASELINE.json`.
+- Honest bounds: the analysis sampled documents (large decision logs were read in part, application source
+  mostly not); detectors see textual signatures only; a lesson is an observed correlation, and a plan may answer
+  "해당 없음: 이유". Tests field-lessons 15/15 (total 317/317, 33 suites); track38 adversarial: clean
+  project → PASS, ten detectors each fire once at file:line, ratchet grow → FAIL, empty scan → exit 4, plan with all
+  rows → no lesson finding, two rows removed → both named, no table → ids listed, duplicate ledger ids, scope shrink,
+  abstaining children; 0 false +/-.
+
 ## [2.8.0] - 2026-11-11
 
 ### Added

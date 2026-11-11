@@ -65,6 +65,14 @@ When the deliverable is a 기획서 or a design/specification set:
 - Run `node scripts/plan-doc-check.js <doc dir> --required "<items>"` and fix every finding before handing the
   documents to the Plan Reviewer.
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner spec-writer` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Start from the matching bundle in the field module catalog instead of a blank page (W-19). Put one line `교훈 태그: <tags>` in the plan and a **실패 방지 대응표** (교훈 ID · 방지책 · 검증 방법) with a row for every lesson that `list --kind fail --tags <tags>` returns with plan enforcement; "해당 없음: 이유" is a valid answer. Every `[결정필요]` carries 이유 and 기본값.
+
 ## Core Principles
 
 1. **100% spec-based:** All development starts from the spec

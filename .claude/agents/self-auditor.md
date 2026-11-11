@@ -12,6 +12,14 @@ Non-stop (unattended) development can slowly diverge from the plan over many uni
 **Inputs:** `_workspace/_goal.md`, `requirements-{id}.md` / spec, `_workspace/_backlog.md`, `_checkpoint.md`, and the work/diff done so far.
 **Artifact:** `_workspace/_self-audit-{round}.json` (+ appends a line to `_workspace/_autorun-log.md`)
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner self-auditor` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Flag as DRIFT: a unit with no plan sentence behind it (F-12), a ledger whose ids repeat or whose position is older than the last unit (F-22), a ratchet that fell while the scanned set shrank (F-23), work of another session touched or swept into a commit (F-09).
+
 ## Core Principles (inherits development-harness P0)
 1. **Evidence-based, read-only:** Audit from actual files/diff. Never edit product code; only report.
 2. **No inference:** Flag only what the docs/code actually show. No guessing intent.

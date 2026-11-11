@@ -35,7 +35,7 @@ const GOOD = [
   '## 11. 테스트와 배포', '배포 본문',
   '## 12. 위험 관리', '위험 본문',
   '## 13. 결정 로그와 오픈 이슈',
-  '- [결정필요] 환불 기한. 이유: 법무 검토 대기',
+  '- [결정필요] 환불 기한. 이유: 법무 검토 대기. 기본값: 14일',
   '- [미검증] 외부 약관 변경 주기. 확인 방법: 공식 약관 페이지 확인',
   '## 14. 용어집', '용어 본문',
   '## 15. 단계 계획', 'MVP 본문', ''
@@ -90,9 +90,16 @@ describe('plan-doc-check (G21 — planning document completion gate)', () => {
     let d = doc(GOOD.replace('| 해당 없음 |', '| 추후 |'));
     expect(rules(evaluate(d))).toContain('deferred-marker');
     fs.rmSync(d, { recursive: true, force: true });
-    d = doc(GOOD.replace('| 해당 없음 |', '| [결정필요] 미정, 이유: 법무 대기 |'));
+    d = doc(GOOD.replace('| 해당 없음 |', '| [결정필요] 미정, 이유: 법무 대기, 기본값: 해당 없음으로 진행 |'));
     expect(rules(evaluate(d))).not.toContain('deferred-marker');
     fs.rmSync(d, { recursive: true, force: true });
+  });
+
+  test('[결정필요] without 기본값 → decision-without-default: the plan proceeds on a stated default (field lesson W-11)', () => {
+    const d = doc(GOOD.replace('. 기본값: 14일', ''));
+    const r = evaluate(d);
+    expect(r.findings.map(f => f.rule)).toContain('decision-without-default');
+    expect(evaluate(doc(GOOD)).findings.map(f => f.rule)).not.toContain('decision-without-default');
   });
 
   test('[미검증] without 확인 방법 and [결정필요] without 이유 are named', () => {

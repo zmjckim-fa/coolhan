@@ -15,6 +15,7 @@
  *   deferred-marker           추후 / 나중에 / TBD / 미정 in a table row without [결정필요] (§7)
  *   unverified-without-method [미검증] without "확인 방법" on the same line (§2-9)
  *   decision-without-reason   [결정필요] without "이유" on the same line (§7)
+ *   decision-without-default  [결정필요] without "기본값": the plan states the default it proceeds on (G22 W-11)
  *   tooltip-too-long          a 풍선말 / tooltip column cell over 10 어절 (§2-2)
  *   em-dash / hype-word       줄표, 과장어 (§2-10)
  *   diagram-missing           an image link whose file does not exist (§5)
@@ -22,7 +23,12 @@
  *   missing-section           one of the 12 must-have items of §4.2 or a §1 product basic is absent
  *   success-criteria-count    fewer than 3 success criteria (§1)
  *
- * Usage: node scripts/plan-doc-check.js <file.md|dir> [--required "ERD,메뉴 구성도,…"] [--json]
+ *   no-lesson-table / lesson-unanswered   with --lessons: every applicable field lesson (fail, plan:true)
+ *                             needs a row in a 실패 방지 대응표 (교훈 ID · 방지책 · 검증 방법) (G22)
+ *
+ * Usage: node scripts/plan-doc-check.js <file.md|dir> [--required "ERD,메뉴 구성도,…"]
+ *          [--lessons knowledge_base/field-lessons.json] [--tags commerce,admin] [--json]
+ *        Tags also come from a plan line "교훈 태그: commerce, admin"; lessons tagged `all` always apply.
  * Exit:  0 PASS · 1 FAIL (each finding names file:line) · 2 usage / no document
  * `plan-doc-check:allow` on a line exempts it (quoted example).
  *
@@ -35,9 +41,10 @@
 const fs = require('fs');
 const path = require('path');
 const { tablesIn, proseLines } = require('./lib/md-table');
-const { argList, positional } = require('./lib/cli');
+const { argList, argValue, positional } = require('./lib/cli');
 const { listFiles } = require('./lib/fs');
 const { t, finding } = require('./messages');
+const lessonRegistry = require('./field-lessons');
 
 const ALLOW = /plan-doc-check:allow/;
 const NA = /^해당\s*없음|^n\/a$|^not applicable$/i;
@@ -46,6 +53,7 @@ const TAG_UNVERIFIED = /\[미검증\]/;
 const TAG_DECISION = /\[결정필요\]/;
 const HAS_METHOD = /확인\s*방법|검증\s*방법|확인\s*[:：]|how to verify|verify by/i;
 const HAS_REASON = /이유|reason|because|\bwhy\b/i;
+const HAS_DEFAULT = /기본값|default/i;
 const HYPE = /혁신적|획기적|완벽한|완벽하게|최고의|압도적|강력한|놀라운|seamless|cutting[- ]edge|world[- ]class|revolutionary|game[- ]chang/i;
 const IMAGE = /!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
 const TOOLTIP_COL = /풍선말|툴팁|tooltip/i;
@@ -54,6 +62,11 @@ const TRACE_WHERE_COL = /위치|문서|경로|location|where|section/i;
 const ID_COL = /^(?:[\w가-힣]*\s*)?id$|식별자/i;
 const NAME_COL = /이름|명칭|^name$|title|제목|기능명|화면명|테이블명/i;
 const ID_VALUE = /^[A-Za-z]{1,8}[-_]?\d+[\w-]*$/;
+const LESSON_ID_COL = /교훈|lesson/i;
+const LESSON_PREVENT_COL = /방지|대응|prevent/i;
+const LESSON_VERIFY_COL = /검증|확인|verif/i;
+const LESSON_ID = /\b[FW]-\d{2,3}\b/g;
+const LESSON_TAGS_LINE = /^\s*(?:[-*]\s*)?(?:\*\*)?(?:교훈\s*태그|lesson tags?)(?:\*\*)?\s*[:：]\s*(.+)$/i;
 const MAX_TOOLTIP_WORDS = 10;
 const MIN_SUCCESS_CRITERIA = 3;
 
@@ -117,6 +130,9 @@ function evaluate(target, opts = {}) {
   let traceTables = 0;
   const headings = [];
   const allText = [];
+  const lessonAnswers = new Set();   // lesson ids that have a row in a 실패 방지 대응표
+  const declaredTags = [];           // tags the plan declares on a "교훈 태그:" line
+  let lessonTables = 0;
 
   for (const d of docs) {
     for (const { n, text } of d.lines) {
@@ -124,9 +140,15 @@ function evaluate(target, opts = {}) {
       const h = /^#{1,6}\s+(.+?)\s*$/.exec(text);
       if (h) headings.push(h[1]);
       allText.push(text);
+      const tagLine = LESSON_TAGS_LINE.exec(text);
+      if (tagLine) declaredTags.push(...tagLine[1].split(/[,\s]+/).map(x => x.replace(/[`*.]/g, '').trim()).filter(Boolean));
       if (ALLOW.test(text)) continue;
       if (TAG_UNVERIFIED.test(text)) { stats.unverified++; if (!HAS_METHOD.test(text)) add('unverified-without-method', where, 'plan.unverifiedWithoutMethod'); }
-      if (TAG_DECISION.test(text)) { stats.decisions++; if (!HAS_REASON.test(text)) add('decision-without-reason', where, 'plan.decisionWithoutReason'); }
+      if (TAG_DECISION.test(text)) {
+        stats.decisions++;
+        if (!HAS_REASON.test(text)) add('decision-without-reason', where, 'plan.decisionWithoutReason');
+        if (!HAS_DEFAULT.test(text)) add('decision-without-default', where, 'plan.decisionWithoutDefault');
+      }
       if (text.includes('—')) add('em-dash', where, 'plan.emDash');
       const hype = HYPE.exec(text);
       if (hype) add('hype-word', where, 'plan.hypeWord', { word: hype[0] });
@@ -148,6 +170,9 @@ function evaluate(target, opts = {}) {
       const isTrace = itemCol >= 0 && whereCol >= 0 && itemCol !== whereCol;
       const idCol = col(ID_COL), nameCol = col(NAME_COL);
       if (isTrace) traceTables++;
+      const lessonCol = col(LESSON_ID_COL);
+      const isLessonTable = lessonCol >= 0 && col(LESSON_PREVENT_COL) >= 0 && col(LESSON_VERIFY_COL) >= 0;
+      if (isLessonTable) lessonTables++;
 
       for (const row of table.rows) {
         const where = `${d.rel}:${row.n}`;
@@ -159,6 +184,7 @@ function evaluate(target, opts = {}) {
           if (isTrace && i === whereCol) return; // reported as trace-unlocated below
           add('table-blank-cell', where, 'plan.tableBlankCell', { column: name });
         });
+        if (isLessonTable) for (const id of (row.cells[lessonCol] || '').match(LESSON_ID) || []) lessonAnswers.add(id);
         const defer = DEFER.exec(line);
         if (defer && !TAG_DECISION.test(line)) add('deferred-marker', where, 'plan.deferredMarker', { marker: defer[0] });
         if (isTrace) {
@@ -198,6 +224,14 @@ function evaluate(target, opts = {}) {
     const pool = s.anyLine ? allText : headings;
     if (!pool.some(x => s.re.test(x))) add('missing-section', '(docs)', 'plan.missingSection', { section: t(s.id) });
   }
+  if (opts.lessons) {
+    const tags = [...(opts.tags || []), ...declaredTags];
+    const need = lessonRegistry.applicable(opts.lessons, { tags, kind: 'fail' }).filter(l => l.plan);
+    stats.lessons_required = need.length;
+    stats.lessons_answered = need.filter(l => lessonAnswers.has(l.id)).length;
+    if (need.length && !lessonTables) add('no-lesson-table', '(docs)', 'plan.noLessonTable', { count: need.length, ids: need.map(l => l.id).join(', ') });
+    else for (const l of need) if (!lessonAnswers.has(l.id)) add('lesson-unanswered', '(docs)', 'plan.lessonUnanswered', { id: l.id, title: l.title });
+  }
   const sc = countSuccessCriteria(docs);
   if (sc.found && sc.count < MIN_SUCCESS_CRITERIA) add('success-criteria-count', sc.where, 'plan.successCriteriaCount', { count: sc.count });
 
@@ -207,9 +241,14 @@ function evaluate(target, opts = {}) {
 function main(argv) {
   const args = argv.slice(2);
   const json = args.includes('--json');
-  const target = positional(args, ['--required']);
+  const target = positional(args, ['--required', '--lessons', '--tags']);
   if (!target) { console.error(t('plan.usage')); return 2; }
-  const r = evaluate(path.resolve(target), { required: argList(args, '--required') });
+  let lessons;
+  if (argValue(args, '--lessons')) {
+    try { lessons = lessonRegistry.load(argValue(args, '--lessons')); }
+    catch (e) { console.error(t('lessons.cannotRead', { file: argValue(args, '--lessons'), error: e.message })); return 2; }
+  }
+  const r = evaluate(path.resolve(target), { required: argList(args, '--required'), lessons, tags: argList(args, '--tags') });
   if (r.status === 'NO_DOCS') { console.error(t('plan.noDocs', { target })); return 2; }
   if (json) console.log(JSON.stringify({ target, ...r }, null, 2));
   else {

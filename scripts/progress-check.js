@@ -77,6 +77,10 @@ function evaluate(md) {
   if (!L.goal) add('no-goal-line', 'ledger', 'progress.noGoal');
   if (!L.tasks.length) add('no-task-table', 'ledger', 'progress.noTaskTable');
 
+  const dup = (rows) => rows.filter((r, i) => r.id && rows.findIndex(x => x.id === r.id) !== i);
+  for (const task of dup(L.tasks)) add('duplicate-id', `task ${task.id} (line ${task.n})`, 'progress.duplicateId', { id: task.id });
+  for (const d of dup(L.defects)) add('duplicate-id', `defect ${d.id} (line ${d.n})`, 'progress.duplicateId', { id: d.id });
+
   for (const task of L.tasks) {
     const where = `task ${task.id} (line ${task.n})`;
     if (!task.state) { add('invalid-status', where, 'progress.invalidStatus', { status: task.status }); continue; }

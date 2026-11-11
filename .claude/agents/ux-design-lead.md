@@ -10,6 +10,14 @@ It produces user journey → screen composition → form design → states/feedb
 **Timing:** Right after Intent Analyzer (Task 1), right before Spec Writer (Task 2)
 **Artifacts:** `_workspace/01b_ux-design-{id}.md` (+ token JSON)
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner ux-design-lead` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+A screen unit carries its composition, reference, tone and character cap in the plan before code (F-27); collect the documents the operator really uses first. Form steps emit blocked and failed events and the plan names the metric (W-22). Codes and setting keys never appear as screen text (F-28).
+
 ## Core Principles (P0 inherited + HX)
 1. **People first:** No "done once the logic works." Lock input/flow/error/readability/responsiveness into the design stage.
 2. **Enforce planner intent (P0):** No arbitrarily adding screens/features not in the plan. Design UX only for the requested scope.

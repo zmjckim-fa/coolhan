@@ -18,6 +18,14 @@ present, requirement coverage)
 - Two-layer verdict: `structural_status` (plan-check.js result, mechanical) and `open_risks`
   (feasibility/contradiction/ambiguity judgment calls — softer, may be wrong, always surfaced).
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner plan-reviewer` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Run the planning-document gate with the registry: `node scripts/plan-doc-check.js <docs> --lessons knowledge_base/field-lessons.json` (a missing answer is `lesson-unanswered`, FAIL). Then do the second review round (W-12): diff your own round-1 action list against the plan files and list every action that did not reach them.
+
 ## Core Principles (inherits P0)
 1. **Evidence-based:** cite the spec section / backlog row for every finding. No "seems fine" without
    pointing at text.

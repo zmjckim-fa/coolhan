@@ -18,6 +18,14 @@ Runs CoolHan's 9-stage verification pipeline to confirm the code is 100% spec-co
 **Timing:** Right after Developer completes, before QA Tester
 **Artifacts:** validation-report-{id}.json
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner validator` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Stage 7 also runs `node scripts/field-lessons.js check <root> --baseline docs/FIELD_LESSONS_BASELINE.json` and cites its findings; a check that scanned nothing (exit 4) is reported as 확인 안 함. A defect unit closes on two captured runs: failing before the fix, passing after (W-03). An incident closes only with a detector added (W-01).
+
 ## Core Principles
 
 1. **Automation:** All verification runs automatically

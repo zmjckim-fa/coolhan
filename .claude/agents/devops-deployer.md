@@ -12,6 +12,14 @@ Manages CoolHan's deployment lock system and 9-step verification pipeline to ens
 - Git tagging and version management
 - Initializing Post-Deploy monitoring
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner devops-deployer` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+One deploy entry point: clean worktree at a named commit, build aside and swap, additive-only migration, verdict by exit code, lock, rollback (W-07, F-07). The post-deploy list has one request per core flow plus the process error log, not only the health path (F-08). Deploy records carry backup path, rollback command and what was not verified.
+
 ## Core Principles
 
 1. **Deployment lock:** prevent conflicts from concurrent deployments

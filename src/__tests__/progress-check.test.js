@@ -53,6 +53,14 @@ describe('progress-check (G20-A — progress ledger gate, §9/§10)', () => {
     expect(rules(GOOD.replace('| 진행 중 | | 버튼 상태·오류 문구 |', '| 진행 중 | | |'))).toContain('in-progress-without-remaining');
   });
 
+  test('duplicate task numbers and duplicate D-numbers are named (field lesson F-22)', () => {
+    const dupTask = GOOD.replace('| 3 | 환불 연동 | 대기 | | |', '| 2 | 환불 연동 | 대기 | | |');
+    expect(evaluate(dupTask).findings.filter(f => f.rule === 'duplicate-id').map(f => f.where)).toEqual([expect.stringMatching(/^task 2 /)]);
+    const dupDefect = GOOD.replace('| D-1 | C2 | src/cancel.js:40 | 닫힘 |', '| D-1 | C2 | src/cancel.js:40 | 닫힘 |\n| D-1 | C3 | src/pay.js:9 | 열림 |');
+    expect(rules(dupDefect)).toContain('duplicate-id');
+    expect(rules(GOOD)).not.toContain('duplicate-id');
+  });
+
   test('status outside {대기, 진행 중, 완료} → invalid-status (no "사실상 완료" state exists)', () => {
     expect(rules(GOOD.replace('| 3 | 환불 연동 | 대기 |', '| 3 | 환불 연동 | 거의 완료 |'))).toContain('invalid-status');
   });

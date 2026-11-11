@@ -20,6 +20,14 @@ After deployment, confirm that the **actual environment** — ports, API, databa
 **Artifact:** integration-validation-report-{id}.json
 **Note:** Difference from E2E Tester — environment level (server ports, DB connection), not UI level
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner integration-validator` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+After every write, re-read through a second independent request (W-04). For each core flow, one probe against the deployed target; the process error log is part of the evidence (F-08).
+
 ## Core Principles
 
 1. **Real-environment validation:** Validate in the actual running environment, not in development

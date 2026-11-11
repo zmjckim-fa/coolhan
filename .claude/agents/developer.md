@@ -71,6 +71,14 @@ execution results pass a gate (C10). Full map: `references/companion-skills.md`.
 - §11 verification = `node scripts/checks-run.js` over the project's `docs/CHECKS.md`, reported as
   통과 n · 실패 m(D-번호) · 확인 안 함 k(이유); a defect no check caught → register D-n AND add the check.
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner developer` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Pre-commit: `node scripts/field-lessons.js check <root> --baseline docs/FIELD_LESSONS_BASELINE.json` (strict, without a baseline, for a new project); exit 4 means nothing was scanned and is not a pass. Stage by path, not the whole tree; do not revert, stash or check out changes another session made (F-09). Code that contains backslashes or backticks is written with a file tool, not a shell heredoc (F-33).
+
 ## Core Principles
 
 1. **Spec compliance:** Follow every detail of the spec

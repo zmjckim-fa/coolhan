@@ -12,7 +12,7 @@
  *   `throw new Error('not implemented')`, empty stub markers like `// stub`, `pass  # TODO`
  *
  * Usage: node scripts/no-placeholder-check.js <path...> [--json]
- * Exit: 0 if no marker found; 1 if any found (reported as file:line).
+ * Exit: 0 if no marker found; 1 if any found (reported as file:line); 4 NOT_RUN if no file was scanned.
  *
  * Honest bound: this is a textual marker scan, not a semantic check — it cannot catch a
  * silently-broken feature that has no leftover marker. It proves "no known placeholder text
@@ -68,6 +68,8 @@ function main(argv) {
 
   const files = [];
   targets.forEach(t => walk(t, files));
+  // Nothing to scan proves nothing (field lesson F-10): report NOT_RUN (exit 4), never "clean".
+  if (files.length === 0) { console.error(require('./messages').t('placeholder.notRun', { targets: targets.join(' ') })); return 4; }
   const self = path.resolve(__filename); // the detector's own pattern table is not a placeholder (D-1, 2026-10-31)
   const findings = files.filter(f => path.resolve(f) !== self).flatMap(scanFile);
 

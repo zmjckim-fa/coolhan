@@ -458,6 +458,15 @@ while (todo remains in backlog):
        word outside [결정필요], every [미검증] with a method, tooltips ≤10 어절, no em dash / hype word, diagram
        files exist, no ID with two names, all §4.2 items and success criteria (≥3) present. FAIL blocks the unit;
        form only — facts and diagrams still need the Plan Reviewer and the human eye.
+   + G22 FIELD LESSONS (v2.9.0, knowledge_base/00_FIELD_LESSONS.md ← knowledge_base/field-lessons.json):
+     what worked and what broke in every project already built, as one registry. Plan time:
+       node scripts/plan-doc-check.js <docs> --lessons knowledge_base/field-lessons.json — the 기획서 carries
+       "교훈 태그: …" and a 실패 방지 대응표; an applicable failure pattern with no row is FAIL.
+     Per unit: node scripts/field-lessons.js check <root> --baseline docs/FIELD_LESSONS_BASELINE.json
+       (data-driven detectors: swallowed errors, numeric fallbacks, fake data, skipped tests, client-trusted
+       amounts, request-derived URLs, exposed secrets, tree-wide git commands; ratchet; exit 4 = nothing
+       scanned = 확인 안 함, not a pass). Agents read their own lines with `list --owner <agent>`.
+     An incident closes by adding one registry entry and re-rendering (render --check keeps the doc derived).
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)
 ```
@@ -846,6 +855,8 @@ READ ALL (not just "check exists"):
   • CLAUDE.md change-history       (prior development on this area — do not re-do or contradict it)
   • prior _workspace artifacts     (requirements/spec/validation/test outputs already produced)
   • relevant knowledge_base module(s) for the domain
+  • knowledge_base/00_FIELD_LESSONS.md (G22 — failure patterns and working practices from every project already
+    built; list the applicable ones with `node scripts/field-lessons.js list --kind fail --tags <tags>` before planning)
   • docs/PROGRESS.md + docs/CHECKS.md (if present — G20 ledger + fixed verification list: the ledger's goal line,
     current position, assumptions and open D-numbers override anything remembered from chat; a completed task
     number is re-verified from file state, never rebuilt)
@@ -1011,7 +1022,7 @@ Task 2: Write CoolHan spec (Spec Writer)
 🛑 Task 2.5: Plan/Spec quality gate (Plan Reviewer) ★ NEW (G3) — PASS-required, before any coding
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ├─ Depends: Task 2 complete (spec) + backlog decomposed (_workspace/_backlog.md or plan.json)
-├─ **Planning-document gate (G21, when the plan is 기획서 documents):** `node scripts/plan-doc-check.js <docs> --required "<items>"`
+├─ **Planning-document gate (G21 + G22, when the plan is 기획서 documents):** `node scripts/plan-doc-check.js <docs> --required "<items>" --lessons knowledge_base/field-lessons.json`
 │  — form of the document itself (§7 of the standard); FAIL blocks Task 3 before G3 runs.
 ├─ **Structural gate (mechanical, non-waivable):** `node scripts/plan-check.js <plan.json>` —
 │  dependency graph acyclic + deps exist, ordering respects deps, every unit has a `verifies`

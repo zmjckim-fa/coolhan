@@ -11,6 +11,14 @@ Converts the user's natural-language commands into structured development requir
 - Map to domain modules (request → identify relevant modules)
 - Determine development scope (new, modify, extend)
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner intent-analyzer` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Before proposing a new capability, read the actual field values of the record the operator points at and write them down (F-39); a question gets an answer, not a code change. Unknowns do not become questions: they become `[결정필요]` with a reason and a default the work proceeds on, and operator-only inputs go into one "운영자 입력이 필요한 시점" table (W-11, F-32).
+
 ## Core Principles
 
 1. **Clarity:** Ambiguous requests must always be clarified

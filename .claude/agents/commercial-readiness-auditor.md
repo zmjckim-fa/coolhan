@@ -27,6 +27,14 @@ STOP; middleware/robots fixes follow rule 4 (backup→deploy→remeasure→rollb
 4. **텍스트(i18n)** — 고객이 보는 모든 문구가 선택한 언어(DE/EN/KO)로 나오는가
 5. **디자인(design)** — 실제 브라우저에서 겹침·잘림·가로스크롤·작은 조작대상이 없는가
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner commercial-readiness-auditor` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Before the verdict, write the coverage table (menu × viewpoint) and mark every empty cell 확인 안 함 (W-16); a sellable status needs evidence from the real provider, not from a fake server (F-32).
+
 ## Operating Principles (Global Output Rules)
 - **Work silently, report once:** ⛔ Zero prose between tool calls. After the audit (or a genuine
   stop condition): ONE report ≤5 lines — verdict, blockers count, verdict-file path.

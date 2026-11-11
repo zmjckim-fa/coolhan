@@ -18,10 +18,12 @@
  *   • with    --baseline : ratchet — FAIL only when a count grew or a NEW duplicate pair / inline style /
  *                          sentence / target literal appeared vs the committed baseline; shrinking is PASS
  *   • --write-baseline   : snapshot the current measurement as the baseline (commit it — §4-c)
+ *   • --allow-scope-shrink : accept a ratchet run whose scanned file count is below the baseline's. Without it a
+ *                          smaller scan is `scan-scope-shrunk`: numbers must fall by fixing, not by moving code out of scope
  *
  * Usage: node scripts/single-source-check.js [root] [--measure] [--baseline <file>] [--write-baseline]
  *          [--targets a,b,c] [--registry-dirs d1,d2] [--dict-dirs d1,d2] [--json]
- * Exit:  0 PASS · 1 FAIL · 2 usage error.  `single-source-check:allow` on a line exempts it.
+ * Exit:  0 PASS · 1 FAIL · 4 NOT_RUN (no file scanned) · 2 usage error.  `single-source-check:allow` on a line exempts it.
  *
  * Honest bound: textual heuristics — a duplicate written twice with different variable names, a hand-made
  * derived table (S4), a scattered setting (S5) or a one-off file (§2-⑤) are NOT detected; the numbers prove
@@ -177,6 +179,7 @@ function evaluate(root, opts = {}) {
     const bInl = baseSet(base.inline_styles); for (const w of m.inline_styles) if (!bInl.has(w) && m.counts.inline_styles > (bc.inline_styles ?? 0)) { add('inline-style-grew', w, 'single.inlineGrew', { before: bc.inline_styles ?? 0, after: m.counts.inline_styles }); break; }
     const bSen = baseSet(base.hardcoded_sentences, 'where'); if (m.counts.hardcoded_sentences > (bc.hardcoded_sentences ?? 0)) { const first = m.hardcoded_sentences.find(s => !bSen.has(s.where)); add('hardcoded-sentence-grew', first ? first.where : '(code)', 'single.sentenceGrew', { before: bc.hardcoded_sentences ?? 0, after: m.counts.hardcoded_sentences }); }
     if (m.counts.target_literals > (bc.target_literals ?? 0)) add('target-literal-grew', m.target_literals[0] ? m.target_literals[0].where : '(code)', 'single.targetGrew', { before: bc.target_literals ?? 0, after: m.counts.target_literals });
+    if (!opts.allowScopeShrink && m.counts.files < (bc.files ?? 0)) add('scan-scope-shrunk', '(scan)', 'single.scopeShrunk', { before: bc.files, after: m.counts.files });
     const limit = opts.maxFileLines || 0;
     if (limit && m.counts.max_file_lines > limit && m.counts.max_file_lines > (bc.max_file_lines ?? 0)) add('max-file-grew', m.max_file.path, 'single.maxFileGrew', { before: bc.max_file_lines ?? 0, after: m.counts.max_file_lines, limit });
   }
@@ -193,7 +196,8 @@ function main(argv) {
     registryDirs: argList(args, '--registry-dirs'),
     dictDirs: argList(args, '--dict-dirs'),
     skipDirs: argList(args, '--skip-dirs'),
-    maxFileLines: argValue(args, '--max-file-lines') ? Number(argValue(args, '--max-file-lines')) : 0
+    maxFileLines: argValue(args, '--max-file-lines') ? Number(argValue(args, '--max-file-lines')) : 0,
+    allowScopeShrink: args.includes('--allow-scope-shrink')
   };
   const baselinePath = argValue(args, '--baseline') ? path.resolve(argValue(args, '--baseline')) : null;
 
@@ -220,6 +224,8 @@ function main(argv) {
     catch (e) { console.error(t('single.cannotReadBaseline', { file: baselinePath, error: e.message })); return 2; }
   }
   const r = evaluate(root, opts);
+  // Nothing to scan proves nothing (field lesson F-10): NOT_RUN (exit 4), never PASS.
+  if (r.files === 0) { console.error(t('single.notRun', { root })); return 4; }
   if (json) console.log(JSON.stringify({ root, ...r }, null, 2));
   else {
     console.log(`${r.status === 'PASS' ? '✔' : '✗'} single-source-check: ${r.status} (${r.mode}) — ${JSON.stringify(r.counts)}`);

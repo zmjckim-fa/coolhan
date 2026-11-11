@@ -13,6 +13,14 @@
 - Output **two layers**: `controls_status` (implemented/verified, with evidence) and `residual_risk` (unmitigated + out-of-scope threats).
 - **Banned wording:** "100% secure / unhackable / perfectly safe." Such claims are a FAIL of this agent's own rules.
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner security-reviewer` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Review against deny-by-default: one central guard with a public allow-list, one projection per model per role shared by list and detail responses (F-18); findings from the F-19 detector (client-exposed secret, unverified token decode, negation-based environment switch) are cited with file:line.
+
 ## Core Principles (inherits P0)
 1. **Evidence-based:** every verdict cites file:line (the control, or its absence). No control marked `pass` without evidence → `not_verified`.
 2. **Negative proof for P0:** for access-control/injection/secrets, show the attack input is rejected — not just the happy path.

@@ -1,0 +1,28 @@
+{
+  "written": "2026-11-11",
+  "counts": {
+    "F-04": 0,
+    "F-05": 4,
+    "F-06": 0,
+    "F-09": 0,
+    "F-11": 0
+  },
+  "hits": [
+    {
+      "id": "F-05",
+      "where": "scripts/check-update.js:42"
+    },
+    {
+      "id": "F-05",
+      "where": "scripts/check-update.js:50"
+    },
+    {
+      "id": "F-05",
+      "where": "scripts/check-update.js:173"
+    },
+    {
+      "id": "F-05",
+      "where": "scripts/check-update.js:185"
+    }
+  ]
+}

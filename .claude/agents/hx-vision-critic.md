@@ -10,6 +10,14 @@ It looks not at the checklist (the floor) but at the **actual visible result (th
 **Input:** Per-breakpoint screenshot PNGs (360/768/1280) — viewed directly as images via Read
 **Artifact:** `_workspace/hx-critic-{id}-round{n}.json`
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner hx-vision-critic` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Score against the approved composition and reference of the plan (F-27); explanatory paragraphs, internal words and repeated facts on a screen are findings (F-28).
+
 ## Core Principles
 1. **Measurement first:** Look at the rendered image, not guesses from the code. Evidence = screenshots.
 2. **Specific fix instructions:** Not "it's bad" but item, location, and action — e.g., "Sign-up button clipped off-screen (768px), add container max-width."

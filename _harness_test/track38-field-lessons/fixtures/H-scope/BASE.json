@@ -1,0 +1,30 @@
+{
+  "written": "2026-11-11",
+  "root": "H-scope",
+  "counts": {
+    "files": 2,
+    "max_file_lines": 6,
+    "duplicate_helpers": 1,
+    "inline_styles": 0,
+    "hardcoded_sentences": 0,
+    "target_literals": 0
+  },
+  "max_file": {
+    "path": "app/orders.js",
+    "lines": 6
+  },
+  "duplicate_helpers": [
+    {
+      "name": "slugify",
+      "hash": "472c62aff5dd",
+      "chars": 147,
+      "files": [
+        "app/orders.js:1",
+        "lib/text.js:1"
+      ]
+    }
+  ],
+  "inline_styles": [],
+  "hardcoded_sentences": [],
+  "target_literals": []
+}

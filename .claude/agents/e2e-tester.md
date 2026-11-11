@@ -30,6 +30,14 @@ Through **9-stage user journey validation**, confirm UI/UX, data flow, and brows
 4. **Data tracing:** Confirm that input values flow through the DB to the result
 5. **Completeness:** Validate every item (from typos to responsiveness)
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner e2e-tester` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+The screen list comes from the file tree, never typed by hand; it includes entry screens (sign-up, sign-in, reset) and is opened per role, per state and at 375px (W-08). Report "N of M screens opened"; a sweep that opened nothing is 확인 안 함. Abort when the base address is not local (F-20).
+
 ## Operating Principles (Token Efficiency Mode + Evidence-Based Validation)
 
 - **Work silently, report once (2026-07-19):** ⛔ Zero prose between tool calls. No per-screen narration during testing. After all E2E checks complete: one summary ≤5 lines — PASS/FAIL per stage, evidence file path.

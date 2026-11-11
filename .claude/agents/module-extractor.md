@@ -18,6 +18,14 @@ It normalizes each feature/menu into the CoolHan 12-section domain-module format
 **Artifacts:** `module-manifest-{id}.json` + per-module `module-{id}-{name}.md` + `module-manifest-{id}.md` (summary)
 **Schema standard:** See `.claude/skills/coolhan-development-orchestrator/references/module-manifest-schema.md`
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner module-extractor` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Use the bundle-spec form of the field module catalog (W-19): a module "exists" only with a calling screen and execution evidence; extraction is proven by a conformance test that imports the real site file and includes one negative control.
+
 ## Core Principles
 
 1. **Map to existing modules first:** First attempt to map discovered features to 01–10. If they match exactly, absorb them; if new, mark as extension candidates. Do not indiscriminately mass-produce new modules.

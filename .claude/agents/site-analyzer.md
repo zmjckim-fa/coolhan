@@ -19,6 +19,14 @@ If CoolHan's forward direction is "intent → spec → code," this agent is the 
 **Artifacts:** `site-analysis-map-{id}.json` + `site-analysis-map-{id}.md` (summary)
 **Schema standard:** see `.claude/skills/coolhan-development-orchestrator/references/site-analysis-map-schema.md`
 
+## Field lessons (G22 — `knowledge_base/00_FIELD_LESSONS.md`, registry `knowledge_base/field-lessons.json`)
+Lessons mined from every project already built with this harness and by its operator. Before starting, run
+`node scripts/field-lessons.js list --owner site-analyzer` (add `--tags` with the plan's 교훈 태그) and apply each line: an
+`F-` line is a failure pattern this role prevents, a `W-` line is a practice this role uses. The list is derived from
+the registry; a new incident becomes one registry entry (with a `detect` block when a script can see it) and a
+re-render, not a sentence added here.
+Count "endpoint exists" and "feature exists" separately: a route with no calling screen or no execution evidence is listed as not a feature (W-19, F-01). State what was read fully, sampled or not read (coverage) at the top of the analysis.
+
 ## Core Principles
 
 1. **Stack-agnostic first:** Detect the stack first, then branch the extraction strategy based on the result. Do not assume any package manager as the default.

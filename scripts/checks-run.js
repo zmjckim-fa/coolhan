@@ -34,6 +34,7 @@ const { t } = require('./messages');
 const DEFAULT_CHECKS = 'docs/CHECKS.md';
 const DEFAULT_LEDGER = 'docs/PROGRESS.md';
 const DEFAULT_TIMEOUT_SEC = 900;
+const NOT_RUN_EXIT = 4;   // the harness convention for "could not measure" (checks-run, commercial-gate, field-lessons)
 const VALUE_FLAGS = ['--only', '--ledger', '--timeout'];
 const TOOL_MISSING = /not recognized as an internal or external command|command not found|is not recognized/i;
 
@@ -94,6 +95,7 @@ function runOne(check, { cwd, timeoutSec }) {
   if (r.error && r.error.code === 'ETIMEDOUT') return { ...check, result: 'not-run', reason: t('checks.reasonTimeout', { sec: timeoutSec }), exit: null, tail, ms };
   if (r.error) return { ...check, result: 'not-run', reason: t('checks.reasonSpawn', { error: r.error.message }), exit: null, tail, ms };
   if (r.status === 127 || TOOL_MISSING.test(out)) return { ...check, result: 'not-run', reason: t('checks.reasonToolMissing'), exit: r.status, tail, ms };
+  if (r.status === NOT_RUN_EXIT) return { ...check, result: 'not-run', reason: t('checks.reasonChildNotRun'), exit: r.status, tail, ms };
   return { ...check, result: r.status === 0 ? 'pass' : 'fail', exit: r.status, tail, ms };
 }
 
