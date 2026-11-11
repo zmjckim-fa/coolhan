@@ -17,10 +17,10 @@
 | 6 | G21 게이트 `scripts/plan-doc-check.js` + S8 `scripts/lib`(fs · md-table 확장) + S2 문구 키 + 시험 | 완료 | jest 신규 16/16 (plan-doc-check), single-source 시험 13/13; ratchet PASS {dup 3, sentences 95} | - |
 | 7 | 기획서 제작 표준 KB `00_PLANNING_DOC_STANDARD.md` + 에이전트·SKILL·SDLC 지도 배선 (intent-analyzer · spec-writer · plan-reviewer 0단계 · ux-design-lead · Task 2.5 · 엔진 루프) | 완료 | prompt-modernization-check clean 48 files; 줄표 문자 0개 | - |
 | 8 | 적대 검증 track37 (적합 PASS / 14개 규칙 위반 FAIL 명명 / 다중 파일 ID 충돌 / 빈 폴더 exit 2 / 펜스·허용 표지 PASS) | 완료 | 시나리오 7/7 일치, 0 false +/- (`_harness_test/track37-plan-doc/run-log.txt`) | - |
-| 9 | 릴리스 v2.8.0 (CHANGELOG · CLAUDE.md 행 · HANDOFF · DECISIONS · 전체 jest · secret-scan · 커밋·태그·푸시 · CI 녹색) | 진행 중 | | 전체 jest 수치 · 커밋 · CI · 이 행 갱신 |
+| 9 | 릴리스 v2.8.0 (CHANGELOG · CLAUDE.md 행 · HANDOFF · DECISIONS · 전체 jest · secret-scan · 커밋·태그·푸시 · CI 녹색) | 완료 | 커밋 bf1918d, 태그 v2.8.0 = releases/latest; CI Release·Test·Harness-check·Python API success (npm publish은 NPM_TOKEN 미설정으로 예상 실패); jest 297/297 (32 suites); checks-run 통과 9 · 실패 0 · 확인 안 함 0 | - |
 
 ## 현재 위치
-9번 — 구현·검증 끝, 문서 갱신 후 커밋·태그·푸시 → CI 확인 단계. (이 단위가 목표에 속하는가: 예. 2026-11-11 지시의 마스터 프롬프트 적용이 목표 줄에 포함됨.)
+9번 완료 — 목표의 작업 9개 모두 완료. 다음 단위는 사용자가 목표 줄을 바꾸거나 D-2~D-4(손대는 날 이행)를 지정할 때 시작한다.
 
 ## 가정 목록
 
