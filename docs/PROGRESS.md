@@ -29,10 +29,10 @@
 | 18 | 프로젝트 킷: `new-project.js` · 런처 · 템플릿 · `handoff-write.js` · `lib/template.js` + 훅 프로젝트 모드 | 완료 | jest project-kit 19/19; ask-run-guards · stop-guard 통과 | - |
 | 19 | 모듈 저장소 연결: 모듈 계획표 기본값 + `plan-doc-check --modules` | 완료 | jest 모듈 계획 시험 3/3; 실제 저장소 대조 26/26 묶음 응답 | - |
 | 20 | 에이전트 5개 · SKILL · SDLC 지도 배선 + 적대 검증 track39 | 완료 | prompt-modernization-check clean 48 files; 시나리오 25/25 일치, 0 false +/- (`_harness_test/track39-project-kit/run-log.txt`) | - |
-| 21 | 릴리스 v2.10.0 (문서 · 전체 jest · checks-run · 커밋·태그·푸시 · CI) | 진행 중 | | 커밋 · 태그 · 푸시 · CI 확인 |
+| 21 | 릴리스 v2.10.0 (문서 · 전체 jest · checks-run · 커밋·태그·푸시 · CI) | 완료 | 커밋 c9448a5, 태그 v2.10.0 = releases/latest; CI Release·Test·Harness-check·Python API success (npm publish은 NPM_TOKEN 미설정으로 예상 실패); jest 337/337 (34 suites); checks-run 통과 12 · 실패 0 · 확인 안 함 0 | - |
 
 ## 현재 위치
-21번 릴리스 v2.10.0. 이 단위가 목표에 속하는가: 예, 2026-11-17 지시(G23)의 출고 단계다.
+21번 완료: 목표의 작업 21개 모두 완료. 다음 단위는 실제 새 사이트를 킷으로 시작해 운영자 메시지 수를 이전 프로젝트와 비교할 때, 사용자가 목표 줄을 바꿀 때, 또는 열린 결함(D-2~D-4, D-8)을 지정할 때 시작한다.
 
 ## 가정 목록
 
