@@ -1,0 +1,191 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1184" width="1200" height="1184" role="img" aria-labelledby="sheet-title">
+  <title id="sheet-title">컴포넌트 표: C-01부터 C-14까지 기본 상태</title>
+  <style>
+    text { font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif; fill: #0c0c0b; }
+    .cell { fill: #ffffff; stroke: #b3b3b3; stroke-width: 1; }
+    .id { font-size: 13px; font-weight: 700; }
+    .lbl { font-size: 12px; font-weight: 600; fill: #383838; }
+    .val { font-size: 16px; font-weight: 500; }
+    .btn { font-size: 13px; font-weight: 700; text-anchor: middle; }
+    .badge { font-size: 12px; font-weight: 700; }
+    .note { font-size: 11px; font-weight: 500; fill: #4d4d4d; }
+    .num { font-variant-numeric: tabular-nums; }
+  </style>
+
+  <rect width="1200" height="1184" fill="#f4f2ef"/>
+  <text x="20" y="38" font-size="18" font-weight="700">컴포넌트 표</text>
+  <text x="1180" y="38" class="note" text-anchor="end">색은 web/tokens.css 값, 모서리 반경 4px</text>
+
+  <!-- C-01 주 버튼 -->
+  <g transform="translate(20,60)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-01 주 버튼</text>
+    <rect x="16" y="52" width="96" height="44" rx="4" fill="#326916"/>
+    <text class="btn" x="64" y="78.5" fill="#ffffff" style="fill:#ffffff">저장</text>
+  </g>
+
+  <!-- C-02 보조 버튼 -->
+  <g transform="translate(610,60)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-02 보조 버튼</text>
+    <rect x="16.5" y="52.5" width="95" height="43" rx="4" fill="#ffffff" stroke="#326916"/>
+    <text class="btn" x="64" y="78.5" style="fill:#326916">취소</text>
+  </g>
+
+  <!-- C-03 삭제 버튼 -->
+  <g transform="translate(20,220)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-03 삭제 버튼</text>
+    <rect x="16.5" y="52.5" width="95" height="43" rx="4" fill="#ffffff" stroke="#dc2626"/>
+    <text class="btn" x="64" y="78.5" style="fill:#b91c1c">삭제</text>
+  </g>
+
+  <!-- C-04 글 입력칸 -->
+  <g transform="translate(610,220)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-04 글 입력칸</text>
+    <text class="lbl" x="16" y="56">메뉴 이름</text>
+    <rect x="16.5" y="64.5" width="259" height="43" rx="4" fill="#ffffff" stroke="#858585"/>
+    <text class="val" x="28" y="91.5">소금빵</text>
+  </g>
+
+  <!-- C-05 시각 입력칸 -->
+  <g transform="translate(20,380)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-05 시각 입력칸</text>
+    <text class="lbl" x="16" y="56">여는 시각</text>
+    <rect x="16.5" y="64.5" width="119" height="43" rx="4" fill="#ffffff" stroke="#858585"/>
+    <text class="val num" x="28" y="91.5">07:30</text>
+  </g>
+
+  <!-- C-06 선택 상자 -->
+  <g transform="translate(610,380)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-06 선택 상자</text>
+    <text class="lbl" x="16" y="56">분류</text>
+    <rect x="16.5" y="64.5" width="159" height="43" rx="4" fill="#ffffff" stroke="#858585"/>
+    <text class="val" x="28" y="91.5">빵</text>
+    <path d="M150 83 l6 6 l6 -6" fill="none" stroke="#383838" stroke-width="2"/>
+  </g>
+
+  <!-- C-07 체크 상자 -->
+  <g transform="translate(20,540)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-07 체크 상자</text>
+    <rect x="16.5" y="62.5" width="19" height="19" rx="4" fill="#ffffff" stroke="#858585"/>
+    <text x="46" y="77" font-size="14" font-weight="500">휴무</text>
+    <rect x="116" y="62" width="20" height="20" rx="4" fill="#326916"/>
+    <path d="M120.5 72.5 l4 4 l7 -8" fill="none" stroke="#ffffff" stroke-width="2"/>
+    <text x="146" y="77" font-size="14" font-weight="500">휴무</text>
+  </g>
+
+  <!-- C-08 상태 표지 -->
+  <g transform="translate(610,540)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-08 상태 표지</text>
+    <!-- open -->
+    <rect x="16" y="48" width="76" height="24" rx="4" fill="#dcfce7"/>
+    <circle cx="28" cy="60" r="4" fill="#166534"/>
+    <text class="badge" x="38" y="64.5" style="fill:#166534">영업 중</text>
+    <!-- closed -->
+    <rect x="100" y="48" width="88" height="24" rx="4" fill="#f3f4f6"/>
+    <rect x="108" y="56" width="8" height="8" fill="#4b5563"/>
+    <text class="badge" x="122" y="64.5" style="fill:#4b5563">영업 종료</text>
+    <!-- dayoff -->
+    <rect x="196" y="48" width="60" height="24" rx="4" fill="#fef3c7"/>
+    <rect x="204" y="58.5" width="8" height="3" fill="#92400e"/>
+    <text class="badge" x="218" y="64.5" style="fill:#92400e">휴무</text>
+    <!-- unset -->
+    <rect x="264.5" y="48.5" width="155" height="23" rx="4" fill="#ffffff" stroke="#858585" stroke-dasharray="3 2"/>
+    <circle cx="276" cy="60" r="3.5" fill="none" stroke="#4d4d4d" stroke-width="1.5"/>
+    <text class="badge" x="286" y="64.5" style="fill:#4d4d4d">영업시간 정보 없음</text>
+    <!-- on_sale -->
+    <rect x="16" y="88" width="76" height="24" rx="4" fill="#e9f8c6"/>
+    <path d="M23 100.5 l3.5 3.5 l6 -7" fill="none" stroke="#326916" stroke-width="2"/>
+    <text class="badge" x="38" y="104.5" style="fill:#326916">판매 중</text>
+    <!-- sold_out -->
+    <rect x="100" y="88" width="60" height="24" rx="4" fill="#555555"/>
+    <path d="M108 96 l8 8 M116 96 l-8 8" fill="none" stroke="#ffffff" stroke-width="2"/>
+    <text class="badge" x="122" y="104.5" style="fill:#ffffff">품절</text>
+  </g>
+
+  <!-- C-09 풍선말 단추 -->
+  <g transform="translate(20,700)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-09 풍선말 단추</text>
+    <rect x="16.5" y="58.5" width="19" height="19" rx="4" fill="#ffffff" stroke="#326916"/>
+    <text x="26" y="72.5" font-size="12" font-weight="700" text-anchor="middle" style="fill:#326916">?</text>
+    <path d="M50 62 l-6 6 l6 6 z" fill="#0c0c0b"/>
+    <rect x="50" y="52" width="150" height="32" rx="4" fill="#0c0c0b"/>
+    <text x="62" y="72.5" font-size="12" font-weight="500" style="fill:#ffffff">5분 단위로 적는다</text>
+  </g>
+
+  <!-- C-10 오류 줄 -->
+  <g transform="translate(610,700)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-10 오류 줄</text>
+    <rect x="17" y="45" width="258" height="42" rx="4" fill="#ffffff" stroke="#dc2626" stroke-width="2"/>
+    <circle cx="24" cy="106" r="7" fill="none" stroke="#b91c1c" stroke-width="1.5"/>
+    <path d="M24 101.5 v5.5 M24 109 v1.5" fill="none" stroke="#b91c1c" stroke-width="1.8"/>
+    <text x="38" y="110.5" font-size="12" font-weight="600" style="fill:#b91c1c">이름을 적어 주세요</text>
+  </g>
+
+  <!-- C-11 확인 창 -->
+  <g transform="translate(20,860)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-11 확인 창</text>
+    <rect x="16.5" y="40.5" width="319" height="99" rx="4" fill="#ffffff" stroke="#b3b3b3"/>
+    <rect x="16" y="40" width="320" height="30" rx="4" fill="#b91c1c"/>
+    <rect x="16" y="56" width="320" height="14" fill="#b91c1c"/>
+    <text x="28" y="60" font-size="13" font-weight="700" style="fill:#ffffff">메뉴 삭제</text>
+    <text x="28" y="90" font-size="12" font-weight="500">소금빵을 삭제할까요?</text>
+    <rect x="208.5" y="100.5" width="55" height="31" rx="4" fill="#ffffff" stroke="#326916"/>
+    <text class="btn" x="236" y="120.5" style="fill:#326916">취소</text>
+    <rect x="272" y="100" width="56" height="32" rx="4" fill="#b91c1c"/>
+    <text class="btn" x="300" y="120.5" style="fill:#ffffff">삭제</text>
+  </g>
+
+  <!-- C-12 위쪽 줄 -->
+  <g transform="translate(610,860)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-12 위쪽 줄</text>
+    <!-- 방문자 -->
+    <rect x="16" y="40" width="440" height="30" fill="#ffffff"/>
+    <path d="M16 70.5 h440" stroke="#c2c2c2" stroke-width="1"/>
+    <text x="28" y="60" font-size="14" font-weight="800">가게 이름</text>
+    <text class="note" x="468" y="59">방문자</text>
+    <!-- 관리자 -->
+    <rect x="16" y="78" width="440" height="32" fill="#1a3d0a"/>
+    <text x="28" y="99" font-size="14" font-weight="800" style="fill:#ffffff">가게 이름</text>
+    <text x="444" y="98.5" font-size="12" font-weight="600" text-anchor="end" style="fill:#ffffff">로그아웃</text>
+    <rect x="16" y="110" width="440" height="30" fill="#e9edf2"/>
+    <rect x="20" y="114" width="104" height="26" fill="#ffffff"/>
+    <text x="72" y="131.5" font-size="12" font-weight="600" text-anchor="middle" style="fill:#326916">영업시간 관리</text>
+    <text x="168" y="131.5" font-size="12" font-weight="600" text-anchor="middle" style="fill:#383838">메뉴 관리</text>
+    <text class="note" x="468" y="113">관리자</text>
+  </g>
+
+  <!-- C-13 목록 행 -->
+  <g transform="translate(20,1020)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-13 목록 행</text>
+    <rect x="16.5" y="44.5" width="537" height="88" rx="4" fill="#ffffff" stroke="#b3b3b3"/>
+    <path d="M17 88.5 h536" stroke="#c2c2c2" stroke-width="1"/>
+    <text x="28" y="71" font-size="14" font-weight="800">소금빵</text>
+    <rect x="84" y="54" width="76" height="24" rx="4" fill="#e9f8c6"/>
+    <path d="M91 66.5 l3.5 3.5 l6 -7" fill="none" stroke="#326916" stroke-width="2"/>
+    <text class="badge" x="106" y="70.5" style="fill:#326916">판매 중</text>
+    <text class="num" x="542" y="71" font-size="14" font-weight="800" text-anchor="end">3,500원</text>
+    <text x="28" y="115" font-size="14" font-weight="600">월요일</text>
+    <text class="num" x="542" y="115" font-size="14" font-weight="700" text-anchor="end">07:30 ~ 20:00</text>
+  </g>
+
+  <!-- C-14 저장 알림 -->
+  <g transform="translate(610,1020)">
+    <rect class="cell" width="570" height="148" rx="4"/>
+    <text class="id" x="16" y="26">C-14 저장 알림</text>
+    <rect x="16.5" y="56.5" width="279" height="43" rx="4" fill="#f4fbe8" stroke="#326916"/>
+    <path d="M28 78.5 l4.5 4.5 l8 -9" fill="none" stroke="#326916" stroke-width="2"/>
+    <text x="50" y="82.5" font-size="13" font-weight="700" style="fill:#326916">저장했습니다</text>
+  </g>
+</svg>

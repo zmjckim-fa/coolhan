@@ -1,0 +1,11 @@
+{
+  "name": "bakery-hours",
+  "intent": "동네 빵집의 영업시간과 메뉴를 보여 주고 관리자가 고치는 사이트",
+  "tags": [
+    "ui"
+  ],
+  "deploy": "none",
+  "home": "C:/sites/CoolHan builder",
+  "modules": "C:/sites/00Module_site",
+  "kit": "2.11.1"
+}

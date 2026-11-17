@@ -1,0 +1,6 @@
+_workspace/_run-active.json
+_workspace/_stop-approved.json
+_workspace/_stop-guard-count.json
+.env
+data/
+node_modules/
