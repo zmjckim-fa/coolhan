@@ -20,8 +20,8 @@ Claude Code. It is the *product* (the harness itself), not an app built with it.
 gates (G1–G24) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.11.0` (package.json = git tag `v2.11.0` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **354 tests, 36 suites, all pass** (~6 min; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.11.1` (package.json = git tag `v2.11.1` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **370 tests, 37 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -153,13 +153,13 @@ provide its own credentials in its own environment — they do NOT travel in thi
 ```bash
 git log --oneline -3
 node -e "console.log('pkg', require('./package.json').version)" && git describe --tags --abbrev=0
-npx jest --ci   # background it; expect 354 passed / 36 suites
+npx jest --ci   # background it; expect 370 passed / 37 suites
 node scripts/checks-run.js   # the fixed list (docs/CHECKS.md) — the G20 way to "verify"; C1 is the slow one
 node scripts/progress-check.js docs/PROGRESS.md   # this repo's ledger: current position + open D-numbers
 node doctor.js
 ```
 
-If those agree (version = v2.11.0, tests green, doctor healthy, ledger PASS), the handoff is intact and you
+If those agree (version = v2.11.1, tests green, doctor healthy, ledger PASS), the handoff is intact and you
 may proceed from § Next actions.
 
 
@@ -305,3 +305,14 @@ CREATE TABLE consent_records (user_id UUID, region TEXT, personalized BOOLEAN DE
 - 다른 기기나 다른 계정에서는 저장소를 받은 뒤 한 번 실행한다: `node scripts/install-global.js`. 확인은 `--check`, 되돌리기는 `--remove`.
 - 지시를 고친 뒤 순서: `knowledge_base/field-lessons.json`의 `orders` 수정, `node scripts/field-lessons.js render`, `node scripts/install-global.js`. 고정 검증 C13이 어긋남을 잡는다.
 - 아직 재지 않은 것: 다른 폴더에서 새로 연 세션이 실제로 이 블록대로 움직이는지. 다음 세션에서 볼 것: 킷이 없는 폴더에서 개발 지시를 하면 묻지 않고 킷을 설치하는가, «이어서 진행하라» 없이 다음 단위로 가는가, 보고가 5줄 이내인가.
+
+---
+## 인수인계 보강 (2026-11-17, v2.11.1): 훅이 가끔 시작되지 않던 원인
+
+- 위 본문의 v2.11.0 수치는 이 보강으로 대체된다: 현재 `2.11.1`, jest **370 tests / 37 suites**, 게이트 G1–G24. D-13은 닫혔다. 열린 결함은 D-14 하나다: 전체 시험 한 번이 요약 줄 없이 종료 코드 127로 끝났고(메모리 여유는 충분했다) 다시 돌린 실행들은 통과했다. 원인은 모른다. 다시 나오면 종료 상태 전체와 마지막 출력을 남긴다.
+- D-13의 원인: 기기의 가상 메모리(커밋) 부족. 메모리를 받지 못한 자식 프로세스는 첫 줄도 실행하지 못하고 죽고 stdout은 비어 있다. CPU 부하와 물리 메모리 부족만으로는 일어나지 않는다. 증거와 재현은 `_harness_test/track41-machine-headroom/track41-report.md`.
+- 시험이나 게이트가 빈 출력으로 실패하면 먼저 실행한다: `node scripts/resource-check.js` (0 충분, 1 부족, 4 재지 못함). 부족이면 가장 많이 쓰는 프로세스 이름이 같이 나온다. 그것을 정리한 뒤 다시 돌린다.
+- `checks-run`은 통과가 아닌 결과가 하나라도 있으면 기기 상태를 같이 적고, 메모리를 받지 못한 검사는 실패가 아니라 «확인 안 함»으로 센다.
+- `node scripts/nonstop.js`는 세션을 띄우기 전에 여유를 재고, 부족하면 60초씩 최대 10번 기다린다. 그 뒤에는 띄우고 기록에 LOW를 남긴다.
+- 하네스가 할 수 없는 것: 기기가 메모리를 주지 않는 순간에는 대화형 세션의 훅도 시작되지 못한다. 그 순간에는 정지 차단이 없다.
+- 프로젝트 폴더에서는 `node scripts/coolhan.js resource-check`로 같은 탐침을 쓴다.

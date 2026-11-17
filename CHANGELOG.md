@@ -1,5 +1,52 @@
 # Changelog
 
+## [2.11.1] - 2026-11-17
+
+### Fixed
+
+- **D-13: why a hook child process sometimes never starts.** The cause on the machine is a shortage of commit
+  (the virtual memory the system can still promise), not CPU load. Evidence: all 4 full runs that failed with
+  empty hook output ended within 60 seconds of the operating system's «low virtual memory» record; 6,960
+  launches with every core busy and memory to spare all started; and the failure was reproduced in isolation by
+  launching the hook inside a job object with a shrinking commit limit (`_harness_test/track41-machine-headroom`).
+  A node child running a hook needs about 48MB to start. Below that it dies before its first line: a V8 fatal
+  «out of memory» (0x80000003, 0xC0000409), «VirtualAlloc failed», a silent 0xC000012D, 0xC0000017 or 0xC000009A, and
+  finally a spawn error. In every case stdout is empty.
+- `scripts/lib/spawn-node.js`: those measured signatures are `memoryDenied`; `neverStarted` includes them, so a
+  starved child with an out-of-memory line on stderr is retried like a silent one (before, only a child with no
+  output at all was). The retry note carries the free physical memory and names the probe.
+- `scripts/checks-run.js`: a check refused memory is 확인 안 함 with the reason, not 실패 of the code. Any run that
+  is not all 통과 prints the machine state beside the result (JSON: `machine`).
+
+### Added
+
+- **`scripts/resource-check.js`**: how much memory a new process can still get. Windows: commit headroom and the
+  largest consumers by name. Linux: available memory plus free swap. Exit 0 enough, 1 low (child processes may
+  not start: hooks, tests, gates), 4 could not measure (never a pass). `--min-free-mb <n>` (default 1024), `--json`.
+- `scripts/nonstop.js`: before launching a session the supervisor reads the headroom; while it is low it waits
+  (60 seconds, at most 10 times), then launches anyway and writes LOW in the session log. Every session's log
+  line carries the reading.
+- Field lesson F-41 (a failure with empty output blamed on code or load; record the exit code, stderr and
+  memory headroom with the failure, count «did not start» as 확인 안 함, reproduce a shortage inside a limited
+  process tree).
+
+### Verification
+
+- jest 370/370, 37 suites (new `resource-check` suite 13/13, `nonstop` +3); lint clean 48 files; fixed list in full.
+- `_harness_test/track41-machine-headroom/run-track.js`: 11 scenarios, 11 match, 0 false +/-.
+
+### Honest bound
+
+- The link between the operating system's record and the failing runs is an observation (4 of 4), not a
+  controlled experiment on the whole machine; exhausting the machine's memory on purpose would endanger every
+  other process on it. The controlled part is the job object.
+- The harness cannot make a hook start when the machine refuses memory. In an interactive session that moment
+  has no stop block; only the outer supervisor waits and relaunches.
+- The 1,024MB floor is a default (about twenty children of the measured size), not tuned on other machines.
+  macOS is not measured (exit 4). The job-object track runs on Windows only.
+- One full test run during this work ended with exit code 127 and no summary line while the headroom reading was
+  PASS before and after; the next runs passed. Cause unknown; registered as D-14 (open).
+
 ## [2.11.0] - 2026-11-17
 
 ### Added

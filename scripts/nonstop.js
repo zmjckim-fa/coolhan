@@ -35,10 +35,13 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const resource = require('./resource-check');
 const { argValue } = require('./lib/cli');
 
 const DEFAULT_PROMPT = '쿨한으로 개발 이어서 진행하라 (체크포인트 _workspace/_checkpoint.md)';
 const DEFAULT_TEMPLATE = 'claude -p {prompt} --permission-mode bypassPermissions';
+const HEADROOM_WAITS = 10;        // at most this many waits per session before launching anyway
+const HEADROOM_WAIT_MS = 60000;
 const TAIL = 1500;
 
 function backlogState(ws) {
@@ -66,6 +69,24 @@ function runSession(template, prompt, cwd) {
   };
 }
 
+/**
+ * D-13: a session started while the machine refuses memory runs without its hooks (a hook process that cannot
+ * start blocks nothing). Wait for headroom first; after the last wait launch anyway and say so in the log.
+ * `opts.headroom` returns a resource-check verdict; without it nothing is measured (tests, other platforms).
+ */
+function awaitHeadroom(opts, ws, session) {
+  if (!opts.headroom) return null;
+  const wait = opts.wait || ((ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms));
+  const waits = opts.headroomWaits === undefined ? HEADROOM_WAITS : opts.headroomWaits;
+  let v = opts.headroom();
+  for (let i = 0; v.status === 'LOW' && i < waits; i++) {
+    appendLog(ws, { session, event: 'low-headroom', free_mb: v.free_mb, min_free_mb: v.min_free_mb, wait: i + 1 });
+    wait(opts.headroomWaitMs === undefined ? HEADROOM_WAIT_MS : opts.headroomWaitMs);
+    v = opts.headroom();
+  }
+  return { status: v.status, free_mb: v.measured ? v.free_mb : null };
+}
+
 function appendLog(ws, entry) {
   try { fs.appendFileSync(path.join(ws, '_nonstop-log.jsonl'), JSON.stringify(entry) + '\n'); } catch (_) { /* non-fatal */ }
 }
@@ -85,8 +106,9 @@ function supervise(opts, sessionRunner) {
     const approved = stopApproved(ws);
     if (approved) return { status: 'STOP_APPROVED', sessions: session - 1, reason: approved.reason };
 
+    const headroom = awaitHeadroom(opts, ws, session);
     const result = runner(session);
-    appendLog(ws, { session, exit: result.exit, timed_out: !!result.timed_out, tail: (result.output_tail || '').slice(-400) });
+    appendLog(ws, { session, exit: result.exit, timed_out: !!result.timed_out, ...(headroom ? { headroom } : {}), tail: (result.output_tail || '').slice(-400) });
     if (result.exit === undefined || result.spawn_error) {
       return { status: 'CMD_ERROR', sessions: session, reason: result.spawn_error || 'session command failed to start' };
     }
@@ -115,7 +137,8 @@ function main(argv) {
     workspace: argValue(args, '--workspace') || '_workspace',
     maxSessions: parseInt(argValue(args, '--max-sessions') || '50', 10),
     resumePrompt: argValue(args, '--resume-prompt') || DEFAULT_PROMPT,
-    cmdTemplate: argValue(args, '--cmd-template') || DEFAULT_TEMPLATE
+    cmdTemplate: argValue(args, '--cmd-template') || DEFAULT_TEMPLATE,
+    headroom: () => resource.verdict(resource.measure())
   };
   if (!fs.existsSync(opts.workspace)) { console.error(`✗ nonstop: workspace not found: ${opts.workspace} (start a CoolHan run first)`); return 2; }
 
@@ -132,4 +155,4 @@ function main(argv) {
 
 if (require.main === module) process.exit(main(process.argv));
 
-module.exports = { supervise, backlogState, runSession, EXIT };
+module.exports = { supervise, backlogState, runSession, awaitHeadroom, EXIT };

@@ -119,6 +119,10 @@ Confirms the harness is complete and healthy — CLAUDE.md pointers, the 6 core
 agents, the orchestrator skill, the knowledge-base domain modules, and your Node
 version — with a fix hint for anything missing. Exits `0` when healthy, `1` otherwise.
 
+When a test or a gate fails with no output at all, measure the machine first: `node scripts/resource-check.js`
+(exit `0` enough memory for new processes, `1` low, `4` not measured). A process the machine refuses memory never
+starts; that is not a result of the code.
+
 ### Apply to every session (no command word)
 
 ```bash

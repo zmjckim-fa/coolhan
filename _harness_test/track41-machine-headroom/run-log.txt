@@ -1,0 +1,88 @@
+$ job limit 2000MB: node worker.js launch run-armer.js 20 200
+  {"exit":0,"held":200,"ok":20,"failed":0,"unclassified":0,"denied":0,"kinds":{}}
+
+$ job limit 252MB: node worker.js launch run-armer.js 20 200
+  {"exit":0,"held":200,"ok":20,"failed":0,"unclassified":0,"denied":0,"kinds":{}}
+
+$ job limit 244MB: node worker.js launch run-armer.js 20 200
+  {"exit":0,"held":200,"ok":0,"failed":20,"unclassified":0,"denied":17,"kinds":{"0xc0000409 silent":3,"0x80000003 out of memory":17}}
+
+$ job limit 240MB: node worker.js launch run-armer.js 20 200
+  {"exit":0,"held":200,"ok":0,"failed":20,"unclassified":0,"denied":20,"kinds":{"0x80000003 out of memory":20}}
+
+$ job limit 236MB: node worker.js launch run-armer.js 20 200
+  {"exit":0,"held":200,"ok":0,"failed":20,"unclassified":0,"denied":20,"kinds":{"0x80000003 out of memory":20}}
+
+$ job limit 232MB: node worker.js launch run-armer.js 20 200
+  {"exit":0,"held":200,"ok":0,"failed":20,"unclassified":0,"denied":20,"kinds":{"0xc0000409 VirtualAlloc failed":20}}
+
+$ job limit 228MB: node worker.js launch run-armer.js 20 200
+  {"exit":0,"held":200,"ok":0,"failed":20,"unclassified":0,"denied":20,"kinds":{"spawn error UNKNOWN":20}}
+
+$ job limit 224MB: node worker.js launch run-armer.js 20 200
+  {"exit":0,"held":200,"ok":0,"failed":20,"unclassified":0,"denied":20,"kinds":{"spawn error UNKNOWN":20}}
+
+$ job limit 244MB: node worker.js runnode run-armer.js 200
+  {"exit":0,"held":200,"started":false,"kind":"0xc0000409 silent","retries":2,"note_has_memory":true}
+
+$ job limit 2000MB: node worker.js runnode run-armer.js 200
+  {"exit":0,"held":200,"started":true,"kind":"ran","retries":0,"note_has_memory":true}
+
+fixtures that ran: [{"name":"rule failure on stderr, exit 1","launches":1,"retried":0,"never":false,"denied":false},{"name":"verdict on stdout, a memory word on stderr, exit 1","launches":1,"retried":0,"never":false,"denied":false},{"name":"silent exit 0","launches":1,"retried":0,"never":false,"denied":false},{"name":"NOT_RUN on stdout, exit 4","launches":1,"retried":0,"never":false,"denied":false}]
+
+$ node scripts/checks-run.js both.md
+  exit 1
+  ○ C1 starved — 확인 안 함(기기가 메모리를 주지 않아 시작하지 못했다) 0.2s
+  ✗ C2 broken — exit 1 0.1s
+  --- C1 tail ---
+  --- C2 tail ---
+  기기 상태: ✔ resource-check: PASS: 새 프로세스가 쓸 수 있는 메모리 3938MB (한도 48893MB, 기준 1024MB 이상, 물리 여유 2442MB)
+  통과 0 · 실패 1(C2:미등록→D-번호 등록 필요) · 확인 안 함 1(C1:기기가 메모리를 주지 않아 시작하지 못했다)
+
+$ node scripts/checks-run.js one.md
+  exit 4
+  ○ C1 starved — 확인 안 함(기기가 메모리를 주지 않아 시작하지 못했다) 0.2s
+  --- C1 tail ---
+  기기 상태: ✔ resource-check: PASS: 새 프로세스가 쓸 수 있는 메모리 3975MB (한도 48893MB, 기준 1024MB 이상, 물리 여유 2440MB)
+  통과 0 · 실패 0 · 확인 안 함 1(C1:기기가 메모리를 주지 않아 시작하지 못했다)
+
+$ node scripts/resource-check.js --json
+  exit 0 {"status":"PASS","source":"windows-commit","free_mb":4519,"limit_mb":48893,"min_free_mb":1024}
+
+saturation: 480 launches with 16 cores busy: 480 started, 0 did not; lowest headroom sampled 3154MB; shortage recorded by Windows during the run: none; none
+
+PASS #1 Control: the hook launched 20 times with memory to spare (job limit 2000MB, 200MB held)
+    expected: 20 of 20 start and exit 0
+    actual:   20 of 20
+PASS #2 The same hook as the job's commit limit shrinks (252, 244, 240, 236, 232, 228, 224MB)
+    expected: below some limit the child no longer starts; nothing reaches stdout
+    actual:   252MB 20/20, 244MB 0/20, 240MB 0/20, 236MB 0/20, 232MB 0/20, 228MB 0/20, 224MB 0/20
+PASS #3 Every child that did not start, across the sweep
+    expected: recognised by neverStarted (0 unrecognised), each one a spawn error or a memory signature
+    actual:   120 failures, unrecognised 0; 0xc0000409 silent x3; 0x80000003 out of memory x57; 0xc0000409 VirtualAlloc failed x20; spawn error UNKNOWN x40
+PASS #4 runNode inside the starving job (244MB)
+    expected: two reported retries carrying a memory figure, then the failure returned as it is (never turned into a result)
+    actual:   started false, retries 2, memory figure true, 0xc0000409 silent
+PASS #5 runNode inside the roomy job
+    expected: runs once, no retry
+    actual:   started true, retries 0
+PASS #6 Four scripts that ran and failed or reported (one mentions memory on stderr beside its verdict)
+    expected: each launched exactly once, not retried, not classified as refused memory
+    actual:   1 launch, 1 launch, 1 launch, 1 launch; retried 0; classified 0
+PASS #7 checks-run: one check refused memory, one check really failing
+    expected: exit 1; 실패 1 and 확인 안 함 1 (the starved one is not counted as a failure of the code); a machine state line is printed
+    actual:   exit 1; 통과 0 · 실패 1(C2:미등록→D-번호 등록 필요) · 확인 안 함 1; machine line true
+PASS #8 checks-run: the only check was refused memory
+    expected: exit 4 (not measured), never 0
+    actual:   exit 4
+PASS #9 resource-check on this machine
+    expected: a verdict with the matching exit code (PASS 0, LOW 1, NOT_RUN 4)
+    actual:   PASS, exit 0
+PASS #10 A floor far above the machine, and an unknown flag
+    expected: exit 1, exit 2
+    actual:   exit 1, exit 2
+PASS #11 Every core busy, memory above the floor throughout
+    expected: every launch starts (a busy CPU alone does not stop a child from starting)
+    actual:   480 launches with 16 cores busy: 480 started, 0 did not; lowest headroom sampled 3154MB; shortage recorded by Windows during the run: none
+
+track41: 11/11 match, 0 mismatch, 0 not measured

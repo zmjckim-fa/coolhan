@@ -103,6 +103,38 @@ describe('nonstop (G13 — outer supervisor loop for true non-stop development)'
     expect(JSON.parse(lines[0])).toMatchObject({ session: 1, exit: 1 });
   });
 
+  test('D-13: a session is not launched into a machine that refuses memory; it waits, then says what it did', () => {
+    writeBacklog([{ id: 'U1', status: 'todo' }]);
+    const readings = [{ status: 'LOW', measured: true, free_mb: 300, min_free_mb: 1024 }, { status: 'LOW', measured: true, free_mb: 600, min_free_mb: 1024 }, { status: 'PASS', measured: true, free_mb: 4000, min_free_mb: 1024 }];
+    const order = []; let i = 0;
+    const runner = () => { order.push('launch'); writeBacklog([{ id: 'U1', status: 'done ✅' }]); return { exit: 0, output_tail: '' }; };
+    const r = supervise(opts({ headroom: () => readings[Math.min(i++, 2)], wait: (ms) => order.push(`wait ${ms}`), headroomWaitMs: 5 }), runner);
+    expect(r).toMatchObject({ status: 'COMPLETE', sessions: 1 });
+    expect(order).toEqual(['wait 5', 'wait 5', 'launch']);
+    const lines = fs.readFileSync(path.join(ws, '_nonstop-log.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l));
+    expect(lines.filter(l => l.event === 'low-headroom').map(l => l.free_mb)).toEqual([300, 600]);
+    expect(lines[2]).toMatchObject({ session: 1, exit: 0, headroom: { status: 'PASS', free_mb: 4000 } });
+  });
+
+  test('D-13: headroom that never returns does not stop the run; after the last wait the session starts and the log says LOW', () => {
+    writeBacklog([{ id: 'U1', status: 'todo' }]);
+    let waits = 0;
+    const runner = () => { writeBacklog([{ id: 'U1', status: 'done ✅' }]); return { exit: 0, output_tail: '' }; };
+    const r = supervise(opts({ headroom: () => ({ status: 'LOW', measured: true, free_mb: 200, min_free_mb: 1024 }), wait: () => { waits++; }, headroomWaits: 3 }), runner);
+    expect(r.status).toBe('COMPLETE'); expect(waits).toBe(3);
+    const last = fs.readFileSync(path.join(ws, '_nonstop-log.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l)).pop();
+    expect(last.headroom).toEqual({ status: 'LOW', free_mb: 200 });
+  });
+
+  test('D-13: an unmeasured machine is recorded as unmeasured and never waited on; without a probe nothing is recorded', () => {
+    writeBacklog([{ id: 'U1', status: 'todo' }]);
+    let waits = 0;
+    supervise(opts({ maxSessions: 1, headroom: () => ({ status: 'NOT_RUN', measured: false, reason: 'platform darwin' }), wait: () => { waits++; } }), () => ({ exit: 0, output_tail: '' }));
+    supervise(opts({ maxSessions: 1 }), () => ({ exit: 0, output_tail: '' }));
+    const [probed, plain] = fs.readFileSync(path.join(ws, '_nonstop-log.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l));
+    expect(waits).toBe(0); expect(probed.headroom).toEqual({ status: 'NOT_RUN', free_mb: null }); expect(plain.headroom).toBeUndefined();
+  });
+
   test('exit-code map covers every terminal status', () => {
     expect(EXIT.COMPLETE).toBe(0);
     expect(new Set(Object.values(EXIT)).size).toBe(Object.values(EXIT).length);

@@ -30,6 +30,8 @@ const { spawnSync } = require('child_process');
 const { cellsOf, isSeparator } = require('./lib/md-table');
 const { argValue, argList, positional } = require('./lib/cli');
 const { t } = require('./messages');
+const resource = require('./resource-check');
+const { memoryDenied } = require('./lib/spawn-node');
 
 const DEFAULT_CHECKS = 'docs/CHECKS.md';
 const DEFAULT_LEDGER = 'docs/PROGRESS.md';
@@ -95,6 +97,7 @@ function runOne(check, { cwd, timeoutSec }) {
   if (r.error && r.error.code === 'ETIMEDOUT') return { ...check, result: 'not-run', reason: t('checks.reasonTimeout', { sec: timeoutSec }), exit: null, tail, ms };
   if (r.error) return { ...check, result: 'not-run', reason: t('checks.reasonSpawn', { error: r.error.message }), exit: null, tail, ms };
   if (r.status === 127 || TOOL_MISSING.test(out)) return { ...check, result: 'not-run', reason: t('checks.reasonToolMissing'), exit: r.status, tail, ms };
+  if (memoryDenied(r)) return { ...check, result: 'not-run', reason: t('checks.reasonNoMemory'), exit: r.status, tail, ms };
   if (r.status === NOT_RUN_EXIT) return { ...check, result: 'not-run', reason: t('checks.reasonChildNotRun'), exit: r.status, tail, ms };
   return { ...check, result: r.status === 0 ? 'pass' : 'fail', exit: r.status, tail, ms };
 }
@@ -119,7 +122,7 @@ function run(checks, opts = {}) {
   return { line, pass: pass.length, fail: fail.length, not_run: notRun.length, results, exit };
 }
 
-function main(argv) {
+function main(argv, opts = {}) {
   const args = argv.slice(2);
   const json = args.includes('--json');
   const file = positional(args, VALUE_FLAGS) || DEFAULT_CHECKS;
@@ -132,7 +135,9 @@ function main(argv) {
   if (!checks.length) { console.error(t('checks.noRows')); return 2; }
   const timeout = argValue(args, '--timeout');
   const r = run(checks, { cwd: process.cwd(), ledger: argValue(args, '--ledger'), timeoutSec: timeout ? Number(timeout) : undefined });
-  if (json) console.log(JSON.stringify({ file, ...r }, null, 2));
+  // A failure or an unmeasured check is reported with the state of the machine (D-13: a child that cannot get memory never starts).
+  const machine = r.exit === 0 ? null : resource.verdict((opts.measure || resource.measure)());
+  if (json) console.log(JSON.stringify({ file, ...r, machine }, null, 2));
   else {
     console.log(t('checks.header', { file }));
     for (const x of r.results) {
@@ -141,6 +146,7 @@ function main(argv) {
       console.log(`  ${mark} ${x.id} ${x.name} — ${verdict}${x.ms != null ? ` ${Math.round(x.ms / 100) / 10}s` : ''}`);
     }
     for (const x of r.results.filter(y => y.result !== 'pass' && y.tail)) console.log(`  --- ${x.id} tail ---\n${x.tail.split('\n').map(l => '    ' + l).join('\n')}`);
+    if (machine) console.log(t('resource.afterFailure', { line: resource.line(machine) }));
     console.log(r.line);
   }
   return r.exit;

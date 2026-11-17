@@ -522,6 +522,9 @@ the machine proposes, the human disposes. Full term-to-mechanism map:
   STOP_APPROVED(3, human decision recorded) · NO_PROGRESS(4, 3 sessions changed nothing) ·
   MAX_SESSIONS(5, default 50) · CMD_ERROR(2). Per-session evidence in _workspace/_nonstop-log.jsonl;
   completion auto-generates the G12 run report.
+  Before each session the supervisor reads the machine's memory headroom (`scripts/resource-check.js`): a hook
+  process that is refused memory does not start and blocks nothing (D-13, track41). While headroom is low it
+  waits (60 seconds, at most 10 times), then launches and writes LOW in the session log.
 
 ### How to start
 ```

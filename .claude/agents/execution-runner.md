@@ -47,6 +47,7 @@ Child processes that boot the application run with side-effect keys (mail, SMS, 
 1️⃣ Target dir exists with a recognized stack signal? (else NOT_RUN: "no recognized stack")
 2️⃣ Required env vars provisioned? (`scripts/provision-check.js` — else NOT_RUN: "missing required env: KEY1, KEY2", never a fabricated FAILED)
 3️⃣ Required tool on PATH? (else that phase NOT_RUN with reason)
+4️⃣ Did the child process start at all? A child the machine refused memory ends with empty stdout and one of the signatures in `scripts/lib/spawn-node.js` (`memoryDenied`): that phase is NOT_RUN with the reason and the reading of `node scripts/resource-check.js`, not FAILED (field lesson F-41)
 ```
 
 ## Work Steps
