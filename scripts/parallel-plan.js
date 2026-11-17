@@ -48,7 +48,9 @@ function computeWaves(units) {
   }
   if (errors.length) return { ok: false, waves: [], serialized: [], errors };
 
-  const filesOf = u => Array.isArray(u.files) ? u.files : null; // null = unknown footprint
+  // A unit's footprint is every file it creates or changes. Plans separate the two (`files` created, `edits` or
+  // `touches` changed); a planner that reads only `files` puts two units that edit one shared file in one wave (track42 K-9).
+  const filesOf = u => Array.isArray(u.files) ? [...u.files, ...(Array.isArray(u.edits) ? u.edits : []), ...(Array.isArray(u.touches) ? u.touches : [])] : null; // null = unknown footprint
   const overlaps = (a, b) => {
     const fa = filesOf(a), fb = filesOf(b);
     if (fa === null || fb === null) return true; // unknown → assume conflict

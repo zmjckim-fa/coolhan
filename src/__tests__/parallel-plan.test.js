@@ -66,4 +66,15 @@ describe('parallel-plan (G9 — safe parallel execution waves)', () => {
     ]);
     expect(r.waves).toEqual([['A'], ['B', 'C'], ['D']]);
   });
+  test('files a unit edits count as its footprint: two units editing one shared file are never in one wave (track42 K-9)', () => {
+    const r = computeWaves([
+      { id: 'U1', deps: [], files: ['src/route-table.js'] },
+      { id: 'U2', deps: ['U1'], files: ['src/a.js'], edits: ['src/route-table.js'] },
+      { id: 'U3', deps: ['U1'], files: ['src/b.js'], edits: ['src/route-table.js'] },
+      { id: 'U4', deps: ['U1'], files: ['src/c.js'], touches: ['docs/x.md'] }
+    ]);
+    expect(r.ok).toBe(true);
+    for (const w of r.waves) expect(w.includes('U2') && w.includes('U3')).toBe(false);
+    expect(r.waves.some(w => w.includes('U4') && (w.includes('U2') || w.includes('U3')))).toBe(true);   // disjoint work still runs together
+  });
 });

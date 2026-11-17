@@ -34,6 +34,8 @@ const fs = require('fs');
 
 const DONE_RE = /(✅|\bdone\b|\bcomplete\b)/i;
 
+const UNIT_ID = /^[A-Za-z]{1,3}-?\d+[A-Za-z]?$/;
+
 function parseBacklog(md) {
   const units = [];
   for (const line of md.split('\n')) {
@@ -42,7 +44,9 @@ function parseBacklog(md) {
     const cells = t.split('|').map(c => c.trim());
     // cells: ['', '#', 'Unit', 'Files', 'Verification', 'Status', '']
     const id = cells[1];
-    if (!id || !/^U\d+$/i.test(id)) continue; // only unit rows (U1, U2, ...) — skips header/separator
+    // Unit rows only (skips header and separator). A plan may number its units U1, U-01 or P1: each is a unit.
+    // A reader that knows only `U1` counts a backlog written as `U-01` as empty (track42 K-11).
+    if (!id || !UNIT_ID.test(id)) continue;
     const verification = cells[4] || '';
     const status = cells[5] || '';
     units.push({ id, verification, status });

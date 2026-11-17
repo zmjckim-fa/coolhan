@@ -63,4 +63,15 @@ describe('completion-check (100%-completion gate)', () => {
     expect(ev.remaining).toEqual(['U3']);
     expect(ev.unvalidated).toEqual(['U2']);
   });
+
+  test('unit IDs written as U-01 or P1 are units too (track42 K-11)', () => {
+    const md = header +
+      '| P1 | plan | docs | plan-doc-check | ✅ done (PASS) |\n' +
+      '| U-01 | env | src | node --test | ⬜ todo |\n' +
+      '| U-02 | rules | web | node --test | ✅ done (12/12) |\n';
+    expect(parseBacklog(md).map(u => u.id)).toEqual(['P1', 'U-01', 'U-02']);
+    const ev = evaluate(md);
+    expect(ev.ok).toBe(false);
+    expect(ev.remaining).toEqual(['U-01']);
+  });
 });

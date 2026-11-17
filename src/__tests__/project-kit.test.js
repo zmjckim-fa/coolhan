@@ -76,6 +76,9 @@ describe('new-project (G23: a project folder that already carries the standing o
     expect(JSON.stringify(JSON.parse(read(d, '.claude/settings.json')).hooks)).toMatch(/hook stop-guard.*hook ask-guard.*hook run-armer/);
     const gate = spawnSync(process.execPath, [path.join(d, 'scripts', 'coolhan.js'), 'progress-check', 'docs/PROGRESS.md'], { cwd: d, encoding: 'utf8' });
     expect(gate.status).toBe(0);
+    // track42 K-3: the lesson tool reads the harness registry from inside a project that has no registry of its own
+    const lessonList = spawnSync(process.execPath, [path.join(d, 'scripts', 'coolhan.js'), 'field-lessons', 'list', '--owner', 'developer', '--tags', '@tags'], { cwd: d, encoding: 'utf8' });
+    expect(lessonList.status).toBe(0); expect(lessonList.stdout).toMatch(/F-01/);
     for (const x of [d, lib]) fs.rmSync(x, { recursive: true, force: true });
   });
 
@@ -226,6 +229,19 @@ describe('plan-doc-check --modules (use the module library first: every bundle a
     const d = tmp(); write(d, 'plan.md', '# 기획서\n');
     expect(planDoc.evaluate(d, { modules: BUNDLES }).findings.map(f => f.rule)).toContain('no-module-table');
     expect(planDoc.evaluate(d).findings.map(f => f.rule).filter(x => /module/.test(x))).toEqual([]);
+    fs.rmSync(d, { recursive: true, force: true });
+  });
+  test('the launcher runs in a project whose package file says type module (track42 K-8)', () => {
+    const d = fs.mkdtempSync(path.join(os.tmpdir(), 'kit-esm-'));
+    fs.mkdirSync(path.join(d, 'scripts'));
+    fs.copyFileSync(path.join(__dirname, '..', '..', 'knowledge_base', 'project-kit', 'coolhan.js'), path.join(d, 'scripts', 'coolhan.js'));
+    fs.writeFileSync(path.join(d, 'coolhan.project.json'), JSON.stringify({ home: path.join(__dirname, '..', '..'), tags: ['ui'] }));
+    fs.writeFileSync(path.join(d, 'package.json'), '{"type":"module"}');
+    const run = (...args) => spawnSync(process.execPath, [path.join(d, 'scripts', 'coolhan.js'), ...args], { cwd: d, encoding: 'utf8', input: '{"prompt":"hello"}' });
+    const where = run('where');
+    expect(where.status).toBe(0); expect(where.stderr).not.toMatch(/require is not defined/);
+    expect(run('hook', 'run-armer').status).toBe(0);
+    expect(run('no-such-tool').status).toBe(2);
     fs.rmSync(d, { recursive: true, force: true });
   });
 });

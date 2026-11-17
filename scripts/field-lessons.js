@@ -252,7 +252,9 @@ function main(argv) {
   if (!['validate', 'render', 'list', 'check'].includes(cmd)) return fail('lessons.usage');
 
   const pos = positional(rest, VALUE_FLAGS);
-  const registryPath = cmd === 'check' ? (argValue(rest, '--registry') || DEFAULT_REGISTRY) : (pos || DEFAULT_REGISTRY);
+  // Without an explicit registry: the one beside the working folder, else the harness's own (a kit project has none of its own).
+  const own = fs.existsSync(DEFAULT_REGISTRY) ? DEFAULT_REGISTRY : path.join(__dirname, '..', DEFAULT_REGISTRY);
+  const registryPath = cmd === 'check' ? (argValue(rest, '--registry') || own) : (pos || own);
   let reg;
   try { reg = load(registryPath); } catch (e) { return fail('lessons.cannotRead', { file: registryPath, error: e.message }); }
 
