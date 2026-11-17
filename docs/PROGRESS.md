@@ -37,10 +37,10 @@
 | 26 | 릴리스 v2.11.0 (문서 · 전체 jest · checks-run · 커밋·태그·푸시 · CI) | 완료 | 커밋 898f265, 태그 v2.11.0 = releases/latest; CI Release·Test·Harness-check·Python API success (npm publish은 NPM_TOKEN 미설정으로 예상 실패); jest 354/354 (36 suites); checks-run 통과 13 · 실패 0 · 확인 안 함 0 | - |
 | 27 | D-13 기기 쪽 원인 찾기 (측정 · 격리 재현) | 완료 | 실패 실행 4/4가 운영체제 메모리 부족 기록과 겹침; CPU 포화 6,960회 중 시작 못 함 0; 작업 개체 재현 120/120 판정 (`_harness_test/track41-machine-headroom/run-log.txt`) | - |
 | 28 | 기기 여유 탐침 `resource-check.js` + `memoryDenied` + checks-run · nonstop 연결 + 교훈 F-41 | 완료 | jest resource-check 13/13, nonstop 13/13; 시나리오 11/11 일치, 0 false +/-; field-lessons validate PASS 65건 | - |
-| 29 | 릴리스 v2.11.1 (문서 · 전체 jest · checks-run · 커밋·태그·푸시 · CI) | 진행 중 | | 커밋 · 태그 · 푸시 · CI 확인 |
+| 29 | 릴리스 v2.11.1 (문서 · 전체 jest · checks-run · 커밋·태그·푸시 · CI) | 완료 | 커밋 7882e1f, 태그 v2.11.1 = releases/latest; CI Release·Test·Harness-check·Python API success (npm publish은 NPM_TOKEN 미설정으로 예상 실패); jest 370/370 (37 suites); checks-run 통과 13 · 실패 0 · 확인 안 함 0 | - |
 
 ## 현재 위치
-29번 릴리스 v2.11.1. 이 단위가 목표에 속하는가: 예, 원장이 다음 단위로 적어 둔 «열린 결함 D-13의 기기 쪽 원인 찾기»의 출고 단계다.
+29번 완료: 목표의 작업 29개 모두 완료. 다음 단위는 다른 프로젝트 폴더의 새 세션에서 전역 지시가 실제로 지켜지는지 관측할 때, 실제 새 사이트를 킷으로 시작할 때, 사용자가 목표 줄을 바꿀 때, 또는 열린 결함 D-14(전체 시험이 요약 없이 종료 코드 127로 끝남)가 다시 나올 때 시작한다.
 
 ## 가정 목록
 

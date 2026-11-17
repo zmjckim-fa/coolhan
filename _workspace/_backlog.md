@@ -6,4 +6,4 @@
 |---|------|-------|--------------|--------|
 | U1 | 원인 측정과 격리 재현 | `_harness_test/track41-machine-headroom/` | run-track.js | ✅ done (시나리오 11/11; 재현 120건 판정 120/120) |
 | U2 | 탐침 + 판정 + checks-run · nonstop 연결 + 교훈 F-41 | `scripts/resource-check.js`, `scripts/lib/spawn-node.js`, `scripts/checks-run.js`, `scripts/nonstop.js`, `knowledge_base/field-lessons.json` | jest resource-check · nonstop · field-lessons validate | ✅ done (jest 13/13, 13/13; validate PASS) |
-| U3 | 릴리스 v2.11.1 | 릴리스 문서 | jest 전체 · checks-run · CI | ⬜ todo |
+| U3 | 릴리스 v2.11.1 | 릴리스 문서 | jest 전체 · checks-run · CI | ✅ done (커밋 7882e1f, 태그 v2.11.1; jest 370/370; checks-run 통과 13 · 실패 0) |
