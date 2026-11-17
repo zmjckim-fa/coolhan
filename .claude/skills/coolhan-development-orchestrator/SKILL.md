@@ -467,6 +467,18 @@ while (todo remains in backlog):
        amounts, request-derived URLs, exposed secrets, tree-wide git commands; ratchet; exit 4 = nothing
        scanned = 확인 안 함, not a pass). Agents read their own lines with `list --owner <agent>`.
      An incident closes by adding one registry entry and re-rendering (render --check keeps the doc derived).
+   + G23 STANDING ORDERS + PROJECT KIT (v2.10.0, knowledge_base/field-lessons.json `orders`, scripts/new-project.js):
+     the commands the operator repeated in every project are registry entries O-01 onward. A new site, or an
+     existing folder brought under the harness, starts with
+       node scripts/new-project.js <dir> --intent "<one-line goal>" --tags <tags> [--deploy none|after-complete]
+     which writes CLAUDE.md (orders block), coolhan.project.json, scripts/coolhan.js (launcher: gates and hooks run
+     from the harness, nothing is copied), the three loop hooks, docs/PROGRESS.md, docs/CHECKS.md, HANDOFF.md,
+     docs/plan/MODULE_PLAN.md (one row per bundle of the module library) and docs/plan/LESSON_PLAN.md. Existing
+     files are kept. In such a folder the operator's own continuation words arm the loop (no «쿨한» needed).
+     Plan time: node scripts/plan-doc-check.js <docs> --modules <library> : every bundle answered with
+       채택/이식/참조/제외 and a reason; an unanswered bundle is FAIL.
+     Per unit: commit the unit's own paths, then node scripts/handoff-write.js (state block of HANDOFF.md is
+       generated from the ledger; no ledger → exit 4, nothing invented). Deploy follows the project's `deploy` value.
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)
 ```
@@ -857,6 +869,8 @@ READ ALL (not just "check exists"):
   • relevant knowledge_base module(s) for the domain
   • knowledge_base/00_FIELD_LESSONS.md (G22 — failure patterns and working practices from every project already
     built; list the applicable ones with `node scripts/field-lessons.js list --kind fail --tags <tags>` before planning)
+  • coolhan.project.json + the CLAUDE.md orders block (if present: G23 project kit; tags, deploy authorization,
+    module library and the standing orders O-01 onward: they are already issued, do not wait for them again)
   • docs/PROGRESS.md + docs/CHECKS.md (if present — G20 ledger + fixed verification list: the ledger's goal line,
     current position, assumptions and open D-numbers override anything remembered from chat; a completed task
     number is re-verified from file state, never rebuilt)
@@ -1022,8 +1036,8 @@ Task 2: Write CoolHan spec (Spec Writer)
 🛑 Task 2.5: Plan/Spec quality gate (Plan Reviewer) ★ NEW (G3) — PASS-required, before any coding
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ├─ Depends: Task 2 complete (spec) + backlog decomposed (_workspace/_backlog.md or plan.json)
-├─ **Planning-document gate (G21 + G22, when the plan is 기획서 documents):** `node scripts/plan-doc-check.js <docs> --required "<items>" --lessons knowledge_base/field-lessons.json`
-│  — form of the document itself (§7 of the standard); FAIL blocks Task 3 before G3 runs.
+├─ **Planning-document gate (G21 + G22, when the plan is 기획서 documents):** `node scripts/plan-doc-check.js <docs> --required "<items>" --lessons knowledge_base/field-lessons.json [--modules <library>]`
+│  — form of the document itself (with `--modules`: every bundle of the module library answered, G23) (§7 of the standard); FAIL blocks Task 3 before G3 runs.
 ├─ **Structural gate (mechanical, non-waivable):** `node scripts/plan-check.js <plan.json>` —
 │  dependency graph acyclic + deps exist, ordering respects deps, every unit has a `verifies`
 │  command, every requirement covered by ≥1 unit. Exit 1 → hard FAIL, return to spec-writer.

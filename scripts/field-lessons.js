@@ -26,7 +26,7 @@
  * Usage
  *   node scripts/field-lessons.js validate [registry]
  *   node scripts/field-lessons.js render   [registry] [--out <doc.md>] [--check]
- *   node scripts/field-lessons.js list     [registry] [--tags a,b] [--kind fail|win] [--owner developer] [--json]
+ *   node scripts/field-lessons.js list     [registry] [--tags a,b] [--kind fail|win|order] [--owner developer] [--json]
  *   node scripts/field-lessons.js check <root> [--registry <file>] [--tags a,b] [--baseline <file>]
  *                                              [--write-baseline] [--skip-dirs a,b] [--json]
  * Exit: 0 PASS · 1 FAIL · 4 NOT_RUN (nothing was scanned: no file or no detector) · 2 usage/read error.
@@ -61,6 +61,8 @@ const SKIP_DIRS = ['node_modules', '.git', 'dist', 'build', 'coverage', '.next',
 const TEST_FILE = /(?:^|\/)(?:__tests__|tests?|e2e)\/|\.(?:test|spec)\.[jt]sx?$|_test\.(?:py|go)$|(?:^|\/)test_[^/]+\.py$/i;
 const ALLOW = /field-lessons:allow/;
 const ID = /^[FW]-\d{2,3}$/;
+const ORDER_ID = /^O-\d{2}$/;
+const ORDER_FIELDS = ['title', 'text', 'enforce', 'seen'];
 const PRIVATE = /[\w.+-]+@[\w-]+\.[a-z]{2,}|https?:\/\//i;
 const FAIL_FIELDS = ['title', 'what', 'cause', 'prevent'];
 const WIN_FIELDS = ['title', 'what', 'why', 'apply'];
@@ -69,6 +71,13 @@ function load(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
 const cell = (s) => String(s === undefined || s === null ? '' : s).replace(/\|/g, '\\|').replace(/\s*\n\s*/g, ' ');
 const tagsOf = (l) => (Array.isArray(l.tags) ? l.tags : []);
 const lessonsOf = (reg) => (Array.isArray(reg.lessons) ? reg.lessons : []);
+const ordersAll = (reg) => (Array.isArray(reg.orders) ? reg.orders : []);
+
+/** Standing orders that apply to a project: tagged `all` or sharing a tag with the project (tags undefined = all). */
+function ordersOf(reg, tags) {
+  const want = new Set((tags || []).map(s => s.toLowerCase()));
+  return ordersAll(reg).filter(o => tags === undefined || tagsOf(o).map(s => s.toLowerCase()).some(x => x === 'all' || want.has(x)));
+}
 
 /** Registry self-check: ids, fields, tags, enforcement, detector regexes compile, no private data. */
 function validate(reg) {
@@ -102,7 +111,17 @@ function validate(reg) {
     }
     if (PRIVATE.test(JSON.stringify(l))) add('lesson-private-data', where, 'lessons.privateData');
   });
-  return { status: findings.length ? 'FAIL' : 'PASS', findings, count: lessons.length };
+  const oseen = new Set();
+  ordersAll(reg).forEach((o, i) => {
+    const where = o.id || `orders[${i}]`;
+    if (!ORDER_ID.test(o.id || '')) add('order-id-format', where, 'lessons.orderIdFormat');
+    if (oseen.has(o.id)) add('lesson-id-duplicate', where, 'lessons.idDuplicate');
+    oseen.add(o.id);
+    for (const f of ORDER_FIELDS) if (!String(o[f] || '').trim()) add('lesson-field-missing', where, 'lessons.fieldMissing', { field: f });
+    if (!tagsOf(o).length) add('lesson-field-missing', where, 'lessons.fieldMissing', { field: 'tags' });
+    if (PRIVATE.test(JSON.stringify(o))) add('lesson-private-data', where, 'lessons.privateData');
+  });
+  return { status: findings.length ? 'FAIL' : 'PASS', findings, count: lessons.length, orders: ordersAll(reg).length };
 }
 
 /**
@@ -132,6 +151,12 @@ function render(reg) {
   out.push(`<!-- ${d.generated || 'GENERATED'}: scripts/field-lessons.js render (knowledge_base/field-lessons.json) -->`);
   out.push(`# ${d.title || 'Field lessons'}`, '');
   for (const line of d.intro || []) out.push(line);
+  if (ordersAll(reg).length) {
+    out.push('', `## ${d.h_orders || 'Orders'}`, '');
+    for (const line of d.orders_intro || []) out.push(line);
+    out.push('', head([c.id, c.order, c.enforce_by, c.seen]));
+    for (const o of ordersAll(reg)) out.push(`| ${o.id} | **${cell(o.title)}**: ${cell(o.text)} | ${cell(o.enforce)} | ${cell(o.seen)} |`);
+  }
   out.push('', `## ${d.h_fail || 'FAIL'}`, '');
   out.push(head([c.id, c.fail, c.cause, c.prevent, c.tags, c.enforce, c.owner, c.seen]));
   for (const l of all.filter(x => x.kind === 'fail')) {
@@ -257,6 +282,11 @@ function main(argv) {
   }
 
   if (cmd === 'list') {
+    if (argValue(rest, '--kind') === 'order') {
+      const os = ordersOf(reg, argList(rest, '--tags'));
+      if (json) console.log(JSON.stringify(os, null, 2)); else for (const o of os) console.log(`${o.id} ${o.title}: ${o.text}`);
+      return 0;
+    }
     const items = applicable(reg, { tags: argList(rest, '--tags'), kind: argValue(rest, '--kind'), owner: argValue(rest, '--owner') });
     if (json) console.log(JSON.stringify(items, null, 2));
     else for (const l of items) console.log(`${l.id} [${tagsOf(l).join(',')}] ${l.title}: ${l.kind === 'fail' ? l.prevent : l.apply}`);
@@ -295,4 +325,4 @@ function main(argv) {
 
 if (require.main === module) process.exit(main(process.argv));
 
-module.exports = { load, validate, applicable, render, check, main, DEFAULT_REGISTRY, DEFAULT_DOC };
+module.exports = { load, validate, applicable, ordersOf, render, check, main, DEFAULT_REGISTRY, DEFAULT_DOC };

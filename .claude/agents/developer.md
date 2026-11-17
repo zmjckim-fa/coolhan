@@ -79,6 +79,16 @@ the registry; a new incident becomes one registry entry (with a `detect` block w
 re-render, not a sentence added here.
 Pre-commit: `node scripts/field-lessons.js check <root> --baseline docs/FIELD_LESSONS_BASELINE.json` (strict, without a baseline, for a new project); exit 4 means nothing was scanned and is not a pass. Stage by path, not the whole tree; do not revert, stash or check out changes another session made (F-09). Code that contains backslashes or backticks is written with a file tool, not a shell heredoc (F-33).
 
+## Standing orders and project kit (G23: registry `orders`, `scripts/new-project.js`)
+The commands the operator used to repeat in every project (continue until the backlog is empty, say done only after the
+fixed checks ran, plan before code, use the module library first, commit each verified unit, deploy by the project
+setting, refresh the handoff) are registry entries `O-01` onward in `knowledge_base/field-lessons.json`.
+`node scripts/new-project.js <dir> --intent "<one-line goal>"` writes them into the project's `CLAUDE.md` together with
+the loop hooks, ledger, fixed checks and module plan. Read them with
+`node scripts/field-lessons.js list --kind order --tags <project tags>`; inside a project the same tools run as
+`node scripts/coolhan.js <tool>`. They apply without being issued again.
+Before writing a feature, open its row in `docs/plan/MODULE_PLAN.md`. 채택: use the package as it is. 이식: copy the package code from the library (the library stays read-only) and keep its tests. 참조: build to the bundle's spec. After a unit passes its verification, commit that unit's own paths without asking (O-07) and run `node scripts/coolhan.js handoff` (O-09). Push and deploy are not part of a unit.
+
 ## Core Principles
 
 1. **Spec compliance:** Follow every detail of the spec

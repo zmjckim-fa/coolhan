@@ -53,13 +53,13 @@ describe('plan-doc-check (G21 — planning document completion gate)', () => {
     fs.rmSync(d, { recursive: true, force: true });
   });
 
-  test('no document → NO_DOCS, main exits 2', () => {
+  test('no document → NO_DOCS, main exits 4 (nothing checked is NOT_RUN, never a pass)', () => {
     const d = tmp();
     expect(evaluate(d).status).toBe('NO_DOCS');
     const orig = { log: console.log, error: console.error }; console.log = () => {}; console.error = () => {};
     const code = main(['node', 'plan-doc-check.js', d]);
     console.log = orig.log; console.error = orig.error;
-    expect(code).toBe(2);
+    expect(code).toBe(4);
     fs.rmSync(d, { recursive: true, force: true });
   });
 

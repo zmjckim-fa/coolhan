@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "Stop": [
+      { "hooks": [{ "type": "command", "command": "node scripts/coolhan.js hook stop-guard", "timeout": 60 }] }
+    ],
+    "PreToolUse": [
+      { "matcher": "AskUserQuestion", "hooks": [{ "type": "command", "command": "node scripts/coolhan.js hook ask-guard", "timeout": 60 }] }
+    ],
+    "UserPromptSubmit": [
+      { "hooks": [{ "type": "command", "command": "node scripts/coolhan.js hook run-armer", "timeout": 30 }] }
+    ]
+  }
+}

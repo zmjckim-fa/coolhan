@@ -26,10 +26,14 @@
  *   no-lesson-table / lesson-unanswered   with --lessons: every applicable field lesson (fail, plan:true)
  *                             needs a row in a 실패 방지 대응표 (교훈 ID · 방지책 · 검증 방법) (G22)
  *
- * Usage: node scripts/plan-doc-check.js <file.md|dir> [--required "ERD,메뉴 구성도,…"]
+ *   no-module-table / module-bundle-unanswered / module-decision-invalid   with --modules <library>: every
+ *                             bundle of the module library needs a row in a 모듈 계획표 (묶음 · 결정 · 근거)
+ *                             with decision 채택 / 이식 / 참조 / 제외 (G23, operator order: use the module library first)
+ *
+ * Usage: node scripts/plan-doc-check.js <file.md|dir> [--required "ERD,메뉴 구성도,…"] [--modules <library dir|modules.json>]
  *          [--lessons knowledge_base/field-lessons.json] [--tags commerce,admin] [--json]
  *        Tags also come from a plan line "교훈 태그: commerce, admin"; lessons tagged `all` always apply.
- * Exit:  0 PASS · 1 FAIL (each finding names file:line) · 2 usage / no document
+ * Exit:  0 PASS · 1 FAIL (each finding names file:line) · 4 NOT_RUN (no document to check) · 2 usage error
  * `plan-doc-check:allow` on a line exempts it (quoted example).
  *
  * Honest bound: proves the document's form — no blank, no untagged unknown, no conflicting ID,
@@ -67,6 +71,10 @@ const LESSON_PREVENT_COL = /방지|대응|prevent/i;
 const LESSON_VERIFY_COL = /검증|확인|verif/i;
 const LESSON_ID = /\b[FW]-\d{2,3}\b/g;
 const LESSON_TAGS_LINE = /^\s*(?:[-*]\s*)?(?:\*\*)?(?:교훈\s*태그|lesson tags?)(?:\*\*)?\s*[:：]\s*(.+)$/i;
+const MODULE_ID_COL = /묶음|bundle/i;
+const MODULE_DECISION_COL = /결정|decision/i;
+const MODULE_DECISIONS = ['채택', '이식', '참조', '제외'];
+const BUNDLE_ID = /\bB\d{2}\b/;
 const MAX_TOOLTIP_WORDS = 10;
 const MIN_SUCCESS_CRITERIA = 3;
 
@@ -133,6 +141,8 @@ function evaluate(target, opts = {}) {
   const lessonAnswers = new Set();   // lesson ids that have a row in a 실패 방지 대응표
   const declaredTags = [];           // tags the plan declares on a "교훈 태그:" line
   let lessonTables = 0;
+  let moduleTables = 0;
+  const moduleAnswers = new Map();   // bundle id → decision cell, from a 모듈 계획표 (묶음 · 결정 · 근거)
 
   for (const d of docs) {
     for (const { n, text } of d.lines) {
@@ -173,6 +183,9 @@ function evaluate(target, opts = {}) {
       const lessonCol = col(LESSON_ID_COL);
       const isLessonTable = lessonCol >= 0 && col(LESSON_PREVENT_COL) >= 0 && col(LESSON_VERIFY_COL) >= 0;
       if (isLessonTable) lessonTables++;
+      const bundleCol = col(MODULE_ID_COL), decisionCol = col(MODULE_DECISION_COL);
+      const isModuleTable = bundleCol >= 0 && decisionCol >= 0 && bundleCol !== decisionCol;
+      if (isModuleTable) moduleTables++;
 
       for (const row of table.rows) {
         const where = `${d.rel}:${row.n}`;
@@ -185,6 +198,7 @@ function evaluate(target, opts = {}) {
           add('table-blank-cell', where, 'plan.tableBlankCell', { column: name });
         });
         if (isLessonTable) for (const id of (row.cells[lessonCol] || '').match(LESSON_ID) || []) lessonAnswers.add(id);
+        if (isModuleTable) { const b = BUNDLE_ID.exec(row.cells[bundleCol] || ''); if (b) moduleAnswers.set(b[0], { decision: (row.cells[decisionCol] || '').trim(), where }); }
         const defer = DEFER.exec(line);
         if (defer && !TAG_DECISION.test(line)) add('deferred-marker', where, 'plan.deferredMarker', { marker: defer[0] });
         if (isTrace) {
@@ -232,6 +246,17 @@ function evaluate(target, opts = {}) {
     if (need.length && !lessonTables) add('no-lesson-table', '(docs)', 'plan.noLessonTable', { count: need.length, ids: need.map(l => l.id).join(', ') });
     else for (const l of need) if (!lessonAnswers.has(l.id)) add('lesson-unanswered', '(docs)', 'plan.lessonUnanswered', { id: l.id, title: l.title });
   }
+  if (opts.modules) {
+    const ids = Object.keys(opts.modules);
+    stats.bundles_required = ids.length;
+    stats.bundles_answered = ids.filter(id => moduleAnswers.has(id)).length;
+    if (!moduleTables) add('no-module-table', '(docs)', 'plan.noModuleTable', { count: ids.length });
+    else for (const id of ids) {
+      const a = moduleAnswers.get(id);
+      if (!a) add('module-bundle-unanswered', '(docs)', 'plan.moduleUnanswered', { id, label: opts.modules[id].label || '' });
+      else if (!MODULE_DECISIONS.some(d => a.decision.startsWith(d))) add('module-decision-invalid', a.where, 'plan.moduleDecisionInvalid', { id, decision: a.decision, allowed: MODULE_DECISIONS.join(' / ') });
+    }
+  }
   const sc = countSuccessCriteria(docs);
   if (sc.found && sc.count < MIN_SUCCESS_CRITERIA) add('success-criteria-count', sc.where, 'plan.successCriteriaCount', { count: sc.count });
 
@@ -241,15 +266,23 @@ function evaluate(target, opts = {}) {
 function main(argv) {
   const args = argv.slice(2);
   const json = args.includes('--json');
-  const target = positional(args, ['--required', '--lessons', '--tags']);
+  const target = positional(args, ['--required', '--lessons', '--tags', '--modules']);
   if (!target) { console.error(t('plan.usage')); return 2; }
   let lessons;
   if (argValue(args, '--lessons')) {
     try { lessons = lessonRegistry.load(argValue(args, '--lessons')); }
     catch (e) { console.error(t('lessons.cannotRead', { file: argValue(args, '--lessons'), error: e.message })); return 2; }
   }
-  const r = evaluate(path.resolve(target), { required: argList(args, '--required'), lessons, tags: argList(args, '--tags') });
-  if (r.status === 'NO_DOCS') { console.error(t('plan.noDocs', { target })); return 2; }
+  let modules;
+  if (argValue(args, '--modules')) {
+    const m = argValue(args, '--modules');
+    const file = fs.existsSync(path.join(m, '_specs', 'modules.json')) ? path.join(m, '_specs', 'modules.json') : m;
+    try { modules = JSON.parse(fs.readFileSync(file, 'utf8')).bundles; if (!modules) throw new Error('no bundles'); }
+    catch (e) { console.error(t('lessons.cannotRead', { file: m, error: e.message })); return 2; }
+  }
+  const r = evaluate(path.resolve(target), { required: argList(args, '--required'), lessons, tags: argList(args, '--tags'), modules });
+  // Nothing to check proves nothing (field lesson F-10): NOT_RUN, exit 4, never a pass.
+  if (r.status === 'NO_DOCS') { console.error(t('plan.noDocs', { target })); return 4; }
   if (json) console.log(JSON.stringify({ target, ...r }, null, 2));
   else {
     console.log(t('plan.summary', { mark: r.status === 'PASS' ? '✔' : '✗', status: r.status, ...r.stats }));

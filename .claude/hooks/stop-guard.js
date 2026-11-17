@@ -72,7 +72,9 @@ function gatherState(root) {
 
   let completionOk = false, remaining = '';
   const backlog = path.join(ws, '_backlog.md');
-  const checker = path.join(root, 'scripts', 'completion-check.js');
+  // A project that only carries the launcher has no scripts/completion-check.js: use the one next to this hook.
+  const local = path.join(root, 'scripts', 'completion-check.js');
+  const checker = fs.existsSync(local) ? local : path.join(__dirname, '..', '..', 'scripts', 'completion-check.js');
   if (runActive && fs.existsSync(backlog) && fs.existsSync(checker)) {
     const r = spawnSync(process.execPath, [checker, backlog], { encoding: 'utf8', timeout: 30000 });
     completionOk = r.status === 0;

@@ -26,6 +26,16 @@ the registry; a new incident becomes one registry entry (with a `detect` block w
 re-render, not a sentence added here.
 Run the planning-document gate with the registry: `node scripts/plan-doc-check.js <docs> --lessons knowledge_base/field-lessons.json` (a missing answer is `lesson-unanswered`, FAIL). Then do the second review round (W-12): diff your own round-1 action list against the plan files and list every action that did not reach them.
 
+## Standing orders and project kit (G23: registry `orders`, `scripts/new-project.js`)
+The commands the operator used to repeat in every project (continue until the backlog is empty, say done only after the
+fixed checks ran, plan before code, use the module library first, commit each verified unit, deploy by the project
+setting, refresh the handoff) are registry entries `O-01` onward in `knowledge_base/field-lessons.json`.
+`node scripts/new-project.js <dir> --intent "<one-line goal>"` writes them into the project's `CLAUDE.md` together with
+the loop hooks, ledger, fixed checks and module plan. Read them with
+`node scripts/field-lessons.js list --kind order --tags <project tags>`; inside a project the same tools run as
+`node scripts/coolhan.js <tool>`. They apply without being issued again.
+Step 0 runs with `--modules <library>` whenever `coolhan.project.json` names one: a bundle with no row, or a decision outside the four words, is a hard FAIL returned to the spec-writer. Then judge what the script cannot see: a 제외 row for a capability the plan in fact builds from scratch, an 이식 row that names no package, a 참조 row whose spec the plan contradicts.
+
 ## Core Principles (inherits P0)
 1. **Evidence-based:** cite the spec section / backlog row for every finding. No "seems fine" without
    pointing at text.
@@ -69,7 +79,7 @@ If absent, use the review steps below and note the skill was absent — never fa
 
 ## Work Steps
 0. **Planning-document gate (G21):** when the plan consists of 기획서 documents, run
-   `node scripts/plan-doc-check.js <plan docs> --required "<user's required items>"` first. Any finding (blank
+   `node scripts/plan-doc-check.js <plan docs> --required "<user's required items>"` first (add `--lessons knowledge_base/field-lessons.json` and, when the project names a module library, `--modules <library>`). Any finding (blank
    cell, deferral word, [미검증] without a method, tooltip over 10 어절, ID conflict, missing §4.2 item, missing
    trace row, missing diagram file) is a hard FAIL that blocks Task 3 and returns to the spec-writer with the
    findings verbatim. Then judge what the script cannot (`knowledge_base/00_PLANNING_DOC_STANDARD.md` Appendix C):

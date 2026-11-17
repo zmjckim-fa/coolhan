@@ -27,8 +27,15 @@ const COOLHAN = /쿨한|coolhan/i;
 const RUN_VERB = /개발|이어서|연속|진행하라|계속하라|continue|develop|resume|keep developing|\/loop/i;
 const INSPECTION = /업데이트|update|확인|check for|검토|review|점검|버전|version|설치|install|doctor/i;
 
-function shouldArm(prompt) {
+// Project mode (G23): a folder carrying `coolhan.project.json` is already a CoolHan project, so the operator's own
+// words arm the loop without saying "쿨한" (field data: the same "이어서 진행하라" was typed 530 times across 9 projects).
+// A question ("이어서 작업할 내용을 알려줘") never arms: it asks for information, not for a run.
+const STRONG_RUN = /이어서|계속|남은\s*작업|roop|무중단|끝까지|완성(?:하라|까지|해)|\/loop|keep going|keep developing|resume|continue/i;
+const QUESTION = /알려\s*줘|알려\s*주|\?\s*$|인가요?\s*[.?]?\s*$|할까요?\s*$|뭐야\s*$|무엇/;
+
+function shouldArm(prompt, opts = {}) {
   const p = String(prompt || '');
+  if (opts.project) return STRONG_RUN.test(p) && !QUESTION.test(p.trim());
   return COOLHAN.test(p) && RUN_VERB.test(p) && !INSPECTION.test(p);
 }
 
@@ -48,7 +55,8 @@ function main() {
   try { input = JSON.parse(fs.readFileSync(0, 'utf8') || '{}'); } catch (_) { /* fail open */ }
 
   try {
-    if (shouldArm(input.prompt)) {
+    const project = fs.existsSync(path.join(process.cwd(), 'coolhan.project.json'));
+    if (shouldArm(input.prompt, { project })) {
       const runId = arm(process.cwd(), input.prompt);
       process.stdout.write(JSON.stringify({
         hookSpecificOutput: {
@@ -69,4 +77,4 @@ function main() {
 
 if (require.main === module) process.exit(main());
 
-module.exports = { shouldArm, arm };
+module.exports = { shouldArm, arm, STRONG_RUN, QUESTION };

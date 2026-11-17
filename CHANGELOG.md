@@ -1,5 +1,66 @@
 # Changelog
 
+## [2.10.0] - 2026-11-17
+
+### Added
+
+- **G23 Standing orders and the project kit: the operator stops repeating commands.**
+  Operator report: across every session and every site the same commands were issued again, and a new site meant
+  issuing them once more; the module library built from those sites (`00Module_site`) should be used. Measured
+  first: 4,286 operator messages in 9 projects (private store, G18) contain a continue-type order 530 times
+  ("이어서 진행하라" alone 118), deploy 259, commit 152, verify 110, parallel agents 47, design corrections 45. Cause:
+  a project folder carried none of it (no orders, no loop hooks, no ledger, no fixed checks, no module plan), and
+  the loop hooks armed only on the harness command word.
+  - **Orders as registry data.** `knowledge_base/field-lessons.json` gains `orders` (O-01 to O-18): continue is the
+    default, silence while working, done only after the fixed checks ran, plan before code, four planning
+    deliverables, module library first, commit each verified unit by path, deploy by project setting, generated
+    handoff, no invented values, no fake data, no explanatory sentences on screen, design default, forbidden
+    zones, checks that do not touch production, operator inputs collected once at the end, parallel agents with a
+    final review, decided things are not asked again. Each names what enforces it. `field-lessons.js` validates
+    and renders them and lists them with `list --kind order --tags`.
+  - **`scripts/new-project.js`** starts a new site or adopts an existing folder:
+    `node scripts/new-project.js <dir> --intent "<one-line goal>" [--tags] [--deploy none|after-complete] [--modules <library>]`.
+    It writes `CLAUDE.md` (orders in a managed block; the rest of the file stays the project's), `coolhan.project.json`,
+    `scripts/coolhan.js` (launcher: gates and hooks run from the harness, nothing is copied; harness missing means
+    exit 4 for a gate and exit 0 for a hook), the three loop hooks merged into `.claude/settings.json`, ledger, fixed
+    checks, decisions, operator-input list, generated handoff, goal and backlog, `docs/plan/LESSON_PLAN.md` and
+    `docs/plan/MODULE_PLAN.md`. Existing files are never overwritten; a second run changes nothing.
+  - **Module library as a required planning input.** `MODULE_PLAN.md` has one row per bundle of the library with a
+    default decision from the project tags (이식 when extracted packages exist, 참조 when only the spec exists, 제외
+    otherwise). `plan-doc-check --modules <library>` fails a plan that leaves a bundle unanswered
+    (`module-bundle-unanswered`), uses a decision outside 채택/이식/참조/제외 (`module-decision-invalid`) or has no
+    table (`no-module-table`). The library is read-only and nothing is copied from it by the kit.
+  - **The loop without the command word.** In a folder with `coolhan.project.json` the operator's own continuation
+    words (이어서, 계속, 남은 작업, 끝까지, 완성하라) arm the run; one-shot orders and questions do not. `stop-guard`
+    finds its completion checker in the harness when the project has no copy.
+  - **`scripts/handoff-write.js`** generates the state block of `HANDOFF.md` from the ledger (goal, counts, current
+    position, open defects, recent commits). No ledger means exit 4 and no file.
+- `scripts/lib/template.js` (slot fill, managed block upsert) joins the shared library.
+
+### Changed
+
+- `plan-doc-check` on a folder with no document exits 4 (NOT_RUN) instead of 2: nothing scanned is not a usage error
+  and not a pass.
+- Five agents (intent-analyzer, spec-writer, plan-reviewer, developer, devops-deployer) carry a G23 section; the
+  orchestrator's Phase 0 reads `coolhan.project.json` and the orders block; Task 2.5 names `--modules`.
+
+### Verification
+
+- jest 337/337, 34 suites (new `project-kit` suite 19/19); prompt-modernization lint clean 48 files;
+  single-source ratchet unchanged {duplicate helpers 3, sentences 95}; field-lesson ratchet unchanged.
+- `_harness_test/track39-project-kit/run-track.js`: 25 scenarios, 25 match, 0 false +/- (fresh project, adopted
+  project kept byte-identical, idempotent re-run, tampered block restored, 6 prompts that must not arm, 3 that
+  must, stop and ask blocked while the backlog is open, recorded stop condition allowed, harness missing, module
+  plan gate four ways, handoff with and without a ledger, the real library 26 of 26 bundles answered).
+
+### Honest bound
+
+- Orders are text an agent reads plus the gates each order names; an order with only "규칙" in its enforce cell is
+  not mechanically checked. Counts come from keyword classification of the private message store.
+- Deploy and push stay operator-authorized (`deploy: none` by default). A new project folder does not contain the
+  agent team: sessions read the pipeline from the harness folder, or the operator installs the skills once.
+- Default module decisions come from a tag map and are a starting point the plan must review.
+
 ## [2.9.0] - 2026-11-11
 
 ### Added

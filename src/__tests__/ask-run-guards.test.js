@@ -31,6 +31,13 @@ describe('run-armer (G11c — mechanical arming from the user prompt)', () => {
     expect(shouldArm('그냥 일반 질문입니다')).toBe(false);
   });
 
+  test('project mode (coolhan.project.json present): the operator\'s own words arm the loop, questions and one-shot commands do not (G23)', () => {
+    const P = { project: true };
+    for (const p of ['이어서 진행하라', '이어서 작업하라', '계속 진행하라', '남은 작업들을 파악하고 이어서 작업하라', '항목이 100% 완료되었음이 확인될때까지 계속 roop로 개발을 완성하라', 'keep going until the backlog is empty']) expect(shouldArm(p, P)).toBe(true);
+    for (const p of ['배포하라', '커밋하라', '이 버튼 색을 바꾸는 작업을 진행하라', '이어서 작업할 내용을 알려줘', '다음에 뭘 이어서 할까요?', '승인한다', '로그인 했다']) expect(shouldArm(p, P)).toBe(false);
+    expect(shouldArm('이어서 진행하라')).toBe(false);   // without the project marker the old keyword rule still applies
+  });
+
   test('arming writes the marker and clears a stale stop-approval', () => {
     const dir = sandbox();
     fs.writeFileSync(path.join(dir, '_workspace', '_stop-approved.json'), '{"reason":"old run ESCALATE"}');

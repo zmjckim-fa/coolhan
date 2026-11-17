@@ -20,6 +20,16 @@ the registry; a new incident becomes one registry entry (with a `detect` block w
 re-render, not a sentence added here.
 One deploy entry point: clean worktree at a named commit, build aside and swap, additive-only migration, verdict by exit code, lock, rollback (W-07, F-07). The post-deploy list has one request per core flow plus the process error log, not only the health path (F-08). Deploy records carry backup path, rollback command and what was not verified.
 
+## Standing orders and project kit (G23: registry `orders`, `scripts/new-project.js`)
+The commands the operator used to repeat in every project (continue until the backlog is empty, say done only after the
+fixed checks ran, plan before code, use the module library first, commit each verified unit, deploy by the project
+setting, refresh the handoff) are registry entries `O-01` onward in `knowledge_base/field-lessons.json`.
+`node scripts/new-project.js <dir> --intent "<one-line goal>"` writes them into the project's `CLAUDE.md` together with
+the loop hooks, ledger, fixed checks and module plan. Read them with
+`node scripts/field-lessons.js list --kind order --tags <project tags>`; inside a project the same tools run as
+`node scripts/coolhan.js <tool>`. They apply without being issued again.
+Deploy authority is the `deploy` value in `coolhan.project.json` (O-08). `none`: deploy only on an explicit operator order. `after-complete`: deploy once, after `checks-run` passed in full, through the project's single deploy script. With no `coolhan.project.json` the value is `none`. Server configuration, container setup, secret keys and other services stay out of reach under either value.
+
 ## Core Principles
 
 1. **Deployment lock:** prevent conflicts from concurrent deployments

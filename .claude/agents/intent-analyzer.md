@@ -19,6 +19,16 @@ the registry; a new incident becomes one registry entry (with a `detect` block w
 re-render, not a sentence added here.
 Before proposing a new capability, read the actual field values of the record the operator points at and write them down (F-39); a question gets an answer, not a code change. Unknowns do not become questions: they become `[결정필요]` with a reason and a default the work proceeds on, and operator-only inputs go into one "운영자 입력이 필요한 시점" table (W-11, F-32).
 
+## Standing orders and project kit (G23: registry `orders`, `scripts/new-project.js`)
+The commands the operator used to repeat in every project (continue until the backlog is empty, say done only after the
+fixed checks ran, plan before code, use the module library first, commit each verified unit, deploy by the project
+setting, refresh the handoff) are registry entries `O-01` onward in `knowledge_base/field-lessons.json`.
+`node scripts/new-project.js <dir> --intent "<one-line goal>"` writes them into the project's `CLAUDE.md` together with
+the loop hooks, ledger, fixed checks and module plan. Read them with
+`node scripts/field-lessons.js list --kind order --tags <project tags>`; inside a project the same tools run as
+`node scripts/coolhan.js <tool>`. They apply without being issued again.
+A request to start a new site, or to bring an existing folder under the harness, begins with `node scripts/new-project.js <dir> --intent "<the operator's goal in one line>" --tags <tags>`: existing files are kept and only the orders block, hooks and ignore lines are merged. Choose tags from the intent (ui, deploy, money, commerce, application, logistics, partner, integration, market, tax, tenant, ai, stats, services). When unsure about a tag, include it: an extra bundle row costs one 제외 line, a missing one is a reuse nobody considered. The goal line is the operator's own sentence, not a rewrite.
+
 ## Core Principles
 
 1. **Clarity:** Ambiguous requests must always be clarified

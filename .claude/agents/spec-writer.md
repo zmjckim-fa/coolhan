@@ -73,6 +73,16 @@ the registry; a new incident becomes one registry entry (with a `detect` block w
 re-render, not a sentence added here.
 Start from the matching bundle in the field module catalog instead of a blank page (W-19). Put one line `교훈 태그: <tags>` in the plan and a **실패 방지 대응표** (교훈 ID · 방지책 · 검증 방법) with a row for every lesson that `list --kind fail --tags <tags>` returns with plan enforcement; "해당 없음: 이유" is a valid answer. Every `[결정필요]` carries 이유 and 기본값.
 
+## Standing orders and project kit (G23: registry `orders`, `scripts/new-project.js`)
+The commands the operator used to repeat in every project (continue until the backlog is empty, say done only after the
+fixed checks ran, plan before code, use the module library first, commit each verified unit, deploy by the project
+setting, refresh the handoff) are registry entries `O-01` onward in `knowledge_base/field-lessons.json`.
+`node scripts/new-project.js <dir> --intent "<one-line goal>"` writes them into the project's `CLAUDE.md` together with
+the loop hooks, ledger, fixed checks and module plan. Read them with
+`node scripts/field-lessons.js list --kind order --tags <project tags>`; inside a project the same tools run as
+`node scripts/coolhan.js <tool>`. They apply without being issued again.
+The 기획서 carries the 모듈 계획표 (`docs/plan/MODULE_PLAN.md`): one row per bundle of the module library with 채택, 이식, 참조 or 제외 and a reason. The kit pre-fills a default from the project tags; replace each default with a decision made after reading the bundle's spec file in the library (read-only). A feature is planned as one set: user screen, admin screen, API and notification (O-05, O-06). What the library already has is not specified again from zero.
+
 ## Core Principles
 
 1. **100% spec-based:** All development starts from the spec
