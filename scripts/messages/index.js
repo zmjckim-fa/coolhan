@@ -77,6 +77,7 @@ const M = {
   'plan.noTraceTable': '요구 항목 추적표가 없다 (열: 요구 항목 · 위치) (§6-5, §7)',
   'plan.traceUnlocated': '요구 항목 "{item}"의 위치가 비어 있다 (§7 추적표에 빈 항목 없음)',
   'plan.traceMissingItem': '요구 항목 "{item}"이 추적표에 없다 (--required)',
+  'plan.traceFileMissing': '요구 항목 "{item}"의 위치가 가리키는 파일이 없다: {path} (산출물은 파일로 있어야 위치다, 상시 지시 O-05)',
   'plan.tableBlankCell': '표의 빈칸 (열 "{column}"): 해당 없음은 "해당 없음"으로 쓴다 (§5)',
   'plan.deferredMarker': '표에 "{marker}" 표기: 미정은 [결정필요]로 이유와 함께 쓴다 (§7)',
   'plan.unverifiedWithoutMethod': '[미검증]에 확인 방법이 없다 (같은 줄에 "확인 방법: …") (§2-9, §7)',

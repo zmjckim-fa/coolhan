@@ -182,4 +182,20 @@ describe('plan-doc-check (G21 — planning document completion gate)', () => {
     expect(JSON.parse(out[out.length - 1]).status).toBe('PASS');
     fs.rmSync(d, { recursive: true, force: true });
   });
+
+  test('trace-file-missing: a location that names a file must name one that exists (track42 K-1, order O-05)', () => {
+    const d = tmp();
+    const plan = GOOD.replace('| ERD | 3장 데이터 |', '| ERD | `02_DB.md`와 `db/schema.sql`, 실행 명령 `node db/check.js --all` |');
+    write(d, 'docs/plan/plan.md', plan);
+    const cwd = process.cwd(); process.chdir(d);
+    try {
+      const missing = evaluate(path.join(d, 'docs/plan')).findings.filter(x => x.rule === 'trace-file-missing');
+      expect(missing.map(x => x.detail).join(' ')).toMatch(/02_DB.md/);
+      expect(missing).toHaveLength(2);                       // the command in backticks is not a path
+      write(d, 'docs/plan/02_DB.md', '# DB');                // beside the document
+      write(d, 'db/schema.sql', 'create table t(a);');       // at the project root
+      expect(evaluate(path.join(d, 'docs/plan')).findings.filter(x => x.rule === 'trace-file-missing')).toHaveLength(0);
+    } finally { process.chdir(cwd); }
+    fs.rmSync(d, { recursive: true, force: true });
+  });
 });

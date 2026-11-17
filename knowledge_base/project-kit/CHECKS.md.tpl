@@ -7,7 +7,7 @@
 | ID | 검사 | 명령 | 비고 |
 |---|---|---|---|
 | C1 | 진행 원장 형식과 완료 정의 | `node scripts/coolhan.js progress-check docs/PROGRESS.md` | |
-| C2 | 기획서 형식, 교훈 대응표, 모듈 계획표 | `node scripts/coolhan.js plan-doc-check docs/plan --lessons @home/knowledge_base/field-lessons.json --tags @tags --modules @modules` | 기획 단위가 끝나기 전에는 실패가 정상이다 |
+| C2 | 기획서 형식, 교훈 대응표, 모듈 계획표 | `node scripts/coolhan.js plan-doc-check docs/plan --lessons @home/knowledge_base/field-lessons.json --tags @tags --modules @modules --required "DB 산출물,화면 설계 산출물,디자인 산출물,소스 산출물"` | 기획 단위가 끝나기 전에는 실패가 정상이다. 추적표에 네 산출물의 행을 두고 위치에 실제 파일을 적는다 |
 | C3 | 실패 패턴 코드 검사 | `node scripts/coolhan.js field-lessons check . --tags @tags --skip-dirs docs` | 소스가 생기기 전에는 확인 안 함 |
 | C4 | 단일 원천과 중복 | `node scripts/coolhan.js single-source-check . --skip-dirs docs` | 소스가 생기기 전에는 확인 안 함 |
 | C5 | 플레이스홀더 잔존 | `node scripts/coolhan.js no-placeholder-check src` | 소스가 생기기 전에는 확인 안 함 |

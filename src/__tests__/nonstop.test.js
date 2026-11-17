@@ -135,6 +135,13 @@ describe('nonstop (G13 — outer supervisor loop for true non-stop development)'
     expect(waits).toBe(0); expect(probed.headroom).toEqual({ status: 'NOT_RUN', free_mb: null }); expect(plain.headroom).toBeUndefined();
   });
 
+  test('a session command that is not logged in stops at once with the cause named (track42 K-2)', () => {
+    writeBacklog([{ id: 'U1', status: 'todo' }]);
+    let calls = 0;
+    const r = supervise(opts(), () => { calls++; return { exit: 0, output_tail: 'Not logged in · Please run /login' }; });
+    expect(r.status).toBe('CMD_ERROR'); expect(r.reason).toMatch(/not logged in/); expect(calls).toBe(1);
+  });
+
   test('exit-code map covers every terminal status', () => {
     expect(EXIT.COMPLETE).toBe(0);
     expect(new Set(Object.values(EXIT)).size).toBe(Object.values(EXIT).length);

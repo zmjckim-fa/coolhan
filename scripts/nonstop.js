@@ -43,6 +43,7 @@ const DEFAULT_TEMPLATE = 'claude -p {prompt} --permission-mode bypassPermissions
 const HEADROOM_WAITS = 10;        // at most this many waits per session before launching anyway
 const HEADROOM_WAIT_MS = 60000;
 const TAIL = 1500;
+const NOT_LOGGED_IN = /not logged in|please run \/login/i;   // the client's own words when it has no account (track42 K-2)
 
 function backlogState(ws) {
   const backlog = path.join(ws, '_backlog.md');
@@ -109,6 +110,9 @@ function supervise(opts, sessionRunner) {
     const headroom = awaitHeadroom(opts, ws, session);
     const result = runner(session);
     appendLog(ws, { session, exit: result.exit, timed_out: !!result.timed_out, ...(headroom ? { headroom } : {}), tail: (result.output_tail || '').slice(-400) });
+    if (NOT_LOGGED_IN.test(result.output_tail || '')) {
+      return { status: 'CMD_ERROR', sessions: session, reason: 'the session command is not logged in: run it once in a terminal, log in, then start the supervisor again' };
+    }
     if (result.exit === undefined || result.spawn_error) {
       return { status: 'CMD_ERROR', sessions: session, reason: result.spawn_error || 'session command failed to start' };
     }

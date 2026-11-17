@@ -11,6 +11,8 @@
  *   no-traceability-table     no 요구 항목 → 위치 table (§6-5)
  *   trace-unlocated           a requirement row whose location is blank
  *   trace-missing-item        an item given with --required that no trace row names
+ *   trace-file-missing        a trace location names a file (`path/name.ext`) that does not exist: a deliverable
+ *                             that is only promised is not located (standing order O-05)
  *   table-blank-cell          an empty table cell (write "해당 없음") (§5)
  *   deferred-marker           추후 / 나중에 / TBD / 미정 in a table row without [결정필요] (§7)
  *   unverified-without-method [미검증] without "확인 방법" on the same line (§2-9)
@@ -126,6 +128,22 @@ function countSuccessCriteria(docs) {
   return { found: false, count: 0, where: '(docs)' };
 }
 
+/** File paths written in backticks inside a trace location: `02_DB.md`, `db/schema.sql`. Words and commands are not paths. */
+const FILE_REF = /`([^`\s*?<>|]+\.[A-Za-z0-9]{1,5})`/g;
+function fileRefs(cell) { const out = []; let m; FILE_REF.lastIndex = 0; while ((m = FILE_REF.exec(cell))) out.push(m[1]); return out; }
+
+/** A path counts as present when it exists beside the document or in one of its parent folders (the project root included). */
+function existsNear(dir, ref) {
+  const stop = path.resolve(process.cwd());
+  for (let cur = path.resolve(dir), i = 0; i < 8; i++) {
+    if (fs.existsSync(path.resolve(cur, ref))) return true;
+    const up = path.dirname(cur);
+    if (cur === stop || up === cur) return false;
+    cur = up;
+  }
+  return false;
+}
+
 function evaluate(target, opts = {}) {
   const docs = loadDocs(target);
   const findings = [];
@@ -206,6 +224,7 @@ function evaluate(target, opts = {}) {
           traceItems.push(item);
           const loc = (row.cells[whereCol] || '').trim();
           if (!loc || /^(?:-|—|없음)$/.test(loc)) add('trace-unlocated', where, 'plan.traceUnlocated', { item });
+          for (const ref of fileRefs(loc)) if (!existsNear(path.dirname(d.full), ref)) add('trace-file-missing', where, 'plan.traceFileMissing', { item, path: ref });
         }
         if (tipCol >= 0) {
           const tip = (row.cells[tipCol] || '').trim();
