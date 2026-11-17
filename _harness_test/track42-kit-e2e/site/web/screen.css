@@ -1,0 +1,987 @@
+/* Component shapes C-01 to C-14 and the base rules they stand on.
+ * Authority: the component table of the design plan (docs/plan, part 04, sections 3 to 5).
+ * Every color, size, space and radius is read from tokens.css. The few lengths that have no
+ * token (64px, 120px, 240px, 14px, 3px) are the sizes written in that table.
+ * Narrow screens (639px and below) are the default. Wide screens start at 640px.
+ * Per-screen layout (page background, containers, columns, grids) lives in each screen's own file.
+ * To hide an element use the hidden attribute. No rule here depends on a style attribute.
+ */
+
+/* ---------- base ---------- */
+
+:root {
+  color-scheme: only light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-heading);
+  word-break: keep-all;
+}
+
+button,
+input,
+select {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+:focus-visible {
+  outline: var(--focus-width) solid var(--color-focus);
+  outline-offset: var(--focus-offset);
+}
+
+.screen-title {
+  font-size: var(--font-size-screen-title);
+  font-weight: var(--font-weight-bold);
+}
+
+.section-title {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-heavy);
+}
+
+/* Section box: the frame that holds a list or a group of inputs. */
+.section-box {
+  padding: var(--space-6);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+/* Skip link: the first focus of every screen, visible only while focused. */
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  padding: 0 var(--space-6);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-accent);
+  font-size: var(--font-size-body-admin);
+  font-weight: var(--font-weight-bold);
+  transform: translateY(calc(-100% - var(--space-2)));
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+.skip-link:focus-visible {
+  outline-offset: calc(-1 * (var(--focus-width) + var(--focus-offset)));
+}
+
+/* Loading and empty are drawn differently from each other and from a failure (C-10 band). */
+.loading-line {
+  margin: 0;
+  padding: var(--space-8) 0;
+  color: var(--color-text-3);
+  font-size: var(--font-size-body-admin);
+  text-align: center;
+}
+
+.empty-row {
+  margin: 0;
+  padding: var(--space-5);
+  color: var(--color-text-3);
+  font-size: var(--font-size-body);
+}
+
+/* ---------- C-01 primary button, C-02 secondary button, C-03 delete button ---------- */
+
+.button-primary,
+.button-secondary,
+.button-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-width: 64px;
+  min-height: var(--control-height);
+  padding: 0 var(--space-6);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius);
+  font-size: var(--font-size-body-admin);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  text-align: center;
+  text-decoration: none;
+  word-break: keep-all;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.button-primary {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.button-primary:enabled:hover,
+.button-primary:enabled:active {
+  border-color: var(--color-accent-hover);
+  background: var(--color-accent-hover);
+}
+
+.button-secondary {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+  color: var(--color-accent);
+}
+
+.button-secondary:enabled:hover,
+.button-secondary:enabled:active {
+  background: var(--color-accent-tint);
+}
+
+.button-danger {
+  border-color: var(--color-danger-border);
+  background: var(--color-surface);
+  color: var(--color-danger-text);
+}
+
+.button-danger:enabled:hover,
+.button-danger:enabled:active {
+  background: var(--color-danger-surface);
+}
+
+.button-primary:disabled,
+.button-secondary:disabled,
+.button-danger:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: default;
+}
+
+/* Button row. Narrow: the buttons share the row equally, so a lone button fills it.
+ * Wide: the buttons keep their own width and sit at the right. Buttons are never stacked. */
+.button-row {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.button-row > * {
+  flex: 1 1 0;
+}
+
+/* ---------- C-04 text input, C-05 time input, C-06 select box ---------- */
+
+/* A field is a label row, a control and an error line. It also anchors the C-09 bubble. */
+.field,
+.tip-anchor {
+  position: relative;
+}
+
+.field {
+  min-width: 0;
+}
+
+.field-label-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.field-label {
+  color: var(--color-text-2);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-label);
+  line-height: var(--line-height-tight);
+}
+
+.required-mark {
+  color: var(--color-text-3);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-label);
+  line-height: var(--line-height-tight);
+}
+
+.text-input,
+.time-input,
+.select-box > select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: var(--control-height);
+  padding: 0 var(--space-5);
+  border: var(--border-width) solid var(--color-border-control);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-size-input);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-tight);
+  transition: border-color var(--transition-fast);
+}
+
+.text-input::placeholder {
+  color: var(--color-text-3);
+  opacity: 1;
+}
+
+.text-input:focus-visible,
+.time-input:focus-visible,
+.select-box > select:focus-visible {
+  border-color: var(--color-accent);
+}
+
+/* The thicker error border takes its extra width from the padding, so the text does not move. */
+.text-input[aria-invalid='true'],
+.time-input[aria-invalid='true'],
+.select-box > select[aria-invalid='true'] {
+  padding-left: calc(var(--space-5) + var(--border-width) - var(--border-width-strong));
+  border-width: var(--border-width-strong);
+  border-color: var(--color-danger-border);
+}
+
+.text-input[aria-invalid='true'],
+.time-input[aria-invalid='true'] {
+  padding-right: calc(var(--space-5) + var(--border-width) - var(--border-width-strong));
+}
+
+.text-input:disabled,
+.time-input:disabled,
+.select-box > select:disabled {
+  background: var(--color-surface-muted);
+  opacity: var(--opacity-disabled);
+}
+
+/* Price: right aligned digits of equal width, with the unit inside the box. */
+.text-input--price {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.input-unit-box {
+  position: relative;
+  display: block;
+}
+
+.input-unit-box > .text-input,
+.input-unit-box > .text-input[aria-invalid='true'] {
+  padding-right: calc(var(--space-5) + 1em + var(--space-2));
+}
+
+.input-unit {
+  position: absolute;
+  top: 50%;
+  right: var(--space-5);
+  color: var(--color-text-3);
+  font-size: var(--font-size-input);
+  line-height: var(--line-height-tight);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.time-input {
+  min-width: 120px;
+  font-variant-numeric: tabular-nums;
+}
+
+.select-box {
+  position: relative;
+  display: block;
+  min-width: 120px;
+}
+
+.select-box > select {
+  padding-right: var(--space-9);
+  appearance: none;
+}
+
+.select-box > select[aria-invalid='true'] {
+  padding-right: calc(var(--space-9) + var(--border-width) - var(--border-width-strong));
+}
+
+/* Chevron: the right and bottom borders of a small square, turned 45 degrees. Decoration only. */
+.select-box::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: var(--space-5);
+  width: var(--space-4);
+  height: var(--space-4);
+  border-right: var(--border-width-strong) solid var(--color-text-2);
+  border-bottom: var(--border-width-strong) solid var(--color-text-2);
+  transform: translateY(-75%) rotate(45deg);
+  pointer-events: none;
+}
+
+.select-box:has(> select:disabled)::after {
+  opacity: var(--opacity-disabled);
+}
+
+/* ---------- C-07 checkbox ---------- */
+
+.checkbox {
+  display: inline-grid;
+  flex: none;
+  place-content: center;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  border: var(--border-width) solid var(--color-border-control);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  appearance: none;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+/* Tick: the right and bottom borders of a narrow box, turned 45 degrees. */
+.checkbox::before {
+  content: '';
+  width: var(--space-3);
+  height: var(--space-5);
+  border-right: var(--border-width-strong) solid var(--color-on-accent);
+  border-bottom: var(--border-width-strong) solid var(--color-on-accent);
+  transform: translateY(calc(-1 * var(--space-1))) rotate(45deg);
+  visibility: hidden;
+}
+
+.checkbox:checked {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+
+.checkbox:checked::before {
+  visibility: visible;
+}
+
+.checkbox:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: default;
+}
+
+/* With a visible label: a label element that wraps the box and the words. */
+.checkbox-row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: var(--target-min);
+  font-size: var(--font-size-body);
+  cursor: pointer;
+}
+
+/* Without a visible label: a label element that only widens the place to press. */
+.checkbox-target {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  cursor: pointer;
+}
+
+/* ---------- C-08 status badge ---------- */
+
+.status-badge {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--badge-height);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  white-space: nowrap;
+}
+
+.status-badge svg {
+  flex: none;
+  width: var(--space-4);
+  height: var(--space-4);
+}
+
+.status-badge--large {
+  min-height: var(--badge-height-large);
+  padding: 0 var(--space-5);
+  font-size: var(--font-size-figure);
+  font-weight: var(--font-weight-heavy);
+}
+
+.status-badge--large svg {
+  width: var(--space-5);
+  height: var(--space-5);
+}
+
+.status-badge[data-status='open'] {
+  background: var(--color-status-open-surface);
+  color: var(--color-status-open-text);
+}
+
+.status-badge[data-status='closed'] {
+  background: var(--color-status-closed-surface);
+  color: var(--color-status-closed-text);
+}
+
+.status-badge[data-status='dayoff'] {
+  background: var(--color-status-dayoff-surface);
+  color: var(--color-status-dayoff-text);
+}
+
+.status-badge[data-status='unset'] {
+  border: var(--border-width) dashed var(--color-status-unset-border);
+  background: var(--color-status-unset-surface);
+  color: var(--color-status-unset-text);
+}
+
+.status-badge[data-status='on_sale'] {
+  background: var(--color-sale-on-surface);
+  color: var(--color-sale-on-text);
+}
+
+.status-badge[data-status='sold_out'] {
+  background: var(--color-sale-soldout-surface);
+  color: var(--color-sale-soldout-text);
+}
+
+/* ---------- C-09 tip button and its bubble ---------- */
+
+/* The button is the place to press. The mark inside it is the visible square. */
+.tip-button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.tip-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--help-size);
+  height: var(--help-size);
+  border: var(--border-width) solid var(--color-accent);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-accent);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.tip-button:hover .tip-mark,
+.tip-button:active .tip-mark,
+.tip-button[aria-expanded='true'] .tip-mark {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.tip-button:focus-visible {
+  outline: none;
+}
+
+.tip-button:focus-visible .tip-mark {
+  outline: var(--focus-width) solid var(--color-focus);
+  outline-offset: var(--focus-offset);
+}
+
+/* The bubble opens upward from the top of its anchor (.field or .tip-anchor) and never grows
+ * wider than the anchor, so it covers neither the control below nor the edge of the screen. */
+.tip-bubble {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  z-index: 2;
+  width: max-content;
+  max-width: min(240px, 100%);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius);
+  background: var(--color-tooltip-surface);
+  color: var(--color-text-on-dark);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  text-align: left;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- C-10 error line and error band ---------- */
+
+.error-line,
+.error-band {
+  color: var(--color-danger-text);
+  font-size: var(--font-size-label);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.error-line {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  font-weight: var(--font-weight-label);
+  line-height: var(--line-height-body);
+}
+
+.error-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
+  border: var(--border-width) solid var(--color-danger-border);
+  border-radius: var(--radius);
+  background: var(--color-danger-surface);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-body);
+}
+
+.error-line svg,
+.error-band svg,
+.saved-notice svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+.error-line svg {
+  margin-top: var(--space-1);
+}
+
+.error-band-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Retry: an underlined text button inside the band. */
+.error-band-retry {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-danger-text);
+  font-weight: var(--font-weight-bold);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.error-band-retry:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: default;
+}
+
+/* ---------- C-11 confirm dialog ---------- */
+
+.confirm-dialog {
+  width: calc(100% - 2 * var(--gutter));
+  max-width: var(--container-dialog);
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-dialog);
+}
+
+.confirm-dialog::backdrop {
+  background: var(--color-overlay);
+}
+
+.confirm-dialog-title {
+  padding: var(--space-5) var(--space-6);
+  background: var(--color-danger-text);
+  color: var(--color-text-on-dark);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+}
+
+.confirm-dialog-body {
+  margin: 0;
+  padding: var(--space-6);
+  font-size: var(--font-size-body-admin);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* The two buttons sit side by side at the right on every width. */
+.confirm-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-4);
+  padding: 0 var(--space-6) var(--space-6);
+}
+
+/* ---------- C-12 top bar ---------- */
+
+.top-bar-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: var(--header-height-narrow);
+  padding: 0 var(--gutter);
+}
+
+/* Visitor home: a white strip with the shop name. The strip keeps its height while the name is empty. */
+.top-bar--visitor .top-bar-strip {
+  padding: 0 max(var(--gutter), calc((100% - var(--container-visitor)) / 2));
+  border-bottom: var(--border-width) solid var(--color-border-soft);
+  background: var(--color-surface);
+}
+
+.top-bar-name {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-heavy);
+  overflow-wrap: anywhere;
+}
+
+/* Login: no surface of its own. One link on the dark page background. */
+.top-bar--login .top-bar-strip {
+  color: var(--color-text-on-dark);
+}
+
+/* Admin: a dark green strip with the link and the logout button, and the tab strip below it. */
+.top-bar--admin .top-bar-strip {
+  padding: 0 max(var(--gutter), calc((100% - var(--container-admin)) / 2));
+  background: var(--color-bar-admin);
+  color: var(--color-text-on-dark);
+}
+
+.top-bar-link,
+.top-bar-logout {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  color: inherit;
+  font-size: var(--font-size-body-admin);
+  font-weight: var(--font-weight-label);
+  line-height: var(--line-height-tight);
+}
+
+.top-bar-link {
+  text-decoration: underline;
+}
+
+.top-bar-logout {
+  justify-content: center;
+  min-width: var(--target-min);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.top-bar-logout:enabled:hover {
+  text-decoration: underline;
+}
+
+.top-bar-logout:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: default;
+}
+
+.top-bar--login .top-bar-strip :focus-visible,
+.top-bar--admin .top-bar-strip :focus-visible {
+  outline-color: var(--color-focus-on-dark);
+}
+
+.tab-strip {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  padding: 0 max(var(--gutter), calc((100% - var(--container-admin)) / 2));
+  background: var(--color-tab-strip);
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-height);
+  padding: 0 var(--space-6);
+  border-radius: var(--radius);
+  color: var(--color-text-2);
+  font-size: var(--font-size-body-admin);
+  font-weight: var(--font-weight-label);
+  line-height: var(--line-height-tight);
+  text-decoration: none;
+  word-break: keep-all;
+  transition: background-color var(--transition-fast);
+}
+
+.tab:hover {
+  background: var(--color-surface);
+}
+
+.tab[aria-current='page'] {
+  background: var(--color-surface);
+  color: var(--color-accent);
+  font-weight: var(--font-weight-bold);
+}
+
+/* ---------- C-13 list row ---------- */
+
+/* The row is a li (menu) or a tr (business hours, inside .list-table).
+ * The arrangement rules sit in :where() so that a screen that re-flows a row on narrow screens
+ * replaces them without a specificity contest. */
+.list-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.list-row {
+  border-bottom: var(--border-width) solid var(--color-border-soft);
+  background: var(--color-surface);
+  font-size: var(--font-size-body);
+}
+
+.list-row:last-child {
+  border-bottom: 0;
+}
+
+:where(.list-row):where(:not(tr)) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: var(--target-min);
+  padding: var(--space-5);
+}
+
+:where(tr.list-row) > :where(th, td) {
+  height: var(--target-min);
+  padding: var(--space-5) 0;
+  font-weight: inherit;
+  text-align: left;
+  vertical-align: middle;
+}
+
+:where(tr.list-row) > :where(:first-child) {
+  padding-left: var(--space-5);
+}
+
+:where(tr.list-row) > :where(:last-child) {
+  padding-right: var(--space-5);
+}
+
+.list-row-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Times and prices: right aligned, digits of equal width, never broken across lines. */
+:where(tr.list-row) > .list-row-value,
+.list-row-value {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.list-row--menu .list-row-name,
+.list-row--menu .list-row-value {
+  font-weight: var(--font-weight-heavy);
+}
+
+.list-row--soldout .list-row-name {
+  color: var(--color-text-3);
+}
+
+/* Today: the word, a soft surface, a bar at the left and bold type. */
+.list-row[aria-current='date'] {
+  background: var(--color-accent-soft);
+  font-weight: var(--font-weight-bold);
+}
+
+.list-row[aria-current='date']:not(tr),
+tr.list-row[aria-current='date'] > :first-child {
+  box-shadow: inset 3px 0 0 var(--color-accent);
+}
+
+.today-mark {
+  margin-left: var(--space-4);
+  color: var(--color-accent);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-bold);
+}
+
+/* ---------- C-14 saved notice ---------- */
+
+.saved-notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--target-min);
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: var(--font-size-body-admin);
+  font-weight: var(--font-weight-bold);
+  word-break: keep-all;
+}
+
+/* ---------- narrow screens only ---------- */
+
+@media (max-width: 639px) {
+  /* Rows that stack several lines inside a section box keep no side padding of their own. */
+  .list-row--flush,
+  :where(tr.list-row--flush) > :where(:first-child),
+  :where(tr.list-row--flush) > :where(:last-child) {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+/* ---------- wide screens ---------- */
+
+@media (min-width: 640px) {
+  .section-box {
+    padding: var(--space-7);
+  }
+
+  .button-primary,
+  .button-secondary,
+  .button-danger {
+    min-height: var(--control-height-compact);
+  }
+
+  .button-row {
+    justify-content: flex-end;
+  }
+
+  .button-row > * {
+    flex: 0 0 auto;
+  }
+
+  .text-input,
+  .time-input,
+  .select-box > select {
+    height: var(--control-height-compact);
+    font-size: var(--font-size-body-admin);
+  }
+
+  .input-unit {
+    font-size: var(--font-size-body-admin);
+  }
+
+  .time-input {
+    width: 120px;
+  }
+
+  .checkbox-row {
+    min-height: var(--target-min-pointer);
+  }
+
+  .checkbox-target,
+  .tip-button,
+  .error-band-retry {
+    min-width: var(--target-min-pointer);
+    min-height: var(--target-min-pointer);
+  }
+
+  .top-bar-strip {
+    min-height: var(--header-height);
+  }
+
+  .top-bar-link,
+  .top-bar-logout {
+    min-height: var(--target-min-pointer);
+  }
+
+  .tab {
+    min-height: var(--control-height-compact);
+  }
+
+  :where(.list-row):where(:not(tr)) {
+    padding-right: var(--space-6);
+    padding-left: var(--space-6);
+  }
+
+  :where(tr.list-row) > :where(:first-child) {
+    padding-left: var(--space-6);
+  }
+
+  :where(tr.list-row) > :where(:last-child) {
+    padding-right: var(--space-6);
+  }
+
+  /* Hover is for admin lists on wide screens. */
+  .list-row--hover:hover {
+    background: var(--color-surface-hover);
+  }
+}
+
+/* ---------- user preferences ---------- */
+
+/* Forced colors: the chevron and the tick give way to the device's own controls. */
+@media (forced-colors: active) {
+  .select-box > select,
+  .checkbox {
+    appearance: auto;
+  }
+
+  .select-box::after,
+  .checkbox::before {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0s !important;
+  }
+}
