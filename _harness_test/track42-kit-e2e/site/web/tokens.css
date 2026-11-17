@@ -67,10 +67,8 @@
   /* 글꼴 (내려받지 않는다. 기기에 없으면 다음 글꼴로 넘어간다) */
   --font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
     'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* 글자 크기 */
-  --font-size-note: 11px;
   --font-size-label: 12px;
   --font-size-body-admin: 13px;
   --font-size-body: 14px;

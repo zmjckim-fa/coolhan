@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 390" width="900" height="390" role="img" aria-labelledby="t d">
+<title id="t">메뉴 구성</title>
+<desc id="d">방문자는 S-01 한 화면을 쓴다. 관리자는 S-02에서 로그인한 뒤 위쪽 줄로 S-03과 S-04를 오가고 로그아웃하면 S-02로 돌아간다.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1c1c1c"/></marker></defs>
+<style>
+text{font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif;fill:#1c1c1c;font-size:14px}
+.s{font-size:12px}.b{font-weight:700}.n{font-size:11px;fill:#555}
+.box{fill:#fff;stroke:#1c1c1c;stroke-width:1.5}
+.sub{fill:#f0f0f0;stroke:#1c1c1c}
+.ln{fill:none;stroke:#1c1c1c;stroke-width:1.5}
+.dl{fill:none;stroke:#1c1c1c;stroke-width:1.5;stroke-dasharray:5 4}
+</style>
+<rect width="900" height="390" fill="#fff"/>
+
+<text x="40" y="50" class="b">방문자 (로그인 없음)</text>
+<text x="440" y="50" class="b">관리자 (비밀번호 로그인)</text>
+
+<!-- 방문자 -->
+<rect x="40" y="80" width="220" height="60" class="box"/>
+<text x="150" y="106" text-anchor="middle" class="b">S-01 방문자 홈</text>
+<text x="150" y="127" text-anchor="middle" class="s">/</text>
+<path d="M150 140V165M85 165H285M85 165V190M195 165V190M285 165V190" class="ln"/>
+<rect x="30" y="190" width="110" height="40" class="sub"/>
+<text x="85" y="215" text-anchor="middle" class="s">지금 영업 상태</text>
+<rect x="150" y="190" width="90" height="40" class="sub"/>
+<text x="195" y="215" text-anchor="middle" class="s">영업시간</text>
+<rect x="250" y="190" width="70" height="40" class="sub"/>
+<text x="285" y="215" text-anchor="middle" class="s">메뉴</text>
+<text x="30" y="256" class="n">한 화면 안의 구역이다.</text>
+
+<!-- 관리자 -->
+<rect x="440" y="80" width="240" height="60" class="box"/>
+<text x="560" y="106" text-anchor="middle" class="b">S-02 관리자 로그인</text>
+<text x="560" y="127" text-anchor="middle" class="s">/admin/login</text>
+<path d="M560 140V189" class="ln" marker-end="url(#a)"/>
+<text x="570" y="170" class="s">로그인 성공</text>
+<rect x="420" y="190" width="440" height="40" class="sub"/>
+<text x="640" y="215" text-anchor="middle">관리자 화면의 위쪽 줄</text>
+<path d="M495 230V279" class="ln" marker-end="url(#a)"/>
+<path d="M660 230V279" class="ln" marker-end="url(#a)"/>
+<path d="M805 230V279" class="ln" marker-end="url(#a)"/>
+<rect x="420" y="280" width="150" height="60" class="box"/>
+<text x="495" y="306" text-anchor="middle" class="b">S-03 영업시간 관리</text>
+<text x="495" y="327" text-anchor="middle" class="s">/admin/hours</text>
+<rect x="585" y="280" width="150" height="60" class="box"/>
+<text x="660" y="306" text-anchor="middle" class="b">S-04 메뉴 관리</text>
+<text x="660" y="327" text-anchor="middle" class="s">/admin/menu</text>
+<rect x="750" y="280" width="110" height="60" class="sub"/>
+<text x="805" y="306" text-anchor="middle" class="b">로그아웃</text>
+<text x="805" y="327" text-anchor="middle" class="s">동작, A-03</text>
+
+<!-- 로그아웃 뒤 S-02 -->
+<path d="M860 310H885V110H681" class="ln" marker-end="url(#a)"/>
+<text x="700" y="102" class="s">로그아웃 뒤 S-02로</text>
+
+<!-- 방문자 화면 링크 -->
+<path d="M420 210H370V110H261" class="dl" marker-end="url(#a)"/>
+<text x="268" y="102" class="s">«방문자 화면»</text>
+
+<!-- 범례 -->
+<path d="M40 366H80" class="ln"/>
+<text x="88" y="370" class="n">메뉴와 동작으로 이동</text>
+<path d="M240 366H280" class="dl"/>
+<text x="288" y="370" class="n">위쪽 줄의 링크로 이동</text>
+</svg>

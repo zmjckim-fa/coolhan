@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 630" width="1040" height="630" role="img" aria-labelledby="fb-title fb-desc">
+  <title id="fb-title">front와 backend 연결 구조</title>
+  <desc id="fb-desc">화면 네 개가 라우트 표를 지나 처리 파일 다섯 개를 부르고, 처리 파일은 SQLite 파일 하나의 테이블 네 개를 읽고 쓴다.</desc>
+  <defs>
+    <marker id="fb-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3f3f3a"/>
+    </marker>
+    <style>
+      .t { font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; fill: #1c1c1a; }
+      .h { font-size: 13px; font-weight: 700; }
+      .b { font-size: 12px; }
+      .s { font-size: 11px; fill: #55554f; }
+      .m { font-family: Consolas, "Courier New", monospace; font-size: 12px; fill: #1c1c1a; }
+      .box { fill: #ffffff; stroke: #3f3f3a; stroke-width: 1; }
+      .soft { fill: #f3f2ec; stroke: #3f3f3a; stroke-width: 1; }
+      .line { stroke: #3f3f3a; stroke-width: 1.2; fill: none; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1040" height="630" fill="#fbfaf6"/>
+  <text class="t" x="30" y="34" font-size="16" font-weight="700">front와 backend 연결 구조</text>
+
+  <text class="t h" x="30" y="76">화면 (web/)</text>
+  <text class="t h" x="320" y="76">요청이 지나는 길</text>
+  <text class="t h" x="500" y="76">처리 (src/)</text>
+  <text class="t h" x="820" y="76">저장소</text>
+
+  <!-- 화면 네 개 -->
+  <rect class="box" x="30" y="90" width="230" height="96"/>
+  <text class="t h" x="44" y="114">S-01 방문자 홈</text>
+  <text class="m" x="44" y="134">/</text>
+  <text class="t b" x="44" y="154">API: A-01</text>
+  <text class="t s" x="44" y="174">실패하면 다시 불러오기</text>
+
+  <rect class="box" x="30" y="204" width="230" height="96"/>
+  <text class="t h" x="44" y="228">S-02 관리자 로그인</text>
+  <text class="m" x="44" y="248">/admin/login</text>
+  <text class="t b" x="44" y="268">API: A-04, A-02</text>
+  <text class="t s" x="44" y="288">성공하면 /admin/hours로 간다</text>
+
+  <rect class="box" x="30" y="318" width="230" height="96"/>
+  <text class="t h" x="44" y="342">S-03 영업시간 관리</text>
+  <text class="m" x="44" y="362">/admin/hours</text>
+  <text class="t b" x="44" y="382">API: A-04, A-05, A-06</text>
+  <text class="t s" x="44" y="402">로그아웃 A-03</text>
+
+  <rect class="box" x="30" y="432" width="230" height="96"/>
+  <text class="t h" x="44" y="456">S-04 메뉴 관리</text>
+  <text class="m" x="44" y="476">/admin/menu</text>
+  <text class="t b" x="44" y="496">API: A-04, A-07부터 A-11</text>
+  <text class="t s" x="44" y="516">로그아웃 A-03</text>
+
+  <!-- 라우트 표 -->
+  <rect class="soft" x="320" y="90" width="120" height="438"/>
+  <text class="m" x="380" y="116" text-anchor="middle" font-weight="700">route-table.js</text>
+  <text class="t b" x="380" y="160" text-anchor="middle">1 경로</text>
+  <text class="t b" x="380" y="186" text-anchor="middle">2 메서드</text>
+  <text class="t b" x="380" y="212" text-anchor="middle">3 세션</text>
+  <text class="t b" x="380" y="238" text-anchor="middle">4 CSRF 토큰</text>
+  <text class="t b" x="380" y="264" text-anchor="middle">5 본문 검사</text>
+  <text class="t b" x="380" y="290" text-anchor="middle">6 입력 규칙</text>
+  <text class="m" x="380" y="308" text-anchor="middle" font-size="10">web/input-rules.js</text>
+  <text class="t s" x="380" y="350" text-anchor="middle">앞에서 걸리면</text>
+  <text class="t s" x="380" y="368" text-anchor="middle">오류 응답</text>
+  <text class="m" x="380" y="392" text-anchor="middle" font-size="11">code, text_key</text>
+  <text class="t s" x="380" y="446" text-anchor="middle">관리자 화면은</text>
+  <text class="t s" x="380" y="464" text-anchor="middle">세션이 없으면</text>
+  <text class="t s" x="380" y="482" text-anchor="middle">302 로그인 화면</text>
+
+  <!-- 처리 파일 -->
+  <rect class="box" x="500" y="90" width="250" height="96"/>
+  <text class="m" x="514" y="114" font-weight="700">public-overview.js</text>
+  <text class="t b" x="514" y="134">A-01</text>
+  <text class="t b" x="514" y="154">T-01, T-02 읽기</text>
+  <text class="t s" x="514" y="174">shop-status.js로 영업 상태 계산</text>
+
+  <rect class="box" x="500" y="204" width="250" height="96"/>
+  <text class="m" x="514" y="228" font-weight="700">admin-login.js</text>
+  <text class="m" x="514" y="246" font-weight="700">admin-session.js</text>
+  <text class="t b" x="514" y="268">A-02, A-03, A-04</text>
+  <text class="t b" x="514" y="288">T-03, T-04 읽기와 쓰기</text>
+
+  <rect class="box" x="500" y="318" width="250" height="96"/>
+  <text class="m" x="514" y="342" font-weight="700">business-hours.js</text>
+  <text class="t b" x="514" y="362">A-05, A-06</text>
+  <text class="t b" x="514" y="382">T-01 읽기와 쓰기</text>
+  <text class="t s" x="514" y="402">일곱 행을 한 트랜잭션으로 저장</text>
+
+  <rect class="box" x="500" y="432" width="250" height="96"/>
+  <text class="m" x="514" y="456" font-weight="700">menu-items.js</text>
+  <text class="t b" x="514" y="476">A-07부터 A-11</text>
+  <text class="t b" x="514" y="496">T-02 읽기와 쓰기</text>
+  <text class="t s" x="514" y="516">응답은 저장 뒤의 전체 목록</text>
+
+  <!-- 저장소 -->
+  <rect class="soft" x="820" y="90" width="190" height="438"/>
+  <text class="t h" x="915" y="116" text-anchor="middle">SQLite 파일 하나</text>
+  <text class="m" x="915" y="136" text-anchor="middle">DB_FILE</text>
+
+  <rect class="box" x="835" y="160" width="160" height="60"/>
+  <text class="t h" x="849" y="184">T-01</text>
+  <text class="m" x="849" y="204">business_hour</text>
+
+  <rect class="box" x="835" y="244" width="160" height="60"/>
+  <text class="t h" x="849" y="268">T-02</text>
+  <text class="m" x="849" y="288">menu_item</text>
+
+  <rect class="box" x="835" y="328" width="160" height="60"/>
+  <text class="t h" x="849" y="352">T-03</text>
+  <text class="m" x="849" y="372">admin_session</text>
+
+  <rect class="box" x="835" y="412" width="160" height="60"/>
+  <text class="t h" x="849" y="436">T-04</text>
+  <text class="m" x="849" y="456">login_attempt</text>
+
+  <!-- 화살표: 화면 → 라우트 표 -->
+  <path class="line" d="M260 138 H318" marker-end="url(#fb-arrow)"/>
+  <path class="line" d="M260 252 H318" marker-end="url(#fb-arrow)"/>
+  <path class="line" d="M260 366 H318" marker-end="url(#fb-arrow)"/>
+  <path class="line" d="M260 480 H318" marker-end="url(#fb-arrow)"/>
+  <!-- 라우트 표 → 처리 -->
+  <path class="line" d="M440 138 H498" marker-end="url(#fb-arrow)"/>
+  <path class="line" d="M440 252 H498" marker-end="url(#fb-arrow)"/>
+  <path class="line" d="M440 366 H498" marker-end="url(#fb-arrow)"/>
+  <path class="line" d="M440 480 H498" marker-end="url(#fb-arrow)"/>
+  <!-- 처리 → 저장소 -->
+  <path class="line" d="M750 138 H818" marker-end="url(#fb-arrow)"/>
+  <path class="line" d="M750 252 H818" marker-end="url(#fb-arrow)"/>
+  <path class="line" d="M750 366 H818" marker-end="url(#fb-arrow)"/>
+  <path class="line" d="M750 480 H818" marker-end="url(#fb-arrow)"/>
+
+  <text class="t b" x="30" y="560">화살표는 요청의 방향이다. 응답은 같은 길로 돌아온다. 관리자 API는 모두 먼저 T-03에서 세션을 읽는다.</text>
+  <text class="t b" x="30" y="582">쓰기 API의 응답은 저장한 뒤 DB에서 다시 읽은 값이다. 화면은 자기가 보낸 값이 아니라 응답의 값으로 다시 그린다.</text>
+  <text class="t b" x="30" y="604">문구 사전(/text/ko.json)과 스크립트, 스타일 파일은 static-file.js의 허용 목록에서만 나간다. 화면도 보내기 전에 web/input-rules.js로 검사한다.</text>
+</svg>

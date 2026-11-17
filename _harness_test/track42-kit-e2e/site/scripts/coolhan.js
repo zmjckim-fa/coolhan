@@ -16,8 +16,12 @@
  * variable). `@home`, `@tags`, `@modules` in arguments expand to the harness folder, the project's tags and the
  * module library. If the harness cannot be found a gate exits 4 (NOT_RUN: not verified, never a pass) and a hook
  * exits 0 (it must never trap the operator).
+ *
+ * The file runs in both module systems: a project whose package file says "type": "module" loads every `.js` as an
+ * ES module, where `require` does not exist (track42 K-8). The body therefore takes `require` as an argument.
  */
 
+function boot(require) {
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
@@ -63,6 +67,13 @@ function main(argv, { cwd = process.cwd(), env = process.env } = {}) {
   return r.status === null ? 1 : r.status;
 }
 
-if (require.main === module) process.exit(main(process.argv));
+return { main, readConfig, resolveHome, expand, CONFIG };
+}
 
-module.exports = { main, readConfig, resolveHome, expand, CONFIG };
+if (typeof require === 'function') {
+  const api = boot(require);
+  if (require.main === module) process.exit(api.main(process.argv));
+  module.exports = api;
+} else {
+  import('node:module').then((m) => process.exit(boot(m.createRequire(process.argv[1])).main(process.argv)));
+}

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 690" width="1120" height="690" role="img" aria-labelledby="t d">
+<title id="t">S-01 방문자 홈 와이어프레임, 넓은 화면</title>
+<desc id="d">위쪽 줄 아래에 두 열이 있다. 왼쪽 열은 지금 영업 상태와 영업시간, 오른쪽 열은 메뉴다.</desc>
+<style>
+text{font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif;fill:#1c1c1c;font-size:14px}
+.s{font-size:12px}.b{font-weight:700}.g{fill:#555}.n{font-size:11px;fill:#555}
+.frame{fill:#fff;stroke:#1c1c1c;stroke-width:1.5}
+.bar{fill:#f0f0f0;stroke:#1c1c1c}
+.tag{fill:#fff;stroke:#1c1c1c}
+.sep{stroke:#bbb}
+</style>
+<rect width="1120" height="690" fill="#fff"/>
+<text x="10" y="24" class="b">S-01 방문자 홈, 두 열 배치 (960px 이상)</text>
+<g transform="translate(10,36)">
+<rect x="0" y="0" width="1100" height="600" class="frame"/>
+<rect x="0" y="0" width="1100" height="64" class="bar"/>
+<text x="70" y="40" class="b" font-size="18">가게 이름</text>
+
+<!-- 왼쪽 열 -->
+<text x="70" y="104" class="s g">지금</text>
+<rect x="70" y="114" width="130" height="46" class="tag"/>
+<circle cx="93" cy="137" r="8" fill="#1c1c1c"/>
+<text x="110" y="144" class="b" font-size="18">영업 중</text>
+<text x="70" y="190">오늘 07:30 ~ 20:00</text>
+<text x="430" y="190" text-anchor="end" class="s g">14:05 기준</text>
+<line x1="70" y1="208" x2="430" y2="208" class="sep"/>
+<text x="70" y="244" class="b" font-size="18">영업시간</text>
+<text x="70" y="284">월요일</text><text x="430" y="284" text-anchor="end">07:30 ~ 20:00</text>
+<line x1="70" y1="298" x2="430" y2="298" class="sep"/>
+<text x="70" y="324" class="b">화요일</text>
+<rect x="120" y="309" width="36" height="22" class="tag"/>
+<text x="138" y="325" text-anchor="middle" class="s">오늘</text>
+<text x="430" y="324" text-anchor="end" class="b">07:30 ~ 20:00</text>
+<line x1="70" y1="338" x2="430" y2="338" class="sep"/>
+<text x="70" y="364">수요일</text><text x="430" y="364" text-anchor="end">07:30 ~ 20:00</text>
+<line x1="70" y1="378" x2="430" y2="378" class="sep"/>
+<text x="70" y="404">목요일</text><text x="430" y="404" text-anchor="end">영업시간 정보 없음</text>
+<line x1="70" y1="418" x2="430" y2="418" class="sep"/>
+<text x="70" y="444">금요일</text><text x="430" y="444" text-anchor="end">07:30 ~ 20:00</text>
+<line x1="70" y1="458" x2="430" y2="458" class="sep"/>
+<text x="70" y="484">토요일</text><text x="430" y="484" text-anchor="end">08:00 ~ 18:00</text>
+<line x1="70" y1="498" x2="430" y2="498" class="sep"/>
+<text x="70" y="524">일요일</text><text x="430" y="524" text-anchor="end">휴무</text>
+<line x1="70" y1="538" x2="430" y2="538" class="sep"/>
+
+<!-- 오른쪽 열 -->
+<text x="490" y="104" class="b" font-size="18">메뉴</text>
+<text x="490" y="138" class="b g">빵</text>
+<text x="490" y="174">소금빵</text><text x="1030" y="174" text-anchor="end">3,500원</text>
+<line x1="490" y1="190" x2="1030" y2="190" class="sep"/>
+<text x="490" y="218">식빵</text>
+<rect x="526" y="203" width="40" height="22" class="tag"/>
+<text x="546" y="219" text-anchor="middle" class="s">품절</text>
+<text x="1030" y="218" text-anchor="end">4,000원</text>
+<line x1="490" y1="234" x2="1030" y2="234" class="sep"/>
+<text x="490" y="270" class="b g">음료</text>
+<text x="490" y="306">아메리카노</text><text x="1030" y="306" text-anchor="end">3,000원</text>
+<line x1="490" y1="322" x2="1030" y2="322" class="sep"/>
+</g>
+<text x="10" y="662" class="n">960px 이상: 왼쪽 열에 지금 영업 상태와 영업시간, 오른쪽 열에 메뉴를 둔다. 내용과 읽는 순서는 375px와 같다. 959px 이하는 한 열이다.</text>
+<text x="10" y="680" class="n">가게 이름, 시간, 메뉴 값은 예시다.</text>
+</svg>

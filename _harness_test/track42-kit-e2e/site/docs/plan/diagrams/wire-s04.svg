@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1070 1320" width="1070" height="1320" role="img" aria-labelledby="t d">
+<title id="t">S-04 메뉴 관리 와이어프레임, 375px</title>
+<desc id="d">왼쪽 그림은 기본 상태다. 위쪽 줄(막대와 탭 줄), 제목, 저장 알림, 메뉴 추가 폼, 메뉴 목록 순서이고 목록의 둘째 행은 수정 중이다. 메뉴 행은 네 줄이다. 이름과 상태 표지, 가격과 품절 버튼, 위로와 아래로, 수정과 삭제 순서다. 오른쪽 그림은 삭제 확인 창이 열린 상태다.</desc>
+<style>
+text{font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif;fill:#1c1c1c;font-size:14px}
+.s{font-size:12px}.m{font-size:13px}.b{font-weight:700}.g{fill:#555}.n{font-size:11px;fill:#555}.w{fill:#fff}
+.frame{fill:#fff;stroke:#1c1c1c;stroke-width:1.5}
+.bar{fill:#d9d9d9;stroke:#1c1c1c}
+.tabs{fill:#f0f0f0;stroke:#1c1c1c}
+.sec{fill:none;stroke:#999}
+.in{fill:#fff;stroke:#555}
+.btn{fill:#fff;stroke:#1c1c1c;stroke-width:1.5}
+.del{fill:#fff;stroke:#1c1c1c;stroke-width:3}
+.off{fill:#e4e4e4;stroke:#999;stroke-dasharray:4 3}
+.pri{fill:#1c1c1c;stroke:#1c1c1c}
+.tag{fill:#fff;stroke:#1c1c1c}
+.note{fill:#f6f6f6;stroke:#1c1c1c}
+.q{fill:#fff;stroke:#1c1c1c}
+.edit{fill:#f6f6f6;stroke:#999}
+.sep{stroke:#bbb}
+.ld{stroke:#999}
+.ck{fill:none;stroke:#1c1c1c;stroke-width:2.5}
+.focus{fill:none;stroke:#1c1c1c;stroke-width:2;stroke-dasharray:5 3}
+</style>
+<rect width="1070" height="1320" fill="#fff"/>
+<text x="10" y="24" class="b">S-04 메뉴 관리, 375px: 기본 상태 (둘째 행은 수정 중)</text>
+<text x="680" y="24" class="b">S-04 메뉴 관리, 375px: 삭제 확인 창</text>
+
+<!-- 그림 A -->
+<g transform="translate(10,36)">
+<rect x="0" y="0" width="375" height="1260" class="frame"/>
+<rect x="0" y="0" width="375" height="52" class="bar"/>
+<text x="16" y="32">방문자 화면</text>
+<text x="359" y="32" text-anchor="end">로그아웃</text>
+<rect x="0" y="52" width="375" height="44" class="tabs"/>
+<text x="16" y="80">영업시간 관리</text>
+<text x="126" y="80" class="b">메뉴 관리</text>
+<line x1="126" y1="87" x2="186" y2="87" stroke="#1c1c1c" stroke-width="2"/>
+
+<text x="16" y="138" class="b" font-size="20">메뉴 관리</text>
+
+<!-- 저장 알림 -->
+<rect x="16" y="152" width="343" height="44" class="note"/>
+<path d="M30 174l5 6l10-12" class="ck"/>
+<text x="54" y="179">추가됨</text>
+
+<!-- 메뉴 추가: 구역 상자. 내용은 x 33부터 342까지 309 -->
+<rect x="16" y="212" width="343" height="276" class="sec"/>
+<text x="33" y="242" class="b" font-size="16">메뉴 추가</text>
+<text x="33" y="272">이름</text><text x="67" y="272" class="s g">필수</text>
+<circle cx="109" cy="267" r="10" class="q"/><text x="109" y="272" text-anchor="middle" class="s b">?</text>
+<rect x="33" y="282" width="309" height="44" class="in"/>
+<text x="33" y="354">가격</text><text x="67" y="354" class="s g">필수</text>
+<circle cx="109" cy="349" r="10" class="q"/><text x="109" y="354" text-anchor="middle" class="s b">?</text>
+<text x="191.5" y="354">분류</text><text x="225.5" y="354" class="s g">필수</text>
+<circle cx="267.5" cy="349" r="10" class="q"/><text x="267.5" y="354" text-anchor="middle" class="s b">?</text>
+<rect x="33" y="364" width="150.5" height="44" class="in"/>
+<text x="171.5" y="392" text-anchor="end" class="g">원</text>
+<rect x="191.5" y="364" width="150.5" height="44" class="in"/>
+<text x="205.5" y="392" class="g">선택</text>
+<path d="M318 382l6 8l6-8z" fill="#1c1c1c"/>
+<rect x="33" y="424" width="309" height="48" class="pri"/>
+<text x="187.5" y="454" text-anchor="middle" class="b w">추가</text>
+
+<!-- 메뉴 목록: 구역 상자 -->
+<rect x="16" y="504" width="343" height="736" class="sec"/>
+<text x="33" y="534" class="b" font-size="16">메뉴 목록</text>
+<text x="33" y="564" class="b g">빵</text>
+
+<!-- 행 1: 네 줄 -->
+<text x="33" y="598" class="b">소금빵</text>
+<rect x="274" y="580" width="68" height="24" class="tag"/>
+<text x="308" y="597" text-anchor="middle" class="s">판매 중</text>
+<text x="33" y="639">3,500원</text>
+<rect x="230" y="612" width="112" height="44" class="btn"/>
+<text x="286" y="639" text-anchor="middle" class="m">품절로 표시</text>
+<rect x="33" y="664" width="150.5" height="44" class="off"/>
+<text x="108.25" y="691" text-anchor="middle" class="m g">위로</text>
+<rect x="191.5" y="664" width="150.5" height="44" class="btn"/>
+<text x="266.75" y="691" text-anchor="middle" class="m">아래로</text>
+<rect x="33" y="716" width="150.5" height="44" class="btn"/>
+<text x="108.25" y="743" text-anchor="middle" class="m">수정</text>
+<rect x="191.5" y="716" width="150.5" height="44" class="del"/>
+<text x="266.75" y="743" text-anchor="middle" class="m b">삭제</text>
+<line x1="33" y1="772" x2="342" y2="772" class="sep"/>
+
+<!-- 행 2: 수정 중 -->
+<rect x="25" y="780" width="325" height="216" class="edit"/>
+<text x="33" y="804">이름</text><text x="67" y="804" class="s g">필수</text>
+<rect x="33" y="812" width="309" height="44" class="in"/>
+<text x="47" y="840">식빵</text>
+<text x="33" y="880">가격</text><text x="67" y="880" class="s g">필수</text>
+<text x="191.5" y="880">분류</text><text x="225.5" y="880" class="s g">필수</text>
+<rect x="33" y="888" width="150.5" height="44" class="in"/>
+<text x="47" y="916">4000</text>
+<text x="171.5" y="916" text-anchor="end" class="g">원</text>
+<rect x="191.5" y="888" width="150.5" height="44" class="in"/>
+<text x="205.5" y="916">빵</text>
+<path d="M318 906l6 8l6-8z" fill="#1c1c1c"/>
+<rect x="33" y="944" width="150.5" height="44" class="pri"/>
+<text x="108.25" y="971" text-anchor="middle" class="b w">저장</text>
+<rect x="191.5" y="944" width="150.5" height="44" class="btn"/>
+<text x="266.75" y="971" text-anchor="middle">취소</text>
+
+<!-- 음료 -->
+<text x="33" y="1028" class="b g">음료</text>
+<text x="33" y="1062" class="b">아메리카노</text>
+<rect x="294" y="1044" width="48" height="24" class="tag"/>
+<text x="318" y="1061" text-anchor="middle" class="s">품절</text>
+<text x="33" y="1103">3,000원</text>
+<rect x="194" y="1076" width="148" height="44" class="btn"/>
+<text x="268" y="1103" text-anchor="middle" class="m">판매 중으로 표시</text>
+<rect x="33" y="1128" width="150.5" height="44" class="off"/>
+<text x="108.25" y="1155" text-anchor="middle" class="m g">위로</text>
+<rect x="191.5" y="1128" width="150.5" height="44" class="off"/>
+<text x="266.75" y="1155" text-anchor="middle" class="m g">아래로</text>
+<rect x="33" y="1180" width="150.5" height="44" class="btn"/>
+<text x="108.25" y="1207" text-anchor="middle" class="m">수정</text>
+<rect x="191.5" y="1180" width="150.5" height="44" class="del"/>
+<text x="266.75" y="1207" text-anchor="middle" class="m b">삭제</text>
+
+<!-- 설명 A -->
+<g class="ld"><line x1="378" y1="28" x2="390" y2="28"/><line x1="378" y1="76" x2="390" y2="76"/><line x1="378" y1="174" x2="390" y2="174"/><line x1="378" y1="267" x2="390" y2="267"/><line x1="378" y1="304" x2="390" y2="304"/><line x1="378" y1="386" x2="390" y2="386"/><line x1="378" y1="448" x2="390" y2="448"/><line x1="378" y1="592" x2="390" y2="592"/><line x1="378" y1="634" x2="390" y2="634"/><line x1="378" y1="686" x2="390" y2="686"/><line x1="378" y1="738" x2="390" y2="738"/><line x1="378" y1="834" x2="390" y2="834"/><line x1="378" y1="966" x2="390" y2="966"/><line x1="378" y1="1150" x2="390" y2="1150"/></g>
+<text x="395" y="32" class="n">C-12 위쪽 줄: 막대에 링크와 로그아웃</text>
+<text x="395" y="80" class="n">탭 줄: 지금 화면은 밑줄과 굵은 글자</text>
+<text x="395" y="178" class="n">C-14 저장 알림: 제목 아래, 다음 수정까지 남음</text>
+<text x="395" y="271" class="n">C-09 풍선말 단추, 필수는 글자로 표시</text>
+<text x="395" y="308" class="n">C-04 글 입력칸</text>
+<text x="395" y="390" class="n">C-04 글 입력칸(가격), C-06 선택 상자: 반씩</text>
+<text x="395" y="452" class="n">C-01 주 버튼</text>
+<text x="395" y="596" class="n">첫 줄: 이름과 C-08 상태 표지</text>
+<text x="395" y="638" class="n">둘째 줄: 가격과 C-02 보조 버튼(바로 저장)</text>
+<text x="395" y="690" class="n">셋째 줄: 순서 버튼 둘이 줄을 반씩 채움</text>
+<text x="395" y="706" class="n">분류의 첫 행은 «위로» 비활성</text>
+<text x="395" y="742" class="n">넷째 줄: «수정»과 C-03 삭제 버튼이 반씩</text>
+<text x="395" y="758" class="n">버튼 폭: 375px에서 150.5px, 320px에서 123px</text>
+<text x="395" y="838" class="n">수정 중인 행: 한 번에 한 행만 연다</text>
+<text x="395" y="970" class="n">«저장»은 A-09, «취소»는 값을 되돌림</text>
+<text x="395" y="1154" class="n">분류에 하나뿐이면 순서 버튼 둘 다 비활성</text>
+<text x="395" y="1226" class="n">회색 선의 상자는 구역 상자다.</text>
+<text x="395" y="1242" class="n">메뉴 값은 예시다.</text>
+</g>
+
+<!-- 그림 B -->
+<g transform="translate(680,36)">
+<rect x="0" y="0" width="375" height="560" class="frame"/>
+<rect x="0" y="0" width="375" height="52" class="bar"/>
+<text x="16" y="32">방문자 화면</text>
+<text x="359" y="32" text-anchor="end">로그아웃</text>
+<rect x="0" y="52" width="375" height="44" class="tabs"/>
+<text x="16" y="80">영업시간 관리</text>
+<text x="126" y="80" class="b">메뉴 관리</text>
+<text x="16" y="138" class="b" font-size="20">메뉴 관리</text>
+<text x="33" y="450" class="b">소금빵</text>
+<text x="33" y="490">3,500원</text>
+<rect x="191.5" y="500" width="150.5" height="44" class="del"/>
+<text x="266.75" y="527" text-anchor="middle" class="m b">삭제</text>
+<rect x="0" y="0" width="375" height="560" fill="#000" opacity="0.45"/>
+
+<rect x="16" y="170" width="343" height="220" class="frame"/>
+<text x="32" y="214" class="b" font-size="18">메뉴 삭제</text>
+<text x="32" y="252">소금빵 메뉴를 삭제할까요?</text>
+<text x="32" y="276">삭제하면 되돌릴 수 없습니다.</text>
+<rect x="203" y="310" width="72" height="56" class="focus"/>
+<rect x="207" y="316" width="64" height="44" class="btn"/>
+<text x="239" y="343" text-anchor="middle">취소</text>
+<rect x="279" y="316" width="64" height="44" class="del"/>
+<text x="311" y="343" text-anchor="middle" class="b">삭제</text>
+</g>
+<text x="680" y="626" class="n">C-11 확인 창: 행의 «삭제»를 누르면 열린다.</text>
+<text x="680" y="646" class="n">«취소»(C-02)와 «삭제»(C-03)는 오른쪽에 나란히 놓인다.</text>
+<text x="680" y="666" class="n">열리면 초점은 «취소»에 놓인다 (점선 테두리).</text>
+<text x="680" y="686" class="n">Tab은 창 안에서만 돈다. Esc는 «취소»와 같다.</text>
+<text x="680" y="706" class="n">닫히면 초점은 누른 «삭제» 버튼으로 돌아간다.</text>
+<text x="680" y="726" class="n">삭제가 끝나면 초점은 다음 행의 «수정»으로 간다.</text>
+</svg>

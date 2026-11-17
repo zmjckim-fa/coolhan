@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 440" width="650" height="440" role="img" aria-labelledby="t d">
+<title id="t">S-02 관리자 로그인 와이어프레임, 375px</title>
+<desc id="d">위쪽 줄, 제목, 오류 줄, 비밀번호 입력칸, 로그인 버튼 순서다.</desc>
+<style>
+text{font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif;fill:#1c1c1c;font-size:14px}
+.s{font-size:12px}.b{font-weight:700}.g{fill:#555}.n{font-size:11px;fill:#555}.w{fill:#fff}
+.frame{fill:#fff;stroke:#1c1c1c;stroke-width:1.5}
+.bar{fill:#f0f0f0;stroke:#1c1c1c}
+.in{fill:#fff;stroke:#555}
+.err{fill:#fff;stroke:#1c1c1c;stroke-width:2}
+.pri{fill:#1c1c1c;stroke:#1c1c1c}
+.ld{stroke:#999}
+</style>
+<rect width="650" height="440" fill="#fff"/>
+<text x="10" y="24" class="b">S-02 관리자 로그인, 375px (넓은 화면은 같은 배치를 가운데 448px 이하 폭으로 둔다)</text>
+<g transform="translate(10,36)">
+<rect x="0" y="0" width="375" height="372" class="frame"/>
+<rect x="0" y="0" width="375" height="56" class="bar"/>
+<text x="16" y="34">방문자 화면</text>
+
+<text x="16" y="104" class="b" font-size="20">관리자 로그인</text>
+
+<!-- 오류 줄 -->
+<rect x="16" y="124" width="343" height="60" class="err"/>
+<circle cx="38" cy="154" r="10" fill="none" stroke="#1c1c1c" stroke-width="1.5"/>
+<text x="38" y="159" text-anchor="middle" class="b">!</text>
+<text x="58" y="149" class="s">비밀번호가 맞지 않습니다.</text>
+<text x="58" y="169" class="s">다시 입력해 주세요.</text>
+
+<!-- 입력 -->
+<text x="16" y="218">비밀번호</text>
+<text x="78" y="218" class="s g">필수</text>
+<rect x="16" y="228" width="343" height="48" class="in"/>
+<g fill="#1c1c1c"><circle cx="34" cy="252" r="4"/><circle cx="48" cy="252" r="4"/><circle cx="62" cy="252" r="4"/><circle cx="76" cy="252" r="4"/><circle cx="90" cy="252" r="4"/><circle cx="104" cy="252" r="4"/></g>
+
+<rect x="16" y="296" width="343" height="48" class="pri"/>
+<text x="187.5" y="326" text-anchor="middle" class="b w">로그인</text>
+
+<g class="ld"><line x1="378" y1="30" x2="390" y2="30"/><line x1="378" y1="154" x2="390" y2="154"/><line x1="378" y1="252" x2="390" y2="252"/><line x1="378" y1="320" x2="390" y2="320"/></g>
+<text x="395" y="34" class="n">C-12 위쪽 줄: «방문자 화면» 링크만</text>
+<text x="395" y="150" class="n">C-10 오류 줄: 오류가 있을 때만 보임</text>
+<text x="395" y="168" class="n">모양 표시와 글자, 색에 기대지 않음</text>
+<text x="395" y="256" class="n">C-04 글 입력칸: 글자를 가림</text>
+<text x="395" y="324" class="n">C-01 주 버튼</text>
+</g>
+</svg>

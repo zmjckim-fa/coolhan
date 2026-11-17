@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 790" width="1020" height="790" role="img" aria-labelledby="t d">
+<title id="t">S-03 영업시간 관리 와이어프레임, 넓은 화면</title>
+<desc id="d">위쪽 줄은 막대와 탭 줄이다. 가운데 표에 요일, 휴무, 여는 시각, 닫는 시각 네 열이 있고 아래에 저장 버튼이 있다.</desc>
+<style>
+text{font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif;fill:#1c1c1c;font-size:14px}
+.s{font-size:12px}.m{font-size:13px}.b{font-weight:700}.g{fill:#555}.n{font-size:11px;fill:#555}.w{fill:#fff}
+.frame{fill:#fff;stroke:#1c1c1c;stroke-width:1.5}
+.bar{fill:#d9d9d9;stroke:#1c1c1c}
+.tabs{fill:#f0f0f0;stroke:#1c1c1c}
+.in{fill:#fff;stroke:#555}
+.off{fill:#e4e4e4;stroke:#999;stroke-dasharray:4 3}
+.pri{fill:#1c1c1c;stroke:#1c1c1c}
+.tag{fill:#f6f6f6;stroke:#1c1c1c}
+.q{fill:#fff;stroke:#1c1c1c}
+.sep{stroke:#bbb}
+.ck{fill:none;stroke:#1c1c1c;stroke-width:2.5}
+</style>
+<rect width="1020" height="790" fill="#fff"/>
+<text x="10" y="24" class="b">S-03 영업시간 관리, 넓은 화면 (640px 이상)</text>
+<g transform="translate(10,36)">
+<rect x="0" y="0" width="1000" height="700" class="frame"/>
+<rect x="0" y="0" width="1000" height="56" class="bar"/>
+<text x="40" y="34">방문자 화면</text>
+<text x="960" y="34" text-anchor="end">로그아웃</text>
+<rect x="0" y="56" width="1000" height="40" class="tabs"/>
+<text x="40" y="81" class="b">영업시간 관리</text>
+<line x1="40" y1="88" x2="128" y2="88" stroke="#1c1c1c" stroke-width="2"/>
+<text x="152" y="81">메뉴 관리</text>
+
+<text x="220" y="144" class="b" font-size="22">영업시간 관리</text>
+
+<rect x="220" y="160" width="560" height="40" class="tag"/>
+<path d="M234 180l5 6l10-12" class="ck"/>
+<text x="258" y="185">저장됨</text>
+
+<text x="220" y="234" class="m">요일</text>
+<text x="440" y="234" class="m">여는 시각</text>
+<circle cx="512" cy="229" r="10" class="q"/><text x="512" y="234" text-anchor="middle" class="s b">?</text>
+<text x="600" y="234" class="m">닫는 시각</text>
+<circle cx="672" cy="229" r="10" class="q"/><text x="672" y="234" text-anchor="middle" class="s b">?</text>
+<text x="340" y="234" class="m">휴무</text>
+<circle cx="382" cy="229" r="10" class="q"/><text x="382" y="234" text-anchor="middle" class="s b">?</text>
+<line x1="220" y1="248" x2="780" y2="248" class="sep"/>
+
+<text x="220" y="283">월요일</text>
+<rect x="440" y="256" width="120" height="44" class="in"/><text x="454" y="283">07:30</text>
+<rect x="600" y="256" width="120" height="44" class="in"/><text x="614" y="283">20:00</text>
+<rect x="344" y="268" width="20" height="20" class="in"/>
+
+<text x="220" y="335">화요일</text>
+<rect x="440" y="308" width="120" height="44" class="in"/><text x="454" y="335">07:30</text>
+<rect x="600" y="308" width="120" height="44" class="in"/><text x="614" y="335">20:00</text>
+<rect x="344" y="320" width="20" height="20" class="in"/>
+
+<text x="220" y="387">수요일</text>
+<rect x="440" y="360" width="120" height="44" class="in"/><text x="454" y="387">07:30</text>
+<rect x="600" y="360" width="120" height="44" class="in"/><text x="614" y="387">20:00</text>
+<rect x="344" y="372" width="20" height="20" class="in"/>
+
+<text x="220" y="439">목요일</text>
+<rect x="440" y="412" width="120" height="44" class="in"/>
+<rect x="600" y="412" width="120" height="44" class="in"/>
+<rect x="344" y="424" width="20" height="20" class="in"/>
+
+<text x="220" y="491">금요일</text>
+<rect x="440" y="464" width="120" height="44" class="in"/><text x="454" y="491">07:30</text>
+<rect x="600" y="464" width="120" height="44" class="in"/><text x="614" y="491">20:00</text>
+<rect x="344" y="476" width="20" height="20" class="in"/>
+
+<text x="220" y="543">토요일</text>
+<rect x="440" y="516" width="120" height="44" class="in"/><text x="454" y="543">08:00</text>
+<rect x="600" y="516" width="120" height="44" class="in"/><text x="614" y="543">18:00</text>
+<rect x="344" y="528" width="20" height="20" class="in"/>
+
+<text x="220" y="595">일요일</text>
+<rect x="440" y="568" width="120" height="44" class="off"/>
+<rect x="600" y="568" width="120" height="44" class="off"/>
+<rect x="344" y="580" width="20" height="20" class="in"/>
+<path d="M348 590l4 5l8-10" class="ck"/>
+<line x1="220" y1="622" x2="780" y2="622" class="sep"/>
+
+<rect x="220" y="638" width="120" height="44" class="pri"/>
+<text x="280" y="666" text-anchor="middle" class="b w">저장</text>
+</g>
+<text x="10" y="760" class="n">넓은 화면: 표는 가운데 560px 폭이고 한 행이 한 줄이다. 저장 버튼은 글자에 맞춘 폭이다. 오류 줄은 375px와 같이 틀린 행 아래에 둔다. 높이와 색은 04_디자인.md를 따른다.</text>
+<text x="10" y="778" class="n">시간 값은 예시다.</text>
+</svg>

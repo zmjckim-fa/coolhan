@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 560" width="760" height="560" role="img" aria-labelledby="t d">
+<title id="t">방문자 흐름</title>
+<desc id="d">방문자가 주소로 들어오면 S-01이 A-01을 부른다. 성공하면 지금 영업 상태, 영업시간, 메뉴를 보이고 실패하면 오류 줄과 다시 불러오기 버튼을 보인다.</desc>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1c1c1c"/></marker></defs>
+<style>
+text{font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif;fill:#1c1c1c;font-size:14px}
+.s{font-size:12px}.b{font-weight:700}.n{font-size:11px;fill:#555}
+.box{fill:#fff;stroke:#1c1c1c;stroke-width:1.5}
+.sub{fill:#f0f0f0;stroke:#1c1c1c}
+.ln{fill:none;stroke:#1c1c1c;stroke-width:1.5}
+</style>
+<rect width="760" height="560" fill="#fff"/>
+
+<rect x="160" y="20" width="200" height="40" rx="20" class="sub"/>
+<text x="260" y="45" text-anchor="middle">주소 / 로 들어옴</text>
+<path d="M260 60V89" class="ln" marker-end="url(#a)"/>
+
+<rect x="140" y="90" width="240" height="50" class="box"/>
+<text x="260" y="111" text-anchor="middle" class="b">S-01 방문자 홈</text>
+<text x="260" y="130" text-anchor="middle" class="s">«불러오는 중» 표시</text>
+<path d="M260 140V159" class="ln" marker-end="url(#a)"/>
+
+<path d="M260 160L350 200L260 240L170 200Z" class="box"/>
+<text x="260" y="205" text-anchor="middle">A-01 응답</text>
+
+<!-- 실패 -->
+<path d="M350 200H479" class="ln" marker-end="url(#a)"/>
+<text x="400" y="192" class="s">실패</text>
+<rect x="480" y="170" width="250" height="60" class="box"/>
+<text x="605" y="194" text-anchor="middle" class="s">오류 줄: 정보를 불러오지 못했습니다</text>
+<text x="605" y="216" text-anchor="middle" class="s">버튼: 다시 불러오기</text>
+<path d="M605 170V115H381" class="ln" marker-end="url(#a)"/>
+<text x="420" y="107" class="s">다시 불러오기 누름</text>
+
+<!-- 성공 -->
+<path d="M260 240V279" class="ln" marker-end="url(#a)"/>
+<text x="270" y="264" class="s">성공</text>
+<rect x="110" y="280" width="300" height="50" class="box"/>
+<text x="260" y="310" text-anchor="middle">지금 영업 상태, 영업시간, 메뉴 표시</text>
+<path d="M260 330V360M130 360H630M130 360V379M380 360V379M630 360V379" class="ln"/>
+
+<rect x="20" y="380" width="220" height="76" class="sub"/>
+<text x="130" y="402" text-anchor="middle" class="b s">지금 영업 상태</text>
+<text x="130" y="423" text-anchor="middle" class="s">영업 중, 영업 종료, 휴무,</text>
+<text x="130" y="443" text-anchor="middle" class="s">영업시간 정보 없음 중 하나</text>
+
+<rect x="270" y="380" width="220" height="76" class="sub"/>
+<text x="380" y="402" text-anchor="middle" class="b s">영업시간</text>
+<text x="380" y="423" text-anchor="middle" class="s">요일 일곱 줄, 오늘 표시</text>
+<text x="380" y="443" text-anchor="middle" class="s">비어 있으면 영업시간 정보 없음</text>
+
+<rect x="520" y="380" width="220" height="76" class="sub"/>
+<text x="630" y="402" text-anchor="middle" class="b s">메뉴</text>
+<text x="630" y="423" text-anchor="middle" class="s">분류별 이름, 가격, 품절 표지</text>
+<text x="630" y="443" text-anchor="middle" class="s">0건이면 등록된 메뉴 없음</text>
+
+<path d="M130 456V489" class="ln" marker-end="url(#a)"/>
+<rect x="20" y="490" width="250" height="44" class="box"/>
+<text x="145" y="517" text-anchor="middle" class="s">계산 기준 시각을 상태 옆에 보임</text>
+</svg>

@@ -1,0 +1,150 @@
+{
+  "feature": "bakery-hours: 동네 빵집의 영업시간과 메뉴를 보여 주고 관리자가 고치는 사이트",
+  "source": "docs/plan/05_소스.md 11절",
+  "requirements": ["R-01", "R-02", "R-03", "R-04", "R-05", "R-06"],
+  "units": [
+    {
+      "id": "U-01",
+      "name": "환경 값, DB 열기",
+      "files": ["package.json", "src/package.json", "test/package.json", ".gitattributes", "src/environment.js", "src/database.js", "test/startup.test.js"],
+      "edits": [".gitignore"],
+      "deps": [],
+      "covers": ["R-01", "R-04"],
+      "verifies": "node --test test/startup.test.js",
+      "browser_check": [],
+      "parallel_with": ["U-02", "U-03"]
+    },
+    {
+      "id": "U-02",
+      "name": "입력 규칙, 분류 목록, 영업 상태 규칙, 오류 표",
+      "files": ["web/package.json", "web/input-rules.js", "src/menu-category.js", "src/shop-status.js", "src/error-catalog.js", "test/input-rules.test.js", "test/shop-status.test.js"],
+      "edits": [],
+      "deps": [],
+      "covers": ["R-01", "R-04", "R-05", "R-06"],
+      "verifies": "node --test test/input-rules.test.js test/shop-status.test.js",
+      "browser_check": [],
+      "parallel_with": ["U-01"]
+    },
+    {
+      "id": "U-03",
+      "name": "화면 바탕",
+      "files": ["web/screen.css", "web/text-dictionary.js", "web/api-client.js", "web/screen-feedback.js", "test/screen-files.test.js", "test/screen-contract.js"],
+      "edits": [],
+      "deps": ["U-02"],
+      "covers": ["R-01", "R-02", "R-03", "R-04", "R-05", "R-06"],
+      "verifies": "node --test test/screen-files.test.js",
+      "browser_check": [],
+      "parallel_with": ["U-01", "U-04", "U-05", "U-06", "U-07", "U-08"]
+    },
+    {
+      "id": "U-04",
+      "name": "HTTP 뼈대와 정적 파일",
+      "files": ["src/server.js", "src/route-table.js", "src/json-exchange.js", "src/security-headers.js", "src/static-file.js", "test/temporary-server.js", "test/request-hardening.test.js"],
+      "edits": [],
+      "deps": ["U-01", "U-02"],
+      "covers": ["R-01", "R-04"],
+      "verifies": "node --test test/request-hardening.test.js",
+      "browser_check": [],
+      "parallel_with": ["U-03"]
+    },
+    {
+      "id": "U-05",
+      "name": "A-01 방문자 화면 자료",
+      "files": ["src/public-overview.js", "test/public-overview.test.js"],
+      "edits": ["src/route-table.js", "test/request-hardening.test.js"],
+      "deps": ["U-04"],
+      "covers": ["R-01", "R-02", "R-03"],
+      "verifies": "node --test test/public-overview.test.js test/request-hardening.test.js",
+      "browser_check": [],
+      "parallel_with": ["U-03"]
+    },
+    {
+      "id": "U-06",
+      "name": "A-02, A-03, A-04 로그인과 세션",
+      "files": ["src/admin-login.js", "src/admin-session.js", "test/admin-login.test.js"],
+      "edits": ["src/route-table.js", "src/server.js", "test/request-hardening.test.js"],
+      "deps": ["U-04", "U-05"],
+      "covers": ["R-04"],
+      "verifies": "node --test test/admin-login.test.js test/request-hardening.test.js",
+      "browser_check": [],
+      "parallel_with": ["U-03"]
+    },
+    {
+      "id": "U-07",
+      "name": "A-05, A-06 영업시간",
+      "files": ["src/business-hours.js", "test/business-hours.test.js"],
+      "edits": ["src/route-table.js"],
+      "deps": ["U-05", "U-06"],
+      "covers": ["R-01", "R-02", "R-05"],
+      "verifies": "node --test test/business-hours.test.js test/request-hardening.test.js",
+      "browser_check": [],
+      "parallel_with": ["U-03", "U-10"]
+    },
+    {
+      "id": "U-08",
+      "name": "A-07, A-08, A-09, A-10, A-11 메뉴",
+      "files": ["src/menu-items.js", "test/menu-items.test.js"],
+      "edits": ["src/route-table.js"],
+      "deps": ["U-05", "U-06", "U-07"],
+      "covers": ["R-03", "R-06"],
+      "verifies": "node --test test/menu-items.test.js test/request-hardening.test.js",
+      "browser_check": [],
+      "parallel_with": ["U-03", "U-10", "U-11"]
+    },
+    {
+      "id": "U-09",
+      "name": "S-01 방문자 홈 화면",
+      "files": ["web/home.html", "web/home.js", "web/home.css", "test/home-screen.test.js"],
+      "edits": [],
+      "deps": ["U-03", "U-07", "U-08"],
+      "covers": ["R-01", "R-02", "R-03"],
+      "verifies": "node --test test/home-screen.test.js test/screen-files.test.js test/public-overview.test.js",
+      "browser_check": [1, 2, 3, 10, 11],
+      "parallel_with": ["U-10", "U-11", "U-12"]
+    },
+    {
+      "id": "U-10",
+      "name": "S-02 관리자 로그인 화면과 위쪽 줄",
+      "files": ["web/admin-login.html", "web/admin-login.js", "web/admin-login.css", "web/admin-top-bar.js", "test/admin-login-screen.test.js"],
+      "edits": [],
+      "deps": ["U-03", "U-06"],
+      "covers": ["R-04"],
+      "verifies": "node --test test/admin-login-screen.test.js test/screen-files.test.js test/admin-login.test.js",
+      "browser_check": [4, 10, 11],
+      "parallel_with": ["U-07", "U-08", "U-09"]
+    },
+    {
+      "id": "U-11",
+      "name": "S-03 영업시간 관리 화면",
+      "files": ["web/admin-hours.html", "web/admin-hours.js", "web/admin-hours.css", "test/admin-hours-screen.test.js"],
+      "edits": [],
+      "deps": ["U-07", "U-10"],
+      "covers": ["R-05"],
+      "verifies": "node --test test/admin-hours-screen.test.js test/screen-files.test.js test/business-hours.test.js",
+      "browser_check": [5, 6, 10, 11],
+      "parallel_with": ["U-08", "U-09", "U-12"]
+    },
+    {
+      "id": "U-12",
+      "name": "S-04 메뉴 관리 화면",
+      "files": ["web/admin-menu.html", "web/admin-menu.js", "web/admin-menu.css", "test/admin-menu-screen.test.js"],
+      "edits": [],
+      "deps": ["U-08", "U-10"],
+      "covers": ["R-06"],
+      "verifies": "node --test test/admin-menu-screen.test.js test/screen-files.test.js test/menu-items.test.js",
+      "browser_check": [7, 8, 9, 10, 11],
+      "parallel_with": ["U-09", "U-11"]
+    },
+    {
+      "id": "U-13",
+      "name": "화면 경로 통합 확인과 고정 검증 연결",
+      "files": ["test/screen-routes.test.js", "web/not-found.html", "web/not-found.js"],
+      "edits": ["docs/CHECKS.md"],
+      "deps": ["U-09", "U-11", "U-12"],
+      "covers": ["R-01", "R-02", "R-03", "R-04", "R-05", "R-06"],
+      "verifies": "node --test \"test/*.test.js\"",
+      "browser_check": [12, 13],
+      "parallel_with": []
+    }
+  ]
+}

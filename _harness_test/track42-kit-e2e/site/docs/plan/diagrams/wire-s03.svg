@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1280" width="720" height="1280" role="img" aria-labelledby="t d">
+<title id="t">S-03 영업시간 관리 와이어프레임, 375px</title>
+<desc id="d">위쪽 줄(막대와 탭 줄), 제목, 저장 알림, 두 줄로 놓인 열 이름과 풍선말 단추, 요일 일곱 행, 저장 버튼 순서다. 요일 행은 두 줄이다. 첫 줄에 요일 이름과 휴무 체크 상자, 둘째 줄에 여는 시각과 닫는 시각 입력칸이 반씩 놓인다.</desc>
+<style>
+text{font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif;fill:#1c1c1c;font-size:14px}
+.s{font-size:12px}.m{font-size:13px}.b{font-weight:700}.g{fill:#555}.n{font-size:11px;fill:#555}.w{fill:#fff}
+.frame{fill:#fff;stroke:#1c1c1c;stroke-width:1.5}
+.bar{fill:#d9d9d9;stroke:#1c1c1c}
+.tabs{fill:#f0f0f0;stroke:#1c1c1c}
+.sec{fill:none;stroke:#999}
+.in{fill:#fff;stroke:#555}
+.bad{fill:#fff;stroke:#1c1c1c;stroke-width:2.5}
+.off{fill:#e4e4e4;stroke:#999;stroke-dasharray:4 3}
+.pri{fill:#1c1c1c;stroke:#1c1c1c}
+.tag{fill:#f6f6f6;stroke:#1c1c1c}
+.q{fill:#fff;stroke:#1c1c1c}
+.sep{stroke:#bbb}
+.ld{stroke:#999}
+.ck{fill:none;stroke:#1c1c1c;stroke-width:2.5}
+</style>
+<rect width="720" height="1280" fill="#fff"/>
+<text x="10" y="24" class="b">S-03 영업시간 관리, 375px</text>
+<g transform="translate(10,36)">
+<rect x="0" y="0" width="375" height="1228" class="frame"/>
+
+<!-- 위쪽 줄: 막대와 탭 줄 -->
+<rect x="0" y="0" width="375" height="52" class="bar"/>
+<text x="16" y="32">방문자 화면</text>
+<text x="359" y="32" text-anchor="end">로그아웃</text>
+<rect x="0" y="52" width="375" height="44" class="tabs"/>
+<text x="16" y="80" class="b">영업시간 관리</text>
+<line x1="16" y1="87" x2="104" y2="87" stroke="#1c1c1c" stroke-width="2"/>
+<text x="126" y="80">메뉴 관리</text>
+
+<text x="16" y="138" class="b" font-size="20">영업시간 관리</text>
+
+<!-- 저장 알림 -->
+<rect x="16" y="152" width="343" height="44" class="tag"/>
+<path d="M30 174l5 6l10-12" class="ck"/>
+<text x="54" y="179">저장됨</text>
+
+<!-- 구역 상자: 좌우 여백 16, 테두리 1, 안쪽 16. 내용은 x 33부터 342까지 309 -->
+<rect x="16" y="212" width="343" height="928" class="sec"/>
+
+<!-- 열 이름: 요일 행과 같은 두 줄 -->
+<text x="33" y="247" class="m">요일</text>
+<text x="302" y="247" text-anchor="end" class="m">휴무</text>
+<circle cx="320" cy="242" r="10" class="q"/><text x="320" y="247" text-anchor="middle" class="s b">?</text>
+<text x="33" y="299" class="m">여는 시각</text>
+<circle cx="105" cy="294" r="10" class="q"/><text x="105" y="299" text-anchor="middle" class="s b">?</text>
+<text x="191.5" y="299" class="m">닫는 시각</text>
+<circle cx="263.5" cy="294" r="10" class="q"/><text x="263.5" y="299" text-anchor="middle" class="s b">?</text>
+<line x1="33" y1="324" x2="342" y2="324" class="sep"/>
+
+<!-- 월 -->
+<text x="33" y="359">월요일</text>
+<rect x="310" y="344" width="20" height="20" class="in"/>
+<rect x="33" y="384" width="150.5" height="44" class="in"/><text x="47" y="411">07:30</text>
+<rect x="191.5" y="384" width="150.5" height="44" class="in"/><text x="205.5" y="411">20:00</text>
+<line x1="33" y1="436" x2="342" y2="436" class="sep"/>
+<!-- 화 -->
+<text x="33" y="471">화요일</text>
+<rect x="310" y="456" width="20" height="20" class="in"/>
+<rect x="33" y="496" width="150.5" height="44" class="in"/><text x="47" y="523">07:30</text>
+<rect x="191.5" y="496" width="150.5" height="44" class="in"/><text x="205.5" y="523">20:00</text>
+<line x1="33" y1="548" x2="342" y2="548" class="sep"/>
+<!-- 수 -->
+<text x="33" y="583">수요일</text>
+<rect x="310" y="568" width="20" height="20" class="in"/>
+<rect x="33" y="608" width="150.5" height="44" class="in"/><text x="47" y="635">07:30</text>
+<rect x="191.5" y="608" width="150.5" height="44" class="in"/><text x="205.5" y="635">20:00</text>
+<line x1="33" y1="660" x2="342" y2="660" class="sep"/>
+<!-- 목: 값 없음 -->
+<text x="33" y="695">목요일</text>
+<rect x="310" y="680" width="20" height="20" class="in"/>
+<rect x="33" y="720" width="150.5" height="44" class="in"/>
+<rect x="191.5" y="720" width="150.5" height="44" class="in"/>
+<line x1="33" y1="772" x2="342" y2="772" class="sep"/>
+<!-- 금: 오류 -->
+<text x="33" y="807">금요일</text>
+<rect x="310" y="792" width="20" height="20" class="in"/>
+<rect x="33" y="832" width="150.5" height="44" class="in"/><text x="47" y="859">07:30</text>
+<rect x="191.5" y="832" width="150.5" height="44" class="bad"/><text x="205.5" y="859">07:00</text>
+<circle cx="43" cy="892" r="9" fill="none" stroke="#1c1c1c" stroke-width="1.5"/>
+<text x="43" y="897" text-anchor="middle" class="s b">!</text>
+<text x="59" y="897" class="m">닫는 시각은 여는 시각보다 늦어야 합니다.</text>
+<line x1="33" y1="916" x2="342" y2="916" class="sep"/>
+<!-- 토 -->
+<text x="33" y="951">토요일</text>
+<rect x="310" y="936" width="20" height="20" class="in"/>
+<rect x="33" y="976" width="150.5" height="44" class="in"/><text x="47" y="1003">08:00</text>
+<rect x="191.5" y="976" width="150.5" height="44" class="in"/><text x="205.5" y="1003">18:00</text>
+<line x1="33" y1="1028" x2="342" y2="1028" class="sep"/>
+<!-- 일: 휴무 -->
+<text x="33" y="1063">일요일</text>
+<rect x="310" y="1048" width="20" height="20" class="in"/>
+<path d="M314 1058l4 5l8-10" class="ck"/>
+<rect x="33" y="1088" width="150.5" height="44" class="off"/>
+<rect x="191.5" y="1088" width="150.5" height="44" class="off"/>
+
+<!-- 저장 -->
+<rect x="16" y="1156" width="343" height="48" class="pri"/>
+<text x="187.5" y="1186" text-anchor="middle" class="b w">저장</text>
+
+<!-- 설명 -->
+<g class="ld"><line x1="378" y1="28" x2="390" y2="28"/><line x1="378" y1="76" x2="390" y2="76"/><line x1="378" y1="174" x2="390" y2="174"/><line x1="378" y1="242" x2="390" y2="242"/><line x1="378" y1="294" x2="390" y2="294"/><line x1="378" y1="354" x2="390" y2="354"/><line x1="378" y1="406" x2="390" y2="406"/><line x1="378" y1="742" x2="390" y2="742"/><line x1="378" y1="892" x2="390" y2="892"/><line x1="378" y1="1058" x2="390" y2="1058"/><line x1="378" y1="1180" x2="390" y2="1180"/></g>
+<text x="395" y="32" class="n">C-12 위쪽 줄: 막대에 링크와 로그아웃</text>
+<text x="395" y="80" class="n">탭 줄: 지금 화면은 밑줄과 굵은 글자</text>
+<text x="395" y="178" class="n">C-14 저장 알림: 제목 아래, 다음 수정까지 남음</text>
+<text x="395" y="246" class="n">열 이름: 요일 행과 같은 두 줄, 맨 위에 한 번</text>
+<text x="395" y="298" class="n">C-09 풍선말 단추: 열 이름 옆에 한 번</text>
+<text x="395" y="358" class="n">첫 줄: 요일 이름과 C-07 체크 상자 (휴무)</text>
+<text x="395" y="410" class="n">둘째 줄: C-05 시각 입력칸 둘이 줄을 반씩 채움</text>
+<text x="395" y="428" class="n">칸 폭: 375px에서 150.5px, 320px에서 123px</text>
+<text x="395" y="746" class="n">값 없음: 방문자 화면에 영업시간 정보 없음</text>
+<text x="395" y="896" class="n">C-10 오류 줄: 틀린 행 아래, 틀린 칸은 굵은 테두리</text>
+<text x="395" y="1062" class="n">휴무 체크: 시각 입력칸 비활성, 저장하면 시각을 비움</text>
+<text x="395" y="1184" class="n">C-01 주 버튼: 일곱 행을 한 번에 저장</text>
+<text x="395" y="1206" class="n">회색 선의 상자는 구역 상자다. 시간 값은 예시다.</text>
+</g>
+</svg>

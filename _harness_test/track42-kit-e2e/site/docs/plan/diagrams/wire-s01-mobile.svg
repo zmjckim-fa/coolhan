@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 900" width="650" height="900" role="img" aria-labelledby="t d">
+<title id="t">S-01 방문자 홈 와이어프레임, 375px</title>
+<desc id="d">위에서 아래로 위쪽 줄, 지금 영업 상태, 영업시간 일곱 행, 분류별 메뉴 순서다.</desc>
+<style>
+text{font-family:'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif;fill:#1c1c1c;font-size:14px}
+.s{font-size:12px}.b{font-weight:700}.g{fill:#555}.n{font-size:11px;fill:#555}
+.frame{fill:#fff;stroke:#1c1c1c;stroke-width:1.5}
+.bar{fill:#f0f0f0;stroke:#1c1c1c}
+.tag{fill:#fff;stroke:#1c1c1c}
+.sep{stroke:#bbb}
+.ld{stroke:#999}
+</style>
+<rect width="650" height="900" fill="#fff"/>
+<text x="10" y="24" class="b">S-01 방문자 홈, 375px</text>
+<g transform="translate(10,36)">
+<rect x="0" y="0" width="375" height="832" class="frame"/>
+
+<!-- 위쪽 줄 -->
+<rect x="0" y="0" width="375" height="56" class="bar"/>
+<text x="16" y="34" class="b" font-size="16">가게 이름</text>
+
+<!-- 지금 영업 상태 -->
+<text x="16" y="88" class="s g">지금</text>
+<rect x="16" y="98" width="124" height="44" class="tag"/>
+<circle cx="38" cy="120" r="8" fill="#1c1c1c"/>
+<text x="54" y="127" class="b" font-size="18">영업 중</text>
+<text x="16" y="170">오늘 07:30 ~ 20:00</text>
+<text x="359" y="170" text-anchor="end" class="s g">14:05 기준</text>
+<line x1="0" y1="190" x2="375" y2="190" class="sep"/>
+
+<!-- 영업시간 -->
+<text x="16" y="224" class="b" font-size="18">영업시간</text>
+<text x="16" y="268">월요일</text><text x="359" y="268" text-anchor="end">07:30 ~ 20:00</text>
+<line x1="16" y1="284" x2="359" y2="284" class="sep"/>
+<text x="16" y="312" class="b">화요일</text>
+<rect x="66" y="297" width="36" height="22" class="tag"/>
+<text x="84" y="313" text-anchor="middle" class="s">오늘</text>
+<text x="359" y="312" text-anchor="end" class="b">07:30 ~ 20:00</text>
+<line x1="16" y1="328" x2="359" y2="328" class="sep"/>
+<text x="16" y="356">수요일</text><text x="359" y="356" text-anchor="end">07:30 ~ 20:00</text>
+<line x1="16" y1="372" x2="359" y2="372" class="sep"/>
+<text x="16" y="400">목요일</text><text x="359" y="400" text-anchor="end">영업시간 정보 없음</text>
+<line x1="16" y1="416" x2="359" y2="416" class="sep"/>
+<text x="16" y="444">금요일</text><text x="359" y="444" text-anchor="end">07:30 ~ 20:00</text>
+<line x1="16" y1="460" x2="359" y2="460" class="sep"/>
+<text x="16" y="488">토요일</text><text x="359" y="488" text-anchor="end">08:00 ~ 18:00</text>
+<line x1="16" y1="504" x2="359" y2="504" class="sep"/>
+<text x="16" y="532">일요일</text><text x="359" y="532" text-anchor="end">휴무</text>
+<line x1="0" y1="548" x2="375" y2="548" class="sep"/>
+
+<!-- 메뉴 -->
+<text x="16" y="584" class="b" font-size="18">메뉴</text>
+<text x="16" y="614" class="b g">빵</text>
+<text x="16" y="654">소금빵</text><text x="359" y="654" text-anchor="end">3,500원</text>
+<line x1="16" y1="672" x2="359" y2="672" class="sep"/>
+<text x="16" y="702">식빵</text>
+<rect x="52" y="687" width="40" height="22" class="tag"/>
+<text x="72" y="703" text-anchor="middle" class="s">품절</text>
+<text x="359" y="702" text-anchor="end">4,000원</text>
+<line x1="16" y1="720" x2="359" y2="720" class="sep"/>
+<text x="16" y="752" class="b g">음료</text>
+<text x="16" y="792">아메리카노</text><text x="359" y="792" text-anchor="end">3,000원</text>
+<line x1="16" y1="810" x2="359" y2="810" class="sep"/>
+
+<!-- 설명 -->
+<g class="ld"><line x1="378" y1="30" x2="390" y2="30"/><line x1="378" y1="120" x2="390" y2="120"/><line x1="378" y1="166" x2="390" y2="166"/><line x1="378" y1="264" x2="390" y2="264"/><line x1="378" y1="308" x2="390" y2="308"/><line x1="378" y1="396" x2="390" y2="396"/><line x1="378" y1="528" x2="390" y2="528"/><line x1="378" y1="650" x2="390" y2="650"/><line x1="378" y1="698" x2="390" y2="698"/></g>
+<text x="395" y="34" class="n">C-12 위쪽 줄: 가게 이름</text>
+<text x="395" y="124" class="n">C-08 상태 표지: 모양과 글자로 표시</text>
+<text x="395" y="170" class="n">오늘의 시간과 계산 기준 시각</text>
+<text x="395" y="268" class="n">C-13 목록 행: 요일과 시간</text>
+<text x="395" y="312" class="n">오늘 행은 글자 «오늘»과 굵은 글자</text>
+<text x="395" y="400" class="n">값이 비면 상태 문구를 보임</text>
+<text x="395" y="532" class="n">휴무 요일</text>
+<text x="395" y="654" class="n">C-13 목록 행: 이름과 가격</text>
+<text x="395" y="702" class="n">C-08 상태 표지 «품절»</text>
+<text x="395" y="806" class="n">회색 설명은 화면에 나오지 않는다.</text>
+<text x="395" y="824" class="n">가게 이름, 시간, 메뉴 값은 예시다.</text>
+</g>
+</svg>

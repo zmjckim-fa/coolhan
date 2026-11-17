@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1340 726" width="1340" height="726" role="img" aria-labelledby="erd-title erd-desc" font-family="Consolas, 'Malgun Gothic', 'Noto Sans KR', monospace" font-size="13">
+  <title id="erd-title">bakery-hours ERD</title>
+  <desc id="erd-desc">테이블 네 개 business_hour, menu_item, admin_session, login_attempt. 외래 키는 없다.</desc>
+  <rect x="0" y="0" width="1340" height="726" fill="#ffffff"/>
+  <text x="30" y="34" font-size="18" font-weight="700" fill="#1f2328">bakery-hours ERD (SQLite, STRICT 테이블 4개)</text>
+  <text x="30" y="58" fill="#57606a">PK = 기본 키. 관계선이 없는 것이 맞다: 외래 키가 없다.</text>
+  <g id="business_hour">
+    <rect class="box" x="30" y="78" width="620" height="300" fill="#ffffff" stroke="#1f2328" stroke-width="1.5"/>
+    <rect x="30" y="78" width="620" height="36" fill="#1f2328"/>
+    <text x="44" y="102" font-size="15" font-weight="700" fill="#ffffff">T-01 business_hour</text>
+    <text x="636" y="102" text-anchor="end" fill="#ffffff">요일별 영업시간, 일곱 행 고정</text>
+    <rect x="31" y="114" width="618" height="26" fill="#eaeef2"/>
+    <text x="44" y="132" font-weight="700" fill="#1f2328">키</text>
+    <text x="82" y="132" font-weight="700" fill="#1f2328">컬럼</text>
+    <text x="206" y="132" font-weight="700" fill="#1f2328">타입</text>
+    <text x="280" y="132" font-weight="700" fill="#1f2328">NULL</text>
+    <text x="366" y="132" font-weight="700" fill="#1f2328">값</text>
+    <text x="44" y="157" font-weight="700" fill="#9a3412">PK</text>
+    <text x="82" y="157" fill="#1f2328" font-weight="700">weekday</text>
+    <text x="206" y="157" fill="#1f2328">INTEGER</text>
+    <text x="280" y="157" fill="#1f2328">NOT NULL</text>
+    <text x="366" y="157" fill="#1f2328">0(일요일)~6(토요일)</text>
+    <line x1="31" y1="164" x2="649" y2="164" stroke="#d0d7de" stroke-width="1"/>
+    <text x="82" y="181" fill="#1f2328">opens_at</text>
+    <text x="206" y="181" fill="#1f2328">TEXT</text>
+    <text x="280" y="181" fill="#1f2328">NULL</text>
+    <text x="366" y="181" fill="#1f2328">HH:MM, 5분 단위</text>
+    <line x1="31" y1="188" x2="649" y2="188" stroke="#d0d7de" stroke-width="1"/>
+    <text x="82" y="205" fill="#1f2328">closes_at</text>
+    <text x="206" y="205" fill="#1f2328">TEXT</text>
+    <text x="280" y="205" fill="#1f2328">NULL</text>
+    <text x="366" y="205" fill="#1f2328">HH:MM, 5분 단위</text>
+    <line x1="31" y1="212" x2="649" y2="212" stroke="#d0d7de" stroke-width="1"/>
+    <text x="82" y="229" fill="#1f2328">is_day_off</text>
+    <text x="206" y="229" fill="#1f2328">INTEGER</text>
+    <text x="280" y="229" fill="#1f2328">NOT NULL</text>
+    <text x="366" y="229" fill="#1f2328">0 또는 1, 기본 0</text>
+    <line x1="31" y1="236" x2="649" y2="236" stroke="#d0d7de" stroke-width="1"/>
+    <text x="82" y="253" fill="#1f2328">updated_at</text>
+    <text x="206" y="253" fill="#1f2328">TEXT</text>
+    <text x="280" y="253" fill="#1f2328">NOT NULL</text>
+    <text x="366" y="253" fill="#1f2328">UTC ISO 8601</text>
+    <line x1="30" y1="260" x2="650" y2="260" stroke="#1f2328" stroke-width="1"/>
+    <text x="44" y="287" fill="#1f2328">제약: opens_at과 closes_at은 둘 다 있거나 둘 다 없다</text>
+    <text x="44" y="309" fill="#1f2328">제약: closes_at &gt; opens_at</text>
+    <text x="44" y="331" fill="#1f2328">제약: 휴무(is_day_off 1)인 요일은 시각이 없다</text>
+    <text x="44" y="353" fill="#1f2328">트리거: 행 삭제 금지 (trg_business_hour_no_delete)</text>
+  </g>
+  <g id="menu_item">
+    <rect class="box" x="690" y="78" width="620" height="300" fill="#ffffff" stroke="#1f2328" stroke-width="1.5"/>
+    <rect x="690" y="78" width="620" height="36" fill="#1f2328"/>
+    <text x="704" y="102" font-size="15" font-weight="700" fill="#ffffff">T-02 menu_item</text>
+    <text x="1296" y="102" text-anchor="end" fill="#ffffff">메뉴</text>
+    <rect x="691" y="114" width="618" height="26" fill="#eaeef2"/>
+    <text x="704" y="132" font-weight="700" fill="#1f2328">키</text>
+    <text x="742" y="132" font-weight="700" fill="#1f2328">컬럼</text>
+    <text x="866" y="132" font-weight="700" fill="#1f2328">타입</text>
+    <text x="940" y="132" font-weight="700" fill="#1f2328">NULL</text>
+    <text x="1026" y="132" font-weight="700" fill="#1f2328">값</text>
+    <text x="704" y="157" font-weight="700" fill="#9a3412">PK</text>
+    <text x="742" y="157" fill="#1f2328" font-weight="700">id</text>
+    <text x="866" y="157" fill="#1f2328">INTEGER</text>
+    <text x="940" y="157" fill="#1f2328">NOT NULL</text>
+    <text x="1026" y="157" fill="#1f2328">자동 증가, 다시 쓰지 않음</text>
+    <line x1="691" y1="164" x2="1309" y2="164" stroke="#d0d7de" stroke-width="1"/>
+    <text x="742" y="181" fill="#1f2328">name</text>
+    <text x="866" y="181" fill="#1f2328">TEXT</text>
+    <text x="940" y="181" fill="#1f2328">NOT NULL</text>
+    <text x="1026" y="181" fill="#1f2328">1~40자</text>
+    <line x1="691" y1="188" x2="1309" y2="188" stroke="#d0d7de" stroke-width="1"/>
+    <text x="742" y="205" fill="#1f2328">price_krw</text>
+    <text x="866" y="205" fill="#1f2328">INTEGER</text>
+    <text x="940" y="205" fill="#1f2328">NOT NULL</text>
+    <text x="1026" y="205" fill="#1f2328">0~1000000</text>
+    <line x1="691" y1="212" x2="1309" y2="212" stroke="#d0d7de" stroke-width="1"/>
+    <text x="742" y="229" fill="#1f2328">category</text>
+    <text x="866" y="229" fill="#1f2328">TEXT</text>
+    <text x="940" y="229" fill="#1f2328">NOT NULL</text>
+    <text x="1026" y="229" fill="#1f2328">bread, cake, cookie, drink</text>
+    <line x1="691" y1="236" x2="1309" y2="236" stroke="#d0d7de" stroke-width="1"/>
+    <text x="742" y="253" fill="#1f2328">sale_status</text>
+    <text x="866" y="253" fill="#1f2328">TEXT</text>
+    <text x="940" y="253" fill="#1f2328">NOT NULL</text>
+    <text x="1026" y="253" fill="#1f2328">on_sale, sold_out</text>
+    <line x1="691" y1="260" x2="1309" y2="260" stroke="#d0d7de" stroke-width="1"/>
+    <text x="742" y="277" fill="#1f2328">sort_order</text>
+    <text x="866" y="277" fill="#1f2328">INTEGER</text>
+    <text x="940" y="277" fill="#1f2328">NOT NULL</text>
+    <text x="1026" y="277" fill="#1f2328">0 이상</text>
+    <line x1="691" y1="284" x2="1309" y2="284" stroke="#d0d7de" stroke-width="1"/>
+    <text x="742" y="301" fill="#1f2328">created_at</text>
+    <text x="866" y="301" fill="#1f2328">TEXT</text>
+    <text x="940" y="301" fill="#1f2328">NOT NULL</text>
+    <text x="1026" y="301" fill="#1f2328">UTC ISO 8601</text>
+    <line x1="691" y1="308" x2="1309" y2="308" stroke="#d0d7de" stroke-width="1"/>
+    <text x="742" y="325" fill="#1f2328">updated_at</text>
+    <text x="866" y="325" fill="#1f2328">TEXT</text>
+    <text x="940" y="325" fill="#1f2328">NOT NULL</text>
+    <text x="1026" y="325" fill="#1f2328">UTC ISO 8601</text>
+    <line x1="690" y1="332" x2="1310" y2="332" stroke="#1f2328" stroke-width="1"/>
+    <text x="704" y="359" fill="#1f2328">인덱스: idx_menu_item_category_sort (category, sort_order, id)</text>
+  </g>
+  <g id="admin_session">
+    <rect class="box" x="30" y="418" width="620" height="226" fill="#ffffff" stroke="#1f2328" stroke-width="1.5"/>
+    <rect x="30" y="418" width="620" height="36" fill="#1f2328"/>
+    <text x="44" y="442" font-size="15" font-weight="700" fill="#ffffff">T-03 admin_session</text>
+    <text x="636" y="442" text-anchor="end" fill="#ffffff">관리자 로그인 세션</text>
+    <rect x="31" y="454" width="618" height="26" fill="#eaeef2"/>
+    <text x="44" y="472" font-weight="700" fill="#1f2328">키</text>
+    <text x="82" y="472" font-weight="700" fill="#1f2328">컬럼</text>
+    <text x="206" y="472" font-weight="700" fill="#1f2328">타입</text>
+    <text x="280" y="472" font-weight="700" fill="#1f2328">NULL</text>
+    <text x="366" y="472" font-weight="700" fill="#1f2328">값</text>
+    <text x="44" y="497" font-weight="700" fill="#9a3412">PK</text>
+    <text x="82" y="497" fill="#1f2328" font-weight="700">token_hash</text>
+    <text x="206" y="497" fill="#1f2328">TEXT</text>
+    <text x="280" y="497" fill="#1f2328">NOT NULL</text>
+    <text x="366" y="497" fill="#1f2328">소문자 16진수 64자</text>
+    <line x1="31" y1="504" x2="649" y2="504" stroke="#d0d7de" stroke-width="1"/>
+    <text x="82" y="521" fill="#1f2328">csrf_token</text>
+    <text x="206" y="521" fill="#1f2328">TEXT</text>
+    <text x="280" y="521" fill="#1f2328">NOT NULL</text>
+    <text x="366" y="521" fill="#1f2328">32~128자</text>
+    <line x1="31" y1="528" x2="649" y2="528" stroke="#d0d7de" stroke-width="1"/>
+    <text x="82" y="545" fill="#1f2328">created_at</text>
+    <text x="206" y="545" fill="#1f2328">TEXT</text>
+    <text x="280" y="545" fill="#1f2328">NOT NULL</text>
+    <text x="366" y="545" fill="#1f2328">UTC ISO 8601</text>
+    <line x1="31" y1="552" x2="649" y2="552" stroke="#d0d7de" stroke-width="1"/>
+    <text x="82" y="569" fill="#1f2328">expires_at</text>
+    <text x="206" y="569" fill="#1f2328">TEXT</text>
+    <text x="280" y="569" fill="#1f2328">NOT NULL</text>
+    <text x="366" y="569" fill="#1f2328">UTC ISO 8601</text>
+    <line x1="30" y1="576" x2="650" y2="576" stroke="#1f2328" stroke-width="1"/>
+    <text x="44" y="603" fill="#1f2328">제약: expires_at &gt; created_at</text>
+    <text x="44" y="625" fill="#1f2328">인덱스: idx_admin_session_expires_at (expires_at)</text>
+  </g>
+  <g id="login_attempt">
+    <rect class="box" x="690" y="418" width="620" height="226" fill="#ffffff" stroke="#1f2328" stroke-width="1.5"/>
+    <rect x="690" y="418" width="620" height="36" fill="#1f2328"/>
+    <text x="704" y="442" font-size="15" font-weight="700" fill="#ffffff">T-04 login_attempt</text>
+    <text x="1296" y="442" text-anchor="end" fill="#ffffff">로그인 시도 기록</text>
+    <rect x="691" y="454" width="618" height="26" fill="#eaeef2"/>
+    <text x="704" y="472" font-weight="700" fill="#1f2328">키</text>
+    <text x="742" y="472" font-weight="700" fill="#1f2328">컬럼</text>
+    <text x="866" y="472" font-weight="700" fill="#1f2328">타입</text>
+    <text x="940" y="472" font-weight="700" fill="#1f2328">NULL</text>
+    <text x="1026" y="472" font-weight="700" fill="#1f2328">값</text>
+    <text x="704" y="497" font-weight="700" fill="#9a3412">PK</text>
+    <text x="742" y="497" fill="#1f2328" font-weight="700">id</text>
+    <text x="866" y="497" fill="#1f2328">INTEGER</text>
+    <text x="940" y="497" fill="#1f2328">NOT NULL</text>
+    <text x="1026" y="497" fill="#1f2328">자동 증가</text>
+    <line x1="691" y1="504" x2="1309" y2="504" stroke="#d0d7de" stroke-width="1"/>
+    <text x="742" y="521" fill="#1f2328">client_key</text>
+    <text x="866" y="521" fill="#1f2328">TEXT</text>
+    <text x="940" y="521" fill="#1f2328">NOT NULL</text>
+    <text x="1026" y="521" fill="#1f2328">1~64자</text>
+    <line x1="691" y1="528" x2="1309" y2="528" stroke="#d0d7de" stroke-width="1"/>
+    <text x="742" y="545" fill="#1f2328">attempted_at</text>
+    <text x="866" y="545" fill="#1f2328">TEXT</text>
+    <text x="940" y="545" fill="#1f2328">NOT NULL</text>
+    <text x="1026" y="545" fill="#1f2328">UTC ISO 8601</text>
+    <line x1="691" y1="552" x2="1309" y2="552" stroke="#d0d7de" stroke-width="1"/>
+    <text x="742" y="569" fill="#1f2328">succeeded</text>
+    <text x="866" y="569" fill="#1f2328">INTEGER</text>
+    <text x="940" y="569" fill="#1f2328">NOT NULL</text>
+    <text x="1026" y="569" fill="#1f2328">0 또는 1</text>
+    <line x1="690" y1="576" x2="1310" y2="576" stroke="#1f2328" stroke-width="1"/>
+    <text x="704" y="603" fill="#1f2328">인덱스: idx_login_attempt_client_key_attempted_at (client_key, attempted_at)</text>
+    <text x="704" y="625" fill="#1f2328">인덱스: idx_login_attempt_attempted_at (attempted_at)</text>
+  </g>
+  <text x="30" y="678" fill="#1f2328">외래 키 없음: 관리자 계정이 하나라 회원 테이블이 없고, admin_session과 login_attempt는 다른 테이블을 가리키지 않는다.</text>
+  <text x="30" y="702" fill="#1f2328">menu_item.category와 sale_status는 분류 테이블이 아니라 고정 코드(CHECK 제약)다. 근거: 01_공통규칙.md 5절, 6절.</text>
+</svg>

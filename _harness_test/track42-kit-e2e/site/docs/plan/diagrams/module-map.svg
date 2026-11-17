@@ -1,0 +1,204 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 864" width="1240" height="864" role="img" aria-labelledby="mm-title mm-desc">
+  <title id="mm-title">모듈 구성</title>
+  <desc id="mm-desc">서버 파일 열다섯 개를 시작, 요청이 지나는 길, API 처리, 규칙, 저장소 다섯 묶음으로, 화면 파일 스물두 개를 화면 열두 개, 화면 바탕 여덟 개, 없는 주소 응답 두 개로, 시험 파일 열여섯 개를 시험 열네 개와 시험 지원 두 개로 나눈 그림. 입력 규칙 파일 하나는 서버와 화면이 같이 읽는다.</desc>
+  <defs>
+    <marker id="mm-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3f3f3a"/>
+    </marker>
+    <style>
+      .t { font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; fill: #1c1c1a; }
+      .h { font-size: 13px; font-weight: 700; }
+      .b { font-size: 12px; }
+      .s { font-size: 11px; fill: #55554f; }
+      .m { font-family: Consolas, "Courier New", monospace; font-size: 11px; fill: #1c1c1a; }
+      .grp { fill: #f3f2ec; stroke: #3f3f3a; stroke-width: 1; }
+      .chip { fill: #ffffff; stroke: #3f3f3a; stroke-width: 1; }
+      .ref { fill: #f3f2ec; stroke: #3f3f3a; stroke-width: 1; stroke-dasharray: 4 3; }
+      .line { stroke: #3f3f3a; stroke-width: 1.2; fill: none; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1240" height="864" fill="#fbfaf6"/>
+  <text class="t" x="20" y="34" font-size="16" font-weight="700">모듈 구성</text>
+  <text class="t s" x="110" y="34">서버 src/ 15개, 화면 web/ 22개, 시험 test/ 16개</text>
+
+  <!-- 시작 -->
+  <rect class="grp" x="20" y="56" width="600" height="72"/>
+  <text class="t h" x="35" y="76">시작 (src/)</text>
+  <rect class="chip" x="35" y="86" width="135" height="30"/>
+  <text class="m" x="102.5" y="105" text-anchor="middle">server.js</text>
+  <rect class="chip" x="180" y="86" width="135" height="30"/>
+  <text class="m" x="247.5" y="105" text-anchor="middle">environment.js</text>
+  <text class="t s" x="330" y="105">환경 변수는 environment.js만 읽는다</text>
+  <path class="line" d="M320 128 V156" marker-end="url(#mm-arrow)"/>
+  <text class="t s" x="332" y="147">요청을 넘긴다</text>
+
+  <!-- 요청이 지나는 길 -->
+  <rect class="grp" x="20" y="158" width="600" height="72"/>
+  <text class="t h" x="35" y="178">요청이 지나는 길 (src/)</text>
+  <rect class="chip" x="35" y="188" width="135" height="30"/>
+  <text class="m" x="102.5" y="207" text-anchor="middle">route-table.js</text>
+  <rect class="chip" x="180" y="188" width="135" height="30"/>
+  <text class="m" x="247.5" y="207" text-anchor="middle">json-exchange.js</text>
+  <rect class="chip" x="325" y="188" width="135" height="30"/>
+  <text class="m" x="392.5" y="207" text-anchor="middle">security-headers.js</text>
+  <rect class="chip" x="470" y="188" width="135" height="30"/>
+  <text class="m" x="537.5" y="207" text-anchor="middle">static-file.js</text>
+  <path class="line" d="M320 230 V258" marker-end="url(#mm-arrow)"/>
+  <text class="t s" x="332" y="249">세션과 CSRF를 본 뒤 부른다</text>
+
+  <!-- API 처리 -->
+  <rect class="grp" x="20" y="260" width="600" height="110"/>
+  <text class="t h" x="35" y="280">API 처리 (src/)</text>
+  <rect class="chip" x="35" y="290" width="135" height="30"/>
+  <text class="m" x="102.5" y="309" text-anchor="middle">public-overview.js</text>
+  <rect class="chip" x="180" y="290" width="135" height="30"/>
+  <text class="m" x="247.5" y="309" text-anchor="middle">admin-login.js</text>
+  <rect class="chip" x="325" y="290" width="135" height="30"/>
+  <text class="m" x="392.5" y="309" text-anchor="middle">admin-session.js</text>
+  <rect class="chip" x="470" y="290" width="135" height="30"/>
+  <text class="m" x="537.5" y="309" text-anchor="middle">business-hours.js</text>
+  <rect class="chip" x="35" y="328" width="135" height="30"/>
+  <text class="m" x="102.5" y="347" text-anchor="middle">menu-items.js</text>
+  <text class="t s" x="185" y="347">A-01부터 A-11을 다섯 파일이 나눠 맡는다</text>
+  <path class="line" d="M165 370 V398" marker-end="url(#mm-arrow)"/>
+  <text class="t s" x="177" y="389">규칙을 부른다</text>
+  <path class="line" d="M475 370 V398" marker-end="url(#mm-arrow)"/>
+  <text class="t s" x="487" y="389">? 묶기로 읽고 쓴다</text>
+
+  <!-- 규칙 -->
+  <rect class="grp" x="20" y="400" width="290" height="110"/>
+  <text class="t h" x="35" y="420">규칙 (src/, 각각 한 곳)</text>
+  <rect class="chip" x="35" y="430" width="125" height="30"/>
+  <text class="m" x="97.5" y="449" text-anchor="middle">menu-category.js</text>
+  <rect class="chip" x="170" y="430" width="125" height="30"/>
+  <text class="m" x="232.5" y="449" text-anchor="middle">shop-status.js</text>
+  <rect class="chip" x="35" y="468" width="125" height="30"/>
+  <text class="m" x="97.5" y="487" text-anchor="middle">error-catalog.js</text>
+  <rect class="ref" x="170" y="468" width="125" height="30"/>
+  <text class="m" x="232.5" y="487" text-anchor="middle">web/input-rules.js</text>
+
+  <!-- 저장소 -->
+  <rect class="grp" x="330" y="400" width="290" height="110"/>
+  <text class="t h" x="345" y="420">저장소 (SQLite 파일 하나)</text>
+  <rect class="chip" x="345" y="430" width="125" height="30"/>
+  <text class="m" x="407.5" y="449" text-anchor="middle">database.js</text>
+  <rect class="ref" x="480" y="430" width="125" height="30"/>
+  <text class="m" x="542.5" y="449" text-anchor="middle">data/bakery.sqlite</text>
+  <rect class="ref" x="345" y="468" width="125" height="30"/>
+  <text class="m" x="407.5" y="487" text-anchor="middle">db/schema.sql</text>
+  <rect class="ref" x="480" y="468" width="125" height="30"/>
+  <text class="m" x="542.5" y="487" text-anchor="middle">db/seed.sql</text>
+
+  <!-- 화면과 서버 사이 -->
+  <rect class="grp" x="20" y="526" width="600" height="110"/>
+  <text class="t h" x="35" y="546">화면과 서버 사이</text>
+  <text class="t b" x="35" y="568">api-client.js가 HTTP로 API를 부른다.</text>
+  <text class="t b" x="35" y="586">화면 파일은 static-file.js의 허용 목록에서만 나간다.</text>
+  <text class="t b" x="35" y="604">목록과 문구 키는 서버가 응답에 넣어 준다. 입력 규칙은 서버와 화면이 같은 파일을 읽는다.</text>
+  <text class="t b" x="35" y="622">화면마다 배치 CSS 파일이 하나 있고 컴포넌트의 모양은 screen.css에만 있다.</text>
+
+  <!-- 화면 -->
+  <rect class="grp" x="660" y="56" width="560" height="190"/>
+  <text class="t h" x="675" y="76">화면 (web/) 12개: 화면마다 HTML, 스크립트, 배치 CSS</text>
+  <rect class="chip" x="675" y="86" width="170" height="30"/>
+  <text class="m" x="760" y="105" text-anchor="middle">home.html</text>
+  <rect class="chip" x="855" y="86" width="170" height="30"/>
+  <text class="m" x="940" y="105" text-anchor="middle">home.js</text>
+  <rect class="chip" x="1035" y="86" width="170" height="30"/>
+  <text class="m" x="1120" y="105" text-anchor="middle">home.css</text>
+  <rect class="chip" x="675" y="124" width="170" height="30"/>
+  <text class="m" x="760" y="143" text-anchor="middle">admin-login.html</text>
+  <rect class="chip" x="855" y="124" width="170" height="30"/>
+  <text class="m" x="940" y="143" text-anchor="middle">admin-login.js</text>
+  <rect class="chip" x="1035" y="124" width="170" height="30"/>
+  <text class="m" x="1120" y="143" text-anchor="middle">admin-login.css</text>
+  <rect class="chip" x="675" y="162" width="170" height="30"/>
+  <text class="m" x="760" y="181" text-anchor="middle">admin-hours.html</text>
+  <rect class="chip" x="855" y="162" width="170" height="30"/>
+  <text class="m" x="940" y="181" text-anchor="middle">admin-hours.js</text>
+  <rect class="chip" x="1035" y="162" width="170" height="30"/>
+  <text class="m" x="1120" y="181" text-anchor="middle">admin-hours.css</text>
+  <rect class="chip" x="675" y="200" width="170" height="30"/>
+  <text class="m" x="760" y="219" text-anchor="middle">admin-menu.html</text>
+  <rect class="chip" x="855" y="200" width="170" height="30"/>
+  <text class="m" x="940" y="219" text-anchor="middle">admin-menu.js</text>
+  <rect class="chip" x="1035" y="200" width="170" height="30"/>
+  <text class="m" x="1120" y="219" text-anchor="middle">admin-menu.css</text>
+  <path class="line" d="M940 246 V274" marker-end="url(#mm-arrow)"/>
+  <text class="t s" x="952" y="265">가져온다</text>
+
+  <!-- 화면 바탕 -->
+  <rect class="grp" x="660" y="276" width="560" height="114"/>
+  <text class="t h" x="675" y="296">화면 바탕 (web/) 8개</text>
+  <rect class="chip" x="675" y="306" width="125" height="30"/>
+  <text class="m" x="737.5" y="325" text-anchor="middle">api-client.js</text>
+  <rect class="chip" x="810" y="306" width="125" height="30"/>
+  <text class="m" x="872.5" y="325" text-anchor="middle">text-dictionary.js</text>
+  <rect class="chip" x="945" y="306" width="125" height="30"/>
+  <text class="m" x="1007.5" y="325" text-anchor="middle">screen-feedback.js</text>
+  <rect class="chip" x="1080" y="306" width="125" height="30"/>
+  <text class="m" x="1142.5" y="325" text-anchor="middle">admin-top-bar.js</text>
+  <rect class="chip" x="675" y="344" width="125" height="30"/>
+  <text class="m" x="737.5" y="363" text-anchor="middle">input-rules.js</text>
+  <rect class="chip" x="810" y="344" width="125" height="30"/>
+  <text class="m" x="872.5" y="363" text-anchor="middle">text/ko.json</text>
+  <rect class="chip" x="945" y="344" width="125" height="30"/>
+  <text class="m" x="1007.5" y="363" text-anchor="middle">tokens.css</text>
+  <rect class="chip" x="1080" y="344" width="125" height="30"/>
+  <text class="m" x="1142.5" y="363" text-anchor="middle">screen.css</text>
+
+  <!-- 없는 주소 응답 -->
+  <path class="line" d="M940 418 V392" marker-end="url(#mm-arrow)"/>
+  <text class="t s" x="952" y="409">가져온다</text>
+  <rect class="grp" x="660" y="418" width="560" height="72"/>
+  <text class="t h" x="675" y="438">없는 주소 응답 (web/) 2개</text>
+  <rect class="chip" x="675" y="448" width="170" height="30"/>
+  <text class="m" x="760" y="467" text-anchor="middle">not-found.html</text>
+  <rect class="chip" x="855" y="448" width="170" height="30"/>
+  <text class="m" x="940" y="467" text-anchor="middle">not-found.js</text>
+  <text class="t s" x="1040" y="467">화면 번호가 없다</text>
+
+  <!-- 화면 바탕 → 요청이 지나는 길 -->
+  <path class="line" d="M660 333 H640 V203 H622" marker-end="url(#mm-arrow)"/>
+
+  <!-- 시험 -->
+  <rect class="grp" x="20" y="652" width="1200" height="148"/>
+  <text class="t h" x="35" y="672">시험 (test/) 16개: 시험 파일 14개와 시험 지원 2개. 임시 DB 파일과 실제 서버에 HTTP 요청을 보낸다</text>
+  <rect class="chip" x="35" y="682" width="180" height="30"/>
+  <text class="m" x="125" y="701" text-anchor="middle">startup.test.js</text>
+  <rect class="chip" x="225" y="682" width="180" height="30"/>
+  <text class="m" x="315" y="701" text-anchor="middle">input-rules.test.js</text>
+  <rect class="chip" x="415" y="682" width="180" height="30"/>
+  <text class="m" x="505" y="701" text-anchor="middle">shop-status.test.js</text>
+  <rect class="chip" x="605" y="682" width="180" height="30"/>
+  <text class="m" x="695" y="701" text-anchor="middle">screen-files.test.js</text>
+  <rect class="chip" x="795" y="682" width="180" height="30"/>
+  <text class="m" x="885" y="701" text-anchor="middle">request-hardening.test.js</text>
+  <rect class="chip" x="985" y="682" width="180" height="30"/>
+  <text class="m" x="1075" y="701" text-anchor="middle">public-overview.test.js</text>
+  <rect class="chip" x="35" y="720" width="180" height="30"/>
+  <text class="m" x="125" y="739" text-anchor="middle">admin-login.test.js</text>
+  <rect class="chip" x="225" y="720" width="180" height="30"/>
+  <text class="m" x="315" y="739" text-anchor="middle">business-hours.test.js</text>
+  <rect class="chip" x="415" y="720" width="180" height="30"/>
+  <text class="m" x="505" y="739" text-anchor="middle">menu-items.test.js</text>
+  <rect class="chip" x="605" y="720" width="180" height="30"/>
+  <text class="m" x="695" y="739" text-anchor="middle">home-screen.test.js</text>
+  <rect class="chip" x="795" y="720" width="180" height="30"/>
+  <text class="m" x="885" y="739" text-anchor="middle">admin-login-screen.test.js</text>
+  <rect class="chip" x="985" y="720" width="180" height="30"/>
+  <text class="m" x="1075" y="739" text-anchor="middle">admin-hours-screen.test.js</text>
+  <rect class="chip" x="35" y="758" width="180" height="30"/>
+  <text class="m" x="125" y="777" text-anchor="middle">admin-menu-screen.test.js</text>
+  <rect class="chip" x="225" y="758" width="180" height="30"/>
+  <text class="m" x="315" y="777" text-anchor="middle">screen-routes.test.js</text>
+  <rect class="chip" x="415" y="758" width="180" height="30"/>
+  <text class="m" x="505" y="777" text-anchor="middle">temporary-server.js</text>
+  <rect class="chip" x="605" y="758" width="180" height="30"/>
+  <text class="m" x="695" y="777" text-anchor="middle">screen-contract.js</text>
+  <text class="t s" x="800" y="777">끝의 둘은 시험 지원 파일이다 (이름이 .test.js로 끝나지 않는다)</text>
+
+  <text class="t b" x="20" y="826">화살표는 «부른다» 또는 «가져온다»의 방향이다. 라우트 표, 입력 규칙, 분류 목록, 영업 상태 계산, 오류 표, 문구 사전 읽기는 각각 파일 하나에만 있다.</text>
+  <text class="t b" x="20" y="846">실선 칸은 src/ 15개, web/ 22개, test/ 16개다. 점선 칸은 세 폴더 밖의 파일이거나 다른 묶음에 이미 그린 파일이라 세지 않는다.</text>
+</svg>
