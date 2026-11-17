@@ -1,7 +1,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { spawnSync } = require('child_process');
+const { runNode } = require('../../scripts/lib/spawn-node');
 const { decide, MAX_BLOCKS } = require('../../.claude/hooks/stop-guard');
 
 describe('stop-guard (G11 — harness-level loop enforcement)', () => {
@@ -52,7 +52,7 @@ describe('stop-guard (G11 — harness-level loop enforcement)', () => {
     afterEach(() => fs.rmSync(dir, { recursive: true, force: true }));
 
     const hook = path.join(__dirname, '../../.claude/hooks/stop-guard.js');
-    const invoke = () => spawnSync(process.execPath, [hook], {
+    const invoke = () => runNode(hook, [], {
       cwd: dir, input: JSON.stringify({ hook_event_name: 'Stop', stop_hook_active: false }), encoding: 'utf8'
     });
 

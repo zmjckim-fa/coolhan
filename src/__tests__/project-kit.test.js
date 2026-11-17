@@ -2,6 +2,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { runNode } = require('../../scripts/lib/spawn-node');
 const kit = require('../../scripts/new-project');
 const launcher = require('../../knowledge_base/project-kit/coolhan');
 const { buildState, START, END } = require('../../scripts/handoff-write');
@@ -165,7 +166,7 @@ describe('project launcher (scripts/coolhan.js in a project)', () => {
   test('in an installed project the operator\'s plain words arm the loop and the stop hook blocks while the backlog is open', () => {
     const d = tmp();
     run(d, '--intent', 'x', '--modules', '');
-    const hook = (name, input) => spawnSync(process.execPath, [path.join(d, 'scripts', 'coolhan.js'), 'hook', name], { cwd: d, input, encoding: 'utf8' });
+    const hook = (name, input) => runNode(path.join(d, 'scripts', 'coolhan.js'), ['hook', name], { cwd: d, input });
     expect(hook('run-armer', JSON.stringify({ prompt: '배포하라' })).stdout).not.toMatch(/ARMED/);
     expect(fs.existsSync(path.join(d, '_workspace', '_run-active.json'))).toBe(false);
     expect(hook('run-armer', JSON.stringify({ prompt: '이어서 진행하라' })).stdout).toMatch(/ARMED/);

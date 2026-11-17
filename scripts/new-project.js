@@ -19,7 +19,9 @@
  *                                    [--deploy none|after-complete] [--modules <library dir>] [--refresh] [--dry] [--json]
  *   Existing files are never overwritten (adopt mode): only missing files are created, the CLAUDE.md orders block,
  *   .claude/settings.json hooks and .gitignore lines are merged. --refresh also rewrites the managed launcher.
- * Exit: 0 done · 2 usage
+ *   --check: exit 0 when the orders block, launcher and hooks equal what the harness derives, 1 when stale,
+ *   4 when the folder has no kit (NOT_RUN). Writes nothing.
+ * Exit: 0 done · 1 stale (--check) · 2 usage · 4 no kit (--check)
  */
 
 const fs = require('fs');
@@ -80,7 +82,11 @@ function main(argv) {
   const target = positional(args, VALUE_FLAGS);
   if (!target) { console.error(t('kit.usage')); return 2; }
   const dir = path.resolve(target);
-  const dry = args.includes('--dry'), refresh = args.includes('--refresh'), json = args.includes('--json');
+  const same = (a, b) => !!b && path.resolve(a).toLowerCase() === path.resolve(b).toLowerCase();
+  if (same(dir, HOME) || same(dir, argValue(args, '--modules') || detectModules())) { console.error(t('kit.refuseTarget', { dir })); return 2; }
+  const check = args.includes('--check');
+  if (check && !fs.existsSync(path.join(dir, 'coolhan.project.json'))) { console.log(t('kit.checkNotInstalled', { dir })); return 4; }
+  const dry = args.includes('--dry') || check, refresh = args.includes('--refresh') || check, json = args.includes('--json');
   const existing = readJson(path.join(dir, 'coolhan.project.json')) || {};
   const deploy = argValue(args, '--deploy') || existing.deploy || 'none';
   if (!DEPLOY.includes(deploy)) { console.error(t('kit.badDeploy', { values: DEPLOY.join(' | ') })); return 2; }
@@ -129,6 +135,12 @@ function main(argv) {
   }
   put('docs/plan/MODULE_PLAN.md', render(path.join(KIT, 'MODULE_PLAN.md.tpl'), { ...vars, rows: rows.join('\n') }), 'create');
 
+  if (check) {
+    const managed = ['CLAUDE.md', 'scripts/coolhan.js', '.claude/settings.json'];
+    const stale = [...done.created, ...done.updated].filter(f => managed.includes(f));
+    console.log(stale.length ? t('kit.checkStale', { dir, files: stale.join(', ') }) : t('kit.checkCurrent', { dir }));
+    return stale.length ? 1 : 0;
+  }
   const notes = [];
   if (!rows.length) notes.push(t('kit.noModules'));
   if (!fs.existsSync(path.join(os.homedir(), '.claude', 'skills', 'coolhan-development-orchestrator', 'SKILL.md'))) notes.push(t('kit.noSkills'));

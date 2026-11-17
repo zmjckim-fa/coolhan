@@ -13,3 +13,4 @@
 | C5 | 플레이스홀더 잔존 | `node scripts/coolhan.js no-placeholder-check src` | 소스가 생기기 전에는 확인 안 함 |
 | C6 | 비밀값 스캔 | `node scripts/coolhan.js secret-scan` | |
 | C7 | 프로젝트 시험 | `echo 스택 확정 후 시험 명령으로 교체` | manual |
+| C8 | 상시 지시 블록, 런처, 훅이 쿨한 본체와 같은가 | `node scripts/coolhan.js new-project . --check` | 다르면 `--refresh` |

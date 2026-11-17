@@ -15,6 +15,7 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const { t } = require('./messages');
 
 const REPO = 'zmjckim-fa/coolhan';
 const GITHUB_API = `https://api.github.com/repos/${REPO}/releases/latest`;
@@ -32,6 +33,8 @@ const colors = {
 };
 
 const c = (color, text) => `${colors[color]}${text}${colors.reset}`;
+/** A failed read or write of the local version record is reported, never swallowed (field lesson F-05). */
+const note = (key, e) => console.error(t(key, { reason: e && e.message ? e.message : String(e) }));
 
 function readInstalledVersion() {
   try {
@@ -39,7 +42,7 @@ function readInstalledVersion() {
       const data = JSON.parse(fs.readFileSync(VERSION_FILE, 'utf8'));
       return data;
     }
-  } catch (e) {}
+  } catch (e) { note('update.readFailed', e); }
 
   // Fallback: read from package.json in INSTALL_DIR if exists
   const pkgPath = path.join(INSTALL_DIR, 'coolhan-package.json');
@@ -47,7 +50,7 @@ function readInstalledVersion() {
     try {
       const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
       return { version: pkg.version, installed_at: 'unknown' };
-    } catch (e) {}
+    } catch (e) { note('update.readFailed', e); }
   }
 
   return null;
@@ -170,7 +173,7 @@ async function main() {
         versionData.latest_known = latestVersion;
         versionData.update_available = true;
         fs.writeFileSync(VERSION_FILE, JSON.stringify(versionData, null, 2));
-      } catch (e) {}
+      } catch (e) { note('update.writeFailed', e); }
 
     } else {
       printUpToDate(installed.version);
@@ -182,7 +185,7 @@ async function main() {
         versionData.latest_known = latestVersion;
         versionData.update_available = false;
         fs.writeFileSync(VERSION_FILE, JSON.stringify(versionData, null, 2));
-      } catch (e) {}
+      } catch (e) { note('update.writeFailed', e); }
     }
 
   } catch (err) {

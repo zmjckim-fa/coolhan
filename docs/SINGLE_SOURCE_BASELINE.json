@@ -1,10 +1,10 @@
 {
-  "written": "2026-10-31",
+  "written": "2026-11-17",
   "root": "CoolHan builder",
   "counts": {
-    "files": 79,
+    "files": 86,
     "max_file_lines": 405,
-    "duplicate_helpers": 3,
+    "duplicate_helpers": 0,
     "inline_styles": 0,
     "hardcoded_sentences": 95,
     "target_literals": 0
@@ -13,42 +13,7 @@
     "path": "scripts/harvest-sessions.js",
     "lines": 405
   },
-  "duplicate_helpers": [
-    {
-      "name": "get",
-      "hash": "ceb2058a5f8d",
-      "chars": 89,
-      "files": [
-        "scripts/agent-loop.js:106",
-        "scripts/ai-arch-check.js:202",
-        "scripts/commercial-gate.js:144",
-        "scripts/design-quality-check.js:89",
-        "scripts/hardening-check.js:221",
-        "scripts/nonstop.js:112",
-        "scripts/run-report.js:144",
-        "scripts/self-growth.js:182"
-      ]
-    },
-    {
-      "name": "readText",
-      "hash": "5fb71aa23ae9",
-      "chars": 94,
-      "files": [
-        "scripts/ai-arch-check.js:73",
-        "scripts/self-growth.js:38"
-      ]
-    },
-    {
-      "name": "parseFlags",
-      "hash": "7271688f1cf0",
-      "chars": 254,
-      "files": [
-        "scripts/context-check.js:58",
-        "scripts/gates.js:137",
-        "scripts/ledger.js:74"
-      ]
-    }
-  ],
+  "duplicate_helpers": [],
   "inline_styles": [],
   "hardcoded_sentences": [
     {
@@ -88,63 +53,63 @@
       "text": "Git is not installed"
     },
     {
-      "where": "scripts/check-update.js:75",
+      "where": "scripts/check-update.js:78",
       "text": "Failed to parse GitHub API response"
     },
     {
-      "where": "scripts/check-update.js:141",
+      "where": "scripts/check-update.js:144",
       "text": "Install info not found. Please reinstall CoolHan."
     },
     {
-      "where": "scripts/check-update.js:156",
+      "where": "scripts/check-update.js:159",
       "text": "Unable to read release information"
     },
     {
-      "where": "scripts/commercial-gate.js:54",
+      "where": "scripts/commercial-gate.js:55",
       "text": "전송(도착+실패 안내)"
     },
     {
-      "where": "scripts/commercial-gate.js:108",
+      "where": "scripts/commercial-gate.js:109",
       "text": "# 상용화 판정 (Commercial Verdict) — ${r.service} — ${dateStr}"
     },
     {
-      "where": "scripts/commercial-gate.js:110",
+      "where": "scripts/commercial-gate.js:111",
       "text": "- 운영 도달성: ${r.probe.reachable ?"
     },
     {
-      "where": "scripts/commercial-gate.js:112",
+      "where": "scripts/commercial-gate.js:113",
       "text": "## ① 상용화 가부: **${r.verdict === 'READY' ? '가 (READY)' : r.ver"
     },
     {
-      "where": "scripts/commercial-gate.js:122",
+      "where": "scripts/commercial-gate.js:123",
       "text": "## ② 남은 차단 항목"
     },
     {
-      "where": "scripts/commercial-gate.js:126",
+      "where": "scripts/commercial-gate.js:127",
       "text": "- [${LABELS[c]}] ${k.id} (exit ${k.exit}) — 측정값이 곧 결함은 아님: 소"
     },
     {
-      "where": "scripts/commercial-gate.js:132",
+      "where": "scripts/commercial-gate.js:133",
       "text": "## ③ 측정되지 않은 칸 (정직 신고)"
     },
     {
-      "where": "scripts/commercial-gate.js:134",
+      "where": "scripts/commercial-gate.js:135",
       "text": "- 없음 — 5개 기준 모두 지킴이가 존재하고 실행됨"
     },
     {
-      "where": "scripts/commercial-gate.js:135",
+      "where": "scripts/commercial-gate.js:136",
       "text": "- ${LABELS[c]}: 지킴이 미선언 → NOT_RUN (통과 아님). 지킴이 스크립트를 만들어 con"
     },
     {
-      "where": "scripts/commercial-gate.js:137",
+      "where": "scripts/commercial-gate.js:138",
       "text": "> READY의 의미: 선언된 모든 지킴이가 지금 운영에 대해 통과했고 5개 기준 전부에 지킴이가 있다는 것"
     },
     {
-      "where": "scripts/commercial-gate.js:138",
+      "where": "scripts/commercial-gate.js:139",
       "text": "> 지킴이가 덮지 않는 결함까지 없다는 증명이 아니다 — 지킴이 커버리지 확장이 계속되는 일이다."
     },
     {
-      "where": "scripts/design-quality-check.js:46",
+      "where": "scripts/design-quality-check.js:47",
       "text": "no accent color declared in tokens"
     },
     {
@@ -196,7 +161,7 @@
       "text": "Administrator with full access"
     },
     {
-      "where": "scripts/nonstop.js:90",
+      "where": "scripts/nonstop.js:91",
       "text": "session command failed to start"
     },
     {

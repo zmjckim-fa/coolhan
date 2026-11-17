@@ -32,6 +32,7 @@ const traceCheck = require('./trace-check');
 const regressionCheck = require('./regression-check');
 const planCheck = require('./plan-check');
 const ledger = require('./ledger');
+const { parseFlags } = require('./lib/cli');
 
 // exec-runner uses PASSED/FAILED/NOT_RUN; the other modules return {ok}. Normalize everything to a
 // single vocabulary: PASSED | FAILED | NOT_RUN.
@@ -132,18 +133,6 @@ function runPlanGate(planFile) {
   if (!plan) return { name: 'plan', status: 'NOT_RUN', reason: 'no plan file' };
   const ev = planCheck.evaluate(plan);
   return { name: 'plan', status: ev.ok ? 'PASSED' : 'FAILED', reason: ev.ok ? null : 'plan structurally unsound (see plan-check)' };
-}
-
-function parseFlags(args) {
-  const flags = {};
-  for (let i = 0; i < args.length; i++) {
-    if (args[i].startsWith('--')) {
-      const key = args[i].slice(2);
-      const next = args[i + 1];
-      flags[key] = (next && !next.startsWith('--')) ? next : true;
-    }
-  }
-  return flags;
 }
 
 function main(argv) {

@@ -479,6 +479,12 @@ while (todo remains in backlog):
        채택/이식/참조/제외 and a reason; an unanswered bundle is FAIL.
      Per unit: commit the unit's own paths, then node scripts/handoff-write.js (state block of HANDOFF.md is
        generated from the ledger; no ledger → exit 4, nothing invented). Deploy follows the project's `deploy` value.
+   + G24 ORDERS FOR EVERY SESSION (v2.11.0, scripts/install-global.js):
+     node scripts/install-global.js puts the registry-derived orders, the harness location and the rule
+     "development in a folder with no coolhan.project.json starts by installing the project kit, without asking"
+     into the user-level instruction file. The harness command word is then not needed in any folder.
+     --check: 0 current / 1 stale / 4 not installed; after changing an order: render, then install-global.
+     Per project: node scripts/new-project.js <dir> --check (orders block, launcher, hooks equal the derived ones).
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)
 ```

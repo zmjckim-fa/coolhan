@@ -1,5 +1,52 @@
 # Changelog
 
+## [2.11.0] - 2026-11-17
+
+### Added
+
+- **G24 Standing orders for every session: no command word, no per-project setup step.**
+  Operator question: do all sessions now use CoolHan, or must each command say so; applying it must be simple and
+  every command must carry CoolHan's rules. Before this release the orders applied only inside the harness
+  repository and inside folders where the project kit had been installed.
+  `node scripts/install-global.js` writes one managed block into the user-level instruction file (loaded by every
+  session in every folder): all standing orders derived from the registry, the harness location, the module
+  library location, and the rule that development in a folder without `coolhan.project.json` starts by installing
+  the project kit without asking. The operator's own text in that file is never touched and the file as it was
+  before the first install is kept beside it. `--check` exits 0 when the block is the derived one, 1 when stale,
+  4 when not installed (not a pass); `--remove` restores the file byte for byte. Settings and hooks are not
+  changed: loop hooks stay per project.
+- **`new-project.js --check`**: an installed kit's orders block, launcher and hooks equal what the harness derives
+  (0), are stale (1, files named, nothing rewritten) or the folder has no kit (4). New projects carry it as a row
+  of their fixed check list.
+- **Install guard**: the kit refuses the harness folder itself and the module library (exit 2).
+- `docs/CHECKS.md` C13: this machine's global block is current.
+
+### Fixed
+
+- D-2, D-3, D-4: the argument helper copied into 8 scripts, `parseFlags` in 3 and `readText` in 3 now live once in
+  `scripts/lib/cli.js` and `scripts/lib/fs.js`. Single-source baseline: duplicate helpers 3 groups to 0.
+- D-8: the update checker reported nothing when the local version record could not be read or written; it now
+  prints the reason. Field-lesson baseline: swallowed errors 4 to 0.
+- `field-lessons validate` reports the number of standing orders beside the number of lessons.
+- `scripts/lib/spawn-node.js`: child launches in the hook tests are retried only when the child never started (D-13).
+
+### Verification
+
+- jest 354/354, 36 suites (new `install-global` suite 13/13, `spawn-node` 4/4); lint clean 48 files; fixed list in full.
+- `_harness_test/track40-global-orders/run-track.js`: 16 scenarios, 16 match, 0 false +/-.
+
+### Honest bound
+
+- Installed and derived is proven; obeyed is not: no fresh session in another folder was observed. The block adds
+  about 8 KB to what every session loads. A folder's own `CLAUDE.md` takes precedence where it carries the same
+  order number.
+- D-13 (mitigated, kept open): twice a full test run failed because a hook child process returned nothing. Measured
+  under CPU saturation: one burst of 37 spawn errors and 4 children dead at start in 1,200 launches, then 0 in
+  5,700. The child never started; the hook code did not run. `scripts/lib/spawn-node.js` (`runNode`) retries only
+  that case (spawn error, no exit status, or non-zero with no output at all), reports each retry, and never retries
+  a script that ran. The hook tests use it. In real use a hook that cannot start is outside the harness's reach:
+  the session's host decides what a failed hook means.
+
 ## [2.10.0] - 2026-11-17
 
 ### Added

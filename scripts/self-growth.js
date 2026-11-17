@@ -34,8 +34,9 @@
 
 const fs = require('fs');
 const path = require('path');
+const { argValue } = require('./lib/cli');
+const { readText } = require('./lib/fs');
 
-function readText(p) { try { return fs.readFileSync(p, 'utf8'); } catch (_) { return null; } }
 function readLines(p) { const t = readText(p); return t ? t.split(/\r?\n/) : []; }
 
 /** G5 ledger → recurring (gate,reason) FAIL clusters (≥ minCount). */
@@ -179,12 +180,11 @@ function render(r) {
 
 function main(argv) {
   const args = argv.slice(2);
-  const get = f => { const i = args.indexOf(f); return i >= 0 ? args[i + 1] : undefined; };
   const json = args.includes('--json');
   const root = process.cwd();
-  const ws = get('--workspace') || path.join(root, '_workspace');
-  const result = evaluate(root, { workspace: ws, sites: get('--sites') });
-  const out = get('--out') || path.join(ws, '_self-growth-backlog.md');
+  const ws = argValue(args, '--workspace') || path.join(root, '_workspace');
+  const result = evaluate(root, { workspace: ws, sites: argValue(args, '--sites') });
+  const out = argValue(args, '--out') || path.join(ws, '_self-growth-backlog.md');
   try { fs.mkdirSync(path.dirname(out), { recursive: true }); fs.writeFileSync(out, render(result)); } catch (e) { console.error(`(write failed: ${e.message})`); }
   if (json) console.log(JSON.stringify(result, null, 2));
   else console.log(`✔ self-growth: ${result.items.length} candidate(s) → ${out}`);

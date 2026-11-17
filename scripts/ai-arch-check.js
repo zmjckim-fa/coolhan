@@ -35,6 +35,8 @@
 
 const fs = require('fs');
 const path = require('path');
+const { argValue } = require('./lib/cli');
+const { readText } = require('./lib/fs');
 
 const DEFAULT_SERVICE_DIRS = ['services/ai', 'src/services/ai', 'app/services/ai', 'lib/ai', 'src/ai', 'ai'];
 const DEFAULT_RECORDS = 'docs/AI_DECISIONS.md';
@@ -70,7 +72,6 @@ const FIELD_LINE = /^\s*(?:[-*]\s*)?\**\s*(Feature|Input|Decision type|Selected 
 const ALLOW_MARKER = /ai-arch-check:allow/;
 const PLACEHOLDER_VALUE = /^\s*\[[^\]]*\]\s*$|^\s*<[^>]*>\s*$|^\s*(?:TBD|TODO|\.\.\.|…)\s*$/i; // no-placeholder-check:allow — detection tokens
 
-function readText(p) { try { return fs.readFileSync(p, 'utf8'); } catch (_) { return null; } }
 
 function walk(dir, out, root) {
   let entries = [];
@@ -199,13 +200,12 @@ function evaluate(root, opts = {}) {
 
 function main(argv) {
   const args = argv.slice(2);
-  const get = f => { const i = args.indexOf(f); return i >= 0 ? args[i + 1] : undefined; };
   const json = args.includes('--json');
   const positional = args.filter((a, i) => !a.startsWith('--') && !['--records', '--service-dirs'].includes(args[i - 1]));
   const root = path.resolve(positional[0] || process.cwd());
   if (!fs.existsSync(root)) { console.error(`usage: ai-arch-check.js [root] [--records FILE] [--service-dirs a,b] [--json]  (root not found: ${root})`); return 2; }
-  const serviceDirs = get('--service-dirs') ? get('--service-dirs').split(',').map(s => s.trim()).filter(Boolean) : undefined;
-  const r = evaluate(root, { records: get('--records'), serviceDirs });
+  const serviceDirs = argValue(args, '--service-dirs') ? argValue(args, '--service-dirs').split(',').map(s => s.trim()).filter(Boolean) : undefined;
+  const r = evaluate(root, { records: argValue(args, '--records'), serviceDirs });
   if (json) console.log(JSON.stringify(r, null, 2));
   else if (r.status === 'NOT_APPLICABLE') console.log(`○ ai-arch-check: NOT_APPLICABLE — ${r.reason} (${r.files_scanned} file(s))`);
   else if (r.status === 'FAIL') {

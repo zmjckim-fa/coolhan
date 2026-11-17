@@ -26,6 +26,7 @@
  */
 
 const fs = require('fs');
+const { argValue } = require('./lib/cli');
 
 function hexToHsl(hex) {
   const m = /^#?([0-9a-f]{6})$/i.exec(String(hex).trim());
@@ -86,9 +87,8 @@ function checkHtml(file) {
 function main(argv) {
   const args = argv.slice(2);
   const json = args.includes('--json');
-  const get = f => { const i = args.indexOf(f); return i >= 0 ? args[i + 1] : undefined; };
-  const tokensFile = get('--tokens');
-  const historyFile = get('--history');
+  const tokensFile = argValue(args, '--tokens');
+  const historyFile = argValue(args, '--history');
   const htmlIdx = args.indexOf('--html');
   const htmlFiles = htmlIdx >= 0 ? args.slice(htmlIdx + 1).filter(a => !a.startsWith('--')) : [];
 

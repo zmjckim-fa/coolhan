@@ -21,4 +21,20 @@ function upsertBlock(existing, start, end, body, heading = '') {
   return `${existing.replace(/\s+$/, '')}\n\n${heading ? heading + '\n\n' : ''}${block}\n`;
 }
 
-module.exports = { fill, render, upsertBlock };
+/** Text between the two marker lines, or null when the block is absent. */
+function blockBody(existing, start, end) {
+  const s = existing.indexOf(start), e = existing.indexOf(end);
+  return s >= 0 && e > s ? existing.slice(s + start.length, e).replace(/^\n|\n$/g, '') : null;
+}
+
+/** Remove the marked block (and its heading line when it directly precedes the block); the rest is untouched. */
+function removeBlock(existing, start, end, heading = '') {
+  const s = existing.indexOf(start), e = existing.indexOf(end);
+  if (!(s >= 0 && e > s)) return existing;
+  let head = existing.slice(0, s).replace(/\s+$/, '');
+  if (heading && head.endsWith(heading)) head = head.slice(0, -heading.length).replace(/\s+$/, '');
+  const tail = existing.slice(e + end.length).replace(/^\s+/, '');
+  return head + (head && tail ? '\n\n' : head ? '\n' : '') + tail;
+}
+
+module.exports = { fill, render, upsertBlock, blockBody, removeBlock };

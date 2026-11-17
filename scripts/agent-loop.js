@@ -43,6 +43,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { argValue } = require('./lib/cli');
 
 const TAIL = 2000; // chars of output kept per stream — enough to act on, bounded for the ledger
 
@@ -103,7 +104,6 @@ function step(state, unitId, observation, maxIterations) {
 
 function main(argv) {
   const args = argv.slice(2);
-  const get = f => { const i = args.indexOf(f); return i >= 0 ? args[i + 1] : undefined; };
   const VALUE_FLAGS = new Set(['--cmd', '--max', '--cwd', '--state', '--ledger', '--run-id']);
   const positional = [];
   for (let i = 0; i < args.length; i++) {
@@ -111,17 +111,17 @@ function main(argv) {
     if (!args[i].startsWith('--')) positional.push(args[i]);
   }
   const unitId = positional[0];
-  const cmd = get('--cmd');
+  const cmd = argValue(args, '--cmd');
   const json = args.includes('--json');
   if (!unitId || !cmd) {
     console.error('usage: agent-loop.js <unit-id> --cmd "<verify command>" [--max N] [--cwd DIR] [--state FILE] [--ledger FILE] [--run-id ID] [--json]');
     return 2;
   }
-  const max = parseInt(get('--max') || '5', 10);
-  const cwd = get('--cwd') || '.';
-  const stateFile = get('--state') || path.join('_workspace', '_loop-state.json');
-  const ledgerFile = get('--ledger');
-  const runId = get('--run-id') || 'local';
+  const max = parseInt(argValue(args, '--max') || '5', 10);
+  const cwd = argValue(args, '--cwd') || '.';
+  const stateFile = argValue(args, '--state') || path.join('_workspace', '_loop-state.json');
+  const ledgerFile = argValue(args, '--ledger');
+  const runId = argValue(args, '--run-id') || 'local';
 
   const state = loadState(stateFile);
   const observation = runVerify(cmd, cwd);

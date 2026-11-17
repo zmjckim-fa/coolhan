@@ -38,6 +38,7 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const { URL } = require('url');
+const { argValue } = require('./lib/cli');
 
 const AI_AGENT_UAS = [
   'Mozilla/5.0 (compatible; ChatGPT-User/1.0; +https://openai.com/bot)',
@@ -218,13 +219,12 @@ function render(r) {
 
 async function main(argv) {
   const args = argv.slice(2);
-  const get = f => { const i = args.indexOf(f); return i >= 0 ? args[i + 1] : undefined; };
   const json = args.includes('--json');
-  const base = args.find(a => !a.startsWith('--') && a !== get('--out'));
+  const base = args.find(a => !a.startsWith('--') && a !== argValue(args, '--out'));
   if (!base) { console.error('usage: hardening-check.js <base_url> [--json] [--out FILE]'); return 2; }
 
   const result = await evaluate(base);
-  const out = get('--out');
+  const out = argValue(args, '--out');
   if (out) { try { fs.writeFileSync(out, render(result)); } catch (e) { console.error(`(write failed: ${e.message})`); } }
 
   if (json) console.log(JSON.stringify(result, null, 2));

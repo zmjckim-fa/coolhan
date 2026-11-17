@@ -1,0 +1,152 @@
+track40 run 2026-11-17: 16 scenarios, 16 match, 0 mismatch, 0 not run
+
+| 1 | No instruction file on the machine, --check | exit 4 (not installed is not a pass), nothing written | exit 4, files 0 | ✅ |
+| 2 | Install into a file that already holds the operator's rules | own text first and byte-identical; every order present; harness path and kit rule present; earlier file kept beside it | own text true; orders 18/18; kit rule true; kept copy true | ✅ |
+| 3 | User settings file beside it | unchanged (no hook is installed for every session) | unchanged | ✅ |
+| 4 | Second run | exit 0, file byte-identical | exit 0, identical true | ✅ |
+| 5 | One order deleted by hand inside the block | --check exit 1 (stale) | exit 1 | ✅ |
+| 6 | Re-run after the hand edit | order restored; the rule the operator appended outside the block kept; first kept copy not replaced | O-03 true; appended rule true; kept copy original true | ✅ |
+| 7 | Install then --remove | file equals the original byte for byte; --check back to 4 | identical true; check 4 | ✅ |
+| 8 | Unknown flag; stray argument; --dry | exit 2, 2, 0 and nothing written | exit 2, 2, 0; files 0 | ✅ |
+| 9 | Kit pointed at the harness folder and at the module library | exit 2 twice; neither folder gains a file | exit 2, 2; harness config false; library files _specs | ✅ |
+| 10 | new-project --check on a folder without the kit | exit 4, nothing written | exit 4, files 0 | ✅ |
+| 11 | Fresh kit plus a project rule written outside the block | exit 0 (the project's own text is not drift) | exit 0 | ✅ |
+| 12 | An order deleted and the Stop hook removed | exit 1 naming CLAUDE.md and .claude/settings.json; nothing rewritten by the check | exit 1; names true true; rewritten false | ✅ |
+| 13 | --refresh then --check | exit 0; project rule still there | exit 0; rule true | ✅ |
+| 14 | Harness self-scan after moving get / parseFlags / readText into scripts/lib (D-2, D-3, D-4) | duplicate helpers 0 | duplicate helpers 0 | ✅ |
+| 15 | Harness self-scan for swallowed errors (D-8) | F-05 hits 0 | F-05 0 | ✅ |
+| 16 | This machine's own instruction file | exit 0 (installed and current) or NOT_RUN where not installed | exit 0, current | ✅ |
+
+$ [1 check empty] node scripts/install-global.js --claude-home <tmp>\a-home --modules  --check
+  exit 4
+  ○ install-global --check: NOT_RUN: <tmp>/a-home/CLAUDE.md 에 블록이 없다 (이 기기에는 전역 설치가 되어 있지 않다)
+  
+
+$ [2 install] node scripts/install-global.js --claude-home <tmp>\a-home --modules 
+  exit 0
+  install-global: <tmp>/a-home/CLAUDE.md 에 상시 지시 블록을 넣었다. 이제 모든 세션이 이 지시로 시작한다
+  
+
+$ [4 again] node scripts/install-global.js --claude-home <tmp>\a-home --modules 
+  exit 0
+  ✔ install-global: <tmp>/a-home/CLAUDE.md 의 상시 지시 블록은 레지스트리에서 파생한 그대로다
+  
+
+$ [5 stale] node scripts/install-global.js --claude-home <tmp>\a-home --modules  --check
+  exit 1
+  ✗ install-global --check: <tmp>/a-home/CLAUDE.md 의 블록이 레지스트리와 다르다. node scripts/install-global.js 로 갱신한다
+  
+
+$ [6 restore] node scripts/install-global.js --claude-home <tmp>\a-home --modules 
+  exit 0
+  install-global: <tmp>/a-home/CLAUDE.md 의 상시 지시 블록을 레지스트리에 맞게 갱신했다
+  
+
+$ [7 install] node scripts/install-global.js --claude-home <tmp>\b-home --modules 
+  exit 0
+  install-global: <tmp>/b-home/CLAUDE.md 에 상시 지시 블록을 넣었다. 이제 모든 세션이 이 지시로 시작한다
+  
+
+$ [7 remove] node scripts/install-global.js --claude-home <tmp>\b-home --modules  --remove
+  exit 0
+  install-global: <tmp>/b-home/CLAUDE.md 에서 상시 지시 블록을 지웠다. 나머지는 그대로다
+  
+
+$ [7 check] node scripts/install-global.js --claude-home <tmp>\b-home --modules  --check
+  exit 4
+  ○ install-global --check: NOT_RUN: <tmp>/b-home/CLAUDE.md 에 블록이 없다 (이 기기에는 전역 설치가 되어 있지 않다)
+  
+
+$ [8 flag] node scripts/install-global.js --claude-home <tmp>\c-home --modules  --force
+  exit 2
+  usage: install-global.js [--claude-home <dir>] [--modules <dir>] [--check] [--remove] [--dry] [--json]
+  
+
+$ [8 stray] node scripts/install-global.js --claude-home <tmp>\c-home --modules  stray
+  exit 2
+  usage: install-global.js [--claude-home <dir>] [--modules <dir>] [--check] [--remove] [--dry] [--json]
+  
+
+$ [8 dry] node scripts/install-global.js --claude-home <tmp>\c-home --modules  --dry
+  exit 0
+  install-global: <tmp>/c-home/CLAUDE.md 에 상시 지시 블록을 넣었다. 이제 모든 세션이 이 지시로 시작한다
+  
+
+$ [9 harness] node scripts/new-project.js <home> --intent x --dry
+  exit 2
+  new-project: <home> 에는 설치하지 않는다 (쿨한 본체와 모듈 저장소는 대상이 아니다)
+  
+
+$ [9 library] node scripts/new-project.js <tmp>\library --intent x --modules <tmp>\library
+  exit 2
+  new-project: <tmp>\library 에는 설치하지 않는다 (쿨한 본체와 모듈 저장소는 대상이 아니다)
+  
+
+$ [10 no kit] node scripts/new-project.js <tmp>\p-project --check
+  exit 4
+  ○ new-project --check: NOT_RUN: <tmp>\p-project 에 coolhan.project.json 이 없다 (킷이 설치되지 않았다)
+  
+
+$ [11 install] node scripts/new-project.js <tmp>\p-project --intent x --modules 
+  exit 0
+  new-project: <tmp>\p-project: 생성 14 · 갱신 0 · 그대로 0
+    + coolhan.project.json
+    + scripts/coolhan.js
+    + CLAUDE.md
+    + .claude/settings.json
+    + .gitignore
+    + HANDOFF.md
+    + docs/PROGRESS.md
+
+$ [11 current] node scripts/new-project.js <tmp>\p-project --check
+  exit 0
+  ✔ new-project --check: <tmp>\p-project: 상시 지시 블록과 런처가 본체와 같다
+  
+
+$ [12 stale] node scripts/new-project.js <tmp>\p-project --check
+  exit 1
+  ✗ new-project --check: <tmp>\p-project: 본체와 다르다 (CLAUDE.md, .claude/settings.json). node scripts/coolhan.js new-project . --refresh 로 맞춘다
+  
+
+$ [13 refresh] node scripts/new-project.js <tmp>\p-project --refresh
+  exit 0
+  new-project: <tmp>\p-project: 생성 0 · 갱신 2 · 그대로 11
+    ~ CLAUDE.md
+    ~ .claude/settings.json
+    = coolhan.project.json
+    = scripts/coolhan.js
+    = HANDOFF.md
+    = docs/PROGRESS.md
+    = docs/CHECKS.md
+
+$ [13 current] node scripts/new-project.js <tmp>\p-project --check
+  exit 0
+  ✔ new-project --check: <tmp>\p-project: 상시 지시 블록과 런처가 본체와 같다
+  
+
+$ [14 single source] node scripts/single-source-check.js . --skip-dirs docs --json
+  exit 1
+  {
+    "root": "<home>",
+    "status": "FAIL",
+    "mode": "strict",
+    "findings": [
+      {
+        "rule": "hardcoded-sentence",
+        "where": "doctor.js:68",
+
+$ [15 lessons] node scripts/field-lessons.js check . --skip-dirs docs --json
+  exit 0
+  {
+    "root": "<home>",
+    "status": "PASS",
+    "mode": "strict",
+    "findings": [],
+    "counts": {
+      "F-04": 0,
+      "F-05": 0,
+
+$ [16 this machine] node scripts/install-global.js --check
+  exit 0
+  ✔ install-global: <user>/.claude/CLAUDE.md 의 상시 지시 블록은 레지스트리에서 파생한 그대로다
+  

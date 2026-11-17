@@ -1,7 +1,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { spawnSync } = require('child_process');
+const { runNode } = require('../../scripts/lib/spawn-node');
 const { shouldArm, arm } = require('../../.claude/hooks/run-armer');
 
 const ASK_HOOK = path.join(__dirname, '../../.claude/hooks/ask-guard.js');
@@ -49,7 +49,7 @@ describe('run-armer (G11c — mechanical arming from the user prompt)', () => {
 
   test('process-level: matching prompt returns additionalContext, other prompts are silent', () => {
     const dir = sandbox();
-    const run = prompt => JSON.parse(spawnSync(process.execPath, [ARMER_HOOK], {
+    const run = prompt => JSON.parse(runNode(ARMER_HOOK, [], {
       cwd: dir, input: JSON.stringify({ hook_event_name: 'UserPromptSubmit', prompt }), encoding: 'utf8'
     }).stdout);
     const armed = run('쿨한으로 개발 이어서 진행하라');
@@ -61,7 +61,7 @@ describe('run-armer (G11c — mechanical arming from the user prompt)', () => {
 });
 
 describe('ask-guard (G11b — AskUserQuestion denied mid-run)', () => {
-  const invoke = dir => JSON.parse(spawnSync(process.execPath, [ASK_HOOK], {
+  const invoke = dir => JSON.parse(runNode(ASK_HOOK, [], {
     cwd: dir, input: JSON.stringify({ hook_event_name: 'PreToolUse', tool_name: 'AskUserQuestion' }), encoding: 'utf8'
   }).stdout);
 

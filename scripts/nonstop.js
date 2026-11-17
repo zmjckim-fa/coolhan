@@ -35,6 +35,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { argValue } = require('./lib/cli');
 
 const DEFAULT_PROMPT = '쿨한으로 개발 이어서 진행하라 (체크포인트 _workspace/_checkpoint.md)';
 const DEFAULT_TEMPLATE = 'claude -p {prompt} --permission-mode bypassPermissions';
@@ -109,13 +110,12 @@ const EXIT = { COMPLETE: 0, CMD_ERROR: 2, STOP_APPROVED: 3, NO_PROGRESS: 4, MAX_
 
 function main(argv) {
   const args = argv.slice(2);
-  const get = f => { const i = args.indexOf(f); return i >= 0 ? args[i + 1] : undefined; };
   const json = args.includes('--json');
   const opts = {
-    workspace: get('--workspace') || '_workspace',
-    maxSessions: parseInt(get('--max-sessions') || '50', 10),
-    resumePrompt: get('--resume-prompt') || DEFAULT_PROMPT,
-    cmdTemplate: get('--cmd-template') || DEFAULT_TEMPLATE
+    workspace: argValue(args, '--workspace') || '_workspace',
+    maxSessions: parseInt(argValue(args, '--max-sessions') || '50', 10),
+    resumePrompt: argValue(args, '--resume-prompt') || DEFAULT_PROMPT,
+    cmdTemplate: argValue(args, '--cmd-template') || DEFAULT_TEMPLATE
   };
   if (!fs.existsSync(opts.workspace)) { console.error(`✗ nonstop: workspace not found: ${opts.workspace} (start a CoolHan run first)`); return 2; }
 

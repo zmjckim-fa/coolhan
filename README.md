@@ -119,6 +119,16 @@ Confirms the harness is complete and healthy — CLAUDE.md pointers, the 6 core
 agents, the orchestrator skill, the knowledge-base domain modules, and your Node
 version — with a fix hint for anything missing. Exits `0` when healthy, `1` otherwise.
 
+### Apply to every session (no command word)
+
+```bash
+node scripts/install-global.js          # once per machine; --check to verify, --remove to undo
+```
+
+Writes one managed block into your user-level `CLAUDE.md`: the standing orders, where the harness lives, and the
+rule that development in a folder without the project kit installs it first. Your own text in that file is not
+touched. After that, any session in any folder starts with CoolHan's rules; you do not have to say "CoolHan".
+
 ### Usage
 
 After installation, open Claude Code in your project directory and use natural language:

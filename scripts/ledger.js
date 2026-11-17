@@ -24,6 +24,7 @@
  */
 
 const fs = require('fs');
+const { parseFlags } = require('./lib/cli');
 
 const DEFAULT_FILE = '_workspace/_ledger.jsonl';
 
@@ -69,18 +70,6 @@ function lessons(minCount = 2, file = DEFAULT_FILE) {
   return [...groups.values()]
     .filter(g => g.count >= minCount)
     .sort((a, b) => b.count - a.count);
-}
-
-function parseFlags(args) {
-  const flags = {};
-  for (let i = 0; i < args.length; i++) {
-    if (args[i].startsWith('--')) {
-      const key = args[i].slice(2);
-      const next = args[i + 1];
-      flags[key] = (next && !next.startsWith('--')) ? next : true;
-    }
-  }
-  return flags;
 }
 
 function main(argv) {

@@ -25,4 +25,7 @@ function listFiles(target, { ext = /./, skipDirs = new Set(['node_modules', '.gi
   return out.sort((a, b) => a.rel.localeCompare(b.rel));
 }
 
-module.exports = { listFiles };
+/** File text, or null when it cannot be read (the caller decides what a missing file means). */
+function readText(p) { try { return fs.readFileSync(p, 'utf8'); } catch (_) { return null; } }
+
+module.exports = { listFiles, readText };

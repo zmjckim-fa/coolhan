@@ -26,7 +26,9 @@ setting, refresh the handoff) are registry entries `O-01` onward in `knowledge_b
 `node scripts/new-project.js <dir> --intent "<one-line goal>"` writes them into the project's `CLAUDE.md` together with
 the loop hooks, ledger, fixed checks and module plan. Read them with
 `node scripts/field-lessons.js list --kind order --tags <project tags>`; inside a project the same tools run as
-`node scripts/coolhan.js <tool>`. They apply without being issued again.
+`node scripts/coolhan.js <tool>`. They apply without being issued again. On a machine where
+`node scripts/install-global.js` has run, every session starts with these orders in any folder and the harness command
+word is not required; a development request in a folder with no `coolhan.project.json` begins by installing the kit.
 A request to start a new site, or to bring an existing folder under the harness, begins with `node scripts/new-project.js <dir> --intent "<the operator's goal in one line>" --tags <tags>`: existing files are kept and only the orders block, hooks and ignore lines are merged. Choose tags from the intent (ui, deploy, money, commerce, application, logistics, partner, integration, market, tax, tenant, ai, stats, services). When unsure about a tag, include it: an extra bundle row costs one 제외 line, a missing one is a reuse nobody considered. The goal line is the operator's own sentence, not a rewrite.
 
 ## Core Principles

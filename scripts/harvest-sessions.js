@@ -32,6 +32,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
+const { readText } = require('./lib/fs');
 
 const DIGEST_MAX_BYTES = 16 * 1024;
 
@@ -116,7 +117,6 @@ function humanText(rec) {
 /* ───────────────────────── store helpers ───────────────────────── */
 
 const sha = (s) => crypto.createHash('sha1').update(s).digest('hex');
-const readText = (p) => { try { return fs.readFileSync(p, 'utf8'); } catch (_) { return null; } };
 function readJsonl(p) {
   const t = readText(p);
   if (!t) return [];

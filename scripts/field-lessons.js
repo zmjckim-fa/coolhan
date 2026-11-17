@@ -260,7 +260,7 @@ function main(argv) {
     const r = validate(reg);
     if (json) console.log(JSON.stringify({ registry: registryPath, ...r }, null, 2));
     else {
-      console.log(t('lessons.validateSummary', { mark: r.status === 'PASS' ? '✔' : '✗', status: r.status, count: r.count, file: registryPath }));
+      console.log(t('lessons.validateSummary', { mark: r.status === 'PASS' ? '✔' : '✗', status: r.status, count: r.count, orders: r.orders || 0, file: registryPath }));
       for (const f of r.findings) console.log(`  [${f.rule}] ${f.where} · ${f.detail}`);
     }
     return EXIT[r.status];

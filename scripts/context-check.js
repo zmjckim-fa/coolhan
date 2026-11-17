@@ -34,6 +34,7 @@
  */
 
 const fs = require('fs');
+const { parseFlags } = require('./lib/cli');
 
 const DEFAULT_REQUIRED = ['goal', 'backlog', 'spec', 'history', 'prior_artifacts'];
 
@@ -53,18 +54,6 @@ function evaluate(digest, runId, required = DEFAULT_REQUIRED) {
     missing,
     ok: !stale && missing.length === 0
   };
-}
-
-function parseFlags(args) {
-  const flags = {};
-  for (let i = 0; i < args.length; i++) {
-    if (args[i].startsWith('--')) {
-      const key = args[i].slice(2);
-      const next = args[i + 1];
-      flags[key] = (next && !next.startsWith('--')) ? next : true;
-    }
-  }
-  return flags;
 }
 
 function main(argv) {

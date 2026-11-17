@@ -16,12 +16,12 @@
 
 CoolHan — a specification-driven, multi-agent, **non-stop** development harness that runs inside
 Claude Code. It is the *product* (the harness itself), not an app built with it. Forward pipeline
-(intent→spec→code→validate→QA→deploy) + reverse/reuse (analyze→modularize→reapply) + 23 mechanical
-gates (G1–G23) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
+(intent→spec→code→validate→QA→deploy) + reverse/reuse (analyze→modularize→reapply) + 24 mechanical
+gates (G1–G24) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.10.0` (package.json = git tag `v2.10.0` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **337 tests, 34 suites, all pass** (~6 min; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.11.0` (package.json = git tag `v2.11.0` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **354 tests, 36 suites, all pass** (~6 min; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -43,7 +43,7 @@ but they are restated here so nothing is missed:
    compose, `SECRET_KEY`, other services, and any coolhanx.com **server file** the deploy script
    doesn't ship.
 
-## 3. The gates (G1–G23) — what already exists
+## 3. The gates (G1–G24) — what already exists
 
 Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-orchestrator/references/ai-native-sdlc-map.md`.
 
@@ -70,6 +70,7 @@ Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-or
 | G19 AI architecture | `scripts/ai-arch-check.js` + `knowledge_base/00_AI_ARCHITECTURE_PRINCIPLES.md` | right brain for the right task: code → Decision Model → LLM → human; calls only in services/ai, schema-validated output, §14 record, threshold in code, AI never acts |
 | G20 minimal source · single source · ledger | `scripts/progress-check.js` + `scripts/checks-run.js` + `scripts/single-source-check.js` + `knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md` | 제0 규칙 중복 0 · S1–S8 one place each · `docs/PROGRESS.md` is the truth (완료 only with evidence) · `docs/CHECKS.md` fixed list run in full (통과·실패(D)·확인 안 함) · ratchet baseline `docs/SINGLE_SOURCE_BASELINE.json` (C7 runs with `--skip-dirs docs`) |
 | G22 field lessons | `scripts/field-lessons.js` + `knowledge_base/field-lessons.json` → `knowledge_base/00_FIELD_LESSONS.md` | one registry of failure patterns and working practices from every project built: derived doc, per-agent list, plan-time 실패 방지 대응표 (`plan-doc-check --lessons`), data-driven code scan with ratchet; exit 4 = nothing scanned |
+| G24 orders for every session | `scripts/install-global.js` + `knowledge_base/project-kit/GLOBAL.md.tpl` + `new-project.js --check` | one managed block in the user-level instruction file: registry-derived orders, harness location, "no kit in this folder, install it first"; `--check` 0 current / 1 stale / 4 not installed; `--remove` restores the file; settings untouched; kit drift check per project |
 | G23 standing orders + project kit | `scripts/new-project.js` + `knowledge_base/project-kit/` + registry `orders` + `scripts/handoff-write.js` + `plan-doc-check --modules` | the commands the operator repeated per project (continue, verify, plan first, module library first, commit per unit, deploy by setting, handoff) installed once into a new or existing folder with loop hooks, ledger, fixed checks and a module plan; gates and hooks run from the harness through `scripts/coolhan.js`; existing files are never overwritten |
 | G21 planning document | `scripts/plan-doc-check.js` + `knowledge_base/00_PLANNING_DOC_STANDARD.md` | the user's 기획서 제작 마스터 프롬프트 (generalized, `{{ }}` slots): §7 completion definition mechanical — 추적표 no blank, no blank cell, no deferral word outside [결정필요], [미검증] with method, tooltip ≤10 어절, no em dash/hype word, diagram files exist, no ID with two names, §4.2 twelve items, success criteria ≥3; form only |
 
@@ -152,13 +153,13 @@ provide its own credentials in its own environment — they do NOT travel in thi
 ```bash
 git log --oneline -3
 node -e "console.log('pkg', require('./package.json').version)" && git describe --tags --abbrev=0
-npx jest --ci   # background it; expect 337 passed / 34 suites
+npx jest --ci   # background it; expect 354 passed / 36 suites
 node scripts/checks-run.js   # the fixed list (docs/CHECKS.md) — the G20 way to "verify"; C1 is the slow one
 node scripts/progress-check.js docs/PROGRESS.md   # this repo's ledger: current position + open D-numbers
 node doctor.js
 ```
 
-If those agree (version = v2.10.0, tests green, doctor healthy, ledger PASS), the handoff is intact and you
+If those agree (version = v2.11.0, tests green, doctor healthy, ledger PASS), the handoff is intact and you
 may proceed from § Next actions.
 
 
@@ -295,3 +296,12 @@ CREATE TABLE consent_records (user_id UUID, region TEXT, personalized BOOLEAN DE
 - 모듈 저장소는 `C:\sites\00Module_site` (읽기 전용). 다른 위치면 `--modules <경로>`.
 - 프로젝트 폴더에는 에이전트 팀이 복사되지 않는다. 세션은 본체의 `.claude/skills/coolhan-development-orchestrator/SKILL.md`를 읽고 진행한다. 스킬 목록에 넣으려면 본체에서 `node install.js`를 한 번 실행한다(운영자 결정).
 - 운영자 명령 통계의 원자료는 비공개 폴더(`.coolhan-private/learned/`)에만 있다.
+
+---
+## 인수인계 보강 (2026-11-17, v2.11.0): 모든 세션에 쿨한이 적용된다
+
+- 위 본문의 v2.10.0 수치는 이 보강으로 대체된다: 현재 `2.11.0`, jest **354 tests / 36 suites**, 게이트 G1–G24. 열린 결함은 D-13 하나다(D-2, D-3, D-4, D-8은 닫혔다). D-13: 부하가 걸린 기기에서 훅 자식 프로세스가 가끔 시작되지 않는다. 시험은 `scripts/lib/spawn-node.js`의 `runNode`로 그 경우만 다시 띄운다. 전체 시험이 훅 시험에서 빈 출력으로 실패하면 stderr의 «자식 프로세스가 시작되지 않아» 줄을 먼저 본다.
+- 이 기기에는 전역 설치가 되어 있다: 사용자 지시 파일(`~/.claude/CLAUDE.md`)의 관리 블록 «쿨한 상시 지시». 어느 폴더의 어느 세션이든 «쿨한으로»라는 말 없이 상시 지시 O-01~O-18로 시작하고, 개발을 시작하는 폴더에 킷이 없으면 세션이 스스로 `new-project.js`를 실행한다. 이전 파일은 `~/.claude/CLAUDE.md.before-coolhan`에 있다.
+- 다른 기기나 다른 계정에서는 저장소를 받은 뒤 한 번 실행한다: `node scripts/install-global.js`. 확인은 `--check`, 되돌리기는 `--remove`.
+- 지시를 고친 뒤 순서: `knowledge_base/field-lessons.json`의 `orders` 수정, `node scripts/field-lessons.js render`, `node scripts/install-global.js`. 고정 검증 C13이 어긋남을 잡는다.
+- 아직 재지 않은 것: 다른 폴더에서 새로 연 세션이 실제로 이 블록대로 움직이는지. 다음 세션에서 볼 것: 킷이 없는 폴더에서 개발 지시를 하면 묻지 않고 킷을 설치하는가, «이어서 진행하라» 없이 다음 단위로 가는가, 보고가 5줄 이내인가.

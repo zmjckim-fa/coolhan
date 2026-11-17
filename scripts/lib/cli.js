@@ -15,4 +15,17 @@ function positional(args, valueFlags = []) {
   return args.find((a, i) => !a.startsWith('--') && !set.has(args[i - 1]));
 }
 
-module.exports = { argValue, argList, positional };
+/** Every `--key value` / `--key` (true) pair as an object. */
+function parseFlags(args) {
+  const flags = {};
+  for (let i = 0; i < args.length; i++) {
+    if (args[i].startsWith('--')) {
+      const key = args[i].slice(2);
+      const next = args[i + 1];
+      flags[key] = (next && !next.startsWith('--')) ? next : true;
+    }
+  }
+  return flags;
+}
+
+module.exports = { argValue, argList, positional, parseFlags };

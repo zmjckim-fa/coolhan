@@ -29,6 +29,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { argValue } = require('./lib/cli');
 
 function readJson(p, fallback) {
   try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch (_) { return fallback; }
@@ -141,12 +142,11 @@ function renderMarkdown(r) {
 
 function main(argv) {
   const args = argv.slice(2);
-  const get = f => { const i = args.indexOf(f); return i >= 0 ? args[i + 1] : undefined; };
   const json = args.includes('--json');
-  const ws = get('--workspace') || '_workspace';
-  const runId = get('--run-id');
+  const ws = argValue(args, '--workspace') || '_workspace';
+  const runId = argValue(args, '--run-id');
   if (!fs.existsSync(ws)) { console.error(`✗ run-report: workspace not found: ${ws}`); return 2; }
-  const out = get('--out') || path.join(ws, 'run-report.md');
+  const out = argValue(args, '--out') || path.join(ws, 'run-report.md');
 
   const report = collect(ws, runId);
   const md = renderMarkdown(report);

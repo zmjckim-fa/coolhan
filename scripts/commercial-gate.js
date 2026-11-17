@@ -49,6 +49,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const https = require('https');
 const http = require('http');
+const { argValue } = require('./lib/cli');
 
 const CRITERIA = ['items', 'save', 'delivery', 'i18n', 'design'];
 const LABELS = { items: '항목(저장·재조회)', save: '저장(부분/중복/동시)', delivery: '전송(도착+실패 안내)', i18n: '텍스트(DE/EN/KO)', design: '디자인(실브라우저)' };
@@ -141,9 +142,8 @@ function renderVerdict(r, dateStr) {
 
 async function main(argv) {
   const args = argv.slice(2);
-  const get = f => { const i = args.indexOf(f); return i >= 0 ? args[i + 1] : undefined; };
   const json = args.includes('--json');
-  const configFile = args.find(a => !a.startsWith('--') && a !== get('--out') && a !== get('--date'));
+  const configFile = args.find(a => !a.startsWith('--') && a !== argValue(args, '--out') && a !== argValue(args, '--date'));
   if (!configFile) { console.error('usage: commercial-gate.js <config.json> [--out FILE] [--date YYYYMMDD] [--json]'); return 2; }
 
   let config;
@@ -151,8 +151,8 @@ async function main(argv) {
   catch (e) { console.error(`✗ commercial-gate: cannot read ${configFile}: ${e.message}`); return 2; }
   if (!config.base_url || !config.service) { console.error('✗ commercial-gate: config needs service + base_url'); return 2; }
 
-  const dateStr = get('--date') || new Date().toISOString().slice(0, 10).replace(/-/g, '');
-  const out = get('--out') || path.join('_workspace', `COMMERCIAL_VERDICT_${dateStr}.md`);
+  const dateStr = argValue(args, '--date') || new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const out = argValue(args, '--out') || path.join('_workspace', `COMMERCIAL_VERDICT_${dateStr}.md`);
 
   const result = await evaluate(config, { cwd: path.dirname(path.resolve(configFile)) });
   fs.mkdirSync(path.dirname(out), { recursive: true });

@@ -7,7 +7,7 @@
 
 | ID | 검사 | 명령 | 비고 |
 |---|---|---|---|
-| C1 | 전체 단위 시험 (jest, 34 suites) | `npx jest --ci` | 느림(~6분) |
+| C1 | 전체 단위 시험 (jest, 36 suites) | `npx jest --ci` | 느림(~6분) |
 | C2 | 프롬프트 현대화 린트 (에이전트·스킬) | `node scripts/prompt-modernization-check.js .claude/agents .claude/skills` | |
 | C3 | 플레이스홀더·TODO 잔존 | `node scripts/no-placeholder-check.js scripts src/health.js src/server.js doctor.js install.js` | |
 | C4 | 비밀값 스캔 (스테이징 전 전체) | `node scripts/secret-scan.js` | 커밋 직전엔 `--staged`로 한 번 더 |
@@ -19,3 +19,4 @@
 | C10 | 교훈 레지스트리 형식 (G22) | `node scripts/field-lessons.js validate` | 실패 교훈마다 집행 수단(기획서·게이트·검사) 필수, 메일·URL 금지. 상시 지시(O-번호)도 같이 검사 |
 | C11 | 교훈 문서가 레지스트리에서 파생한 그대로인가 (G22) | `node scripts/field-lessons.js render --check` | 어긋나면 손으로 고치지 말고 `render` |
 | C12 | 교훈 검사 래칫: 하네스 자기 실행 (G22) | `node scripts/field-lessons.js check . --baseline docs/FIELD_LESSONS_BASELINE.json --skip-dirs docs` | 종료 코드 4 = 훑은 것이 없음 = 확인 안 함 |
+| C13 | 전역 상시 지시 블록이 레지스트리에서 파생한 그대로인가 (G24) | `node scripts/install-global.js --check` | 종료 코드 4 = 이 기기에 설치되지 않음 = 확인 안 함. 1이면 `node scripts/install-global.js` |

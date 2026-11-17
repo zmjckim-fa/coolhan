@@ -97,7 +97,7 @@ $ [6 again] node scripts\new-project.js <tmp>\c-existing --json
       "deploy": "none",
       "home": "<home>",
       "modules": "<tmp>\\library",
-      "kit": "2.10.0"
+      "kit": "2.11.0"
     },
 
 $ [7 restore] node scripts\new-project.js <tmp>\a-fresh
@@ -143,19 +143,19 @@ $ [8 no-arm] node scripts\coolhan.js hook run-armer
 
 $ [9 arm] node scripts\coolhan.js hook run-armer
   exit 0
-  {"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"[CoolHan G11] Run run-mwk0z458 ARMED by the harness. The Stop hook will block turn-ends and AskUserQuestion is denied while the backlog is incomplete — outside the 4 Auto-Pilot conditions, choose safest defaults, log to docs/DECISIONS.md, and keep working until completion-check exits 0 (or write _workspace/_stop-approved.json {\"reason\"} for a genuine stop)."}}
+  {"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"[CoolHan G11] Run run-mwk26ey7 ARMED by the harness. The Stop hook will block turn-ends and AskUserQuestion is denied while the backlog is incomplete — outside the 4 Auto-Pilot conditions, choose safest defaults, log to docs/DECISIONS.md, and keep working until completion-check exits 0 (or write _workspace/_stop-approved.json {\"reason\"} for a genuine stop)."}}
 
 $ [9 arm] node scripts\coolhan.js hook run-armer
   exit 0
-  {"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"[CoolHan G11] Run run-mwk0z4cv ARMED by the harness. The Stop hook will block turn-ends and AskUserQuestion is denied while the backlog is incomplete — outside the 4 Auto-Pilot conditions, choose safest defaults, log to docs/DECISIONS.md, and keep working until completion-check exits 0 (or write _workspace/_stop-approved.json {\"reason\"} for a genuine stop)."}}
+  {"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"[CoolHan G11] Run run-mwk26fdi ARMED by the harness. The Stop hook will block turn-ends and AskUserQuestion is denied while the backlog is incomplete — outside the 4 Auto-Pilot conditions, choose safest defaults, log to docs/DECISIONS.md, and keep working until completion-check exits 0 (or write _workspace/_stop-approved.json {\"reason\"} for a genuine stop)."}}
 
 $ [9 arm] node scripts\coolhan.js hook run-armer
   exit 0
-  {"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"[CoolHan G11] Run run-mwk0z4k5 ARMED by the harness. The Stop hook will block turn-ends and AskUserQuestion is denied while the backlog is incomplete — outside the 4 Auto-Pilot conditions, choose safest defaults, log to docs/DECISIONS.md, and keep working until completion-check exits 0 (or write _workspace/_stop-approved.json {\"reason\"} for a genuine stop)."}}
+  {"hookSpecificOutput":{"hookEventName":"UserPromptSubmit","additionalContext":"[CoolHan G11] Run run-mwk26fr4 ARMED by the harness. The Stop hook will block turn-ends and AskUserQuestion is denied while the backlog is incomplete — outside the 4 Auto-Pilot conditions, choose safest defaults, log to docs/DECISIONS.md, and keep working until completion-check exits 0 (or write _workspace/_stop-approved.json {\"reason\"} for a genuine stop)."}}
 
 $ [10 stop] node scripts\coolhan.js hook stop-guard
   exit 0
-  {"decision":"block","reason":"CoolHan run run-mwk0z4k5 is active and the backlog is NOT complete (remaining: completion-check: 0/2 units done |   ✗ not done: U1, U2 | ✗ NOT complete — keep going (a baton/pause is not a completion); finish every unit before declaring done). Per the Non-Stop Execution rules: do not end the turn to ask — questions outside the 4 Auto-Pilot conditions are stop-excuses; pick the safest 기획서-consistent default, log it in docs/DECISIONS.md, and continue the next unit NOW (re-read _workspace/_goal.md + _backlog.md; zero prose until the final ≤5-line report). If a GENUINE stop condition applies (real credential / payment / irreversible prod-data destruction / incompatible requirements / P0 gate / ESCALATE), write _workspace/_stop-approved.json {\"reason\": \"...\"} first — then stopping is permitted."}
+  {"decision":"block","reason":"CoolHan run run-mwk26fr4 is active and the backlog is NOT complete (remaining: completion-check: 0/2 units done |   ✗ not done: U1, U2 | ✗ NOT complete — keep going (a baton/pause is not a completion); finish every unit before declaring done). Per the Non-Stop Execution rules: do not end the turn to ask — questions outside the 4 Auto-Pilot conditions are stop-excuses; pick the safest 기획서-consistent default, log it in docs/DECISIONS.md, and continue the next unit NOW (re-read _workspace/_goal.md + _backlog.md; zero prose until the final ≤5-line report). If a GENUINE stop condition applies (real credential / payment / irreversible prod-data destruction / incompatible requirements / P0 gate / ESCALATE), write _workspace/_stop-approved.json {\"reason\": \"...\"} first — then stopping is permitted."}
 
 $ [11 ask] node scripts\coolhan.js hook ask-guard
   exit 0
@@ -282,7 +282,7 @@ $ [23 bad deploy] node scripts\new-project.js <tmp>\g-usage --intent x --deploy 
 
 $ [24 validate] node scripts\field-lessons.js validate
   exit 0
-  ✔ field-lessons validate: PASS: 교훈 64건 (knowledge_base/field-lessons.json)
+  ✔ field-lessons validate: PASS: 교훈 64건 · 상시 지시 18건 (knowledge_base/field-lessons.json)
   
 
 $ [24 render] node scripts\field-lessons.js render --check
