@@ -34,10 +34,10 @@
 | 23 | 킷 어긋남 검사 `new-project --check` + 본체·모듈 저장소 설치 거부 | 완료 | jest 3/3 (--check · 거부 · 훅 제거 감지) | - |
 | 24 | 열린 결함 D-2, D-3, D-4, D-8 닫기 (공용 도우미 이행 13개 스크립트, 삼킨 오류 4건) | 완료 | single-source ratchet PASS (중복 도우미 3 → 0); field-lessons ratchet PASS (F-05 4 → 0); 두 기준선 갱신; jest 354/354 (36 suites) | - |
 | 25 | 배선 + 적대 검증 track40 | 완료 | 시나리오 16/16 일치, 0 false +/- (`_harness_test/track40-global-orders/run-log.txt`); prompt-modernization-check clean 48 files | - |
-| 26 | 릴리스 v2.11.0 (문서 · 전체 jest · checks-run · 커밋·태그·푸시 · CI) | 진행 중 | | 커밋 · 태그 · 푸시 · CI 확인 |
+| 26 | 릴리스 v2.11.0 (문서 · 전체 jest · checks-run · 커밋·태그·푸시 · CI) | 완료 | 커밋 898f265, 태그 v2.11.0 = releases/latest; CI Release·Test·Harness-check·Python API success (npm publish은 NPM_TOKEN 미설정으로 예상 실패); jest 354/354 (36 suites); checks-run 통과 13 · 실패 0 · 확인 안 함 0 | - |
 
 ## 현재 위치
-26번 릴리스 v2.11.0. 이 단위가 목표에 속하는가: 예, 2026-11-17 지시(G24)의 출고 단계다.
+26번 완료: 목표의 작업 26개 모두 완료. 다음 단위는 다른 프로젝트 폴더의 새 세션에서 전역 지시가 실제로 지켜지는지 관측할 때, 실제 새 사이트를 킷으로 시작할 때, 사용자가 목표 줄을 바꿀 때, 또는 열린 결함 D-13의 기기 쪽 원인을 찾을 때 시작한다.
 
 ## 가정 목록
 

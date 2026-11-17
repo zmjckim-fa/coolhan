@@ -8,4 +8,4 @@
 | U2 | 킷 어긋남 검사 + 설치 거부 | `scripts/new-project.js`, `knowledge_base/project-kit/CHECKS.md.tpl` | jest install-global (new-project --check) | ✅ done (jest 3/3) |
 | U3 | 열린 결함 D-2, D-3, D-4, D-8 | `scripts/lib/`, 13개 스크립트, `scripts/check-update.js`, 기준선 2개 | single-source-check · field-lessons check | ✅ done (중복 도우미 0, F-05 0) |
 | U4 | 배선 + 적대 검증 track40 | agents, SKILL.md, SDLC map, `_harness_test/track40-global-orders/` | prompt-modernization-check · run-track.js | ✅ done (lint clean 48 files; 시나리오 16/16) |
-| U5 | 릴리스 v2.11.0 | 릴리스 문서 | jest 전체 · checks-run · CI | ⬜ todo |
+| U5 | 릴리스 v2.11.0 | 릴리스 문서 | jest 전체 · checks-run · CI | ✅ done (커밋 898f265, 태그 v2.11.0; jest 354/354; checks-run 통과 13 · 실패 0) |
