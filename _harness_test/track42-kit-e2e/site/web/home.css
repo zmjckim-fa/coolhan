@@ -1,0 +1,123 @@
+/* S-01 visitor home: the layout of this screen only.
+ * Component shapes (C-08, C-10, C-12, C-13, section box, loading row, empty row) come from screen.css.
+ * Authority: the layout table of the design plan (docs/plan, part 04, section 6) and the 375px
+ * rules of the screen plan (part 03, section 7.1).
+ * Narrow screens are the default: one column with a 16px gutter. From 960px the gutter is 24px
+ * and there are two columns: 320px (status and hours) and the rest (menu). 320px is the width
+ * written in that table and has no token.
+ */
+
+.home-page {
+  background: var(--color-page);
+}
+
+/* The page gutter grows on wide windows so the content keeps the visitor width in the middle,
+ * on the same line as the shop name in the top bar. */
+.home-main {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-9) max(var(--gutter), calc((100% - var(--container-visitor)) / 2));
+}
+
+/* The skip link and the retry button move focus here. It is a place to read on from, not a control. */
+.home-main:focus-visible {
+  outline: none;
+}
+
+.home-overview,
+.home-column,
+.home-menu-groups {
+  display: grid;
+  gap: var(--space-6);
+}
+
+/* Grid items may shrink below their content, so a long menu name wraps instead of widening the page. */
+.home-overview > *,
+.home-column > *,
+.home-menu-groups > * {
+  min-width: 0;
+}
+
+.home-main .section-title {
+  margin-bottom: var(--space-4);
+}
+
+/* ---------- status now ---------- */
+
+.home-status-label {
+  margin: 0 0 var(--space-4);
+}
+
+.home-status-figure {
+  margin: 0;
+}
+
+/* Today's hours at the left, the time of the computation at the right. They wrap when they must. */
+.home-status-detail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.home-today-line,
+.home-asof {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-asof {
+  margin-left: auto;
+  color: var(--color-text-3);
+  font-size: var(--font-size-label);
+}
+
+/* ---------- lists ---------- */
+
+/* A box that holds list rows: the rows bring their own padding and reach the edge of the box. */
+.section-box.home-list-box {
+  padding: 0;
+  overflow: hidden;
+}
+
+.home-menu-list {
+  margin: 0;
+  list-style: none;
+}
+
+.home-category-title {
+  margin-bottom: var(--space-4);
+  color: var(--color-text-3);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Name and sold-out badge stay together at the left. The price keeps the right. */
+.home-menu-label {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.home-menu-label > .list-row-name {
+  flex: 0 1 auto;
+}
+
+/* ---------- two columns ---------- */
+
+@media (min-width: 960px) {
+  .home-page .top-bar-strip,
+  .home-main {
+    padding-right: max(var(--space-8), calc((100% - var(--container-visitor)) / 2));
+    padding-left: max(var(--space-8), calc((100% - var(--container-visitor)) / 2));
+  }
+
+  .home-overview {
+    grid-template-columns: 320px minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-8);
+  }
+}

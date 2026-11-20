@@ -1,0 +1,44 @@
+/* S-02 admin login: the arrangement of this screen only.
+ * Authority: the design plan (docs/plan, part 04, section 6) and the screen plan (part 03, 7.1).
+ * A dark page, the one-link top bar at the top, and one white card below it.
+ * The card is as wide as the screen minus the gutter on both sides and never wider than
+ * --container-login. Its padding is --space-8, so the input and the button are 295px wide on a
+ * 375px screen and 240px wide on a 320px screen. Wide screens keep the same arrangement.
+ * Component shapes stay in screen.css. Every value here is a token.
+ */
+
+.login-page {
+  background: var(--color-page-login);
+}
+
+.login-main {
+  padding: var(--space-6) var(--gutter) var(--space-8);
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: var(--container-login);
+  margin: 0 auto;
+  padding: var(--space-8);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* The lone button fills the card on every width. */
+.login-submit {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .login-main {
+    padding-top: var(--space-9);
+  }
+}

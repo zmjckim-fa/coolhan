@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{text:title.login}}</title>
+<link rel="stylesheet" href="/tokens.css">
+<link rel="stylesheet" href="/screen.css">
+<link rel="stylesheet" href="/admin-login.css">
+<script type="module" src="/admin-login.js"></script>
+</head>
+<body class="login-page">
+<a class="skip-link" href="#screen-title" data-text="nav.skip"></a>
+
+<header class="top-bar top-bar--login">
+  <div class="top-bar-strip">
+    <a class="top-bar-link" href="/" data-text="nav.home"></a>
+  </div>
+</header>
+
+<main class="login-main">
+  <div class="login-card">
+    <h1 class="screen-title" id="screen-title" tabindex="-1" data-text="title.login"></h1>
+
+    <p class="saved-notice" id="login-notice" role="status" aria-live="polite" hidden>
+      <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M2 7.5 l3.5 3.5 l6.5 -8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      <span data-feedback-text></span>
+    </p>
+
+    <p class="error-band" id="login-error" role="alert" hidden>
+      <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      <span class="error-band-text" data-feedback-text></span>
+    </p>
+
+    <p class="loading-line" id="login-loading" role="status" data-text="notice.loading"></p>
+
+    <!-- The form stays hidden until the script has checked the session. The script sends the
+         password itself as JSON. method="post" keeps the password out of the address even if
+         the form were ever submitted without the script. -->
+    <form class="login-form" id="login-form" method="post" novalidate hidden>
+      <div class="field">
+        <div class="field-label-row">
+          <label class="field-label" for="password" data-text="login.password"></label>
+          <span class="required-mark" id="password-required" data-text="mark.required"></span>
+        </div>
+        <input class="text-input" id="password" name="password" type="password" autocomplete="current-password" aria-describedby="password-required">
+        <p class="error-line" id="password-error" hidden>
+          <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span data-feedback-text></span>
+        </p>
+      </div>
+      <button class="button-primary login-submit" id="login-submit" type="submit" data-text="button.login"></button>
+    </form>
+  </div>
+</main>
+</body>
+</html>

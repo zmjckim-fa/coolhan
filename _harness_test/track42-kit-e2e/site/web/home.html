@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{text:title.home}}</title>
+<meta name="description" content="{{text:title.home}}">
+<link rel="stylesheet" href="/tokens.css">
+<link rel="stylesheet" href="/screen.css">
+<link rel="stylesheet" href="/home.css">
+<script type="module" src="/home.js"></script>
+</head>
+<body class="home-page">
+<a class="skip-link" href="#main" data-text="nav.skip"></a>
+
+<header class="top-bar top-bar--visitor">
+  <div class="top-bar-strip">
+    <h1 class="top-bar-name" id="shop-name"></h1>
+  </div>
+</header>
+
+<main class="home-main" id="main" tabindex="-1">
+  <p class="loading-line" id="home-loading" role="status" data-text="notice.loading"></p>
+
+  <div class="error-band" id="home-error" role="alert" hidden>
+    <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+      <circle cx="7" cy="7" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M7 3.5v4.5M7 9.75v1.25" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    </svg>
+    <span class="error-band-text" data-feedback-text></span>
+    <button type="button" class="error-band-retry" id="home-retry" data-text="button.retry"></button>
+  </div>
+
+  <div class="home-overview" id="home-overview" hidden>
+    <div class="home-column">
+      <section class="section-box home-status" aria-labelledby="status-label">
+        <p class="field-label home-status-label" id="status-label" data-text="status.now"></p>
+        <p class="home-status-figure">
+          <span class="status-badge status-badge--large" id="shop-status">
+            <svg viewBox="0 0 8 8" aria-hidden="true" focusable="false" data-status-shape="open" hidden>
+              <circle cx="4" cy="4" r="4" fill="currentColor"/>
+            </svg>
+            <svg viewBox="0 0 8 8" aria-hidden="true" focusable="false" data-status-shape="closed" hidden>
+              <rect width="8" height="8" fill="currentColor"/>
+            </svg>
+            <svg viewBox="0 0 8 8" aria-hidden="true" focusable="false" data-status-shape="dayoff" hidden>
+              <rect y="2.5" width="8" height="3" fill="currentColor"/>
+            </svg>
+            <svg viewBox="0 0 8 8" aria-hidden="true" focusable="false" data-status-shape="unset" hidden>
+              <circle cx="4" cy="4" r="3.25" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            <span id="shop-status-text"></span>
+          </span>
+        </p>
+        <div class="home-status-detail">
+          <p class="home-today-line" id="today-line" hidden>
+            <span data-text="status.today"></span>
+            <span id="today-range"></span>
+          </p>
+          <p class="home-asof" id="status-asof"></p>
+        </div>
+      </section>
+
+      <section class="home-hours" aria-labelledby="hours-heading">
+        <h2 class="section-title" id="hours-heading" data-text="hours.heading"></h2>
+        <div class="section-box home-list-box">
+          <table class="list-table" aria-labelledby="hours-heading">
+            <tbody>
+              <tr class="list-row" data-weekday="1">
+                <th scope="row"><span data-text="weekday.mon"></span><span class="today-mark" data-text="status.today" hidden></span></th>
+                <td class="list-row-value" data-hours-value></td>
+              </tr>
+              <tr class="list-row" data-weekday="2">
+                <th scope="row"><span data-text="weekday.tue"></span><span class="today-mark" data-text="status.today" hidden></span></th>
+                <td class="list-row-value" data-hours-value></td>
+              </tr>
+              <tr class="list-row" data-weekday="3">
+                <th scope="row"><span data-text="weekday.wed"></span><span class="today-mark" data-text="status.today" hidden></span></th>
+                <td class="list-row-value" data-hours-value></td>
+              </tr>
+              <tr class="list-row" data-weekday="4">
+                <th scope="row"><span data-text="weekday.thu"></span><span class="today-mark" data-text="status.today" hidden></span></th>
+                <td class="list-row-value" data-hours-value></td>
+              </tr>
+              <tr class="list-row" data-weekday="5">
+                <th scope="row"><span data-text="weekday.fri"></span><span class="today-mark" data-text="status.today" hidden></span></th>
+                <td class="list-row-value" data-hours-value></td>
+              </tr>
+              <tr class="list-row" data-weekday="6">
+                <th scope="row"><span data-text="weekday.sat"></span><span class="today-mark" data-text="status.today" hidden></span></th>
+                <td class="list-row-value" data-hours-value></td>
+              </tr>
+              <tr class="list-row" data-weekday="0">
+                <th scope="row"><span data-text="weekday.sun"></span><span class="today-mark" data-text="status.today" hidden></span></th>
+                <td class="list-row-value" data-hours-value></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <section class="home-menu" aria-labelledby="menu-heading">
+      <h2 class="section-title" id="menu-heading" data-text="menu.heading"></h2>
+      <div class="section-box home-list-box" id="menu-empty" hidden>
+        <p class="empty-row" data-text="menu.empty"></p>
+      </div>
+      <div class="home-menu-groups" id="menu-groups"></div>
+    </section>
+  </div>
+</main>
+
+<template id="menu-category-template">
+  <section class="home-menu-group">
+    <h3 class="home-category-title" data-category-title></h3>
+    <ul class="section-box home-list-box home-menu-list" data-category-rows></ul>
+  </section>
+</template>
+
+<template id="menu-row-template">
+  <li class="list-row list-row--menu">
+    <span class="home-menu-label">
+      <span class="list-row-name" data-menu-name></span>
+      <span class="status-badge" data-status="sold_out" data-menu-soldout hidden>
+        <svg viewBox="0 0 8 8" aria-hidden="true" focusable="false">
+          <path d="M1 1l6 6M7 1l-6 6" fill="none" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <span data-text="sale.soldout"></span>
+      </span>
+    </span>
+    <span class="list-row-value" data-menu-price></span>
+  </li>
+</template>
+</body>
+</html>
