@@ -26,6 +26,24 @@ the registry; a new incident becomes one registry entry (with a `detect` block w
 re-render, not a sentence added here.
 Use the bundle-spec form of the field module catalog (W-19): a module "exists" only with a calling screen and execution evidence; extraction is proven by a conformance test that imports the real site file and includes one negative control.
 
+## Module standard (G25: `knowledge_base/00_MODULE_STANDARD.md`, `scripts/module-check.js`, `scripts/modules.js`)
+A module that goes into the module library has the standard form: one name (`영역-기능`), one folder, the same ten
+subfolders (`core api user admin db text style adapters test docs`), a manifest with version, requires, settings and
+origin, a README and a CHANGELOG. The library holds them under `modules/<name>/`.
+- Compare the variants of a feature across the source projects and build one module from the strongest, adding what
+  only the others have. Record each source in `origin` (site, path, commit, date).
+- Tidy, do not copy: the fewest lines and files that do the job; dead code, single-site branches and business names
+  stay behind; per-site values become settings. Record «source n files m lines, module n files m lines» in the
+  CHANGELOG entry.
+- Quality bar: tests when there is `core/` or `api/` (with rejection cases), own tables only (area prefix, no
+  foreign key into another module), `docs/security.md` when there is `api/`, `user/` or `admin/`.
+- An error found in a source is fixed in the module with a test that catches it and listed for the source project;
+  the source project's files are never edited.
+- Done for a module means: `node scripts/module-check.js <module dir>` PASS, the module's own tests pass, and a
+  throwaway `node scripts/modules.js add <name> --app <empty dir>` installs it with what it requires.
+- `node scripts/modules.js drift` lists modules whose origin paths changed in the source project since they were
+  taken: those are the candidates for the next version.
+
 ## Core Principles
 
 1. **Map to existing modules first:** First attempt to map discovered features to 01–10. If they match exactly, absorb them; if new, mark as extension candidates. Do not indiscriminately mass-produce new modules.

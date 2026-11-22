@@ -50,6 +50,7 @@ describe('module-check: the form of a module (knowledge_base/00_MODULE_STANDARD.
     ['area-mismatch', 'member-signup', { area: 'account' }, {}],
     ['version-format', 'member-signup', { version: '1.0' }, {}],
     ['manifest-invalid', 'member-signup', { summary: '' }, {}],
+    ['require-name-format', 'member-signup', { requires: ['member-login (when the gate is needed)'] }, {}],
     ['unknown-folder', 'member-signup', {}, { 'src/thing.js': '' }],
     ['unknown-file', 'member-signup', {}, { 'notes.txt': 'x' }],
     ['required-file-missing', 'member-signup', {}, { 'README.md': null }],

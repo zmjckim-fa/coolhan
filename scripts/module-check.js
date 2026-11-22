@@ -93,6 +93,7 @@ function checkModule(dir) {
   for (const w of name.split('-')) if (BANNED.has(w)) add('name-banned-word', 'module.json', 'module.bannedWord', { word: w, name });
   if (m.area && name && name.split('-')[0] !== m.area) add('area-mismatch', 'module.json', 'module.areaMismatch', { area: m.area, name });
   if (!VERSION.test(String(m.version || ''))) add('version-format', 'module.json', 'module.versionFormat', { version: m.version });
+  for (const r of requireNames(m)) if (!NAME.test(r)) add('require-name-format', 'module.json', 'module.requireNameFormat', { name: r });
 
   // top level
   const top = fs.readdirSync(dir, { withFileTypes: true });

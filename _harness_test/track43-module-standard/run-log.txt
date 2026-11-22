@@ -1,0 +1,356 @@
+$ [1 good module] node scripts/module-check.js <tmp>\good
+  exit 0
+  ✔ module-check: PASS: 모듈 1개 · 지적 0건
+
+$ [2 broken name-format] node scripts/module-check.js <tmp>\broken\0 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "signup",
+        "version": "1.0.0",
+
+$ [2 broken name-banned-word] node scripts/module-check.js <tmp>\broken\1 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-helpers",
+        "version": "1.0.0",
+
+$ [2 broken unknown-folder] node scripts/module-check.js <tmp>\broken\2 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken parts-mismatch] node scripts/module-check.js <tmp>\broken\3 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken file-name-format] node scripts/module-check.js <tmp>\broken\4 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken file-name-banned-word] node scripts/module-check.js <tmp>\broken\5 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken entry-missing] node scripts/module-check.js <tmp>\broken\6 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken core-imports-framework] node scripts/module-check.js <tmp>\broken\7 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken import-escapes-module] node scripts/module-check.js <tmp>\broken\8 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken require-undeclared] node scripts/module-check.js <tmp>\broken\9 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken setting-undeclared] node scripts/module-check.js <tmp>\broken\10 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken test-missing] node scripts/module-check.js <tmp>\broken\11 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken security-note-missing] node scripts/module-check.js <tmp>\broken\12 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken db-table-prefix] node scripts/module-check.js <tmp>\broken\13 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken db-foreign-reference] node scripts/module-check.js <tmp>\broken\14 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [2 broken changelog-version-missing] node scripts/module-check.js <tmp>\broken\15 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.1.0",
+
+$ [2 broken origin-missing] node scripts/module-check.js <tmp>\broken\16 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+        "name": "member-signup",
+        "version": "1.0.0",
+
+$ [3 allowed] node scripts/module-check.js <tmp>\allowed
+  exit 0
+  ✔ module-check: PASS: 모듈 2개 · 지적 0건
+
+$ [4 empty] node scripts/module-check.js <tmp>\empty
+  exit 4
+  ○ module-check: NOT_RUN: <tmp>\empty 에 module.json 이 있는 폴더가 없다
+
+$ [5 add] node scripts/modules.js add member-login --library <tmp>\library --app <tmp>\app
+  exit 0
+    + member-signup 1.0.0 → coolhan_modules/member-signup
+    + member-login 1.0.0 → coolhan_modules/member-login
+
+$ [5 status] node scripts/modules.js status --library <tmp>\library --app <tmp>\app
+  exit 0
+    ✔ member-login 1.0.0: 최신
+    ✔ member-signup 1.0.0: 최신
+  모듈 2개 · 새 판 있음 0 · 프로젝트에서 고침 0
+
+$ [5 status again] node scripts/modules.js status --library <tmp>\library --app <tmp>\app
+  exit 0
+    ✔ member-login 1.0.0: 최신
+    ✔ member-signup 1.0.0: 최신
+  모듈 2개 · 새 판 있음 0 · 프로젝트에서 고침 0
+
+$ [6 status behind] node scripts/modules.js status --json --library <tmp>\library --app <tmp>\app
+  exit 1
+  {
+    "status": "BEHIND",
+    "modules": [
+      {
+        "name": "member-login",
+        "installed": "1.0.0",
+
+$ [6 update] node scripts/modules.js update member-signup --library <tmp>\library --app <tmp>\app
+  exit 0
+    ↑ member-signup 1.0.0 → 1.1.0 (보관한 고친 파일 0개)
+
+$ [6 status] node scripts/modules.js status --library <tmp>\library --app <tmp>\app
+  exit 0
+    ✔ member-login 1.0.0: 최신
+    ✔ member-signup 1.1.0: 최신
+  모듈 2개 · 새 판 있음 0 · 프로젝트에서 고침 0
+
+$ [7 update refused] node scripts/modules.js update member-signup --library <tmp>\library --app <tmp>\app
+  exit 1
+  ✗ member-signup: 프로젝트에서 고친 파일이 있어 바꾸지 않았다: core/index.js. 고친 것을 모듈 밖으로 옮기거나 --force 를 쓴다(사본을 coolhan_modules/.local 에 남긴다)
+
+$ [7 update --force] node scripts/modules.js update member-signup --force --library <tmp>\library --app <tmp>\app
+  exit 0
+    ↑ member-signup 1.1.0 → 1.2.0 (보관한 고친 파일 1개)
+
+$ [8 status after CRLF] node scripts/modules.js status --library <tmp>\library --app <tmp>\app
+  exit 0
+    ✔ member-login 1.0.0: 최신
+    ✔ member-signup 1.2.0: 최신
+  모듈 2개 · 새 판 있음 0 · 프로젝트에서 고침 0
+
+$ [9 remove required] node scripts/modules.js remove member-signup --library <tmp>\library --app <tmp>\app
+  exit 1
+  ✗ member-signup 을 지울 수 없다: member-login 가 필요로 한다
+
+$ [9 remove user] node scripts/modules.js remove member-login --library <tmp>\library --app <tmp>\app
+  exit 0
+    - member-login 을 지웠다
+
+$ [9 remove now] node scripts/modules.js remove member-signup --library <tmp>\library --app <tmp>\app
+  exit 0
+    - member-signup 을 지웠다
+
+$ [10 status none] node scripts/modules.js status --library <tmp>\library --app <tmp>\app
+  exit 4
+  ○ modules status: NOT_RUN: <tmp>\app 에 설치된 모듈이 없다
+
+$ [10 status allow-none] node scripts/modules.js status --allow-none --library <tmp>\library --app <tmp>\app
+  exit 0
+  ✔ modules status: 이 프로젝트는 설치한 모듈이 없다 (확인할 새 판이 없다)
+
+$ [10 add unknown] node scripts/modules.js add member-nothing --library <tmp>\library --app <tmp>\app
+  exit 1
+  modules: 저장소에 "member-nothing" 모듈이 없다
+
+$ [11 drift before] node scripts/modules.js drift --library <tmp>\library --sites <tmp>\sites --json
+  exit 0
+  {
+    "status": "CURRENT",
+    "measured": 1,
+    "not_measured": 1,
+    "ahead": []
+  }
+
+$ [11 drift after] node scripts/modules.js drift --library <tmp>\library --sites <tmp>\sites --json
+  exit 1
+  {
+    "status": "SOURCE_AHEAD",
+    "measured": 1,
+    "not_measured": 1,
+    "ahead": [
+      {
+
+$ [12 convert] node scripts/module-convert.js <tmp>\older --out <tmp>\converted
+  exit 0
+  module-convert: 패키지 2개 · 옮김 2 · 이미 있어 건너뜀 0 · 실패 0 · 옮긴 줄 수 15
+
+$ [12 gate on converted] node scripts/module-check.js <tmp>\converted
+  exit 0
+  ✔ module-check: PASS: 모듈 2개 · 지적 0건
+
+$ [12 convert again] node scripts/module-convert.js <tmp>\older --out <tmp>\converted --json
+  exit 0
+  {
+    "packages": 2,
+    "converted": [],
+    "skipped": [
+      "ledger-chain",
+      "partner-settlement"
+
+$ [13 kit] node scripts/new-project.js <tmp>\kit-project --intent module use --tags ui --modules <tmp>\library
+  exit 0
+  new-project: <tmp>\kit-project: 생성 14 · 갱신 0 · 그대로 0
+    + coolhan.project.json
+    + scripts/coolhan.js
+    + CLAUDE.md
+    + .claude/settings.json
+    + .gitignore
+
+$ [13 launcher] node scripts/coolhan.js modules list
+  exit 0
+
+$ [13 launcher] node scripts/coolhan.js modules add member-login
+  exit 0
+
+$ [13 launcher] node scripts/coolhan.js modules status
+  exit 0
+
+$ [13 launcher] node scripts/coolhan.js checks-run --only C9
+  exit 0
+
+$ [14 real gate] node scripts/module-check.js <library>\modules --json
+  exit 0
+  {
+    "status": "PASS",
+    "modules": [
+      {
+        "name": "access-guard",
+        "version": "1.0.0",
+
+$ [15 real add] node scripts/modules.js add partner-settlement --library <library> --app <tmp>\real-app
+  exit 0
+    + application-state-machine 1.0.0 → coolhan_modules/application-state-machine
+    + partner-settlement 1.0.0 → coolhan_modules/partner-settlement
+
+PASS #1 A module that follows the standard
+    expected: exit 0
+    actual:   exit 0
+PASS #2 17 modules each breaking one rule of the standard
+    expected: exit 1 and the rule named, 17 of 17
+    actual:   17 of 17
+PASS #3 What the standard allows: a declared sibling entry, a declared setting, a reference inside the module, a named exception, a dotted variant file name
+    expected: exit 0, no finding
+    actual:   exit 0
+PASS #4 A folder with no module
+    expected: exit 4 (not measured, never a pass)
+    actual:   exit 4
+PASS #5 Take a module that requires another into an empty project
+    expected: both folders arrive, the record holds versions and hashes, status exit 0, the installed module's own tests pass
+    actual:   add exit 0; installed member-login, member-signup; status exit 0; module tests exit 0
+PASS #6 The library gets a newer version of one module
+    expected: status exit 1 naming that module only; update replaces the folder; status exit 0
+    actual:   status exit 1 behind: member-signup; update exit 0; now 1.1.0; status exit 0
+PASS #7 The project edited a file inside the module, then the library moved on
+    expected: update exit 1 naming the file and changing nothing; --force replaces and keeps the project's edit as a copy
+    actual:   update exit 1, file named true, edit kept true; --force exit 0, copy kept true
+PASS #8 The same module checked out with other line endings
+    expected: not «behind», not «modified»: status exit 0
+    actual:   exit 0
+PASS #9 Remove a module another one needs, then the other, then it
+    expected: refused (exit 1), then 0, then 0; folders and record gone
+    actual:   exit 1, 0, 0; left 0
+PASS #10 Nothing installed; the same with --allow-none; an unknown module
+    expected: exit 4 (not measured); exit 0 said in words; exit 1
+    actual:   exit 4; 0; 1
+PASS #11 A module's origin file is changed in its source project after the module was taken
+    expected: before: exit 0, 1 measured, 1 not measured; after: exit 1 naming the module and 1 commit
+    actual:   before exit 0 measured 1 not measured 1; after exit 1 ahead member-signup:1
+PASS #12 Two packages of the older layout, one importing the other without declaring it
+    expected: both converted, gate PASS, their tests pass after the move, the missing requirement declared; a second run overwrites nothing
+    actual:   convert exit 0; gate exit 0; tests exit 0, 0; requires ledger-chain; second run converted 0, by-hand edit kept true
+PASS #13 Inside a kit project: list, add and status through the project launcher, and the kit's fixed check for modules
+    expected: exit 0 each; the library is the one in the project settings; check C9 passes
+    actual:   list 0, add 0, status 0, checks-run C9 0; installed true
+PASS #14 The real module library on this machine
+    expected: module-check PASS for every module in it
+    actual:   exit 0; modules 74; findings 0
+PASS #15 Take one real module (partner-settlement) with what it requires into an empty project and run the installed modules' own tests
+    expected: add exit 0; every installed module's tests exit 0
+    actual:   add exit 0; installed 2 (application-state-machine, partner-settlement); tests exit 0, 0
+
+track43: 15/15 match, 0 mismatch, 0 not measured

@@ -18,6 +18,7 @@
  *   • with    --baseline : ratchet — FAIL only when a count grew or a NEW duplicate pair / inline style /
  *                          sentence / target literal appeared vs the committed baseline; shrinking is PASS
  *   • --write-baseline   : snapshot the current measurement as the baseline (commit it — §4-c)
+ *   • --skip-files a/b.js,c.js : named files left out of the scan (verification scripts whose labels are for a reader)
  *   • --allow-scope-shrink : accept a ratchet run whose scanned file count is below the baseline's. Without it a
  *                          smaller scan is `scan-scope-shrunk`: numbers must fall by fixing, not by moving code out of scope
  *
@@ -46,7 +47,7 @@ const DEFAULT_DICT_DIRS = ['i18n', 'locales', 'locale', 'lang', 'messages', 'tra
 const DEFAULT_REGISTRY_DIRS = ['registry', 'registries', 'adapters', 'adapter', 'specs', 'providers', 'targets', 'channels', 'markets'];
 const ALLOW = /single-source-check:allow/;
 const MIN_BODY_CHARS = 80;
-const VALUE_FLAGS = ['--baseline', '--targets', '--registry-dirs', '--dict-dirs', '--max-file-lines', '--skip-dirs'];
+const VALUE_FLAGS = ['--baseline', '--targets', '--registry-dirs', '--dict-dirs', '--max-file-lines', '--skip-dirs', '--skip-files'];
 
 const FUNC_HEAD = [
   /^\s*(?:export\s+)?(?:async\s+)?function\s+([A-Za-z_$][\w$]*)\s*\(/,                    // js/ts/php
@@ -66,7 +67,10 @@ function walk(dir, out, root, opts) {
   for (const e of entries) {
     const full = path.join(dir, e.name);
     if (e.isDirectory()) { if (!SKIP_DIRS.has(e.name) && !(opts.skipDirs || []).includes(e.name) && !SKIP_PREFIX.test(e.name) && !e.name.startsWith('.')) walk(full, out, root, opts); continue; }
-    if (CODE_EXT.test(e.name) || MARKUP_EXT.test(e.name)) out.push({ full, rel: path.relative(root, full).split(path.sep).join('/') });
+    const rel = path.relative(root, full).split(path.sep).join('/');
+    // A verification script named in --skip-files prints labels for a reader; it is not the product's source (track42 K-13).
+    if ((opts.skipFiles || []).includes(rel)) continue;
+    if (CODE_EXT.test(e.name) || MARKUP_EXT.test(e.name)) out.push({ full, rel });
   }
 }
 
@@ -196,6 +200,7 @@ function main(argv) {
     registryDirs: argList(args, '--registry-dirs'),
     dictDirs: argList(args, '--dict-dirs'),
     skipDirs: argList(args, '--skip-dirs'),
+    skipFiles: argList(args, '--skip-files'),
     maxFileLines: argValue(args, '--max-file-lines') ? Number(argValue(args, '--max-file-lines')) : 0,
     allowScopeShrink: args.includes('--allow-scope-shrink')
   };

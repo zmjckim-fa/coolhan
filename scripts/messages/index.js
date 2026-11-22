@@ -162,6 +162,7 @@ const M = {
   'module.bannedWord': '금지 낱말 "{word}"이 이름에 있다: {name} (표준 2절)',
   'module.areaMismatch': '영역 "{area}"이 이름 "{name}"의 첫 낱말과 다르다',
   'module.versionFormat': '판 "{version}"이 주.부.수 세 숫자가 아니다',
+  'module.requireNameFormat': 'requires 의 "{name}"이 모듈 이름 형식이 아니다 (이름만 적는다. 설명은 README 에 쓴다)',
   'module.unknownFolder': '표준에 없는 하위 폴더 "{folder}" (core, api, user, admin, db, text, style, adapters, test, docs 만 둔다)',
   'module.unknownFile': '모듈 바로 아래에 둘 수 없는 파일 "{file}" (module.json, README.md, CHANGELOG.md 만 둔다)',
   'module.requiredFileMissing': '{file} 이 없다',

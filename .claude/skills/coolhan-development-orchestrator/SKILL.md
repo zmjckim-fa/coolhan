@@ -485,6 +485,13 @@ while (todo remains in backlog):
      into the user-level instruction file. The harness command word is then not needed in any folder.
      --check: 0 current / 1 stale / 4 not installed; after changing an order: render, then install-global.
      Per project: node scripts/new-project.js <dir> --check (orders block, launcher, hooks equal the derived ones).
+   + G25 MODULES AS PLUG-INS (v2.12.0, knowledge_base/00_MODULE_STANDARD.md):
+     A feature that exists as a module is taken, not rebuilt: node scripts/coolhan.js modules list / add <name>.
+     Session start in a project: modules status (0 current / 1 a newer version exists / 4 nothing installed);
+     modules update <name> replaces the folder and refuses when the project edited a file inside it.
+     A feature a project improved goes back to the library as a new module or version in the standard form:
+     node scripts/module-check.js <module dir> (0 PASS / 1 FAIL / 4 no module), then the module's own tests.
+     node scripts/modules.js drift names modules whose source project moved on since they were taken.
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)
 ```

@@ -165,4 +165,14 @@ describe('single-source-check (G20-C — minimal source / single source of truth
     expect(JSON.parse(fs.readFileSync(path.join(d, 'docs', 'BASE.json'), 'utf8')).counts.duplicate_helpers).toBe(1);
     fs.rmSync(d, { recursive: true, force: true });
   });
+  test('--skip-files leaves a named verification script out of the scan and nothing else (track42 K-13)', () => {
+    const d = fs.mkdtempSync(path.join(os.tmpdir(), 'ss-skipfile-'));
+    fs.mkdirSync(path.join(d, 'db')); fs.mkdirSync(path.join(d, 'src'));
+    fs.writeFileSync(path.join(d, 'db', 'check-schema.js'), "console.log('the closing time is later than the opening time');\n");
+    fs.writeFileSync(path.join(d, 'src', 'page.js'), "console.log('this sentence belongs in the dictionary');\n");
+    const all = measure(d, {}); const skipped = measure(d, { skipFiles: ['db/check-schema.js'] });
+    expect(all.counts.hardcoded_sentences).toBe(2); expect(skipped.counts.hardcoded_sentences).toBe(1);
+    expect(skipped.counts.files).toBe(1);
+    fs.rmSync(d, { recursive: true, force: true });
+  });
 });

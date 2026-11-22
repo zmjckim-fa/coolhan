@@ -87,6 +87,7 @@ setting, refresh the handoff) are registry entries `O-01` onward in `knowledge_b
 the loop hooks, ledger, fixed checks and module plan. Read them with
 `node scripts/field-lessons.js list --kind order --tags <project tags>`; inside a project the same tools run as
 `node scripts/coolhan.js <tool>`. They apply without being issued again.
+Before writing a feature, look for it in the module library: `node scripts/coolhan.js modules list`, then `modules add <name>` brings the module into `coolhan_modules/<name>/` with what it requires (standing order O-19, `knowledge_base/00_MODULE_STANDARD.md`). Use what its `core/index` exports; do not edit files inside `coolhan_modules/` (an edit there blocks the next `modules update` and is reported by `modules status`). When the session starts, `modules status` shows modules that are behind the library.
 Before writing a feature, open its row in `docs/plan/MODULE_PLAN.md`. 채택: use the package as it is. 이식: copy the package code from the library (the library stays read-only) and keep its tests. 참조: build to the bundle's spec. After a unit passes its verification, commit that unit's own paths without asking (O-07) and run `node scripts/coolhan.js handoff` (O-09). Push and deploy are not part of a unit.
 
 ## Core Principles

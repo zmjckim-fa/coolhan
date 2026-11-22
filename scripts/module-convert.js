@@ -82,7 +82,8 @@ function convertOne(root, pkg, out) {
     name, version: '1.0.0', label: old.label || name, summary: old.label || name, area: name.split('-')[0], stack: 'none',
     parts: Object.fromEntries(PARTS.map(p => [p, Object.keys(files).some(f => f.startsWith(`${p}/`)) ? true : absent])),
     // What the source really imports is added to what the old manifest declared (two packages imported a module they did not list).
-    requires: [...new Set([...(old.requires || []).map(r => String(r).split('/').join('-')), ...imported])].sort(),
+    // An old entry may carry a remark after the name («ledger/chain(when prevHash is needed)»): only the name is a requirement.
+    requires: [...new Set([...(old.requires || []).map(r => (String(r).match(/^[a-z0-9-]+(?:\/[a-z0-9-]+)?/) || [''])[0].split('/').join('-')).filter(Boolean), ...imported])].sort(),
     provides: old.provides || {},
     settings: [...settings].sort().map(n => ({ name: n })),
     origin: (old.codeRef || []).map(c => ({ site: c.site, path: c.path, commit: null, date: old.extracted || null, role: c.role })),
