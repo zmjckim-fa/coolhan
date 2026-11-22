@@ -13,5 +13,7 @@
 | U7 | 모듈 추출 2차: 관리자 틀·알림·계정·접근 기록, 배송 추적·픽업 예약·운송사 충전 원장 | 모듈 저장소 `modules/` | module-check · 모듈 시험 · 빈 폴더 설치 | ✅ done (입고 검사 7/7 PASS; 모듈 시험 187/187; 저장소 커밋 3건) |
 | U8 | 모듈 입고 검사 한 명령 + 릴리스 v2.12.1 | `scripts/module-admit.js`, `src/__tests__/module-admit.test.js`, `_harness_test/track44-module-admit/`, 문서 | jest · track44 · checks-run · CI | ✅ done (jest 430/430; track44 9/9; checks-run 13/13; 커밋 419816b 태그 v2.12.1; CI 4/4 success) |
 | U9 | 모듈 추출 3차: 디자인 체계, 관리자 목록·상세 틀, 정산 | 모듈 저장소 `modules/` | module-admit | ✅ done (입고 검사 10/10 PASS; 모듈 시험 129/129; 저장소 커밋 2건) |
-| U10 | 모듈 추출 4차: 구매대행 | 모듈 저장소 `modules/` | module-admit | ⬜ todo |
+| U10 | 모듈 추출 4차: 구매대행 | 모듈 저장소 `modules/` | module-admit | ✅ done (입고 검사 8/8 PASS; 모듈 시험 174/174; 저장소 커밋 fb4fdca) |
 | U11 | 모듈 실증: 관리자 모듈들을 빈 프로젝트에 설치해 브라우저에서 연다 | `_harness_test/track45-module-demo/` | module-admit · 브라우저 확인 · 화면 시험 | ✅ done (설치 10/10; 타입 검사·빌드 종료 코드 0; 브라우저 2개 폭 콘솔 오류 0건; 결함 3/3 수정 뒤 다시 잼; 갱신 경로 status 1 → update 0 → status 0) |
+| U12 | 모듈 추출 5차: 회원 2차, 연동 보호와 연결, 문서 양식, HS 검색 | 모듈 저장소 `modules/` | module-admit | ✅ done (입고 검사 10/10 PASS; 모듈 시험 313/313; 저장소 형식 검사 114/114; 저장소 커밋 3건) |
+| U13 | 모듈 찾기 옵션 + 릴리스 v2.12.2 | `scripts/modules.js`, `src/__tests__/module-standard.test.js`, `_harness_test/track43-module-standard/`, 문서 | jest · track43 · checks-run · CI | ⬜ todo |

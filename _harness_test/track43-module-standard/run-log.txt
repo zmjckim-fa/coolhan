@@ -293,6 +293,33 @@ $ [13 launcher] node scripts/coolhan.js modules status
 $ [13 launcher] node scripts/coolhan.js checks-run --only C9
   exit 0
 
+$ [16 area] node scripts/modules.js list --area member --library <tmp>\find-library
+  exit 0
+  모듈 1개 (이름 · 판 · 스택 · 설명)
+    member-signup  1.0.0  [none]  Sign-up
+
+$ [16 word] node scripts/modules.js list --find SIDE MENU --library <tmp>\find-library
+  exit 0
+  모듈 1개 (이름 · 판 · 스택 · 설명)
+    admin-shell  1.0.0  [none]  Admin frame
+
+$ [16 none] node scripts/modules.js list --find no-such-thing --library <tmp>\find-library
+  exit 4
+  모듈 0개 (이름 · 판 · 스택 · 설명)
+
+$ [16 no area] node scripts/modules.js list --area nowhere --library <tmp>\find-library
+  exit 4
+  모듈 0개 (이름 · 판 · 스택 · 설명)
+
+$ [16 md] node scripts/modules.js list --md --library <tmp>\find-library
+  exit 0
+  # 모듈 목록
+  > 이 파일은 매니페스트에서 만든다: `node scripts/modules.js list --md`. 손으로 고치지 않는다. 모듈 2개.
+  ## admin
+  | 이름 | 판 | 스택 | 필요한 모듈 | 설명 |
+  |---|---|---|---|---|
+  | `admin-shell` | 1.0.0 | none | - | Admin frame |
+
 $ [14 real gate] node scripts/module-check.js <library>\modules --json
   exit 0
   {
@@ -305,7 +332,7 @@ $ [14 real gate] node scripts/module-check.js <library>\modules --json
 $ [15 real add] node scripts/modules.js add partner-settlement --library <library> --app <tmp>\real-app
   exit 0
     + application-state-machine 1.0.0 → coolhan_modules/application-state-machine
-    + partner-settlement 1.0.0 → coolhan_modules/partner-settlement
+    + partner-settlement 1.1.0 → coolhan_modules/partner-settlement
 
 PASS #1 A module that follows the standard
     expected: exit 0
@@ -346,11 +373,14 @@ PASS #12 Two packages of the older layout, one importing the other without decla
 PASS #13 Inside a kit project: list, add and status through the project launcher, and the kit's fixed check for modules
     expected: exit 0 each; the library is the one in the project settings; check C9 passes
     actual:   list 0, add 0, status 0, checks-run C9 0; installed true
+PASS #16 Find a module by area, by a word of its summary in another case, by a word nothing has, and print the catalogue
+    expected: area: only that area, exit 0; word: the one module, exit 0; nothing found: exit 4 twice (never a pass); catalogue: one heading per area in order, one row per module
+    actual:   area exit 0 (member true, admin false); word exit 0 (admin true, member false); none exit 4, 4; catalogue exit 0, headings ## admin ## member, rows 2
 PASS #14 The real module library on this machine
     expected: module-check PASS for every module in it
-    actual:   exit 0; modules 74; findings 0
+    actual:   exit 0; modules 114; findings 0
 PASS #15 Take one real module (partner-settlement) with what it requires into an empty project and run the installed modules' own tests
     expected: add exit 0; every installed module's tests exit 0
     actual:   add exit 0; installed 2 (application-state-machine, partner-settlement); tests exit 0, 0
 
-track43: 15/15 match, 0 mismatch, 0 not measured
+track43: 16/16 match, 0 mismatch, 0 not measured

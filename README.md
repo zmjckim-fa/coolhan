@@ -137,6 +137,7 @@ touched. After that, any session in any folder starts with CoolHan's rules; you 
 
 ```bash
 node scripts/coolhan.js modules list            # what the module library holds
+node scripts/coolhan.js modules list --find <w> # by a word in name, label or summary (--area <word> by area)
 node scripts/coolhan.js modules add <name>      # into coolhan_modules/<name>/, with what it requires
 node scripts/coolhan.js modules status          # 0 current · 1 a newer version exists · 4 nothing installed
 node scripts/coolhan.js modules update <name>   # replace the folder; a file the project changed is never overwritten silently

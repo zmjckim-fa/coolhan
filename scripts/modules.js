@@ -13,7 +13,7 @@
  * so «is this module behind» and «did the project change it» are decided by hashes, not by memory.
  *
  * Usage:
- *   node scripts/modules.js list   [--library <dir>] [--json]
+ *   node scripts/modules.js list   [--area <word>] [--find <text>] [--md] [--library <dir>] [--json]
  *   node scripts/modules.js add    <name...> [--app <dir>] [--library <dir>]
  *   node scripts/modules.js status [--app <dir>] [--library <dir>] [--json] [--allow-none]
  *   node scripts/modules.js update <name...|--all> [--app <dir>] [--library <dir>] [--force]
@@ -39,8 +39,8 @@ const { requireNames } = require('./module-check');
 const RECORD = 'coolhan.modules.json';
 const INSTALL_DIR = 'coolhan_modules';
 const LOCAL_DIR = '.local';
-const VALUE_FLAGS = ['--app', '--library', '--sites'];
-const FLAGS = new Set([...VALUE_FLAGS, '--json', '--force', '--all', '--allow-none']);
+const VALUE_FLAGS = ['--app', '--library', '--sites', '--area', '--find'];
+const FLAGS = new Set([...VALUE_FLAGS, '--json', '--force', '--all', '--allow-none', '--md']);
 
 const sha = (buf) => crypto.createHash('sha256').update(buf).digest('hex');
 const readJson = (file, fallback) => { try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch (_) { return fallback; } };
@@ -84,7 +84,7 @@ function catalog(library) {
     const m = readJson(path.join(dir, 'module.json'), null);
     if (!m || m.name !== e.name) continue;
     const files = fileHashes(dir);
-    out[e.name] = { name: e.name, version: m.version, label: m.label, area: m.area, stack: m.stack, requires: requireNames(m), origin: Array.isArray(m.origin) ? m.origin : [], dir, files, hash: contentHash(files) };
+    out[e.name] = { name: e.name, version: m.version, label: m.label, summary: m.summary, area: m.area, stack: m.stack, requires: requireNames(m), origin: Array.isArray(m.origin) ? m.origin : [], dir, files, hash: contentHash(files) };
   }
   return out;
 }
@@ -132,10 +132,25 @@ function install(app, name, cat, rec, commit) {
   rec.modules[name] = { version: cat[name].version, hash: cat[name].hash, library_commit: commit, installed_at: new Date().toISOString(), requires: cat[name].requires, files: cat[name].files };
 }
 
-function cmdList(cat, json) {
-  const rows = Object.values(cat).sort((a, b) => a.name.localeCompare(b.name));
+/** One line of text for a table cell: no line break, no pipe, at most `max` characters. */
+const cell = (s, max) => { const one = String(s || '').replace(/\s+/g, ' ').replace(/\|/g, '/').trim(); return one.length > max ? `${one.slice(0, max - 1)}…` : one; };
+
+function cmdList(cat, { json, md, area, find }) {
+  const needle = String(find || '').toLowerCase();
+  const rows = Object.values(cat)
+    .filter(m => !area || m.area === area)
+    .filter(m => !needle || [m.name, m.label, m.summary].some(x => String(x || '').toLowerCase().includes(needle)))
+    .sort((a, b) => a.name.localeCompare(b.name));
   if (json) console.log(JSON.stringify(rows.map(({ dir, files, ...rest }) => rest), null, 2));
-  else { console.log(t('modules.listHead', { count: rows.length })); for (const m of rows) console.log(`  ${m.name}  ${m.version}  [${m.stack}]  ${m.label || ''}`); }
+  else if (md) {
+    // A catalogue derived from the manifests: grouped by area, one row per module. Written by redirecting this output.
+    console.log(t('modules.mdHead', { count: rows.length }));
+    for (const a of [...new Set(rows.map(m => m.area))].sort()) {
+      console.log(`\n## ${a}\n\n${t('modules.mdColumns')}`);
+      for (const m of rows.filter(x => x.area === a)) console.log(`| \`${m.name}\` | ${m.version} | ${m.stack} | ${m.requires.join(', ') || '-'} | ${cell(m.label, 120)} |`);
+    }
+  } else { console.log(t('modules.listHead', { count: rows.length })); for (const m of rows) console.log(`  ${m.name}  ${m.version}  [${m.stack}]  ${cell(m.label, 100)}`); }
+  // A search that matches nothing is «nothing found» (4), not a pass.
   return rows.length ? 0 : 4;
 }
 
@@ -256,7 +271,7 @@ function main(argv, opts = {}) {
   const cat = catalog(library);
   if (cmd === 'status') return cmdStatus(app, cat, json, rest.includes('--allow-none'));
   if (!cat) { console.error(t('modules.noLibrary')); return 4; }
-  if (cmd === 'list') return cmdList(cat, json);
+  if (cmd === 'list') return cmdList(cat, { json, md: rest.includes('--md'), area: argValue(rest, '--area'), find: argValue(rest, '--find') });
   if (cmd === 'add') return cmdAdd(names, app, cat, library);
   if (cmd === 'update') return cmdUpdate(names, app, cat, library, { all: rest.includes('--all'), force: rest.includes('--force') });
   return cmdDrift(cat, path.resolve(argValue(rest, '--sites') || path.dirname(path.resolve(library))), json);

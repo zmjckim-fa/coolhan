@@ -102,6 +102,8 @@
 | 일 | 명령 | 결과 |
 |---|---|---|
 | 목록 | `node scripts/coolhan.js modules list` | 저장소의 모듈 이름, 판, 영역, 스택 |
+| 찾기 | `modules list --find <낱말>`, `modules list --area <영역>` | 이름, 설명, 요약에 그 낱말이 든 모듈. 대소문자를 가리지 않는다. 찾은 것이 없으면 종료 코드 4다(통과가 아니다) |
+| 목록 파일 | `modules list --md` | 영역별 목록. 저장소의 `modules/INDEX.md`는 이 출력으로 만든다. 손으로 고치지 않는다 |
 | 설치 | `node scripts/coolhan.js modules add <이름>` | 프로젝트의 `coolhan_modules/<이름>/`에 폴더째 복사. 필요한 모듈도 함께. 기록은 `coolhan.modules.json` |
 | 상태 | `node scripts/coolhan.js modules status` | 모듈마다 최신, 새 판 있음, 프로젝트에서 고침. 종료 코드 0 최신, 1 새 판 있음, 4 설치된 것 없음 |
 | 갱신 | `node scripts/coolhan.js modules update <이름>` | 고치지 않은 모듈은 폴더째 바꿔 끼운다. 프로젝트에서 고친 파일이 있으면 바꾸지 않고 그 파일 이름을 알린다(`--force`는 고친 것을 `.coolhan-local` 사본으로 남기고 바꾼다) |

@@ -1,5 +1,42 @@
 # Changelog
 
+## [2.12.2] - 2026-11-22
+
+### Added
+
+- **Finding a module** (`scripts/modules.js list`, part of G25): `--area <word>` narrows to one area,
+  `--find <text>` matches a word in the name, label or summary without regard to case, `--md` prints a catalogue
+  grouped by area (one row per module: name, version, stack, required modules, label). A search that matches
+  nothing is exit 4, not a pass. The library's catalogue file is made by redirecting `--md`; it is derived from
+  the manifests and not written by hand.
+- **Track 45**: ten admin and design modules of the library installed into an empty project through the module
+  manager, their real screens mounted and opened in a browser at 375px and 1280px with a role switch. Three
+  module defects were found only this way (an edit button drawn for a view-only role, two touch targets under
+  44px), fixed in the library as new versions and measured again. The project took them through
+  `status` (exit 1), `update` (exit 0), `status` (exit 0); the major version reached the project as one compile
+  error at the call site.
+
+### Changed
+
+- `jest.config.js`: the private folder is never part of the harness suite (it now holds a project with its own
+  packages).
+- Long labels are cut to one line in `modules list`.
+
+### Verification
+
+- jest 431/431, 39 suites (`module-standard` 46/46); lint clean 48 files; fixed list in full.
+- `_harness_test/track43-module-standard/run-track.js`: 16 scenarios, 16 match, 0 false +/- (scenario 16 is the
+  search: area, word, nothing found twice, catalogue). Real library: 114 modules, form findings 0.
+- `_harness_test/track45-module-demo/track45-report.md`.
+
+### Honest bound
+
+- Two closed, as far as they go: a project other than a throwaway folder has used the manager (one project, the
+  private demo), and module screens have been opened in a browser (one stack, one browser engine, two widths).
+- Not checked for the module screens: a screen reader, print, keyboard order through every screen, 200% text
+  size, other browsers.
+- `--find` matches text. It does not know that two words mean the same feature.
+
 ## [2.12.1] - 2026-11-22
 
 ### Added

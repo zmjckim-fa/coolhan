@@ -115,6 +115,21 @@ describe('modules: take a module into a project, see that it is behind, replace 
     expect(r.code).toBe(0); expect(r.out).toMatch(/member-login/); expect(r.out).toMatch(/member-signup/);
   });
 
+  test('list narrows by area and by a word in name, label or summary; a search that finds nothing is exit 4; --md is a catalogue by area', () => {
+    makeModule(path.join(lib, 'modules'), 'admin-shell', { label: 'Admin frame', summary: 'side menu and top bar' });
+    const byArea = run('list', '--area', 'member');
+    expect(byArea.code).toBe(0); expect(byArea.out).toMatch(/member-login/); expect(byArea.out).not.toMatch(/admin-shell/);
+    const byWord = run('list', '--find', 'SIDE MENU');
+    expect(byWord.code).toBe(0); expect(byWord.out).toMatch(/admin-shell/); expect(byWord.out).not.toMatch(/member-login/);
+    expect(run('list', '--find', 'no-such-thing').code).toBe(4);
+    expect(run('list', '--area', 'nowhere').code).toBe(4);
+    const md = run('list', '--md');
+    expect(md.code).toBe(0);
+    expect(md.out).toMatch(/^## admin$/m); expect(md.out).toMatch(/^## member$/m);
+    expect(md.out).toMatch(/\| `member-login` \| 1\.0\.0 \| none \| member-signup \|/);
+    expect(md.out.indexOf('## admin')).toBeLessThan(md.out.indexOf('## member'));
+  });
+
   test('add copies the module folder as it is, brings what it requires, and records version and hashes', () => {
     expect(run('add', 'member-login').code).toBe(0);
     expect(fs.existsSync(installed('member-signup', 'core/index.js'))).toBe(true);

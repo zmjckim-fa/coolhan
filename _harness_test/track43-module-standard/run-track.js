@@ -161,6 +161,19 @@ check(13, 'Inside a kit project: list, add and status through the project launch
   `list ${l1.status}, add ${l2.status}, status ${l3.status}, checks-run C9 ${l4.status}; installed ${fs.existsSync(path.join(kit, 'coolhan_modules', 'member-signup', 'module.json'))}`,
   l1.status === 0 && l2.status === 0 && l3.status === 0 && l4.status === 0 && fs.existsSync(path.join(kit, 'coolhan_modules', 'member-signup', 'module.json')));
 
+// ── 16. finding a module: by area, by a word, as a catalogue ──────────────────────────────────────────────────
+const findLib = mk('find-library'); const findMods = path.join(findLib, 'modules');
+makeModule(findMods, 'member-signup', { label: 'Sign-up', summary: 'account creation and e-mail verification' });
+makeModule(findMods, 'admin-shell', { label: 'Admin frame', summary: 'side menu and top bar' });
+const f = (label, ...args) => run(label, 'modules.js', ['list', ...args, '--library', findLib]);
+const fArea = f('16 area', '--area', 'member'); const fWord = f('16 word', '--find', 'SIDE MENU'); const fNone = f('16 none', '--find', 'no-such-thing');
+const fNoArea = f('16 no area', '--area', 'nowhere'); const fMd = f('16 md', '--md');
+check(16, 'Find a module by area, by a word of its summary in another case, by a word nothing has, and print the catalogue',
+  'area: only that area, exit 0; word: the one module, exit 0; nothing found: exit 4 twice (never a pass); catalogue: one heading per area in order, one row per module',
+  `area exit ${fArea.status} (member ${/member-signup/.test(fArea.out)}, admin ${/admin-shell/.test(fArea.out)}); word exit ${fWord.status} (admin ${/admin-shell/.test(fWord.out)}, member ${/member-signup/.test(fWord.out)}); none exit ${fNone.status}, ${fNoArea.status}; catalogue exit ${fMd.status}, headings ${(fMd.out.match(/^## .+$/gm) || []).join(' ')}, rows ${(fMd.out.match(/^\| `/gm) || []).length}`,
+  fArea.status === 0 && /member-signup/.test(fArea.out) && !/admin-shell/.test(fArea.out) && fWord.status === 0 && /admin-shell/.test(fWord.out) && !/member-signup/.test(fWord.out)
+  && fNone.status === 4 && fNoArea.status === 4 && fMd.status === 0 && (fMd.out.match(/^## .+$/gm) || []).join(' ') === '## admin ## member' && (fMd.out.match(/^\| `/gm) || []).length === 2);
+
 // ── 14-15. the real library on this machine ──────────────────────────────────────────────────────────────────
 const realModules = path.join(REAL_LIBRARY, 'modules');
 if (fs.existsSync(realModules)) {
