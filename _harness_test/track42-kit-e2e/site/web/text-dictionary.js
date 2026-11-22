@@ -57,7 +57,7 @@ export function loadDictionary(fetchFile = (url) => globalThis.fetch(url)) {
  * @returns {string}
  */
 export function text(key, values = {}) {
-  if (entries === null) throw new Error('the text dictionary is not loaded');
+  if (entries === null) throw new Error('text_dictionary_not_loaded');
   if (!Object.hasOwn(entries, key)) throw new Error(`unknown text key: ${key}`);
   return entries[key].replace(SLOT, (_, slot) => {
     if (!Object.hasOwn(values, slot)) throw new Error(`text key ${key} needs a value for ${slot}`);

@@ -14,6 +14,7 @@ import { text } from './text-dictionary.js';
 
 const TEXT_SLOT = '[data-feedback-text]';
 const DIALOG_CANCEL = '[data-dialog-cancel]';
+const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 const DESCRIBED_BY = 'aria-describedby';
 
 /**
@@ -22,7 +23,7 @@ const DESCRIBED_BY = 'aria-describedby';
  */
 function textSlot(element) {
   const slot = element.matches(TEXT_SLOT) ? element : element.querySelector(TEXT_SLOT);
-  if (slot === null) throw new Error('a feedback element needs a data-feedback-text slot');
+  if (slot === null) throw new Error('feedback_text_slot_missing');
   return slot;
 }
 
@@ -137,6 +138,36 @@ export function closeConfirmDialog(dialog, { returnFocus = true } = {}) {
 }
 
 /**
+ * Where focus goes on Tab inside a dialog: the next item, wrapping to the first after the last,
+ * and with Shift to the previous one, wrapping to the last. An unknown position (focus is
+ * outside the list) goes to the first, or to the last when going backwards.
+ * @param {number} count how many focusable items the dialog holds
+ * @param {number} index position of the focused item, -1 when it is not in the list
+ * @param {boolean} backwards true for Shift+Tab
+ * @returns {number} position to focus, -1 when the dialog has no focusable item
+ */
+export function nextDialogFocus(count, index, backwards) {
+  if (count === 0) return -1;
+  if (index < 0) return backwards ? count - 1 : 0;
+  return (index + (backwards ? count - 1 : 1)) % count;
+}
+
+/**
+ * Keeps Tab inside the dialog. The browser would move focus out of the dialog to its own
+ * interface once before coming back, so Tab is handled here.
+ * @param {HTMLDialogElement} dialog
+ * @param {KeyboardEvent} event
+ */
+function keepFocusInside(dialog, event) {
+  if (event.key !== 'Tab') return;
+  const items = [...dialog.querySelectorAll(FOCUSABLE)].filter((item) => !item.hidden);
+  const index = items.indexOf(dialog.ownerDocument.activeElement);
+  const next = nextDialogFocus(items.length, index, event.shiftKey);
+  event.preventDefault();
+  if (next >= 0) items[next].focus();
+}
+
+/**
  * Opens the dialog as a modal and puts focus on its cancel button, so that a stray Enter
  * deletes nothing. The cancel button and the Escape key both close it. The screen listens to
  * the delete button itself and calls closeConfirmDialog when its request has an answer.
@@ -145,9 +176,10 @@ export function closeConfirmDialog(dialog, { returnFocus = true } = {}) {
  */
 export function openConfirmDialog(dialog, opener) {
   const cancelButton = dialog.querySelector(DIALOG_CANCEL);
-  if (cancelButton === null) throw new Error('a confirm dialog needs a data-dialog-cancel button');
+  if (cancelButton === null) throw new Error('dialog_cancel_button_missing');
   if (!dialogOpeners.has(dialog)) {
     cancelButton.addEventListener('click', () => closeConfirmDialog(dialog));
+    dialog.addEventListener('keydown', (event) => keepFocusInside(dialog, event));
     dialog.addEventListener('cancel', (event) => {
       event.preventDefault();
       closeConfirmDialog(dialog);

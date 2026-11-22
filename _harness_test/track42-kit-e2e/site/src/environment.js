@@ -28,7 +28,7 @@ export class EnvironmentError extends Error {
   /** @param {{ name: string, reason: string }[]} problems */
   constructor(problems) {
     const lines = problems.map(({ name, reason }) => `${name} ${reason}`);
-    super(['cannot start: environment is not usable', ...lines].join('\n'));
+    super(['environment_not_usable', ...lines].join('\n'));
     this.name = 'EnvironmentError';
     this.problems = problems;
   }

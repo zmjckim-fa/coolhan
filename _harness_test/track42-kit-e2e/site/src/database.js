@@ -34,12 +34,12 @@ function readSchemaVersion(connection) {
  * `work` must be synchronous. A promise would let COMMIT run before its writes.
  */
 function runInTransaction(connection, work) {
-  if (connection.isTransaction) throw new Error('a transaction is already open on this database handle');
+  if (connection.isTransaction) throw new Error('transaction_already_open');
   connection.exec('BEGIN IMMEDIATE');
   try {
     const result = work();
     if (result !== null && typeof result === 'object' && typeof result.then === 'function') {
-      throw new TypeError('transaction work must be synchronous');
+      throw new TypeError('transaction_work_not_synchronous');
     }
     connection.exec('COMMIT');
     return result;
@@ -68,7 +68,7 @@ function createSchema(connection) {
 function removeExpiredRows(connection, now) {
   const at = now();
   if (!(at instanceof Date) || Number.isNaN(at.getTime())) {
-    throw new TypeError('now() must return a valid Date');
+    throw new TypeError('clock_returned_no_date');
   }
   const attemptLimit = new Date(at.getTime() - LOGIN_ATTEMPT_RETENTION_MS);
   runInTransaction(connection, () => {
@@ -93,7 +93,7 @@ function removeExpiredRows(connection, now) {
  */
 export function openDatabase({ dbFile, now }) {
   if (typeof dbFile !== 'string' || dbFile === '') throw new TypeError('dbFile must be a file path');
-  if (typeof now !== 'function') throw new TypeError('now must be a function that returns a Date');
+  if (typeof now !== 'function') throw new TypeError('clock_not_a_function');
 
   mkdirSync(path.dirname(dbFile), { recursive: true });
   const connection = new DatabaseSync(dbFile);

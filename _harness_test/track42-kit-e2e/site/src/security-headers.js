@@ -35,7 +35,7 @@ const ON_EVERY_RESPONSE = Object.freeze({
  */
 export function securityHeaders(cachePolicy) {
   if (cachePolicy !== CACHE_NO_STORE && cachePolicy !== CACHE_NO_CACHE) {
-    throw new Error('a response needs one of the two cache policies');
+    throw new Error('cache_policy_unknown');
   }
   const headers = { ...ON_EVERY_RESPONSE, 'Cache-Control': cachePolicy };
   if (cachePolicy === CACHE_NO_STORE) headers['X-Robots-Tag'] = 'noindex, nofollow';

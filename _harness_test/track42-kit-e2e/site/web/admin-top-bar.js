@@ -112,7 +112,7 @@ function fillTopBar(header, onLogoutError) {
  * @returns {Promise<ApiResult>}
  */
 export async function startAdminTopBar({ onLogoutError }) {
-  if (typeof onLogoutError !== 'function') throw new TypeError('startAdminTopBar needs an onLogoutError function');
+  if (typeof onLogoutError !== 'function') throw new TypeError('logout_error_handler_missing');
   const header = document.querySelector(TOP_BAR_SELECTOR);
   if (header === null) throw new Error(`the page has no ${TOP_BAR_SELECTOR} element`);
   await loadDictionary();

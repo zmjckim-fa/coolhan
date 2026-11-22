@@ -12,6 +12,7 @@ import { CATEGORY_CODES, CATEGORY_LIST } from '../src/menu-category.js';
 import { SHOP_STATUS_TEXT_KEYS } from '../src/shop-status.js';
 import { SALE_STATUS_CODES } from '../web/input-rules.js';
 import { createApiClient } from '../web/api-client.js';
+import { nextDialogFocus } from '../web/screen-feedback.js';
 import { withoutComments } from './screen-contract.js';
 
 const root = path.join(import.meta.dirname, '..');
@@ -255,4 +256,35 @@ test('api-client는 401 login_failed에는 이동하지 않고 auth_required에�
   const onLoginScreen = await callFrom(LOGIN_SCREEN, () => errorAnswer('auth_required'));
   assert.deepEqual(onLoginScreen.moves, [], 'auth_required on the login screen');
   assert.equal(onLoginScreen.result.code, 'auth_required');
+});
+
+test('D-1 the narrow time input gives its box back to the value (8px side padding, no picker margin)', () => {
+  const css = withoutComments(readText('web/screen.css'), 'screen.css');
+  const narrow = css.slice(css.indexOf('@media (max-width: 639px)'), css.indexOf('@media (min-width: 640px)'));
+  assert.match(narrow, /\.time-input\s*\{[^}]*padding-right:\s*var\(--space-4\)[^}]*padding-left:\s*var\(--space-4\)/);
+  assert.match(narrow, /\.time-input::-webkit-calendar-picker-indicator\s*\{[^}]*margin-inline-start:\s*0/);
+  assert.match(css, /\.time-input\s*\{\s*min-width:\s*120px/);
+});
+
+test('D-2 the tip bubble opens below its anchor and never above it', () => {
+  const css = withoutComments(readText('web/screen.css'), 'screen.css');
+  const rule = css.match(/\.tip-bubble\s*\{([^}]*)\}/)?.[1] ?? '';
+  assert.match(rule, /top:\s*100%/);
+  assert.doesNotMatch(rule, /bottom:/);
+  assert.match(rule, /max-width:\s*min\(240px,\s*100%\)/);
+});
+
+test('D-3 Tab inside the confirm dialog cycles between its buttons in both directions', () => {
+  assert.equal(nextDialogFocus(2, 0, false), 1);
+  assert.equal(nextDialogFocus(2, 1, false), 0, 'Tab on the last button wraps to the first');
+  assert.equal(nextDialogFocus(2, 0, true), 1, 'Shift+Tab on the first button wraps to the last');
+  assert.equal(nextDialogFocus(2, 1, true), 0);
+  assert.equal(nextDialogFocus(2, -1, false), 0);
+  assert.equal(nextDialogFocus(2, -1, true), 1);
+  assert.equal(nextDialogFocus(0, -1, false), -1);
+  let index = 0;
+  for (let press = 0; press < 10; press += 1) {
+    index = nextDialogFocus(3, index, press % 2 === 0);
+    assert.ok(index >= 0 && index < 3);
+  }
 });
