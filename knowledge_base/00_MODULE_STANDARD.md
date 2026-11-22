@@ -81,6 +81,7 @@
 
 - `core/`는 프레임워크, DB 클라이언트, 다른 모듈을 가져오지 않는다.
 - 모듈 밖의 파일을 상대 경로로 가져오지 않는다. 다른 모듈은 `requires`에 적고 그 모듈의 `core/index`만 쓴다.
+- 모듈이 `core/index` 말고 더 여는 파일이 있으면 매니페스트의 `provides.entries`에 경로를 적는다(예: 브라우저에서 쓸 수 있는 `core/rules.ts`, 다른 화면 모듈이 올라타는 `admin/list.tsx`, `text/ko.json`). 다른 모듈은 거기 적힌 파일만 더 가져올 수 있다. 적지 않은 파일은 그 모듈의 안쪽이다. `test/` 아래는 열 수 없다.
 - 다른 모듈의 테이블을 직접 쓰지 않는다. 필요하면 그 모듈의 창구를 부른다.
 - 환경 변수는 `settings`에 적은 이름만 읽는다.
 
@@ -155,7 +156,8 @@
 | entry-missing | `core/`가 있는데 `core/index.*`가 없다. 다른 고정 이름도 같다 |
 | test-outside-test-folder | 시험 파일이 `test/` 밖에 있다 |
 | core-imports-framework | `core/`가 프레임워크나 DB 클라이언트를 가져온다 |
-| import-escapes-module | 모듈 폴더 밖을 상대 경로로 가져온다 |
+| import-escapes-module | 모듈 폴더 밖을 상대 경로로 가져온다. 다른 모듈은 `core/index`와 그 모듈이 `provides.entries`에 연 파일만 가져온다 |
+| public-entry-invalid | `provides.entries`에 적은 파일이 없거나, 모듈 밖이거나, `test/` 아래다 |
 | require-undeclared | 다른 모듈을 가져오는데 `requires`에 없다 |
 | origin-missing | `origin`이 비었다. 모르는 칸은 `null`과 `originNote`로 적는다 |
 | setting-undeclared | `settings`에 없는 환경 변수 이름을 읽는다 |

@@ -18,4 +18,5 @@
 | U12 | 모듈 추출 5차: 회원 2차, 연동 보호와 연결, 문서 양식, HS 검색 | 모듈 저장소 `modules/` | module-admit | ✅ done (입고 검사 10/10 PASS; 모듈 시험 313/313; 저장소 형식 검사 114/114; 저장소 커밋 3건) |
 | U13 | 모듈 찾기 옵션 + 릴리스 v2.12.2 | `scripts/modules.js`, `src/__tests__/module-standard.test.js`, `_harness_test/track43-module-standard/`, 문서 | jest · track43 · checks-run · CI | ✅ done (jest 431/431; track43 16/16; checks-run 13/13; 커밋 4ca7131 태그 v2.12.2; CI 4/4 success) |
 | U14 | 모듈 추출 6차: 쇼핑, 마이페이지 틀, 회원 화면 | 모듈 저장소 `modules/`, 실증 프로젝트 | module-admit · 브라우저 확인 | ✅ done (입고 검사 5/5 PASS; 모듈 시험 114/114; 회원 화면 브라우저 확인; 저장소 커밋 3건) |
-| U15 | 모듈 다음 판: 연동 보호 통일, 회원 계정 진입점, 추적 합치기, 목록과 상세 틀 보강, 마이페이지 틀 브라우저 확인 | 모듈 저장소 `modules/`, 실증 프로젝트 | module-admit · 브라우저 확인 | ⬜ todo |
+| U15 | 모듈 다음 판: 연동 보호 통일, 회원 계정 진입점, 추적 합치기, 목록과 상세 틀 보강, 마이페이지 틀 브라우저 확인 | 모듈 저장소 `modules/`, 실증 프로젝트 | module-admit · 브라우저 확인 | ✅ done (입고 검사 13/13, 4/4 PASS; 실증 프로젝트 타입 검사·빌드 종료 코드 0; 저장소 커밋 2건) |
+| U16 | 공개 진입점 규칙 + 릴리스 v2.12.3 | `scripts/module-check.js`, `src/__tests__/module-standard.test.js`, `_harness_test/track43-module-standard/`, 문서 | jest · track43 · checks-run · CI | ⬜ todo |

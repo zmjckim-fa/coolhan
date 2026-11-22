@@ -174,6 +174,20 @@ check(16, 'Find a module by area, by a word of its summary in another case, by a
   fArea.status === 0 && /member-signup/.test(fArea.out) && !/admin-shell/.test(fArea.out) && fWord.status === 0 && /admin-shell/.test(fWord.out) && !/member-signup/.test(fWord.out)
   && fNone.status === 4 && fNoArea.status === 4 && fMd.status === 0 && (fMd.out.match(/^## .+$/gm) || []).join(' ') === '## admin ## member' && (fMd.out.match(/^\| `/gm) || []).length === 2);
 
+// ── 17. public entries: what a module opens besides core/index ────────────────────────────────────────────────
+const openLib = mk('entries');
+makeModule(openLib, 'member-login', { provides: { lib: ['rule'], entries: ['core/rules.js'] } }, { 'core/rules.js': 'export const min = 8;\n', 'core/inside.js': 'export const secret = 1;\n' });
+makeModule(openLib, 'member-signup', { requires: ['member-login'] }, { 'core/index.js': "import { min } from '../../member-login/core/rules.js';\nexport const rule = () => min;\n" });
+makeModule(openLib, 'member-profile', { requires: ['member-login'] }, { 'core/index.js': "import { secret } from '../../member-login/core/inside.js';\nexport const rule = () => secret;\n" });
+makeModule(openLib, 'member-reset', { provides: { lib: ['rule'], entries: ['core/nothing.js'] } });
+const e1 = run('17 listed', 'module-check.js', [path.join(openLib, 'member-signup')]);
+const e2 = run('17 unlisted', 'module-check.js', [path.join(openLib, 'member-profile')]);
+const e3 = run('17 invalid entry', 'module-check.js', [path.join(openLib, 'member-reset')]);
+check(17, 'A module imports a file its neighbour lists in provides.entries, a file the neighbour does not list, and a module lists a file that is not there',
+  'listed: exit 0; unlisted: exit 1 naming import-escapes-module; missing entry: exit 1 naming public-entry-invalid',
+  `listed exit ${e1.status}; unlisted exit ${e2.status} (${/import-escapes-module/.test(e2.out)}); missing entry exit ${e3.status} (${/public-entry-invalid/.test(e3.out)})`,
+  e1.status === 0 && e2.status === 1 && /import-escapes-module/.test(e2.out) && e3.status === 1 && /public-entry-invalid/.test(e3.out));
+
 // ── 14-15. the real library on this machine ──────────────────────────────────────────────────────────────────
 const realModules = path.join(REAL_LIBRARY, 'modules');
 if (fs.existsSync(realModules)) {

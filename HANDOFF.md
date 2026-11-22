@@ -20,8 +20,8 @@ Claude Code. It is the *product* (the harness itself), not an app built with it.
 gates (G1–G25) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.12.2` (package.json = git tag `v2.12.2` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **431 tests, 39 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.12.3` (package.json = git tag `v2.12.3` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **433 tests, 39 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -154,13 +154,13 @@ provide its own credentials in its own environment — they do NOT travel in thi
 ```bash
 git log --oneline -3
 node -e "console.log('pkg', require('./package.json').version)" && git describe --tags --abbrev=0
-npx jest --ci   # background it; expect 431 passed / 39 suites
+npx jest --ci   # background it; expect 433 passed / 39 suites
 node scripts/checks-run.js   # the fixed list (docs/CHECKS.md) — the G20 way to "verify"; C1 is the slow one
 node scripts/progress-check.js docs/PROGRESS.md   # this repo's ledger: current position + open D-numbers
 node doctor.js
 ```
 
-If those agree (version = v2.12.2, tests green, doctor healthy, ledger PASS), the handoff is intact and you
+If those agree (version = v2.12.3, tests green, doctor healthy, ledger PASS), the handoff is intact and you
 may proceed from § Next actions.
 
 
@@ -350,3 +350,12 @@ CREATE TABLE consent_records (user_id UUID, region TEXT, personalized BOOLEAN DE
 - 운영자가 확인해야 하는 것(모듈의 `docs/`에 «미검증»으로 적혀 있다): 우편번호 조회처 8곳의 이용 조건, HS 코드표와 별칭표의 출처와 이용 조건(모듈에 넣지 않았다), 정산 모듈의 세무 가정 8건, 회원 모듈의 법무 가정(부가세 번호 형식, 탈퇴 뒤 보관 자료와 기간), 판매 사이트 약관.
 - 아직 재지 않은 것: 모듈의 SQL을 PostgreSQL에서 실행(SQLite로만 돌렸다), 실제 운송사와 문자 업체와 로그인 제공처의 응답, 실제 이름 풀이와 소켓(연동 보호 모듈), 화면 낭독기와 인쇄와 키보드 순서.
 - 대기열에 남은 것(`.coolhan-private/module-harvest/QUEUE.md`): 회원과 관리자의 화면 부분, 쇼핑(가격 검증, 장바구니), 마이페이지, 다른 디자인 체계들, 한국 우체국과 추적 어댑터, 이전 형식 38개의 분리, 다음 판 후보(7번 표), 아직 조사하지 않은 폴더.
+
+---
+## 인수인계 보강 (2026-11-22, v2.12.3): 모듈이 여는 파일, 그리고 모듈을 고친 뒤의 순서
+
+- 위 본문의 v2.12.2 수치는 이 보강으로 대체된다: 현재 `2.12.3`, jest **433 tests / 39 suites**. 저장소의 모듈은 119개다. 열린 결함은 D-14 하나다.
+- 다른 모듈은 `core/index`와, 그 모듈이 매니페스트의 `provides.entries`에 적은 파일만 가져올 수 있다. 화면 모듈이 다른 틀에 올라탈 때는 틀의 모양을 베끼지 말고 틀이 연 파일에서 타입을 가져온다. 틀이 열지 않았으면 틀의 매니페스트에 먼저 적고 판을 올린다.
+- 모듈을 고친 뒤의 순서: (1) `module-admit`를 고친 모듈과 그 모듈을 `requires`로 쓰는 모듈까지 함께 돌린다(`modules list --json`의 `requires`로 찾는다). (2) 저장소에 경로를 지정해 커밋하고 `modules list --md > modules/INDEX.md`로 목록을 다시 만든다. (3) 실증 프로젝트에서 `modules update --all`, `npx tsc --noEmit`, `npx vite build`. 여기서 깨지면 모듈끼리 어긋난 것이다. (4) 화면이 바뀌었으면 브라우저로 375px와 1280px에서 연다.
+- 이번에 올린 다음 판: 밖으로 나가는 호출은 모두 연동 보호 모듈을 거친다(우편번호 2.0.0, 운송사 2.0.0. 바꾼 호스트가 안쪽 주소로 풀려도 검사하지 않던 구멍을 닫았다), 회원 계정 1.1.1(브라우저용 진입점, 외부 인증 계정과 동의 기록의 내부 창구), 추적 1.1.0(구매대행 추적을 합침), 목록 틀 1.0.3, 상세 틀 2.1.1(뒤로가기 가드), 확인창 1.0.1, 회원 화면 1.0.1. 옮기는 법은 모듈마다 `CHANGELOG.md`에 있다.
+- 마이페이지 틀은 실증 프로젝트의 `#/my/orders`에서 연다(375px 가로 띠, 1280px 왼쪽 목록, 숨긴 탭과 잘못된 주소 거절을 브라우저에서 쟀다).

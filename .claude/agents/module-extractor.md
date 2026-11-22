@@ -39,6 +39,10 @@ origin, a README and a CHANGELOG. The library holds them under `modules/<name>/`
   foreign key into another module), `docs/security.md` when there is `api/`, `user/` or `admin/`.
 - An error found in a source is fixed in the module with a test that catches it and listed for the source project;
   the source project's files are never edited.
+- Another module is entered through its `core/index` or through a file its manifest lists in `provides.entries`,
+  nothing else. A screen module built on a shared frame imports the frame's own types from those entries and never
+  copies their shape; when the frame has not opened the file yet, the frame's manifest is changed first.
+- After changing a module, admit it together with every module that requires it.
 - Done for a module means `node scripts/module-admit.js <name> --library <library>` exits 0: the form gate, the
   module's own tests, an install into an empty folder with the tests run inside the installed copy, and the secret
   scan. Exit 4 means a step measured nothing and is not a pass. Read the exit status itself, never the last line of

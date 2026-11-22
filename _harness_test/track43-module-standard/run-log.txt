@@ -320,6 +320,20 @@ $ [16 md] node scripts/modules.js list --md --library <tmp>\find-library
   |---|---|---|---|---|
   | `admin-shell` | 1.0.0 | none | - | Admin frame |
 
+$ [17 listed] node scripts/module-check.js <tmp>\entries\member-signup
+  exit 0
+  ✔ module-check: PASS: 모듈 1개 · 지적 0건
+
+$ [17 unlisted] node scripts/module-check.js <tmp>\entries\member-profile
+  exit 1
+  ✗ module-check: FAIL: 모듈 1개 · 지적 1건
+    [import-escapes-module] member-profile/core/index.js · 모듈 폴더 밖이나 다른 모듈의 안쪽을 상대 경로로 가져온다: ../../member-login/core/inside.js (다른 모듈은 core/index 와 그 모듈이 provides.entries 에 연 파일만 쓴다)
+
+$ [17 invalid entry] node scripts/module-check.js <tmp>\entries\member-reset
+  exit 1
+  ✗ module-check: FAIL: 모듈 1개 · 지적 1건
+    [public-entry-invalid] member-reset/module.json · provides.entries 의 "core/nothing.js" 가 모듈 안의 파일이 아니다 (없거나, 모듈 밖이거나, test 아래다)
+
 $ [14 real gate] node scripts/module-check.js <library>\modules --json
   exit 0
   {
@@ -376,11 +390,14 @@ PASS #13 Inside a kit project: list, add and status through the project launcher
 PASS #16 Find a module by area, by a word of its summary in another case, by a word nothing has, and print the catalogue
     expected: area: only that area, exit 0; word: the one module, exit 0; nothing found: exit 4 twice (never a pass); catalogue: one heading per area in order, one row per module
     actual:   area exit 0 (member true, admin false); word exit 0 (admin true, member false); none exit 4, 4; catalogue exit 0, headings ## admin ## member, rows 2
+PASS #17 A module imports a file its neighbour lists in provides.entries, a file the neighbour does not list, and a module lists a file that is not there
+    expected: listed: exit 0; unlisted: exit 1 naming import-escapes-module; missing entry: exit 1 naming public-entry-invalid
+    actual:   listed exit 0; unlisted exit 1 (true); missing entry exit 1 (true)
 PASS #14 The real module library on this machine
     expected: module-check PASS for every module in it
-    actual:   exit 0; modules 114; findings 0
+    actual:   exit 0; modules 119; findings 0
 PASS #15 Take one real module (partner-settlement) with what it requires into an empty project and run the installed modules' own tests
     expected: add exit 0; every installed module's tests exit 0
     actual:   add exit 0; installed 2 (application-state-machine, partner-settlement); tests exit 0, 0
 
-track43: 16/16 match, 0 mismatch, 0 not measured
+track43: 17/17 match, 0 mismatch, 0 not measured

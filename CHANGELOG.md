@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.12.3] - 2026-11-22
+
+### Added
+
+- **Public entries of a module** (`scripts/module-check.js`, module standard §6, part of G25). A module could
+  import another module's `core/index` only. Screen modules therefore copied the shapes of the frames they are
+  built on. When the detail frame added one function to its form in a minor version, the copy in the member
+  screens module no longer fitted and the demo project stopped building after `modules update` (one type error).
+  A module now lists the further files it opens in its manifest (`provides.entries`, for example a browser-safe
+  `core/rules.ts` or a screen file other screen modules build on); another module that requires it may import
+  those files and nothing else of its inside.
+  - `import-escapes-module` now reads the neighbour's manifest; an unlisted file stays closed, and a neighbour
+    that is not there to ask counts as closed.
+  - New rule `public-entry-invalid`: a listed file that is missing, outside the module or under `test/`.
+
+### Verification
+
+- jest 433/433, 39 suites (`module-standard` 48/48); lint clean 48 files; fixed list in full.
+- `_harness_test/track43-module-standard/run-track.js`: 17 scenarios, 17 match, 0 false +/- (scenario 17: listed
+  file allowed, unlisted file refused, missing entry refused). Real library: 119 modules, form findings 0.
+- In the library the three admin frames list their screen files and the member screens module imports the
+  frames' own types; the demo project took the four new versions through the manager and builds again with no
+  change of its own (type check exit 0, build exit 0).
+
+### Honest bound
+
+- The rule opens files, not names: everything a listed file exports is reachable.
+- Whether two modules still fit together after one of them changes is not checked by admission (each module is
+  admitted with what it requires, in isolation). The demo project's type check after `modules update` is what
+  caught this case; it covers only the modules mounted there.
+
 ## [2.12.2] - 2026-11-22
 
 ### Added

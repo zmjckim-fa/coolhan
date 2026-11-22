@@ -82,6 +82,33 @@ describe('module-check: the form of a module (knowledge_base/00_MODULE_STANDARD.
     expect(rulesOf(makeModule(root, name, over, files))).toContain(rule);
   });
 
+  test('a module opens more files than core/index by listing them in provides.entries; an unlisted file stays closed', () => {
+    makeModule(root, 'member-login', { provides: { lib: ['rule'], entries: ['core/rules.js', 'text/ko.json'] }, parts: { ...ABSENT, core: true, test: true, text: true } },
+      { 'core/rules.js': 'export const min = 8;\n', 'core/inside.js': 'export const secret = 1;\n', 'text/ko.json': '{"a":"b"}\n' });
+    // listed, with and without the extension
+    makeModule(root, 'member-signup', { requires: ['member-login'] }, { 'core/index.js': "import { min } from '../../member-login/core/rules.js';\nimport t from '../../member-login/text/ko.json';\nimport { min as m2 } from '../../member-login/core/rules';\nexport const rule = () => min + m2 + t.a.length;\n" });
+    expect(rulesOf(path.join(root, 'member-signup'))).toEqual([]);
+    // not listed
+    makeModule(root, 'member-profile', { requires: ['member-login'] }, { 'core/index.js': "import { secret } from '../../member-login/core/inside.js';\nexport const rule = () => secret;\n" });
+    expect(rulesOf(path.join(root, 'member-profile'))).toEqual(['import-escapes-module']);
+    // listed but the importer did not declare the requirement
+    makeModule(root, 'member-reset', {}, { 'core/index.js': "import { min } from '../../member-login/core/rules.js';\nexport const rule = () => min;\n" });
+    expect(rulesOf(path.join(root, 'member-reset'))).toEqual(['require-undeclared']);
+    // the neighbour is not there to ask: closed
+    const alone = tmp('modstd-alone-');
+    makeModule(alone, 'member-signup', { requires: ['member-login'] }, { 'core/index.js': "import { min } from '../../member-login/core/rules.js';\nexport const rule = () => min;\n" });
+    expect(rulesOf(path.join(alone, 'member-signup'))).toEqual(['import-escapes-module']);
+    fs.rmSync(alone, { recursive: true, force: true });
+  });
+
+  test('provides.entries must name files inside the module and not under test/', () => {
+    for (const entry of ['core/nothing.js', '../member-login/core/index.js', 'test/rule.test.js', 'core']) {
+      const dir = makeModule(root, 'member-signup', { provides: { lib: ['rule'], entries: [entry] } });
+      expect(rulesOf(dir)).toEqual(['public-entry-invalid']);
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   test('what the standard allows is not reported: a declared sibling entry, a declared setting, own tables with a reference inside the module, a named exception', () => {
     const dir = makeModule(root, 'member-signup', {
       requires: [{ name: 'member-login', version: '^1.0.0' }], settings: [{ name: 'SIGNUP_SECRET', note: 'signing' }],

@@ -19,7 +19,9 @@
  *   entry-missing                         core/index.*, api/routes.*, db/schema.*, text/<lang>.json, style/tokens.css
  *   test-outside-test-folder
  *   core-imports-framework                core/ imports a framework or a database client
- *   import-escapes-module                 a relative import that leaves the module (or enters another module's inside)
+ *   import-escapes-module                 a relative import that leaves the module (or enters another module's inside:
+ *                                         only its core/index and the files its manifest lists in provides.entries are open)
+ *   public-entry-invalid                  provides.entries names a file that is missing, outside the module or under test/
  *   require-undeclared                    another module's entry is imported but not listed in `requires`
  *   origin-missing                        no origin, or an unknown commit without an `originNote`
  *   setting-undeclared                    an environment variable is read that `settings` does not name
@@ -77,6 +79,19 @@ function findModules(target) {
     .map(e => path.join(target, e.name)).sort();
 }
 
+/** The files a module opens to other modules besides core/index: `provides.entries`, as paths inside the module. */
+function publicEntries(m) {
+  const e = m && m.provides && m.provides.entries;
+  return Array.isArray(e) ? e.filter(x => typeof x === 'string').map(x => x.replace(/\\/g, '/').replace(/^\.\//, '')) : [];
+}
+
+/** Does the neighbouring module `other` (a folder beside `dir`) open `rel` to other modules? An extension may be left out by the importer. */
+function opensEntry(dir, other, rel) {
+  let m;
+  try { m = JSON.parse(fs.readFileSync(path.join(dir, '..', other, 'module.json'), 'utf8')); } catch (_) { return false; }
+  return publicEntries(m).some(e => e === rel || e.replace(/\.[a-z]+$/, '') === rel);
+}
+
 function checkModule(dir) {
   const folder = path.basename(dir);
   const findings = [];
@@ -94,6 +109,10 @@ function checkModule(dir) {
   if (m.area && name && name.split('-')[0] !== m.area) add('area-mismatch', 'module.json', 'module.areaMismatch', { area: m.area, name });
   if (!VERSION.test(String(m.version || ''))) add('version-format', 'module.json', 'module.versionFormat', { version: m.version });
   for (const r of requireNames(m)) if (!NAME.test(r)) add('require-name-format', 'module.json', 'module.requireNameFormat', { name: r });
+  for (const e of publicEntries(m)) {
+    const inside = !e.startsWith('..') && !path.isAbsolute(e) && !e.split('/').includes('..') && e.split('/')[0] !== 'test';
+    if (!inside || !fs.existsSync(path.join(dir, e)) || !fs.statSync(path.join(dir, e)).isFile()) add('public-entry-invalid', 'module.json', 'module.publicEntryInvalid', { entry: e });
+  }
 
   // top level
   const top = fs.readdirSync(dir, { withFileTypes: true });
@@ -151,7 +170,8 @@ function checkModule(dir) {
         const seg = target.split('/').filter(s => s !== '..');
         const other = seg[0];
         const entersEntry = seg.length === 3 && seg[1] === 'core' && /^index(?:\.[a-z]+)?$/.test(seg[2]);
-        if (target.split('/').filter(s => s === '..').length === 1 && entersEntry) {
+        const oneUp = target.split('/').filter(s => s === '..').length === 1;
+        if (oneUp && (entersEntry || (seg.length >= 2 && opensEntry(dir, other, seg.slice(1).join('/'))))) {
           if (!requires.has(other)) add('require-undeclared', f.rel, 'module.requireUndeclared', { other });
         } else add('import-escapes-module', f.rel, 'module.importEscapes', { spec });
       }

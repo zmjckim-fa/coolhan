@@ -47,3 +47,22 @@ had to change, not as a silent difference in behaviour. The two patch versions n
   only as extra demo code, which was not measured.
 - Leaving a dirty detail screen with the browser's back button is not stopped by the detail frame (only the
   browser's own unload warning applies). Recorded for the module's next version.
+
+## Addendum (same day): the second update through the manager broke the build, and why
+
+Twelve modules got next versions (outbound calls through the guard module, member entry points, tracking merged,
+frame fixes). `modules status` in the demo project: exit 1, three behind. `modules update --all`: exit 0. Type
+check: exit 2, one error. The member screens module carried copies of the detail frame's types; the frame's minor
+version had added one function to its form. No module test and no admission run had shown it: each module is
+admitted with what it requires, in isolation, and the copies were structurally valid on their own.
+
+The cause was the rule that a module may import another module's `core/index` only, which made copying the only
+way to build on a frame. The gate now lets a module list the files it opens (`provides.entries`); the three admin
+frames list their screen files; the member screens module imports the frames' own types. The demo project took the
+four new versions (`update` exit 0, `status` exit 0) and builds with no change of its own: type check exit 0, build
+exit 0.
+
+Also opened in the browser after that: the member screens (sign-up validation with focus on the first invalid field
+and the error tied to it, sign-in, staff list and detail at 375px, a view-only role sees no action button, an action
+asks for its reason first) and the my-page frame (horizontal tab strip at 375px, side list at 1280px, a hidden tab
+and a path with `..` refused with their reasons). Console errors 0, no horizontal page scroll.
