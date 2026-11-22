@@ -1,5 +1,56 @@
 # Changelog
 
+## [2.12.0] - 2026-11-22
+
+### Added
+
+- **G25 Modules used like plug-ins.** Operator orders: modules must be separated better and must absorb what the
+  projects improve; any session in any folder takes the modules it needs and replaces an old one by the upgraded
+  one; every module has a name, the same subfolders and file name rules; the source is stable, the database
+  separate, the module detachable; go through every project, take the better variant of each feature, bring it over
+  tidied, and keep both sides in step.
+  - `knowledge_base/00_MODULE_STANDARD.md`: one name (`영역-기능`), one folder, the same ten subfolders
+    (`core api user admin db text style adapters test docs`), file name rules, a manifest with version, requires,
+    settings and origin, the quality bar (tests, own tables, a security note, detachable) and the tidy rules for
+    absorption (the better variant, fewer lines and files, errors fixed in the module).
+  - `scripts/module-check.js`: the form of a module, 26 rules; exit 0 PASS, 1 FAIL, 4 no module.
+  - `scripts/modules.js`: `list`, `add` (with what the module requires), `status` (0 current, 1 a newer version
+    exists, 4 nothing installed; `--allow-none` for projects without modules), `update` (refuses when the project
+    changed a file inside the module; `--force` keeps the project's edit as a copy), `remove`, `drift` (origin paths
+    changed in the source project since the module was taken). A project records version and hashes in
+    `coolhan.modules.json`; text is hashed with normalized line endings.
+  - `scripts/module-convert.js`: older stack-neutral packages into the standard form, never overwriting an existing
+    module.
+  - Kit: the launcher's `modules` is the module manager (the library's older loader is `modules-loader`); a fixed
+    check for installed modules; standing order O-19 (take modules, give improvements back) in the registry, the
+    project kit and the global block.
+- **Kit carried through a real small site (track42)** and nine kit defects fixed: the planning gate requires
+  located deliverables to exist (`trace-file-missing`); the supervisor names a client that is not logged in; the
+  lesson tool works inside a project; the launcher runs in a module-type project; the wave planner counts edited
+  files; the completion gate reads unit IDs written as `U-01`; `single-source-check --skip-files`; the goal file
+  keeps the operator's own words (`new-project.js --command`); the ledger template asks for the integration review.
+- Plan reviewer: the review is repeated after fixes; a unit that builds shared pieces carries its own check; a
+  unit's verification must run with only its dependencies built.
+
+### Verification
+
+- jest 421/421, 38 suites (new `module-standard` suite 45/45); lint clean 48 files; fixed list in full.
+- `_harness_test/track42-kit-e2e`: one operator sentence to a verified site: 13 units, 191 site tests, site fixed
+  checks 통과 10 · 실패 0, 28 accessibility rows that need a person left open on the site's own ledger.
+- `_harness_test/track43-module-standard/run-track.js`: 15 scenarios, 15 match, 0 false +/-.
+- Real module library: 68 older packages converted, form gate PASS, the modules' own 332 tests pass; origins that
+  moved on since extraction: 109 in 44 modules.
+
+### Honest bound
+
+- The gate checks a module's form. That it stands alone is shown by its own tests and a throwaway install.
+- Packages of the library that carry screens, server code and database fragments are still in the older layout.
+- Update replaces a module folder; it does not migrate a database.
+- `drift` counts commits on origin paths; whether a change is an improvement is decided by reading it.
+- No project other than throwaway folders and the demo site has used the manager yet.
+- Whether a fresh session in another folder obeys the global block is still not observed: the bundled command line
+  client is not logged in on this machine.
+
 ## [2.11.1] - 2026-11-17
 
 ### Fixed

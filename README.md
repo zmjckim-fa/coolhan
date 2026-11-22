@@ -133,6 +133,19 @@ Writes one managed block into your user-level `CLAUDE.md`: the standing orders, 
 rule that development in a folder without the project kit installs it first. Your own text in that file is not
 touched. After that, any session in any folder starts with CoolHan's rules; you do not have to say "CoolHan".
 
+### Modules as plug-ins
+
+```bash
+node scripts/coolhan.js modules list            # what the module library holds
+node scripts/coolhan.js modules add <name>      # into coolhan_modules/<name>/, with what it requires
+node scripts/coolhan.js modules status          # 0 current · 1 a newer version exists · 4 nothing installed
+node scripts/coolhan.js modules update <name>   # replace the folder; a file the project changed is never overwritten silently
+```
+
+A module has one name, one folder, the same subfolders and a manifest (`knowledge_base/00_MODULE_STANDARD.md`);
+`node scripts/module-check.js <module dir>` checks the form. `node scripts/modules.js drift` names modules whose
+source project has moved on since they were taken.
+
 ### Usage
 
 After installation, open Claude Code in your project directory and use natural language:
