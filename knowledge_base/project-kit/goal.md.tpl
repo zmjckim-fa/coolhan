@@ -3,7 +3,7 @@
 run_id: {{date}}-{{slug}}
 feature: {{intent}}
 operator_command: |
-  {{intent}}
+  {{command}}
 purpose_fit: |
   쿨한 빌더의 목적: 사람의 추가 명령 없이 기획서를 제대로 만들고, 그 기획서에 맞는 결과물을 쿨한 에이전트로 끝까지 완성한다.
 scope_boundary (P0):

@@ -121,7 +121,7 @@ const M = {
   'lessons.checkSummary': '{mark} field-lessons check: {status} ({mode}): 훑음 {files}회(파일×규칙) · 검사 규칙 {detectors} · {counts}',
   'lessons.notRun': '  확인 안 함: 훑은 파일이나 검사 규칙이 0이다. 통과가 아니다 (교훈 F-10)',
   // ── new-project / handoff-write (G23) ────────────────────────────────────────────────────
-  'kit.usage': 'usage: new-project.js <dir> --intent "한 줄 목표" [--name n] [--tags ui,deploy] [--deploy none|after-complete] [--modules <dir>] [--refresh] [--check] [--dry] [--json]',
+  'kit.usage': 'usage: new-project.js <dir> --intent "한 줄 목표" [--command "운영자의 말 그대로"] [--name n] [--tags ui,deploy] [--deploy none|after-complete] [--modules <dir>] [--refresh] [--check] [--dry] [--json]',
   'kit.noIntent': 'new-project: --intent "한 줄 목표"가 필요하다 (목표 줄은 운영자가 정한다)',
   'kit.badDeploy': 'new-project: --deploy 는 {values} 중 하나',
   'kit.badSettings': '  ○ .claude/settings.json 을 읽을 수 없어 훅을 넣지 않았다 (확인 안 함: 파일을 고친 뒤 다시 실행)',

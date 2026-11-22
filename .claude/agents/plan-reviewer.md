@@ -122,6 +122,16 @@ If absent, use the review steps below and note the skill was absent — never fa
    Record in `debate` field of the output artifact.
 7. **Compile:** `structural_status` (from step 1) + `open_risks` (steps 2–6) + `debate` (step 6.5 if triggered) + `gate`.
 
+## Repeat the review after fixes; shared pieces carry their own check (track42 K-10, K-12)
+- A review that found a blocking fault is run again after the fixes, on the whole plan. The plan is clean when a pass
+  finds no blocking fault. In the measured case the first pass found two, the pass after the fixes found one more that
+  had been there from the first draft; all mechanical gates had passed both times.
+- A unit that builds something several later units share (screen base, component styles, a route table) carries a
+  check of its own for that shared behaviour: for screen pieces a browser row at the narrowest supported width. In
+  the measured case three defects of a shared screen base surfaced only in the browser rows of later units.
+- A unit's verification command must be runnable with only that unit and its dependencies built. Read the test list
+  of each unit against the files of later units.
+
 ## Verdict / Gate
 - `gate = FAIL` if `structural_status.ok === false` (plan-check.js exit 1) — hard block, return to
   spec-writer/orchestrator with the specific violations.

@@ -34,7 +34,7 @@ const lessons = require('./field-lessons');
 
 const HOME = path.resolve(__dirname, '..');
 const KIT = path.join(HOME, 'knowledge_base', 'project-kit');
-const VALUE_FLAGS = ['--intent', '--name', '--tags', '--deploy', '--modules'];
+const VALUE_FLAGS = ['--intent', '--command', '--name', '--tags', '--deploy', '--modules'];
 const DEFAULT_TAGS = ['ui', 'deploy'];
 const DEPLOY = ['none', 'after-complete'];
 const ORDERS = ['<!-- coolhan:orders:start -->', '<!-- coolhan:orders:end -->'];
@@ -103,7 +103,8 @@ function main(argv) {
   const reg = lessons.load(path.join(HOME, lessons.DEFAULT_REGISTRY));
   const orders = lessons.ordersOf(reg, ['all', ...tags]).map(o => `- **${o.id} ${o.title}**: ${o.text}`).join('\n');
   const rows = moduleRows(cfg.modules, tags);
-  const vars = { name: cfg.name, intent: cfg.intent, tags: cfg.tags.join(', '), deploy: cfg.deploy, modules: cfg.modules || t('kit.none'), date: new Date().toISOString().slice(0, 10), slug: slug(cfg.name), orders, kit: cfg.kit };
+  // The goal file keeps the operator's own words when they are given (--command); the one-line intent is a summary (track42 K-4).
+  const vars = { name: cfg.name, intent: cfg.intent, command: argValue(args, '--command') || cfg.intent, tags: cfg.tags.join(', '), deploy: cfg.deploy, modules: cfg.modules || t('kit.none'), date: new Date().toISOString().slice(0, 10), slug: slug(cfg.name), orders, kit: cfg.kit };
   const done = { created: [], updated: [], skipped: [] };
   const put = (rel, content, how) => {
     const f = path.join(dir, rel);
