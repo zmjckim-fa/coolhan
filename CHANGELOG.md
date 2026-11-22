@@ -1,5 +1,41 @@
 # Changelog
 
+## [2.12.1] - 2026-11-22
+
+### Added
+
+- **Module admission in one command** (`scripts/module-admit.js`, part of G25). Before a module is committed to
+  the library it must show four things: the form gate, its own tests, an install into an empty folder through the
+  module manager with the tests run inside the installed copy, and the secret scan. They were run by hand, one
+  shell line each. One library commit went in while the scan had four findings, because the scan's exit status
+  was behind a pipe (the findings were invented test values and were marked in the next commit). The script runs
+  the four steps per module and reads every exit status.
+  - `node scripts/module-admit.js <name...|--all> --library <dir> [--json]`: exit 0 every step PASS, 1 any FAIL,
+    2 usage, 4 something not measured (no test command, a run of 0 tests, a child that never started, unknown
+    module, no library).
+  - The install step catches a module that passes only beside its neighbours in the library.
+  - `secret-scan.js` exports `scanPath` for callers that need the result and not the printed line.
+
+### Changed
+
+- Module standard §8, the module extractor's definition of done, the orchestrator skill and the handoff name the
+  admission command where they listed the separate steps.
+
+### Verification
+
+- jest 430/430, 39 suites (new `module-admit` suite 9/9); lint clean 48 files; fixed list in full.
+- `_harness_test/track44-module-admit/run-track.js`: 9 scenarios, 9 match, 0 false +/-; the incident is scenario 3
+  (form and tests pass, a line looks like a secret: FAIL), its marked twin is scenario 4 (PASS).
+- Real library: 88 modules through `--all`, 88 PASS, 0 FAIL, 0 NOT_RUN (more than ten minutes).
+
+### Honest bound
+
+- Admission reads what the module's own tests assert; a module with weak tests passes. Whether the tests are
+  enough is the reviewer's judgement.
+- The secret scan is textual; a clean scan lowers the risk and does not prove there is no secret.
+- Screens inside a module are not opened in a browser by this command.
+- Nothing is committed by the script: a person or a session still makes the library commit after exit 0.
+
 ## [2.12.0] - 2026-11-22
 
 ### Added

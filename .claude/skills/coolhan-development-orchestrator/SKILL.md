@@ -490,7 +490,8 @@ while (todo remains in backlog):
      Session start in a project: modules status (0 current / 1 a newer version exists / 4 nothing installed);
      modules update <name> replaces the folder and refuses when the project edited a file inside it.
      A feature a project improved goes back to the library as a new module or version in the standard form:
-     node scripts/module-check.js <module dir> (0 PASS / 1 FAIL / 4 no module), then the module's own tests.
+     node scripts/module-admit.js <name> --library <dir> (v2.12.1: form, the module's tests, empty-folder install
+     with the tests there, secret scan; 0 admit / 1 FAIL / 4 a step measured nothing); the library commit follows 0.
      node scripts/modules.js drift names modules whose source project moved on since they were taken.
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)

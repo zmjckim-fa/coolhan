@@ -161,4 +161,11 @@ if (require.main === module) {
   process.exit(main(process.argv));
 }
 
-module.exports = { scanFile, looksHighEntropySecret, shannonEntropy, PATTERNS, main };
+/** Every scannable file under `target` and its findings: for callers that need the result, not the printed line. */
+function scanPath(target) {
+  const files = [];
+  walk(target, files);
+  return { files: files.length, findings: files.flatMap(scanFile) };
+}
+
+module.exports = { scanFile, scanPath, looksHighEntropySecret, shannonEntropy, PATTERNS, main };

@@ -7,7 +7,7 @@
 
 | ID | 검사 | 명령 | 비고 |
 |---|---|---|---|
-| C1 | 전체 단위 시험 (jest, 38 suites) | `npx jest --ci` | 느림(~6분) |
+| C1 | 전체 단위 시험 (jest, 39 suites) | `npx jest --ci` | 느림(~6분) |
 | C2 | 프롬프트 현대화 린트 (에이전트·스킬) | `node scripts/prompt-modernization-check.js .claude/agents .claude/skills` | |
 | C3 | 플레이스홀더·TODO 잔존 | `node scripts/no-placeholder-check.js scripts src/health.js src/server.js doctor.js install.js` | |
 | C4 | 비밀값 스캔 (스테이징 전 전체) | `node scripts/secret-scan.js` | 커밋 직전엔 `--staged`로 한 번 더 |

@@ -20,8 +20,8 @@ Claude Code. It is the *product* (the harness itself), not an app built with it.
 gates (G1–G25) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.12.0` (package.json = git tag `v2.12.0` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **421 tests, 38 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.12.1` (package.json = git tag `v2.12.1` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **430 tests, 39 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -73,7 +73,7 @@ Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-or
 | G24 orders for every session | `scripts/install-global.js` + `knowledge_base/project-kit/GLOBAL.md.tpl` + `new-project.js --check` | one managed block in the user-level instruction file: registry-derived orders, harness location, "no kit in this folder, install it first"; `--check` 0 current / 1 stale / 4 not installed; `--remove` restores the file; settings untouched; kit drift check per project |
 | G23 standing orders + project kit | `scripts/new-project.js` + `knowledge_base/project-kit/` + registry `orders` + `scripts/handoff-write.js` + `plan-doc-check --modules` | the commands the operator repeated per project (continue, verify, plan first, module library first, commit per unit, deploy by setting, handoff) installed once into a new or existing folder with loop hooks, ledger, fixed checks and a module plan; gates and hooks run from the harness through `scripts/coolhan.js`; existing files are never overwritten |
 | G21 planning document | `scripts/plan-doc-check.js` + `knowledge_base/00_PLANNING_DOC_STANDARD.md` | the user's 기획서 제작 마스터 프롬프트 (generalized, `{{ }}` slots): §7 completion definition mechanical — 추적표 no blank, no blank cell, no deferral word outside [결정필요], [미검증] with method, tooltip ≤10 어절, no em dash/hype word, diagram files exist, no ID with two names, §4.2 twelve items, success criteria ≥3; form only |
-| G25 modules as plug-ins | `scripts/module-check.js` + `scripts/modules.js` + `scripts/module-convert.js` + `knowledge_base/00_MODULE_STANDARD.md` | the module standard (name, same subfolders, file names, manifest, own tables, tests, security note) checked mechanically; `modules list / add / status / update / remove` from any project folder; `modules drift` finds modules whose source project moved on; the library holds standard modules under `modules/<name>/` |
+| G25 modules as plug-ins | `scripts/module-check.js` + `scripts/modules.js` + `scripts/module-admit.js` + `scripts/module-convert.js` + `knowledge_base/00_MODULE_STANDARD.md` | the module standard (name, same subfolders, file names, manifest, own tables, tests, security note) checked mechanically; `modules list / add / status / update / remove` from any project folder; `modules drift` finds modules whose source project moved on; the library holds standard modules under `modules/<name>/` |
 
 Also: prompt-modernization lint (`scripts/prompt-modernization-check.js`, 9 rule families incl. the Claude-5-era
 ones added in v2.5.0; agent footers carry a role-based `**Effort:**` tier — see
@@ -154,13 +154,13 @@ provide its own credentials in its own environment — they do NOT travel in thi
 ```bash
 git log --oneline -3
 node -e "console.log('pkg', require('./package.json').version)" && git describe --tags --abbrev=0
-npx jest --ci   # background it; expect 421 passed / 38 suites
+npx jest --ci   # background it; expect 430 passed / 39 suites
 node scripts/checks-run.js   # the fixed list (docs/CHECKS.md) — the G20 way to "verify"; C1 is the slow one
 node scripts/progress-check.js docs/PROGRESS.md   # this repo's ledger: current position + open D-numbers
 node doctor.js
 ```
 
-If those agree (version = v2.12.0, tests green, doctor healthy, ledger PASS), the handoff is intact and you
+If those agree (version = v2.12.1, tests green, doctor healthy, ledger PASS), the handoff is intact and you
 may proceed from § Next actions.
 
 
@@ -330,3 +330,12 @@ CREATE TABLE consent_records (user_id UUID, region TEXT, personalized BOOLEAN DE
 - 운영자가 영역마다 원천 프로젝트를 정했다(관리자 모드가 최우선). 어느 프로젝트인지는 비공개 폴더의 `00-operator-decisions.md`에 있다. 이 저장소는 공개라 프로젝트 이름을 적지 않는다.
 - 킷 실증(track42): `_harness_test/track42-kit-e2e/`. 지어낸 빵집 사이트를 킷으로 끝까지 만들었고 킷 결함 9건을 고쳤다. 사이트의 사람 확인 28행(접근성)은 그 사이트 원장의 열린 항목이다.
 - 아직 재지 않은 것: 다른 폴더의 새 세션이 전역 지시대로 움직이는지. 이 기기의 명령줄 클라이언트가 로그인되어 있지 않다(운영자가 터미널에서 한 번 로그인해야 한다). 로그인 뒤 `node scripts/nonstop.js`로 무인 실행을 볼 수 있다.
+
+---
+## 인수인계 보강 (2026-11-22, v2.12.1): 모듈은 입고 검사 한 명령을 통과한 뒤에 커밋한다
+
+- 위 본문의 v2.12.0 수치는 이 보강으로 대체된다: 현재 `2.12.1`, jest **430 tests / 39 suites**. 열린 결함은 D-14 하나다.
+- 모듈을 저장소에 커밋하기 전에 실행한다: `node scripts/module-admit.js <이름...> --library C:/sites/00Module_site`. 형식, 모듈 시험, 빈 폴더 설치와 설치본 시험, 비밀값 스캔을 모듈마다 돌리고 종료 코드를 모두 읽는다. 0 입고 가능, 1 실패, 4 재지 못한 것이 있음.
+- 그 뒤 저장소에서: `git add modules/<이름>`, `node <본체>/scripts/secret-scan.js --staged`(파이프로 잇지 않는다. 종료 코드를 본다), 커밋. 저장소 전체는 `--all`로 잰다(모듈이 많아 10분을 넘긴다. 백그라운드로 돌린다).
+- 왜 생겼나: 손으로 돌리던 검사에서 스캔의 종료 코드가 파이프 뒤에 가려 지적 4건을 보지 못한 채 커밋 1건이 들어갔다. 지적은 지어낸 시험 값이었고 다음 커밋에서 표시했다.
+- 모듈 추출은 대기열(`.coolhan-private/module-harvest/QUEUE.md`) 순서로 이어 간다. 추출 에이전트의 보고는 증거가 아니다. 입고 검사를 직접 돌린 뒤 커밋한다.

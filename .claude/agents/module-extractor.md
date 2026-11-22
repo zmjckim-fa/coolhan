@@ -39,8 +39,10 @@ origin, a README and a CHANGELOG. The library holds them under `modules/<name>/`
   foreign key into another module), `docs/security.md` when there is `api/`, `user/` or `admin/`.
 - An error found in a source is fixed in the module with a test that catches it and listed for the source project;
   the source project's files are never edited.
-- Done for a module means: `node scripts/module-check.js <module dir>` PASS, the module's own tests pass, and a
-  throwaway `node scripts/modules.js add <name> --app <empty dir>` installs it with what it requires.
+- Done for a module means `node scripts/module-admit.js <name> --library <library>` exits 0: the form gate, the
+  module's own tests, an install into an empty folder with the tests run inside the installed copy, and the secret
+  scan. Exit 4 means a step measured nothing and is not a pass. Read the exit status itself, never the last line of
+  a pipe. The library commit follows only after exit 0.
 - `node scripts/modules.js drift` lists modules whose origin paths changed in the source project since they were
   taken: those are the candidates for the next version.
 

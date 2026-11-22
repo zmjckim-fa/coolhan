@@ -1,0 +1,78 @@
+Track 44 module admission: 9/9 scenarios match, 1 observation
+
+MATCH #1 sound module, requirement installed beside it
+    expected: exit 0; all four steps PASS
+    actual:   exit 0; form PASS, test PASS, install PASS, secrets PASS
+MATCH #2 failing test
+    expected: exit 1; test FAIL and install FAIL
+    actual:   exit 1; form PASS, test FAIL, install FAIL, secrets PASS
+MATCH #3 form and tests pass, a line looks like a secret (the commit that slipped through by hand)
+    expected: exit 1; secrets FAIL, the other three PASS
+    actual:   exit 1; form PASS, test PASS, install PASS, secrets FAIL
+MATCH #4 the same line carrying the scan marker
+    expected: exit 0; secrets PASS
+    actual:   exit 0; form PASS, test PASS, install PASS, secrets PASS
+MATCH #5 test command exits 0 having run 0 tests
+    expected: exit 4; test NOT_RUN, never PASS
+    actual:   exit 4; form PASS, test NOT_RUN, install NOT_RUN, secrets PASS
+MATCH #6 folder the standard does not know
+    expected: exit 1; form FAIL, install NOT_RUN
+    actual:   exit 1; form FAIL, test PASS, install NOT_RUN, secrets PASS
+MATCH #7 test reads an undeclared neighbour module at run time
+    expected: exit 1; test PASS in the library, install FAIL
+    actual:   exit 1; form PASS, test PASS, install FAIL, secrets PASS
+MATCH #8 --all with one sound and one failing module
+    expected: exit 1; member-rules PASS, member-signup FAIL
+    actual:   exit 1; member-rules PASS, member-signup FAIL
+MATCH #9 unknown module, missing library, no module name
+    expected: exit 4, 4, 2
+    actual:   exit 4, 4, 2
+OBSERVED #10 real library, every committed module
+    expected: observation: counts per result
+    actual:   exit 0; modules 88, PASS 88, FAIL 0, NOT_RUN 0; steps not PASS: form 0, test 0, install 0, secrets 0
+
+--- commands ---
+$ [sound] node scripts/module-admit.js member-signup --library <tmp>\lib1
+  exit 0
+  member-signup: PASS (form PASS, test PASS, install PASS, secrets PASS)
+
+$ [failing test] node scripts/module-admit.js member-signup --library <tmp>\lib2
+  exit 1
+  member-signup: FAIL (form PASS, test FAIL, install FAIL, secrets PASS)
+
+$ [secret line] node scripts/module-admit.js member-signup --library <tmp>\lib3
+  exit 1
+  member-signup: FAIL (form PASS, test PASS, install PASS, secrets FAIL)
+
+$ [marked line] node scripts/module-admit.js member-signup --library <tmp>\lib4
+  exit 0
+  member-signup: PASS (form PASS, test PASS, install PASS, secrets PASS)
+
+$ [zero tests] node scripts/module-admit.js member-signup --library <tmp>\lib5
+  exit 4
+  member-signup: NOT_RUN (form PASS, test NOT_RUN, install NOT_RUN, secrets PASS)
+
+$ [form fails] node scripts/module-admit.js member-signup --library <tmp>\lib6
+  exit 1
+  member-signup: FAIL (form FAIL, test PASS, install NOT_RUN, secrets PASS)
+
+$ [needs neighbour] node scripts/module-admit.js member-signup --library <tmp>\lib7
+  exit 1
+  member-signup: FAIL (form PASS, test PASS, install FAIL, secrets PASS)
+
+$ [all] node scripts/module-admit.js --all --library <tmp>\lib8
+  exit 1
+  member-rules: PASS (form PASS, test PASS, install PASS, secrets PASS)
+  member-signup: FAIL (form PASS, test FAIL, install FAIL, secrets PASS)
+
+$ [unknown] node scripts/module-admit.js member-none --library <tmp>\lib9
+  exit 4
+  member-none: NOT_RUN (form -, test -, install -, secrets -)
+
+$ [no library] node scripts/module-admit.js member-rules --library <tmp>\nowhere
+  exit 4
+  ○ modules: NOT_RUN: 모듈 저장소를 찾지 못했다 (--library, coolhan.project.json 의 modules, 환경 변수 COOLHAN_MODULES)
+
+$ [real library] node scripts/module-admit.js <88 committed modules> --library <library>
+  exit 0
+  modules 88: PASS 88, FAIL 0, NOT_RUN 0

@@ -143,7 +143,9 @@ node scripts/coolhan.js modules update <name>   # replace the folder; a file the
 ```
 
 A module has one name, one folder, the same subfolders and a manifest (`knowledge_base/00_MODULE_STANDARD.md`);
-`node scripts/module-check.js <module dir>` checks the form. `node scripts/modules.js drift` names modules whose
+`node scripts/module-check.js <module dir>` checks the form; `node scripts/module-admit.js <name> --library <dir>`
+runs everything a module must show before it is committed to the library (form, its tests, an install into an
+empty folder, the secret scan). `node scripts/modules.js drift` names modules whose
 source project has moved on since they were taken.
 
 ### Usage
