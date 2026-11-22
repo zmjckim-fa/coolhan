@@ -23,3 +23,5 @@
 | U17 | 모듈 추출 7차: 디자인 체계들, 우체국과 추적 어댑터, 자동 환불 + 입고 검사의 의존 모듈 옵션 | 모듈 저장소 `modules/`, `scripts/module-admit.js` | module-admit · jest | ✅ done (입고 검사 8/8 PASS; 저장소 127/127 PASS; jest 434/434; track44 10/10; 커밋 415ccb3 태그 v2.12.4; CI 4/4 success) |
 | U18 | 디자인 모듈 브라우저 확인, 다음 판 후보, 남은 폴더 조사, 입고 검사의 프로젝트 단계 | 실증 프로젝트, 모듈 저장소 `modules/`, `.coolhan-private/module-harvest/`, `scripts/module-admit.js` | 브라우저 확인 · module-admit · 조사 보고서 · jest | ✅ done (갤러리 6/6; 입고 검사 10/10, 2/2; 조사 보고서 1건; jest 435/435; track44 11/11; 커밋 bcbdf90 태그 v2.12.5; CI 4/4 success) |
 | U19 | 모듈 추출 8차: 결제, 속도 제한, 보안 머리글, 비밀값 보관 | 모듈 저장소 `modules/` | module-admit --with-dependents --consumer | ✅ done (입고 검사 7/7 PASS; 모듈 시험 423/423; 저장소 형식 검사 133/133; 저장소 커밋 3건) |
+| U20 | «확인 안 함» 항목 확인: 전체 입고 검사, PostgreSQL 실행, 알림 결함 직접 확인, 키보드 순서 | 모듈 저장소 `modules/`, 실증 프로젝트, `.coolhan-private/module-harvest/` | module-admit --all · PostgreSQL 실행 · 브라우저 | ✅ done (입고 검사 133/133; PostgreSQL 스키마 39/39, 추가전용 77/77; 알림 7건 직접 읽음; 키보드 확인과 결함 1건 수정; 저장소 커밋 2건) |
+| U21 | 추가 모듈 20개 (운영자 지시 2026-11-22: 지금 있는 것 외에 20개를 선정해 순서대로) | 모듈 저장소 `modules/` | module-admit --with-dependents --consumer | ⬜ todo |
