@@ -26,7 +26,7 @@
 - jest 430/430, 39 suites (new `module-admit` suite 9/9); lint clean 48 files; fixed list in full.
 - `_harness_test/track44-module-admit/run-track.js`: 9 scenarios, 9 match, 0 false +/-; the incident is scenario 3
   (form and tests pass, a line looks like a secret: FAIL), its marked twin is scenario 4 (PASS).
-- Real library: 88 modules through `--all`, 88 PASS, 0 FAIL, 0 NOT_RUN (more than ten minutes).
+- Real library: 88 committed modules, 88 PASS, 0 FAIL, 0 NOT_RUN (more than ten minutes).
 
 ### Honest bound
 
