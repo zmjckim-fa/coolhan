@@ -22,4 +22,4 @@
 | U16 | 공개 진입점 규칙 + 릴리스 v2.12.3 | `scripts/module-check.js`, `src/__tests__/module-standard.test.js`, `_harness_test/track43-module-standard/`, 문서 | jest · track43 · checks-run · CI | ✅ done (jest 433/433; track43 17/17; checks-run 13/13; 커밋 610ab8e 태그 v2.12.3; CI 4/4 success) |
 | U17 | 모듈 추출 7차: 디자인 체계들, 우체국과 추적 어댑터, 자동 환불 + 입고 검사의 의존 모듈 옵션 | 모듈 저장소 `modules/`, `scripts/module-admit.js` | module-admit · jest | ✅ done (입고 검사 8/8 PASS; 저장소 127/127 PASS; jest 434/434; track44 10/10; 커밋 415ccb3 태그 v2.12.4; CI 4/4 success) |
 | U18 | 디자인 모듈 브라우저 확인, 다음 판 후보, 남은 폴더 조사, 입고 검사의 프로젝트 단계 | 실증 프로젝트, 모듈 저장소 `modules/`, `.coolhan-private/module-harvest/`, `scripts/module-admit.js` | 브라우저 확인 · module-admit · 조사 보고서 · jest | ✅ done (갤러리 6/6; 입고 검사 10/10, 2/2; 조사 보고서 1건; jest 435/435; track44 11/11; 커밋 bcbdf90 태그 v2.12.5; CI 4/4 success) |
-| U19 | 모듈 추출 8차: 결제, 속도 제한, 보안 머리글, 비밀값 보관 | 모듈 저장소 `modules/` | module-admit --with-dependents --consumer | ⬜ todo |
+| U19 | 모듈 추출 8차: 결제, 속도 제한, 보안 머리글, 비밀값 보관 | 모듈 저장소 `modules/` | module-admit --with-dependents --consumer | ✅ done (입고 검사 7/7 PASS; 모듈 시험 423/423; 저장소 형식 검사 133/133; 저장소 커밋 3건) |
