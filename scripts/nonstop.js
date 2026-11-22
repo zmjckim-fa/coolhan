@@ -36,6 +36,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const resource = require('./resource-check');
+const { t } = require('./messages');
 const { argValue } = require('./lib/cli');
 
 const DEFAULT_PROMPT = '쿨한으로 개발 이어서 진행하라 (체크포인트 _workspace/_checkpoint.md)';
@@ -111,7 +112,7 @@ function supervise(opts, sessionRunner) {
     const result = runner(session);
     appendLog(ws, { session, exit: result.exit, timed_out: !!result.timed_out, ...(headroom ? { headroom } : {}), tail: (result.output_tail || '').slice(-400) });
     if (NOT_LOGGED_IN.test(result.output_tail || '')) {
-      return { status: 'CMD_ERROR', sessions: session, reason: 'the session command is not logged in: run it once in a terminal, log in, then start the supervisor again' };
+      return { status: 'CMD_ERROR', sessions: session, reason: t('nonstop.notLoggedIn') };
     }
     if (result.exit === undefined || result.spawn_error) {
       return { status: 'CMD_ERROR', sessions: session, reason: result.spawn_error || 'session command failed to start' };

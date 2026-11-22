@@ -9,7 +9,8 @@
  *   node scripts/coolhan.js plan-doc-check docs/plan --lessons @home/knowledge_base/field-lessons.json --tags @tags --modules @modules
  *   node scripts/coolhan.js handoff                 (refreshes the state block of HANDOFF.md)
  *   node scripts/coolhan.js hook stop-guard         (used by .claude/settings.json; always fails open)
- *   node scripts/coolhan.js modules list            (the module library's own loader)
+ *   node scripts/coolhan.js modules list            (module manager: list, add, status, update, remove, drift)
+ *   node scripts/coolhan.js modules-loader list     (the module library's own older loader)
  *   node scripts/coolhan.js where
  *
  * The only machine-specific value is `home` in coolhan.project.json (or the COOLHAN_HOME environment
@@ -55,9 +56,13 @@ function main(argv, { cwd = process.cwd(), env = process.env } = {}) {
   if (isHook) {
     if (!TOOL.test(rest[0] || '')) return 0;
     script = path.join(home, '.claude', 'hooks', `${rest[0]}.js`); args = [];
-  } else if (tool === 'modules') {
+  } else if (tool === 'modules-loader') {
     if (!cfg.modules || !fs.existsSync(path.join(cfg.modules, 'coolhan.mjs'))) { console.error(`coolhan: module library not found ("modules" in ${CONFIG}). Not verified: exit 4`); return 4; }
     script = path.join(cfg.modules, 'coolhan.mjs'); args = rest;
+  } else if (tool === 'modules') {
+    // The module manager lives in the harness; the project's library setting is passed unless the caller names one.
+    script = path.join(home, 'scripts', 'modules.js');
+    args = rest.includes('--library') || !cfg.modules ? rest : [...rest, '--library', cfg.modules];
   } else {
     if (!TOOL.test(tool)) { console.error(`coolhan: bad tool name ${tool}`); return 2; }
     script = path.join(home, 'scripts', `${ALIAS[tool] || tool}.js`); args = expand(rest, cfg, home);

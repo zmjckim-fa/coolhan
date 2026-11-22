@@ -25,7 +25,10 @@ function listFiles(target, { ext = /./, skipDirs = new Set(['node_modules', '.gi
   return out.sort((a, b) => a.rel.localeCompare(b.rel));
 }
 
+/** True when the path exists and is a folder. */
+function isDir(p) { try { return fs.statSync(p).isDirectory(); } catch (_) { return false; } }
+
 /** File text, or null when it cannot be read (the caller decides what a missing file means). */
 function readText(p) { try { return fs.readFileSync(p, 'utf8'); } catch (_) { return null; } }
 
-module.exports = { listFiles, readText };
+module.exports = { listFiles, readText, isDir };
