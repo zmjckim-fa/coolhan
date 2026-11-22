@@ -20,4 +20,5 @@
 | U14 | 모듈 추출 6차: 쇼핑, 마이페이지 틀, 회원 화면 | 모듈 저장소 `modules/`, 실증 프로젝트 | module-admit · 브라우저 확인 | ✅ done (입고 검사 5/5 PASS; 모듈 시험 114/114; 회원 화면 브라우저 확인; 저장소 커밋 3건) |
 | U15 | 모듈 다음 판: 연동 보호 통일, 회원 계정 진입점, 추적 합치기, 목록과 상세 틀 보강, 마이페이지 틀 브라우저 확인 | 모듈 저장소 `modules/`, 실증 프로젝트 | module-admit · 브라우저 확인 | ✅ done (입고 검사 13/13, 4/4 PASS; 실증 프로젝트 타입 검사·빌드 종료 코드 0; 저장소 커밋 2건) |
 | U16 | 공개 진입점 규칙 + 릴리스 v2.12.3 | `scripts/module-check.js`, `src/__tests__/module-standard.test.js`, `_harness_test/track43-module-standard/`, 문서 | jest · track43 · checks-run · CI | ✅ done (jest 433/433; track43 17/17; checks-run 13/13; 커밋 610ab8e 태그 v2.12.3; CI 4/4 success) |
-| U17 | 모듈 추출 7차: 디자인 체계들, 우체국과 추적 어댑터, 자동 환불 + 입고 검사의 의존 모듈 옵션 | 모듈 저장소 `modules/`, `scripts/module-admit.js` | module-admit · jest | ⬜ todo |
+| U17 | 모듈 추출 7차: 디자인 체계들, 우체국과 추적 어댑터, 자동 환불 + 입고 검사의 의존 모듈 옵션 | 모듈 저장소 `modules/`, `scripts/module-admit.js` | module-admit · jest | ✅ done (입고 검사 8/8 PASS; 저장소 127/127 PASS; jest 434/434; track44 10/10; 커밋 415ccb3 태그 v2.12.4; CI 4/4 success) |
+| U18 | 디자인 모듈 브라우저 확인, 다음 판 후보, 남은 폴더 조사 | 실증 프로젝트, 모듈 저장소 `modules/`, `.coolhan-private/module-harvest/` | 브라우저 확인 · module-admit · 조사 보고서 | ⬜ todo |
