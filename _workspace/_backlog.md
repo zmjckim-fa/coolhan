@@ -9,4 +9,4 @@
 | U3 | 모듈 저장소 분리 점검과 앞선 기능 조사, 통합안 | `.coolhan-private/module-harvest/`, `docs/` | 보고서 6건 · 대기열 | ✅ done (조사 보고 6/6; 대기열 26줄) |
 | U4 | 모듈 흡수 장치 (원천이 앞선 모듈 검사 + 절차) | `scripts/`, `src/__tests__/`, agents, SKILL | jest · 실제 저장소 실행 · 적대 검증 | ✅ done (jest module-standard 45/45; track43 15/15; 실제 저장소 변환 68/68, 모듈 시험 332 통과) |
 | U5 | 모듈 추출 1차: 관리자, 운송사, 회원, 우편번호 | 모듈 저장소 `modules/` | module-check · 모듈 시험 · 빈 폴더 설치 | ⬜ todo |
-| U6 | 릴리스 v2.12.0 | 릴리스 문서 | jest 전체 · checks-run · CI | ⬜ todo |
+| U6 | 릴리스 v2.12.0 | 릴리스 문서 | jest 전체 · checks-run · CI | ✅ done (jest 421/421; checks-run 13/13; 커밋 a67dd8a 태그 v2.12.0; CI 3/3 success, releases/latest = v2.12.0) |
