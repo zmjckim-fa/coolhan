@@ -1,4 +1,4 @@
-Track 44 module admission: 10/10 scenarios match, 1 observation
+Track 44 module admission: 11/11 scenarios match, 1 observation
 
 MATCH #1 sound module, requirement installed beside it
     expected: exit 0; all four steps PASS
@@ -30,6 +30,9 @@ MATCH #9 unknown module, missing library, no module name
 MATCH #11 A module whose dependent (through another module) is broken: admitted alone, then with --with-dependents
     expected: alone: exit 0; with dependents: exit 1, member-screens FAIL, the unrelated module not admitted
     actual:   alone exit 0; with dependents exit 1; member-rules PASS, member-screens FAIL, member-signup PASS
+MATCH #12 A project that uses a module: admitted with --consumer when nothing changed, then after a version that passes its own test and changes what the project relies on
+    expected: unchanged: exit 0, consumer PASS; changed: the module PASS, consumer FAIL, exit 1
+    actual:   unchanged exit 0, consumer PASS; changed exit 1, module PASS, consumer FAIL
 OBSERVED #10 real library, every committed module
     expected: observation: counts per result
     actual:   exit 0; modules 127, PASS 127, FAIL 0, NOT_RUN 0; steps not PASS: form 0, test 0, install 0, secrets 0
@@ -85,6 +88,14 @@ $ [with dependents] node scripts/module-admit.js member-rules --with-dependents 
   member-rules: PASS (form PASS, test PASS, install PASS, secrets PASS)
   member-screens: FAIL (form PASS, test FAIL, install FAIL, secrets PASS)
   member-signup: PASS (form PASS, test PASS, install PASS, secrets PASS)
+
+$ [consumer, nothing changed] node scripts/module-admit.js member-rules --consumer <tmp>\consumer-app --consumer-check node check.mjs --library <tmp>\lib11
+  exit 0
+  member-rules: PASS (form PASS, test PASS, install PASS, secrets PASS)
+
+$ [consumer, a version that passes its own test and breaks the project] node scripts/module-admit.js member-rules --consumer <tmp>\consumer-app --consumer-check node check.mjs --library <tmp>\lib11
+  exit 1
+  member-rules: PASS (form PASS, test PASS, install PASS, secrets PASS)
 
 $ [real library] node scripts/module-admit.js <127 committed modules> --library <library>
   exit 0

@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.12.5] - 2026-11-22
+
+### Added
+
+- **Admission against a project that uses the modules** (`scripts/module-admit.js --consumer <project dir>
+  [--consumer-check "<command>"]`, part of G25). After the modules pass, a project that has modules installed
+  takes the new versions through the manager (`modules update --all`) and runs its own check (default
+  `npm run typecheck`). On 2026-11-22 this step was done by hand three times and found a defect each time: copied
+  frame types gone stale, and twice a change released as a minor version that broke a type the project
+  implements. None of them was visible to the form gate, to the modules' own tests or to an install into an
+  empty folder.
+  - The project is updated only when every module passed; a refused update or a failing check is FAIL; a folder
+    that is not a module project or has no check command is NOT_RUN (exit 4).
+
+### Verification
+
+- jest 435/435, 39 suites (`module-admit` 11/11); lint clean 48 files; fixed list in full.
+- `_harness_test/track44-module-admit/run-track.js`: 11 scenarios, 11 match, 0 false +/- (scenario 12: project
+  unchanged exit 0; a version that passes its own test and changes what the project relies on: the module PASS,
+  the project FAIL, exit 1).
+- Real library: 127 committed modules, 127 PASS, 0 FAIL, 0 NOT_RUN.
+- The private demo project (22 modules installed) passes as consumer: update exit 0, type check exit 0.
+
+### Honest bound
+
+- The consumer shows only what it mounts and only what its check command checks. A type check does not run the
+  screens; a browser pass is still a separate step.
+- The command changes the consumer project (it takes the new versions). Point it at a demo project, not at a
+  site in production.
+- A version labelled smaller than it is still gets through when no consumer uses the changed surface.
+
 ## [2.12.4] - 2026-11-22
 
 ### Added

@@ -111,6 +111,34 @@ describe('module-admit: what a module must show before it is committed to the li
     expect(admit.withDependents(['admin-shell'], { 'admin-shell': { name: 'admin-shell', requires: [] } })).toEqual(['admin-shell']);
   });
 
+  test('--consumer: a project takes the new versions and runs its own check; a change that breaks the project fails admission', () => {
+    const mgr = require('../../scripts/modules');
+    makeModule(library, 'member-rules');
+    const app = fs.mkdtempSync(path.join(os.tmpdir(), 'admit-app-'));
+    try {
+      expect(quiet(() => mgr.main(['node', 'modules.js', 'add', 'member-rules', '--app', app, '--library', library])).code).toBe(0);
+      // the project's own check: it uses rule() and expects a boolean
+      write(app, 'check.mjs', "import { rule } from './coolhan_modules/member-rules/core/index.js';\nif (typeof rule(1) !== 'boolean') { console.error('error: rule no longer returns a boolean'); process.exit(1); }\n");
+      const check = ['--consumer', app, '--consumer-check', 'node check.mjs'];
+      // nothing changed: admitted, project current
+      let r = run(library, 'member-rules', ...check);
+      expect(r.code).toBe(0); expect(r.json.consumer).toMatchObject({ status: 'PASS', updated: 0 });
+      // a new version that still passes its own test and breaks the project
+      makeModule(library, 'member-rules', { version: '1.1.0' }, { 'core/index.js': 'export function rule(x) { return x > 0 ? "yes" : ""; }\n', 'test/rule.test.js': GOOD_TEST.replace('rule(1), true', 'rule(1), "yes"'), 'CHANGELOG.md': '## 1.1.0\n- changed\n' });
+      r = run(library, 'member-rules', ...check);
+      expect(r.json.modules[0].status).toBe('PASS');
+      expect(r.json.consumer.status).toBe('FAIL'); expect(r.json.consumer.detail).toMatch(/rule no longer returns a boolean/);
+      expect(r.code).toBe(1);
+      // a module that fails is not pushed into the project
+      makeModule(library, 'member-rules', { version: '1.2.0' }, { 'test/rule.test.js': GOOD_TEST.replace('rule(1), true', 'rule(1), false'), 'CHANGELOG.md': '## 1.2.0\n- broken\n' });
+      r = run(library, 'member-rules', ...check);
+      expect(r.json.consumer.status).toBe('NOT_RUN');
+      expect(JSON.parse(fs.readFileSync(path.join(app, 'coolhan.modules.json'), 'utf8')).modules['member-rules'].version).toBe('1.1.0');
+      // a folder that is not a project, and a project without the check command
+      expect(run(library, 'member-none', '--consumer', library).code).toBe(4);
+    } finally { fs.rmSync(app, { recursive: true, force: true }); }
+  });
+
   test('unknown module and missing library are exit 4, a missing name is usage (exit 2)', () => {
     makeModule(library, 'member-rules');
     expect(run(library, 'member-none').code).toBe(4);

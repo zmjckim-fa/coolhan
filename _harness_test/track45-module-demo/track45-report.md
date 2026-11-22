@@ -66,3 +66,20 @@ Also opened in the browser after that: the member screens (sign-up validation wi
 and the error tied to it, sign-in, staff list and detail at 375px, a view-only role sees no action button, an action
 asks for its reason first) and the my-page frame (horizontal tab strip at 375px, side list at 1280px, a hidden tab
 and a path with `..` refused with their reasons). Console errors 0, no horizontal page scroll.
+
+## Addendum 2 (same day): two more broken updates, and the six design systems side by side
+
+- member-admin 1.1.0 made one column required on the member row type and went out as a minor version. After
+  `modules update` the demo's own row fixture no longer type-checked (one error). The same code was relabelled
+  2.0.0 with the migration step; the demo added the column and builds.
+- The step «update the project and run its check» is now part of admission (`module-admit --consumer`, v2.12.5).
+  Run against this demo with 22 modules installed: update exit 0, type check exit 0.
+- Design gallery (`#/design/<system>` and `#/design/<system>/admin`): the six design modules are loaded one at a
+  time (their styles are swapped, the admin shell's own styles are restored on leaving). Measured in the browser
+  at 1280px and 375px for all six: no horizontal page scroll, console errors 0, no enabled button below 4.5:1 as
+  rendered (computed colours sampled from the page), the admin list renders ten rows under each system's bridge.
+  Two defects found only here and fixed as new versions: one design module's bridge fed 37 of the 56 names the
+  functional modules read (the admin list's table head fell back to the list module's own colour), and a segment
+  button 36px high on a phone.
+- Not checked in the gallery: hover and focus appearance, print, a screen reader, colour contrast of text other
+  than enabled buttons as rendered.

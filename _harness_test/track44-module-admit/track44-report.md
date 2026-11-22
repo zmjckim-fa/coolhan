@@ -27,9 +27,10 @@ nothing is NOT_RUN and the run ends with 4.
 | 8 | `--all` with one sound and one failing module | exit 1, PASS and FAIL kept apart | match |
 | 9 | Unknown module, missing library, no module name | exit 4, 4, 2 | match |
 | 11 | A module whose dependent, reached through another module, is broken: admitted alone, then with `--with-dependents` (v2.12.4) | alone exit 0; with dependents exit 1 naming the dependent | match |
+| 12 | A project that uses a module: admitted with `--consumer` when nothing changed, then after a version that passes its own test and changes what the project relies on (v2.12.5) | unchanged exit 0; changed: module PASS, project FAIL, exit 1 | match |
 
-10 of 10 match. False pass 0 (scenarios 2, 3, 5, 6, 7 and the second half of 11 must not pass and do not). False
-fail 0 (scenarios 1, 4 and the first half of 11 must pass and do). Scenario 11 is the case of v2.12.3: a minor version
+11 of 11 match. False pass 0 (scenarios 2, 3, 5, 6, 7 and the second halves of 11 and 12 must not pass and do not). False
+fail 0 (scenarios 1, 4 and the first halves of 11 and 12 must pass and do). Scenario 11 is the case of v2.12.3: a minor version
 of a shared frame passed its own admission and broke the module built on it.
 
 ## Real library (observation)

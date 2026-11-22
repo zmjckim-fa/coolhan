@@ -104,6 +104,24 @@ check(11, 'A module whose dependent (through another module) is broken: admitted
   `alone exit ${alone.status}; with dependents exit ${withDeps.status}; ${withDeps.json ? withDeps.json.modules.map(m => `${m.name} ${m.status}`).join(', ') : 'no result'}`,
   alone.status === 0 && withDeps.status === 1 && withDeps.json && withDeps.json.modules.map(m => `${m.name} ${m.status}`).join(', ') === 'member-rules PASS, member-screens FAIL, member-signup PASS');
 
+// 12. a project that uses the module takes the new version and runs its own check
+lib = library({ 'member-rules': {} });
+const consumerApp = path.join(TMP, 'consumer-app'); fs.mkdirSync(consumerApp, { recursive: true });
+spawnSync(process.execPath, [path.join(HOME, 'scripts', 'modules.js'), 'add', 'member-rules', '--app', consumerApp, '--library', lib], { encoding: 'utf8' });
+write(consumerApp, 'check.mjs', "import { rule } from './coolhan_modules/member-rules/core/index.js';\nif (typeof rule(1) !== 'boolean') { console.error('error: rule no longer returns a boolean'); process.exit(1); }\n");
+const consumerArgs = ['--consumer', consumerApp, '--consumer-check', 'node check.mjs'];
+const c0 = admit('consumer, nothing changed', lib, ['member-rules', ...consumerArgs]);
+write(path.join(lib, 'modules', 'member-rules'), 'module.json', fs.readFileSync(path.join(lib, 'modules', 'member-rules', 'module.json'), 'utf8').replace('"version": "1.0.0"', '"version": "1.1.0"'));
+write(path.join(lib, 'modules', 'member-rules'), 'CHANGELOG.md', '## 1.1.0\n- changed\n');
+write(path.join(lib, 'modules', 'member-rules'), 'core/index.js', 'export function rule(x) { return x > 0 ? "yes" : ""; }\n');
+write(path.join(lib, 'modules', 'member-rules'), 'test/rule.test.js', GOOD_TEST.replace('rule(1), true', 'rule(1), "yes"'));
+const c1 = admit('consumer, a version that passes its own test and breaks the project', lib, ['member-rules', ...consumerArgs]);
+const cState = (x) => (x.json && x.json.consumer ? x.json.consumer.status : 'none');
+check(12, 'A project that uses a module: admitted with --consumer when nothing changed, then after a version that passes its own test and changes what the project relies on',
+  'unchanged: exit 0, consumer PASS; changed: the module PASS, consumer FAIL, exit 1',
+  `unchanged exit ${c0.status}, consumer ${cState(c0)}; changed exit ${c1.status}, module ${c1.json ? c1.json.modules[0].status : '?'}, consumer ${cState(c1)}`,
+  c0.status === 0 && cState(c0) === 'PASS' && c1.status === 1 && c1.json && c1.json.modules[0].status === 'PASS' && cState(c1) === 'FAIL');
+
 // 10. the real library: every committed module (observation when the library is not on this machine).
 // Committed ones only: modules still being written by another session would make the count mean nothing.
 const tracked = spawnSync('git', ['-C', REAL_LIBRARY, 'ls-files', 'modules'], { encoding: 'utf8', maxBuffer: 64 * 2 ** 20 });
