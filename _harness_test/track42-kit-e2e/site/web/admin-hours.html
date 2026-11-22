@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{text:title.hours}}</title>
+<link rel="stylesheet" href="/tokens.css">
+<link rel="stylesheet" href="/screen.css">
+<link rel="stylesheet" href="/admin-hours.css">
+<script type="module" src="/admin-hours.js"></script>
+</head>
+<body class="hours-page">
+<a class="skip-link" href="#screen-title" data-text="nav.skip"></a>
+
+<!-- The top bar (C-12) is drawn by admin-top-bar.js. -->
+<header data-admin-top-bar></header>
+
+<main class="hours-main">
+  <h1 class="screen-title" id="screen-title" tabindex="-1" data-text="title.hours"></h1>
+
+  <p class="saved-notice" id="hours-notice" role="status" aria-live="polite" hidden>
+    <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M2 7.5 l3.5 3.5 l6.5 -8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    <span data-feedback-text></span>
+  </p>
+
+  <!-- One band for a failed load (with the retry button) and for a failed save (without it). -->
+  <div class="error-band" id="hours-error" role="alert" hidden>
+    <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    <span class="error-band-text" data-feedback-text></span>
+    <button class="error-band-retry" id="hours-retry" type="button" data-text="button.retry" hidden></button>
+  </div>
+
+  <p class="loading-line" id="hours-loading" role="status" data-text="notice.loading"></p>
+
+  <!-- The form stays hidden until the week has arrived. The script sends the week itself as JSON.
+       The seven weekday rows are fixed here in display order: Monday to Sunday. Each row is one
+       grid: one line on wide screens, two lines on narrow ones, its error line below. -->
+  <form class="hours-form" id="hours-form" method="post" novalidate hidden>
+    <div class="section-box">
+      <table class="list-table hours-table" aria-labelledby="screen-title">
+        <tbody>
+          <tr class="list-row hours-row hours-row--head tip-anchor">
+            <th scope="col"><span class="field-label" data-text="hours.weekday"></span></th>
+            <th class="hours-head hours-cell-dayoff" scope="col">
+              <span class="field-label" data-text="hours.dayoff"></span>
+              <button class="tip-button" type="button" data-text-aria="tip.aria" data-value-label="hours.dayoff" aria-describedby="tip-hours-dayoff">
+                <span class="tip-mark" aria-hidden="true">?</span>
+              </button>
+              <span class="tip-bubble" id="tip-hours-dayoff" role="tooltip" data-text="tip.hours.dayoff" hidden></span>
+            </th>
+            <th class="hours-head hours-cell-time" scope="col">
+              <span class="field-label" data-text="hours.opens"></span>
+              <button class="tip-button" type="button" data-text-aria="tip.aria" data-value-label="hours.opens" aria-describedby="tip-hours-opens">
+                <span class="tip-mark" aria-hidden="true">?</span>
+              </button>
+              <span class="tip-bubble" id="tip-hours-opens" role="tooltip" data-text="tip.hours.opens" hidden></span>
+            </th>
+            <th class="hours-head hours-cell-time" scope="col">
+              <span class="field-label" data-text="hours.closes"></span>
+              <button class="tip-button" type="button" data-text-aria="tip.aria" data-value-label="hours.closes" aria-describedby="tip-hours-closes">
+                <span class="tip-mark" aria-hidden="true">?</span>
+              </button>
+              <span class="tip-bubble" id="tip-hours-closes" role="tooltip" data-text="tip.hours.closes" hidden></span>
+            </th>
+          </tr>
+          <tr class="list-row list-row--hover hours-row" data-weekday="1">
+            <th scope="row" data-text="weekday.mon"></th>
+            <td class="hours-cell-dayoff">
+              <label class="checkbox-target"><input class="checkbox" type="checkbox" data-hours-field="is_day_off" data-text-aria="hours.aria.dayoff" data-value-weekday="weekday.mon"></label>
+            </td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="opens_at" data-text-aria="hours.aria.opens" data-value-weekday="weekday.mon"></td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="closes_at" data-text-aria="hours.aria.closes" data-value-weekday="weekday.mon"></td>
+            <td class="hours-cell-error" id="hours-error-1" data-hours-error hidden>
+              <p class="error-line">
+                <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span data-feedback-text></span>
+              </p>
+            </td>
+          </tr>
+          <tr class="list-row list-row--hover hours-row" data-weekday="2">
+            <th scope="row" data-text="weekday.tue"></th>
+            <td class="hours-cell-dayoff">
+              <label class="checkbox-target"><input class="checkbox" type="checkbox" data-hours-field="is_day_off" data-text-aria="hours.aria.dayoff" data-value-weekday="weekday.tue"></label>
+            </td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="opens_at" data-text-aria="hours.aria.opens" data-value-weekday="weekday.tue"></td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="closes_at" data-text-aria="hours.aria.closes" data-value-weekday="weekday.tue"></td>
+            <td class="hours-cell-error" id="hours-error-2" data-hours-error hidden>
+              <p class="error-line">
+                <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span data-feedback-text></span>
+              </p>
+            </td>
+          </tr>
+          <tr class="list-row list-row--hover hours-row" data-weekday="3">
+            <th scope="row" data-text="weekday.wed"></th>
+            <td class="hours-cell-dayoff">
+              <label class="checkbox-target"><input class="checkbox" type="checkbox" data-hours-field="is_day_off" data-text-aria="hours.aria.dayoff" data-value-weekday="weekday.wed"></label>
+            </td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="opens_at" data-text-aria="hours.aria.opens" data-value-weekday="weekday.wed"></td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="closes_at" data-text-aria="hours.aria.closes" data-value-weekday="weekday.wed"></td>
+            <td class="hours-cell-error" id="hours-error-3" data-hours-error hidden>
+              <p class="error-line">
+                <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span data-feedback-text></span>
+              </p>
+            </td>
+          </tr>
+          <tr class="list-row list-row--hover hours-row" data-weekday="4">
+            <th scope="row" data-text="weekday.thu"></th>
+            <td class="hours-cell-dayoff">
+              <label class="checkbox-target"><input class="checkbox" type="checkbox" data-hours-field="is_day_off" data-text-aria="hours.aria.dayoff" data-value-weekday="weekday.thu"></label>
+            </td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="opens_at" data-text-aria="hours.aria.opens" data-value-weekday="weekday.thu"></td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="closes_at" data-text-aria="hours.aria.closes" data-value-weekday="weekday.thu"></td>
+            <td class="hours-cell-error" id="hours-error-4" data-hours-error hidden>
+              <p class="error-line">
+                <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span data-feedback-text></span>
+              </p>
+            </td>
+          </tr>
+          <tr class="list-row list-row--hover hours-row" data-weekday="5">
+            <th scope="row" data-text="weekday.fri"></th>
+            <td class="hours-cell-dayoff">
+              <label class="checkbox-target"><input class="checkbox" type="checkbox" data-hours-field="is_day_off" data-text-aria="hours.aria.dayoff" data-value-weekday="weekday.fri"></label>
+            </td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="opens_at" data-text-aria="hours.aria.opens" data-value-weekday="weekday.fri"></td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="closes_at" data-text-aria="hours.aria.closes" data-value-weekday="weekday.fri"></td>
+            <td class="hours-cell-error" id="hours-error-5" data-hours-error hidden>
+              <p class="error-line">
+                <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span data-feedback-text></span>
+              </p>
+            </td>
+          </tr>
+          <tr class="list-row list-row--hover hours-row" data-weekday="6">
+            <th scope="row" data-text="weekday.sat"></th>
+            <td class="hours-cell-dayoff">
+              <label class="checkbox-target"><input class="checkbox" type="checkbox" data-hours-field="is_day_off" data-text-aria="hours.aria.dayoff" data-value-weekday="weekday.sat"></label>
+            </td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="opens_at" data-text-aria="hours.aria.opens" data-value-weekday="weekday.sat"></td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="closes_at" data-text-aria="hours.aria.closes" data-value-weekday="weekday.sat"></td>
+            <td class="hours-cell-error" id="hours-error-6" data-hours-error hidden>
+              <p class="error-line">
+                <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span data-feedback-text></span>
+              </p>
+            </td>
+          </tr>
+          <tr class="list-row list-row--hover hours-row" data-weekday="0">
+            <th scope="row" data-text="weekday.sun"></th>
+            <td class="hours-cell-dayoff">
+              <label class="checkbox-target"><input class="checkbox" type="checkbox" data-hours-field="is_day_off" data-text-aria="hours.aria.dayoff" data-value-weekday="weekday.sun"></label>
+            </td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="opens_at" data-text-aria="hours.aria.opens" data-value-weekday="weekday.sun"></td>
+            <td class="hours-cell-time"><input class="time-input" type="time" step="300" data-hours-field="closes_at" data-text-aria="hours.aria.closes" data-value-weekday="weekday.sun"></td>
+            <td class="hours-cell-error" id="hours-error-0" data-hours-error hidden>
+              <p class="error-line">
+                <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span data-feedback-text></span>
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="button-row">
+      <button class="button-primary" id="hours-save" type="submit" data-text="button.save"></button>
+    </div>
+  </form>
+</main>
+</body>
+</html>

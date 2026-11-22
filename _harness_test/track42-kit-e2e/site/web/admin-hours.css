@@ -1,0 +1,111 @@
+/* S-03 business hours for the admin: the arrangement of this screen only.
+ * Authority: the layout table of the design plan (docs/plan, part 04, section 6) and the 375px
+ * rules of the screen plan (part 03, section 7.1).
+ * Component shapes (C-01, C-05, C-07, C-09, C-10, C-12, C-13, C-14, section box) stay in screen.css.
+ *
+ * The weekday table is drawn as one grid per row, the heading row included, so the error line of
+ * a weekday can sit under its row on every width. The cells stand in the order weekday, day off,
+ * opens, closes, which is also the Tab order.
+ * Narrow screens (the default): two lines per row. Weekday at the left and day off at the right,
+ * then the two time inputs sharing the line in halves, 8px apart and 8px below the first line.
+ * The rows keep no side padding inside the section box.
+ * Wide screens (640px and up): the table is 560px wide in the middle and a row is one line.
+ * 560px and 120px are the widths written in that layout table and have no token.
+ */
+
+.hours-page {
+  background: var(--color-page-admin);
+}
+
+.hours-main {
+  --hours-table-width: 560px;
+  --hours-time-width: 120px;
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-8) var(--gutter) var(--space-9);
+}
+
+.hours-form {
+  display: grid;
+  gap: var(--space-6);
+}
+
+/* Grid items may shrink below their content, so nothing widens the page. */
+.hours-main > *,
+.hours-form > * {
+  min-width: 0;
+}
+
+/* ---------- rows ---------- */
+
+.hours-table,
+.hours-table > tbody {
+  display: block;
+}
+
+.hours-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  column-gap: var(--space-4);
+  padding: var(--space-5) 0;
+}
+
+/* The row carries the padding. Its cells are grid items and take the height of what they hold. */
+.hours-row > * {
+  height: auto;
+  padding: 0;
+}
+
+/* The tip buttons of the heading row give it its height. */
+.hours-row--head {
+  padding: 0 0 var(--space-4);
+}
+
+.hours-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.hours-cell-dayoff {
+  justify-self: end;
+}
+
+/* Second line of a row. */
+.hours-cell-time {
+  margin-top: var(--space-4);
+}
+
+.hours-cell-error {
+  grid-column: 1 / -1;
+}
+
+/* ---------- wide screens ---------- */
+
+@media (min-width: 640px) {
+  /* The section box adds its border and padding around the 560px table. */
+  .hours-main {
+    --hours-box-width: calc(var(--hours-table-width) + 2 * (var(--space-7) + var(--border-width)));
+    padding-right: max(var(--gutter), calc((100% - var(--hours-box-width)) / 2));
+    padding-left: max(var(--gutter), calc((100% - var(--hours-box-width)) / 2));
+  }
+
+  .hours-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) var(--hours-time-width) var(--hours-time-width);
+    column-gap: var(--space-6);
+    padding: var(--space-5) var(--space-6);
+  }
+
+  .hours-row--head {
+    padding: var(--space-4) var(--space-6);
+  }
+
+  .hours-cell-dayoff {
+    justify-self: start;
+  }
+
+  .hours-cell-time {
+    margin-top: 0;
+  }
+}
