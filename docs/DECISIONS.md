@@ -221,3 +221,10 @@ a direct-API guard can be added the day a script calls the API.
 - Rationale: 하루에 세 번, 모듈 갱신이 실증 프로젝트의 타입 검사를 깨뜨렸고 세 번 다 그곳에서만 보였다(베낀 타입의 어긋남 1건, 부 판으로 나간 깨지는 변경 2건). 손으로 돌리던 단계다.
 - Default chosen without asking: 필수 칸이 생기는 타입 변경은 주 판으로 올린다. 이미 부 판으로 나간 회원 관리 모듈은 같은 코드에 주 판 번호를 다시 붙였다.
 - Not done / 확인 못 한 것: 프로젝트의 확인은 타입 검사다. 화면을 실행하지 않는다. 쓰는 곳이 없는 변경은 여전히 지나간다.
+
+## 2026-11-22: 모듈의 DB는 실제 PostgreSQL에서 잰다 (v2.12.6)
+- Decision: `scripts/module-db-check.js`가 실행 때마다 임시 클러스터를 만들어 스키마와 PostgreSQL용 보장 파일을 두 번씩 실행하고 지운다. 한 DB용 보장 파일만 있으면 형식 검사가 지적한다(`db-guard-one-dialect`).
+- Rationale: 운영자 지시 «이어서 확인을 하라». «PostgreSQL에서 돌려 보지 않았다»는 줄이 모듈 보고마다 있었다. 처음 실제로 돌리자 일곱 모듈의 추가전용 보장이 SQLite에만 있고 PostgreSQL에서는 UPDATE와 DELETE가 통과한다는 것이 나왔다.
+- Default chosen without asking: 이 기기에 설치된 PostgreSQL 프로그램만 쓰고(내려받지 않는다) 기기의 서비스와 자료에는 접속하지 않는다. 비밀번호를 쓰지 않는다(임시 클러스터는 127.0.0.1에서 trust 인증).
+- Default chosen without asking (2): 추가 20개는 남은 폴더 조사의 후보에서 여러 프로젝트에 반복되고 돈과 보안에 닿는 것을 먼저 골랐다. AI 호출 모듈은 본체의 AI 아키텍처 원칙(G19)을 조항별로 따르게 했다.
+- Not done / 확인 못 한 것: 보장이 실제로 거절하는지는 열세 모듈에서 손으로 쟀고 스크립트는 되풀이하지 않는다. PostgreSQL 한 판. 이 저장소의 CI 기기에 PostgreSQL 프로그램이 있는지는 재지 않았다(없으면 그 시험은 건너뛴다고 출력한다).

@@ -20,8 +20,8 @@ Claude Code. It is the *product* (the harness itself), not an app built with it.
 gates (G1–G25) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.12.5` (package.json = git tag `v2.12.5` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **435 tests, 39 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.12.6` (package.json = git tag `v2.12.6` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **441 tests, 40 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -73,7 +73,7 @@ Full detail: `CLAUDE.md` Change History + `.claude/skills/coolhan-development-or
 | G24 orders for every session | `scripts/install-global.js` + `knowledge_base/project-kit/GLOBAL.md.tpl` + `new-project.js --check` | one managed block in the user-level instruction file: registry-derived orders, harness location, "no kit in this folder, install it first"; `--check` 0 current / 1 stale / 4 not installed; `--remove` restores the file; settings untouched; kit drift check per project |
 | G23 standing orders + project kit | `scripts/new-project.js` + `knowledge_base/project-kit/` + registry `orders` + `scripts/handoff-write.js` + `plan-doc-check --modules` | the commands the operator repeated per project (continue, verify, plan first, module library first, commit per unit, deploy by setting, handoff) installed once into a new or existing folder with loop hooks, ledger, fixed checks and a module plan; gates and hooks run from the harness through `scripts/coolhan.js`; existing files are never overwritten |
 | G21 planning document | `scripts/plan-doc-check.js` + `knowledge_base/00_PLANNING_DOC_STANDARD.md` | the user's 기획서 제작 마스터 프롬프트 (generalized, `{{ }}` slots): §7 completion definition mechanical — 추적표 no blank, no blank cell, no deferral word outside [결정필요], [미검증] with method, tooltip ≤10 어절, no em dash/hype word, diagram files exist, no ID with two names, §4.2 twelve items, success criteria ≥3; form only |
-| G25 modules as plug-ins | `scripts/module-check.js` + `scripts/modules.js` + `scripts/module-admit.js` + `scripts/module-convert.js` + `knowledge_base/00_MODULE_STANDARD.md` | the module standard (name, same subfolders, file names, manifest, own tables, tests, security note) checked mechanically; `modules list / add / status / update / remove` from any project folder; `modules drift` finds modules whose source project moved on; the library holds standard modules under `modules/<name>/` |
+| G25 modules as plug-ins | `scripts/module-check.js` + `scripts/modules.js` + `scripts/module-admit.js` + `scripts/module-db-check.js` + `scripts/module-convert.js` + `knowledge_base/00_MODULE_STANDARD.md` | the module standard (name, same subfolders, file names, manifest, own tables, tests, security note) checked mechanically; `modules list / add / status / update / remove` from any project folder; `modules drift` finds modules whose source project moved on; the library holds standard modules under `modules/<name>/` |
 
 Also: prompt-modernization lint (`scripts/prompt-modernization-check.js`, 9 rule families incl. the Claude-5-era
 ones added in v2.5.0; agent footers carry a role-based `**Effort:**` tier — see
@@ -154,13 +154,13 @@ provide its own credentials in its own environment — they do NOT travel in thi
 ```bash
 git log --oneline -3
 node -e "console.log('pkg', require('./package.json').version)" && git describe --tags --abbrev=0
-npx jest --ci   # background it; expect 435 passed / 39 suites
+npx jest --ci   # background it; expect 441 passed / 40 suites
 node scripts/checks-run.js   # the fixed list (docs/CHECKS.md) — the G20 way to "verify"; C1 is the slow one
 node scripts/progress-check.js docs/PROGRESS.md   # this repo's ledger: current position + open D-numbers
 node doctor.js
 ```
 
-If those agree (version = v2.12.5, tests green, doctor healthy, ledger PASS), the handoff is intact and you
+If those agree (version = v2.12.6, tests green, doctor healthy, ledger PASS), the handoff is intact and you
 may proceed from § Next actions.
 
 
@@ -387,3 +387,13 @@ CREATE TABLE consent_records (user_id UUID, region TEXT, personalized BOOLEAN DE
 - 더 들어온 것: 결제 알림 수신함(서명 비밀이 없으면 어느 환경에서나 거절, 이벤트는 한 번만, 알림은 힌트일 뿐이라 결제사에서 다시 읽어 금액·통화·모드를 대조), 결제사 어댑터 둘, 속도 제한(로그인·재설정·돈 정책은 저장소가 죽으면 닫힘), 보안 머리글, 비밀값 보관(봉인 실패는 오류, 평문으로 떨어지는 길 없음). 이전 형식에서 옮긴 결제 판정 모듈은 금액 확인 없이 열리던 길을 닫아 주 판을 올렸다.
 - 운영자가 먼저 볼 것: 비공개 폴더의 `.coolhan-private/module-harvest/OPERATOR-NOTICE.md`. 남은 폴더 조사에서 운영 중인 사이트들의 결제 웹훅 결함이 나왔다(서명 없이 통과하는 조건, 재전송 방어 없음, 이중 적립 가능, 금액 대조 없음). 원천 파일은 고치지 않았다. 그 사이트의 세션과 운영자가 확인할 일이다.
 - 다음 단위: 대기열 9번 표의 7번(쿠키 동의)부터 34번까지, 4번 표(이전 형식 38개의 분리), 7번 표(다음 판 후보). 결제 모듈의 공급자 사실 33건은 실제 키로 처음 붙이는 사이트에서 결제사의 시험 환경으로 확인한다.
+
+---
+## 인수인계 보강 (2026-11-22, v2.12.6): 저장소 153개, PostgreSQL에서 잰다
+
+- 위 본문의 v2.12.5 수치는 이 보강으로 대체된다: 현재 `2.12.6`, jest **441 tests / 40 suites**. 저장소의 모듈은 153개다. 열린 결함은 D-14 하나다.
+- DB가 있는 모듈을 만들거나 고쳤으면 입고 검사에 더해 `node scripts/module-db-check.js <이름...> --library C:/sites/00Module_site`를 돌린다. 이 기기의 PostgreSQL 프로그램으로 임시 클러스터를 만들어 스키마와 `db/*.postgres.sql`을 두 번씩 실행하고 지운다. 기기의 PostgreSQL 서비스와 자료는 건드리지 않고 비밀번호도 쓰지 않는다. 프로그램이 없으면 4(재지 못함)다.
+- 추가전용 같은 보장 파일은 두 DB용을 함께 둔다(`<이름>.sqlite.sql`, `<이름>.postgres.sql`). 하나만 있으면 형식 검사가 잡는다. PostgreSQL 쪽은 줄 단위 UPDATE와 DELETE, 문장 단위 TRUNCATE를 막는다.
+- 운영자 지시로 더 들어온 20개(순서와 근거는 비공개 대기열 10번 표): 쿠키 동의, 약관 동의 기록, 수신거부, 예약 실행, 작업 큐, 백업 점검, 로그인 잠금, 사람 확인, 밖으로 보내는 웹훅, 환율, 다른 통화 청구, 결제 대조, 주인 없는 결제 감지, 미수 안내, 권리침해 신고 접수, PDF 글 추출, 회계 내보내기, 은행 명세 점검, 받는 메일함, AI 제공자 호출.
+- 직전 보고의 «확인 안 함» 가운데 잰 것: 저장소 전체 입고 검사, PostgreSQL 실행, 운영자 알림 7건을 원천 코드에서 직접 읽음(알림 파일 아래쪽 표), 실증 프로젝트의 키보드 순서와 초점. 여전히 재지 않은 것: 화면 낭독기와 인쇄, 다른 브라우저, 밖의 서비스(결제사, 운송사, 메일 서버, AI 제공자) 실제 호출, 다른 PostgreSQL 판, 추출한 모듈을 실제 사이트에 갈아 끼우는 일.
+- 다음 단위 후보: 대기열 9번 표의 남은 줄(가장 큰 넷과 한 프로젝트에만 있는 것), 4번 표(이전 형식 38개의 분리), 7번 표(다음 판 후보), 빠진 어댑터(IMAP, OCR, 한글 글꼴 PDF, 통합문서).

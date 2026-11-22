@@ -1,5 +1,40 @@
 # Changelog
 
+## [2.12.6] - 2026-11-22
+
+### Added
+
+- **Module schemas and guards on a real PostgreSQL** (`scripts/module-db-check.js`, part of G25). The operator
+  asked for what earlier reports had left unverified to be verified. Module schemas had been run on SQLite only.
+  The first real run (a throwaway cluster of the PostgreSQL installed on the machine) showed that every schema
+  ran, and that seven modules kept «this table is append-only» with a trigger for SQLite only: on PostgreSQL an
+  UPDATE or a DELETE went through; five more refused UPDATE and DELETE and let TRUNCATE through. All were fixed in
+  the library and measured again.
+  - The script creates a cluster for the run (trust authentication, 127.0.0.1 only, its own port and data folder)
+    and removes it; per module the schema twice and every `db/*.postgres.sql` twice; tables and triggers counted.
+    Exit 0 PASS, 1 FAIL, 2 usage, 4 nothing measured (no PostgreSQL programs, the cluster did not start, no
+    schema). A folder named with `--pg-bin` is the only place looked at.
+- **Form rule `db-guard-one-dialect`** (`scripts/module-check.js`): a guard file for one database without its twin
+  for the other (`<name>.sqlite.sql` and `<name>.postgres.sql`) is a finding.
+
+### Verification
+
+- jest 441/441, 40 suites (new `module-db-check` suite 5/5, one of them on a real PostgreSQL where
+  the machine has one; `module-standard` 49/49); lint clean 48 files; fixed list in full.
+- `_harness_test/track46-module-db/run-track.js`: 6 scenarios, 6 match, 0 false +/-.
+- Real library: 50 modules with a schema on PostgreSQL 16.13, 50 PASS; 100 tables, 62 triggers, 20 guard files.
+- Real library, admission of every module: 153 modules, 153 PASS, 0 FAIL, 0 NOT_RUN; 3,299 module tests.
+- Also measured in this unit, by hand and recorded in the ledger: the seven payment and secret findings of the
+  operator notice read at their source lines (six as reported, one as far as the call site); keyboard order,
+  dialog and drawer focus in the demo project (one defect found and fixed: focus left the open drawer).
+
+### Honest bound
+
+- The script shows that the SQL runs, twice. That a guard refuses what it should was measured by hand for thirteen
+  modules (statements in each module's `docs/postgres-check.md`); the script does not repeat it.
+- One PostgreSQL version. Concurrency and the modules' own code against PostgreSQL are not exercised.
+- The real-PostgreSQL test is skipped on a machine without the programs, and says so.
+
 ## [2.12.5] - 2026-11-22
 
 ### Added

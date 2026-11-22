@@ -44,6 +44,10 @@ origin, a README and a CHANGELOG. The library holds them under `modules/<name>/`
   copies their shape; when the frame has not opened the file yet, the frame's manifest is changed first.
 - After changing a module, admit it together with every module that requires it:
   `node scripts/module-admit.js <name> --with-dependents --consumer <demo project> --library <library>`.
+- A module with tables: `db/schema.sql` runs on PostgreSQL and SQLite and can be applied again; a guarantee kept by a
+  trigger (append-only) ships for both databases (`<name>.sqlite.sql`, `<name>.postgres.sql`, the PostgreSQL one
+  refusing UPDATE, DELETE and TRUNCATE); measure with `node scripts/module-db-check.js <name> --library <library>`
+  (exit 4 means the machine has no PostgreSQL programs: not measured, say so).
 - Version level: a new required field or property on a type that a project implements or passes is a breaking
   change (major), even when behaviour is unchanged. A minor version adds only what existing callers may ignore.
 - Done for a module means `node scripts/module-admit.js <name> --library <library>` exits 0: the form gate, the

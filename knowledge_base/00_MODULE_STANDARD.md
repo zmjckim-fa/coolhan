@@ -93,6 +93,7 @@
 | 기준 | 모듈이 지킬 것 | 확인 |
 |---|---|---|
 | 안정적인 소스 | `core/`나 `api/`가 있으면 `test/`가 있다. 거절 시험(잘못된 입력, 권한 없음, 경계 값)을 포함한다. 판을 올릴 때 시험이 모두 통과한다 | 게이트 `test-missing`, 모듈의 시험 명령 |
+| 두 DB에서 같은 보장 | 추가전용 같은 보장을 트리거로 지키면 SQLite용과 PostgreSQL용 파일을 함께 둔다(`db/<이름>.sqlite.sql`, `db/<이름>.postgres.sql`). PostgreSQL 쪽은 UPDATE, DELETE, TRUNCATE를 막고 다시 실행해도 된다. 스키마와 보장 파일은 실제 PostgreSQL에서 두 번씩 실행해 본다 | 게이트 `db-guard-one-dialect`, `node scripts/module-db-check.js` |
 | 분리된 DB | 모듈의 테이블은 `db/`에만 있고 이름이 영역 낱말로 시작한다(`member_account`). 다른 모듈의 테이블을 가리키는 외래 키를 두지 않고 값(id)만 가진다. 내놓는 테이블은 매니페스트 `provides.tables`에 적는다 | 게이트 `db-table-prefix`, `db-table-undeclared`, `db-foreign-reference` |
 | 취약점 점검 | `api/`, `user/`, `admin/` 가운데 하나라도 있으면 `docs/security.md`에 위협, 통제, 그 통제를 확인하는 시험을 적는다. «취약점 없음»은 약속하지 않고 무엇을 확인했는지 적는다 | 게이트 `security-note-missing`, Security Reviewer |
 | 착탈 | 설치는 폴더 복사 하나, 제거는 폴더 삭제 하나다. 모듈 밖에 파일을 만들지 않는다. 프로젝트에 연결하는 방법은 `README.md`에 적는다 | `modules add`, `modules remove`, 빈 프로젝트 설치 시험 |
@@ -164,6 +165,7 @@
 | test-missing | `core/`나 `api/`가 있는데 `test/`가 없다 |
 | db-table-prefix, db-table-undeclared | 테이블 이름이 영역 낱말로 시작하지 않는다. `provides.tables`에 없다 |
 | db-foreign-reference | 이 모듈에 없는 테이블을 외래 키로 가리킨다 |
+| db-guard-one-dialect | `db/<이름>.sqlite.sql`만 있고 `db/<이름>.postgres.sql`이 없다(또는 그 반대). 추가전용 같은 보장을 한 DB에서만 지킨다 |
 | security-note-missing | `api/`, `user/`, `admin/`이 있는데 `docs/security.md`가 없다 |
 
 종료 코드: 0 PASS, 1 FAIL, 2 사용법 오류, 4 검사할 모듈이 없음(통과가 아니다).

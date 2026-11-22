@@ -21,6 +21,9 @@
  *   core-imports-framework                core/ imports a framework or a database client
  *   import-escapes-module                 a relative import that leaves the module (or enters another module's inside:
  *                                         only its core/index and the files its manifest lists in provides.entries are open)
+ *   db-guard-one-dialect                  db/<name>.sqlite.sql without db/<name>.postgres.sql, or the reverse: a guarantee
+ *                                         that holds on one database only (measured 2026-11-22: seven modules were
+ *                                         append-only on SQLite and open to UPDATE and DELETE on PostgreSQL)
  *   public-entry-invalid                  provides.entries names a file that is missing, outside the module or under test/
  *   require-undeclared                    another module's entry is imported but not listed in `requires`
  *   origin-missing                        no origin, or an unknown commit without an `originNote`
@@ -186,6 +189,13 @@ function checkModule(dir) {
   if ((present('core') || present('api')) && !present('test')) add('test-missing', 'module.json', 'module.testMissing');
   if (['api', 'user', 'admin'].some(present) && !fs.existsSync(path.join(dir, 'docs', 'security.md'))) add('security-note-missing', 'docs', 'module.securityNoteMissing');
   if (present('db')) {
+    const dbFiles = fs.readdirSync(path.join(dir, 'db'));
+    for (const f of dbFiles) {
+      const m2 = /^(.+)\.(sqlite|postgres)\.sql$/.exec(f);
+      if (!m2) continue;
+      const twin = `${m2[1]}.${m2[2] === 'sqlite' ? 'postgres' : 'sqlite'}.sql`;
+      if (!dbFiles.includes(twin)) add('db-guard-one-dialect', `db/${f}`, 'module.dbGuardOneDialect', { file: f, twin });
+    }
     const declared = new Set((m.provides && Array.isArray(m.provides.tables)) ? m.provides.tables : []);
     const prefix = `${String(m.area || '').replace(/-/g, '_')}_`;
     const own = new Set(); const refs = [];

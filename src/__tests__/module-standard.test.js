@@ -101,6 +101,18 @@ describe('module-check: the form of a module (knowledge_base/00_MODULE_STANDARD.
     fs.rmSync(alone, { recursive: true, force: true });
   });
 
+  test('a guard written for one database only is a finding; both dialects, or a plain schema, pass', () => {
+    const TABLE = 'create table member_event (id text primary key);\n';
+    const withDb = (files) => makeModule(root, 'member-signup', { parts: { ...ABSENT, core: true, test: true, db: true }, provides: { lib: ['rule'], tables: ['member_event'] } }, { 'db/schema.sql': TABLE, ...files });
+    expect(rulesOf(withDb({}))).toEqual([]);
+    fs.rmSync(path.join(root, 'member-signup'), { recursive: true, force: true });
+    expect(rulesOf(withDb({ 'db/append-only.sqlite.sql': '-- guard\n' }))).toEqual(['db-guard-one-dialect']);
+    fs.rmSync(path.join(root, 'member-signup'), { recursive: true, force: true });
+    expect(rulesOf(withDb({ 'db/append-only.postgres.sql': '-- guard\n' }))).toEqual(['db-guard-one-dialect']);
+    fs.rmSync(path.join(root, 'member-signup'), { recursive: true, force: true });
+    expect(rulesOf(withDb({ 'db/append-only.sqlite.sql': '-- guard\n', 'db/append-only.postgres.sql': '-- guard\n' }))).toEqual([]);
+  });
+
   test('provides.entries must name files inside the module and not under test/', () => {
     for (const entry of ['core/nothing.js', '../member-login/core/index.js', 'test/rule.test.js', 'core']) {
       const dir = makeModule(root, 'member-signup', { provides: { lib: ['rule'], entries: [entry] } });

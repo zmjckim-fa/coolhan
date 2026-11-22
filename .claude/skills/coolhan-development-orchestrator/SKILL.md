@@ -495,6 +495,8 @@ while (todo remains in backlog):
      with the tests there, secret scan; 0 admit / 1 FAIL / 4 a step measured nothing); the library commit follows 0.
      A changed module is admitted with --with-dependents (v2.12.4: every module that requires it, named in the output)
      and --consumer <project> (v2.12.5: a project takes the new versions and runs its own check).
+     A module with tables: node scripts/module-db-check.js <name> --library <dir> (v2.12.6: schema and PostgreSQL
+     guard files run twice on a throwaway cluster; 0 PASS / 1 FAIL / 4 no PostgreSQL programs, not measured).
      node scripts/modules.js drift names modules whose source project moved on since they were taken.
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)

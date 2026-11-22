@@ -1,0 +1,67 @@
+Track 46 module database check: 6/6 scenarios match, 1 not judged
+
+MATCH #1 A schema with its PostgreSQL guard, both written to run again
+    expected: exit 0, PASS
+    actual:   exit 0
+MATCH #2 A schema that fails when it is applied again
+    expected: exit 1 naming schema.sql and the second run
+    actual:   exit 1; names schema.sql true
+MATCH #3 A guard file with an error
+    expected: exit 1 naming the guard file
+    actual:   exit 1; names the guard true
+MATCH #4 A module without a schema; a named folder that holds no PostgreSQL; no module name
+    expected: exit 4, 4, 2 (not measured is never a pass)
+    actual:   exit 4, 4, 2
+MATCH #5 A module whose append-only guard exists for SQLite only (the state of seven library modules before this track)
+    expected: module-check exit 1 naming db-guard-one-dialect
+    actual:   exit 1; true
+MATCH #6 The guard in both dialects; a module with a plain schema and no guard
+    expected: module-check exit 0 for both (no false finding)
+    actual:   exit 0, 0
+OBSERVED #7 Every module of the real library that has a schema
+    expected: observation: counts
+    actual:   exit 0; PASS: PostgreSQL 16.13 · 모듈 50개 · 통과 50 · 실패 0 · 확인 안 함 0 · 표 100 · 트리거 62 · 보장 파일 20
+
+--- commands ---
+$ [sound] node scripts/module-db-check.js member-events --library <tmp>\lib1
+  exit 0
+  ✔ module-db-check: PASS: PostgreSQL 16.13 · 모듈 1개 · 통과 1 · 실패 0 · 확인 안 함 0 · 표 1 · 트리거 1 · 보장 파일 1
+
+$ [not repeatable] node scripts/module-db-check.js member-once --library <tmp>\lib2
+  exit 1
+    ✗ member-once: schema.sql 실행이 2번째에 실패했다: psql:<tmp>/lib2/modules/member-once/db/schema.sql:1: ERROR:  relation "member_event" already exists
+  ✗ module-db-check: FAIL: PostgreSQL 16.13 · 모듈 1개 · 통과 0 · 실패 1 · 확인 안 함 0 · 표 0 · 트리거 0 · 보장 파일 0
+
+$ [broken guard] node scripts/module-db-check.js member-typo --library <tmp>\lib3
+  exit 1
+    ✗ member-typo: append-only.postgres.sql 실행이 1번째에 실패했다: psql:<tmp>/lib3/modules/member-typo/db/append-only.postgres.sql:1: ERROR:  relation "no_such_table" does not exist
+  ✗ module-db-check: FAIL: PostgreSQL 16.13 · 모듈 1개 · 통과 0 · 실패 1 · 확인 안 함 0 · 표 0 · 트리거 0 · 보장 파일 1
+
+$ [no schema] node scripts/module-db-check.js member-rules --library <tmp>\lib4
+  exit 4
+  ○ module-db-check: NOT_RUN: 스키마가 있는 모듈이 없다. 통과가 아니다
+
+$ [named folder without PostgreSQL] node scripts/module-db-check.js member-events --library <tmp>\lib4 --pg-bin <tmp>\nowhere
+  exit 4
+  ○ module-db-check: NOT_RUN: 이 기기에서 PostgreSQL 프로그램(initdb, pg_ctl, psql)을 찾지 못했다 (--pg-bin 또는 환경 변수 COOLHAN_PG_BIN). 통과가 아니다
+
+$ [usage] node scripts/module-db-check.js --library <tmp>\lib4
+  exit 2
+  usage: module-db-check.js <name...|--all> --library <dir> [--pg-bin <dir>] [--json]
+
+$ [one dialect] node scripts/module-check.js <tmp>\lib5\modules\member-events
+  exit 1
+  ✗ module-check: FAIL: 모듈 1개 · 지적 1건
+    [db-guard-one-dialect] member-events/db/append-only.sqlite.sql · append-only.sqlite.sql 만 있고 append-only.postgres.sql 이 없다. 한 DB에서만 지켜지는 보장이다 (같은 규칙을 다른 DB용으로도 둔다)
+
+$ [both dialects] node scripts/module-check.js <tmp>\lib6\modules\member-events
+  exit 0
+  ✔ module-check: PASS: 모듈 1개 · 지적 0건
+
+$ [plain schema] node scripts/module-check.js <tmp>\lib6\modules\member-plain
+  exit 0
+  ✔ module-check: PASS: 모듈 1개 · 지적 0건
+
+$ [real library] node scripts/module-db-check.js --all --library <library>
+  exit 0
+  ✔ module-db-check: PASS: PostgreSQL 16.13 · 모듈 50개 · 통과 50 · 실패 0 · 확인 안 함 0 · 표 100 · 트리거 62 · 보장 파일 20
