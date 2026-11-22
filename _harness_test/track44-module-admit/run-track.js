@@ -96,11 +96,20 @@ const noLib = admit('no library', path.join(TMP, 'nowhere'), ['member-rules']);
 const usage = spawnSync(process.execPath, [path.join(HOME, 'scripts', 'module-admit.js'), '--library', lib], { encoding: 'utf8' });
 check(9, 'unknown module, missing library, no module name', 'exit 4, 4, 2', `exit ${unknown.status}, ${noLib.status}, ${usage.status}`, unknown.status === 4 && noLib.status === 4 && usage.status === 2);
 
+// 11. a change that passes on its own and breaks what is built on it
+lib = library({ 'member-rules': {}, 'member-signup': { over: { requires: ['member-rules'] } }, 'member-screens': { over: { requires: ['member-signup'] }, files: { 'test/rule.test.js': FAILING } }, 'admin-shell': {} });
+const alone = admit('changed module alone', lib, ['member-rules']);
+const withDeps = admit('with dependents', lib, ['member-rules', '--with-dependents']);
+check(11, 'A module whose dependent (through another module) is broken: admitted alone, then with --with-dependents', 'alone: exit 0; with dependents: exit 1, member-screens FAIL, the unrelated module not admitted',
+  `alone exit ${alone.status}; with dependents exit ${withDeps.status}; ${withDeps.json ? withDeps.json.modules.map(m => `${m.name} ${m.status}`).join(', ') : 'no result'}`,
+  alone.status === 0 && withDeps.status === 1 && withDeps.json && withDeps.json.modules.map(m => `${m.name} ${m.status}`).join(', ') === 'member-rules PASS, member-screens FAIL, member-signup PASS');
+
 // 10. the real library: every committed module (observation when the library is not on this machine).
 // Committed ones only: modules still being written by another session would make the count mean nothing.
 const tracked = spawnSync('git', ['-C', REAL_LIBRARY, 'ls-files', 'modules'], { encoding: 'utf8', maxBuffer: 64 * 2 ** 20 });
 const committed = [...new Set(String(tracked.stdout || '').split('\n').map(f => f.split('/')[1]).filter(n => n && fs.existsSync(path.join(REAL_LIBRARY, 'modules', n, 'module.json'))))].sort();
-if (tracked.status === 0 && committed.length) {
+if (process.env.TRACK44_SKIP_REAL === '1') check(10, 'real library, every committed module', 'observation', 'skipped by TRACK44_SKIP_REAL=1 (takes more than ten minutes): not measured in this run', null);
+else if (tracked.status === 0 && committed.length) {
   r = admit('real library', REAL_LIBRARY, committed, true);
   const by = (s) => r.json ? r.json.modules.filter(m => m.status === s).length : 0;
   const stepFails = r.json ? ['form', 'test', 'install', 'secrets'].map(s => `${s} ${r.json.modules.filter(m => m.steps[s] && m.steps[s].status !== 'PASS').length}`).join(', ') : 'no result';

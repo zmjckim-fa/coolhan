@@ -223,7 +223,8 @@ const M = {
   'modules.driftAhead': '  ↯ {module} {version}: 원천 {site} 의 {path} 가 그 뒤로 {commits}번 바뀌었다',
   'modules.driftLine': '출처 {origins}곳 · 잰 곳 {measured} · 원천이 앞선 곳 {ahead} (모듈 {modules}개) · 재지 못한 곳 {notMeasured}',
   // ── module-admit (G25: admission before a library commit) ──────────────────────────────────
-  'admit.usage': 'usage: module-admit.js <name...|--all> --library <dir> [--json]',
+  'admit.usage': 'usage: module-admit.js <name...|--all> --library <dir> [--with-dependents] [--json]',
+  'admit.dependents': '이 모듈을 쓰는 모듈 {count}개를 함께 잰다: {names}',
   'admit.noTestCommand': 'module.json 에 test 명령이 없다',
   'admit.neverStarted': '자식 프로세스가 시작되지 않았다 (node scripts/resource-check.js 로 기기 상태를 본다)',
   'admit.testFailed': '시험 명령이 종료 코드 {exit} 로 끝났다 (실패 {failed})',

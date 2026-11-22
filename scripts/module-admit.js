@@ -17,8 +17,11 @@
  * started) is NOT_RUN, never PASS. Nothing is committed here: admission says whether a commit may follow.
  *
  * Usage:
- *   node scripts/module-admit.js <name...> --library <dir> [--json]
+ *   node scripts/module-admit.js <name...> --library <dir> [--with-dependents] [--json]
  *   node scripts/module-admit.js --all --library <dir> [--json]
+ *
+ * --with-dependents also admits every module that requires a named one, directly or through another module: a
+ * change that passes on its own can still break what is built on it (a minor version of a shared frame did, v2.12.3).
  *
  * Exit: 0 every step of every module PASS · 1 any FAIL · 2 usage · 4 something NOT_RUN and nothing failed, or no
  *       such module: never a pass
@@ -107,15 +110,31 @@ function admit(name, library, cat) {
   return { name, version: entry.version, status, steps };
 }
 
+/** The named modules plus every module of the catalogue that requires one of them, directly or through another module. */
+function withDependents(names, cat) {
+  const out = new Set(names);
+  for (let grew = true; grew;) {
+    grew = false;
+    for (const m of Object.values(cat)) if (!out.has(m.name) && m.requires.some(r => out.has(r))) { out.add(m.name); grew = true; }
+  }
+  return [...out].sort();
+}
+
 function main(argv) {
   const args = argv.slice(2);
   const library = argValue(args, '--library') || process.env.COOLHAN_MODULES || '';
-  const bad = args.find(a => a.startsWith('--') && !['--library', '--json', '--all'].includes(a));
+  const bad = args.find(a => a.startsWith('--') && !['--library', '--json', '--all', '--with-dependents'].includes(a));
   let names = args.filter((a, i) => !a.startsWith('--') && args[i - 1] !== '--library');
   if (bad || (!names.length && !args.includes('--all'))) { console.error(t('admit.usage')); return 2; }
   const cat = isDir(library) ? catalog(library) : null;
   if (!cat) { console.error(t('modules.noLibrary')); return 4; }
   if (args.includes('--all')) names = Object.keys(cat).sort();
+  else if (args.includes('--with-dependents')) {
+    const named = new Set(names);
+    names = withDependents(names.filter(n => cat[n]), cat).concat(names.filter(n => !cat[n]));
+    const added = names.filter(n => !named.has(n));
+    if (added.length && !args.includes('--json')) console.log(t('admit.dependents', { count: added.length, names: added.join(', ') }));
+  }
   // What a module requires must be in the library too, or the install step cannot be read.
   for (const n of names) { if (cat[n]) { try { withRequirements([n], cat); } catch (e) { console.error(e.message); return 1; } } }
   const results = names.map(n => admit(n, library, cat));
@@ -135,4 +154,4 @@ function main(argv) {
 
 if (require.main === module) process.exit(main(process.argv));
 
-module.exports = { main, admit, runTest, counts, STEPS };
+module.exports = { main, admit, runTest, counts, withDependents, STEPS };

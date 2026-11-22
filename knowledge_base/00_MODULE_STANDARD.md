@@ -120,7 +120,7 @@
 | 감지 | `node scripts/modules.js drift` | 매니페스트의 `origin` 경로가 원천 프로젝트에서 그 뒤로 바뀌었는지 git 기록으로 본다(읽기만). 바뀐 모듈이 흡수 후보다 |
 | 조사 | Site Analyzer, Module Extractor | 프로젝트의 새 기능을 읽고 모듈 경계로 나눈다. 고객 자료, 비밀값, 남의 코드는 가져오지 않는다 |
 | 작성 | Developer | 이 표준의 폴더 구성으로 모듈을 만들거나 판을 올린다. `CHANGELOG.md`와 `origin`을 갱신한다 |
-| 검사 | `node scripts/module-admit.js <이름> --library <저장소>` | 입고 검사 한 명령: 형식(`module-check`), 모듈의 시험, 빈 폴더에 설치해 설치본에서 다시 시험, 비밀값 스캔. 종료 코드 0일 때만 저장소에 커밋한다. 재지 못한 단계가 있으면 4다(통과가 아니다) |
+| 검사 | `node scripts/module-admit.js <이름> --library <저장소>` | 입고 검사 한 명령: 형식(`module-check`), 모듈의 시험, 빈 폴더에 설치해 설치본에서 다시 시험, 비밀값 스캔. 종료 코드 0일 때만 저장소에 커밋한다. 재지 못한 단계가 있으면 4다(통과가 아니다). 이미 있는 모듈을 고쳤으면 `--with-dependents`로 그 모듈을 `requires`로 쓰는 모듈까지 함께 잰다 |
 | 배포 | `modules status`, `modules update` | 그 모듈을 쓰는 프로젝트가 새 판을 본다 |
 
 ### 8-1. 가져올 때 정돈한다 (운영자 지시 2026-11-22)

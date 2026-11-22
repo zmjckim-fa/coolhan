@@ -26,13 +26,15 @@ nothing is NOT_RUN and the run ends with 4.
 | 7 | Test reads an undeclared neighbour module at run time | exit 1, test PASS in the library, install FAIL | match |
 | 8 | `--all` with one sound and one failing module | exit 1, PASS and FAIL kept apart | match |
 | 9 | Unknown module, missing library, no module name | exit 4, 4, 2 | match |
+| 11 | A module whose dependent, reached through another module, is broken: admitted alone, then with `--with-dependents` (v2.12.4) | alone exit 0; with dependents exit 1 naming the dependent | match |
 
-9 of 9 match. False pass 0 (scenarios 2, 3, 5, 6, 7 must not pass and do not). False fail 0 (scenarios 1 and 4
-must pass and do).
+10 of 10 match. False pass 0 (scenarios 2, 3, 5, 6, 7 and the second half of 11 must not pass and do not). False
+fail 0 (scenarios 1, 4 and the first half of 11 must pass and do). Scenario 11 is the case of v2.12.3: a minor version
+of a shared frame passed its own admission and broke the module built on it.
 
 ## Real library (observation)
 
-Every committed module of the library on this machine at the time of the run: 88 modules, 88 PASS, 0 FAIL,
+Every committed module of the library on this machine at the time of the last run: 127 modules, 127 PASS, 0 FAIL,
 0 NOT_RUN; steps not PASS: form 0, test 0, install 0, secrets 0. Modules another session was still writing are
 left out (only tracked folders are admitted). The library is private, so the log carries counts and no module
 names. The run took more than ten minutes (four steps and several child processes per module).

@@ -1,4 +1,4 @@
-Track 44 module admission: 9/9 scenarios match, 1 observation
+Track 44 module admission: 10/10 scenarios match, 1 observation
 
 MATCH #1 sound module, requirement installed beside it
     expected: exit 0; all four steps PASS
@@ -27,9 +27,12 @@ MATCH #8 --all with one sound and one failing module
 MATCH #9 unknown module, missing library, no module name
     expected: exit 4, 4, 2
     actual:   exit 4, 4, 2
+MATCH #11 A module whose dependent (through another module) is broken: admitted alone, then with --with-dependents
+    expected: alone: exit 0; with dependents: exit 1, member-screens FAIL, the unrelated module not admitted
+    actual:   alone exit 0; with dependents exit 1; member-rules PASS, member-screens FAIL, member-signup PASS
 OBSERVED #10 real library, every committed module
     expected: observation: counts per result
-    actual:   exit 0; modules 88, PASS 88, FAIL 0, NOT_RUN 0; steps not PASS: form 0, test 0, install 0, secrets 0
+    actual:   exit 0; modules 127, PASS 127, FAIL 0, NOT_RUN 0; steps not PASS: form 0, test 0, install 0, secrets 0
 
 --- commands ---
 $ [sound] node scripts/module-admit.js member-signup --library <tmp>\lib1
@@ -73,6 +76,16 @@ $ [no library] node scripts/module-admit.js member-rules --library <tmp>\nowhere
   exit 4
   ○ modules: NOT_RUN: 모듈 저장소를 찾지 못했다 (--library, coolhan.project.json 의 modules, 환경 변수 COOLHAN_MODULES)
 
-$ [real library] node scripts/module-admit.js <88 committed modules> --library <library>
+$ [changed module alone] node scripts/module-admit.js member-rules --library <tmp>\lib10
   exit 0
-  modules 88: PASS 88, FAIL 0, NOT_RUN 0
+  member-rules: PASS (form PASS, test PASS, install PASS, secrets PASS)
+
+$ [with dependents] node scripts/module-admit.js member-rules --with-dependents --library <tmp>\lib10
+  exit 1
+  member-rules: PASS (form PASS, test PASS, install PASS, secrets PASS)
+  member-screens: FAIL (form PASS, test FAIL, install FAIL, secrets PASS)
+  member-signup: PASS (form PASS, test PASS, install PASS, secrets PASS)
+
+$ [real library] node scripts/module-admit.js <127 committed modules> --library <library>
+  exit 0
+  modules 127: PASS 127, FAIL 0, NOT_RUN 0

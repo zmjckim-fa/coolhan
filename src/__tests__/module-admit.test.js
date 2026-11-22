@@ -98,6 +98,19 @@ describe('module-admit: what a module must show before it is committed to the li
     expect(j.modules.map(m => [m.name, m.status])).toEqual([['member-rules', 'PASS'], ['member-signup', 'FAIL']]);
   });
 
+  test('--with-dependents admits what is built on a changed module, also through another module; the break shows there', () => {
+    makeModule(library, 'member-rules');
+    makeModule(library, 'member-signup', { requires: ['member-rules'] });
+    // built on member-signup, and its test fails: admitted alone, member-rules would pass and hide this
+    makeModule(library, 'member-screens', { requires: ['member-signup'] }, { 'test/rule.test.js': GOOD_TEST.replace('rule(1), true', 'rule(1), false') });
+    makeModule(library, 'admin-shell');
+    expect(run(library, 'member-rules').code).toBe(0);
+    const r = run(library, 'member-rules', '--with-dependents');
+    expect(r.json.modules.map(m => [m.name, m.status])).toEqual([['member-rules', 'PASS'], ['member-screens', 'FAIL'], ['member-signup', 'PASS']]);
+    expect(r.code).toBe(1);
+    expect(admit.withDependents(['admin-shell'], { 'admin-shell': { name: 'admin-shell', requires: [] } })).toEqual(['admin-shell']);
+  });
+
   test('unknown module and missing library are exit 4, a missing name is usage (exit 2)', () => {
     makeModule(library, 'member-rules');
     expect(run(library, 'member-none').code).toBe(4);

@@ -1,5 +1,34 @@
 # Changelog
 
+## [2.12.4] - 2026-11-22
+
+### Added
+
+- **Admission with dependents** (`scripts/module-admit.js --with-dependents`, part of G25). A module that
+  changed is admitted together with every module that requires it, directly or through another module. v2.12.3
+  showed why: a minor version of a shared frame passed its own admission and broke the module built on it. The
+  order «admit the dependents too» was a line in the handoff; it is now an option of the command, and the added
+  modules are named in the output.
+
+### Changed
+
+- The admission track can leave out its long real-library observation (`TRACK44_SKIP_REAL=1`); the committed
+  log was produced with it included.
+
+### Verification
+
+- jest 434/434, 39 suites (`module-admit` 10/10); lint clean 48 files; fixed list in full.
+- `_harness_test/track44-module-admit/run-track.js`: 10 scenarios, 10 match, 0 false +/- (scenario 11: admitted
+  alone exit 0, with dependents exit 1 naming the broken dependent, an unrelated module not admitted).
+- Real library: 127 committed modules, 127 PASS, 0 FAIL, 0 NOT_RUN.
+
+### Honest bound
+
+- Dependents are found through `requires`. A module that uses another without declaring it is not found here
+  (the form gate reports the undeclared import instead).
+- Admission still runs each module's own tests. Two modules that fit their own tests and not each other show
+  only where they are mounted together (the demo project's type check).
+
 ## [2.12.3] - 2026-11-22
 
 ### Added
