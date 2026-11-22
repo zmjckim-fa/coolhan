@@ -14,4 +14,4 @@
 | U8 | 모듈 입고 검사 한 명령 + 릴리스 v2.12.1 | `scripts/module-admit.js`, `src/__tests__/module-admit.test.js`, `_harness_test/track44-module-admit/`, 문서 | jest · track44 · checks-run · CI | ✅ done (jest 430/430; track44 9/9; checks-run 13/13; 커밋 419816b 태그 v2.12.1; CI 4/4 success) |
 | U9 | 모듈 추출 3차: 디자인 체계, 관리자 목록·상세 틀, 정산 | 모듈 저장소 `modules/` | module-admit | ✅ done (입고 검사 10/10 PASS; 모듈 시험 129/129; 저장소 커밋 2건) |
 | U10 | 모듈 추출 4차: 구매대행 | 모듈 저장소 `modules/` | module-admit | ⬜ todo |
-| U11 | 모듈 실증: 관리자 모듈들을 빈 프로젝트에 설치해 브라우저에서 연다 | `_harness_test/track45-module-demo/` | module-admit · 브라우저 확인 · 화면 시험 | ⬜ todo |
+| U11 | 모듈 실증: 관리자 모듈들을 빈 프로젝트에 설치해 브라우저에서 연다 | `_harness_test/track45-module-demo/` | module-admit · 브라우저 확인 · 화면 시험 | ✅ done (설치 10/10; 타입 검사·빌드 종료 코드 0; 브라우저 2개 폭 콘솔 오류 0건; 결함 3/3 수정 뒤 다시 잼; 갱신 경로 status 1 → update 0 → status 0) |
