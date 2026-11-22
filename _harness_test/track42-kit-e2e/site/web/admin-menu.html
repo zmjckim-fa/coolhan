@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{text:title.menu}}</title>
+<link rel="stylesheet" href="/tokens.css">
+<link rel="stylesheet" href="/screen.css">
+<link rel="stylesheet" href="/admin-menu.css">
+<script type="module" src="/admin-menu.js"></script>
+</head>
+<body class="menu-page">
+<a class="skip-link" href="#screen-title" data-text="nav.skip"></a>
+
+<!-- The top bar (C-12) is drawn by admin-top-bar.js. -->
+<header data-admin-top-bar></header>
+
+<main class="menu-main">
+  <h1 class="screen-title" id="screen-title" tabindex="-1" data-text="title.menu"></h1>
+
+  <p class="saved-notice" id="menu-notice" role="status" aria-live="polite" hidden>
+    <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M2 7.5 l3.5 3.5 l6.5 -8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    <span data-feedback-text></span>
+  </p>
+
+  <!-- One band under the title. Without the list it reports a failed load and carries the retry
+       button. With the list on screen it reports a list that had to be read again. -->
+  <div class="error-band" id="menu-error" role="alert" hidden>
+    <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    <span class="error-band-text" data-feedback-text></span>
+    <button class="error-band-retry" id="menu-retry" type="button" data-text="button.retry" hidden></button>
+  </div>
+
+  <p class="loading-line" id="menu-loading" role="status" data-text="notice.loading"></p>
+
+  <!-- Hidden until the menu has arrived. The script sends every form itself as JSON. -->
+  <div class="menu-content" id="menu-content" hidden>
+    <section class="section-box" aria-labelledby="add-heading">
+      <h2 class="section-title" id="add-heading" data-text="menu.add"></h2>
+      <form class="menu-form" id="add-form" method="post" novalidate>
+        <div class="field menu-form-name">
+          <div class="field-label-row">
+            <label class="field-label" for="add-name" data-text="menu.name"></label>
+            <span class="required-mark" id="add-name-required" data-text="mark.required"></span>
+            <button class="tip-button" type="button" data-text-aria="tip.aria" data-value-label="menu.name" aria-describedby="add-name-tip">
+              <span class="tip-mark" aria-hidden="true">?</span>
+            </button>
+            <span class="tip-bubble" id="add-name-tip" role="tooltip" data-text="tip.menu.name" hidden></span>
+          </div>
+          <input class="text-input" id="add-name" name="name" type="text" data-field="name" aria-describedby="add-name-required">
+          <p class="error-line" id="add-name-error" data-field-error="name" hidden>
+            <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span data-feedback-text></span>
+          </p>
+        </div>
+
+        <div class="field menu-form-price">
+          <div class="field-label-row">
+            <label class="field-label" for="add-price" data-text="menu.price"></label>
+            <span class="required-mark" id="add-price-required" data-text="mark.required"></span>
+            <button class="tip-button" type="button" data-text-aria="tip.aria" data-value-label="menu.price" aria-describedby="add-price-tip">
+              <span class="tip-mark" aria-hidden="true">?</span>
+            </button>
+            <span class="tip-bubble" id="add-price-tip" role="tooltip" data-text="tip.menu.price" hidden></span>
+          </div>
+          <span class="input-unit-box">
+            <input class="text-input text-input--price" id="add-price" name="price_krw" type="text" inputmode="numeric" data-field="price_krw" aria-describedby="add-price-required add-price-unit">
+            <span class="input-unit" id="add-price-unit" data-text="menu.unit"></span>
+          </span>
+          <p class="error-line" id="add-price-error" data-field-error="price_krw" hidden>
+            <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span data-feedback-text></span>
+          </p>
+        </div>
+
+        <div class="field menu-form-category">
+          <div class="field-label-row">
+            <label class="field-label" for="add-category" data-text="menu.category"></label>
+            <span class="required-mark" id="add-category-required" data-text="mark.required"></span>
+            <button class="tip-button" type="button" data-text-aria="tip.aria" data-value-label="menu.category" aria-describedby="add-category-tip">
+              <span class="tip-mark" aria-hidden="true">?</span>
+            </button>
+            <span class="tip-bubble" id="add-category-tip" role="tooltip" data-text="tip.menu.category" hidden></span>
+          </div>
+          <span class="select-box">
+            <select id="add-category" name="category" data-field="category" aria-describedby="add-category-required">
+              <option value="" data-text="menu.choose"></option>
+            </select>
+          </span>
+          <p class="error-line" id="add-category-error" data-field-error="category" hidden>
+            <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            <span data-feedback-text></span>
+          </p>
+        </div>
+
+        <!-- A write the server turned down for a reason that belongs to no single control. -->
+        <p class="error-line menu-form-error" id="add-error" role="alert" hidden>
+          <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span data-feedback-text></span>
+        </p>
+        <button class="button-primary menu-form-submit" id="add-submit" type="submit" data-text="button.add" data-request-button></button>
+      </form>
+    </section>
+
+    <section class="section-box menu-list" aria-labelledby="list-heading">
+      <h2 class="section-title" id="list-heading" data-text="menu.list"></h2>
+      <p class="empty-row" id="menu-empty" data-text="menu.empty" hidden></p>
+      <div class="menu-groups" id="menu-groups"></div>
+    </section>
+  </div>
+</main>
+
+<dialog class="confirm-dialog" id="delete-dialog" aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-body">
+  <h2 class="confirm-dialog-title" id="delete-dialog-title" data-text="confirm.delete.title"></h2>
+  <p class="confirm-dialog-body" id="delete-dialog-body"></p>
+  <div class="confirm-dialog-actions">
+    <button class="button-secondary" type="button" data-text="button.cancel" data-dialog-cancel></button>
+    <button class="button-danger" id="delete-confirm" type="button" data-text="button.delete" data-request-button></button>
+  </div>
+</dialog>
+
+<!-- One group per category that has a menu, in the order of the category list. -->
+<template id="menu-group-template">
+  <section class="menu-group">
+    <h3 class="menu-category-title" data-category-title></h3>
+    <ul class="menu-group-list" data-category-rows></ul>
+  </section>
+</template>
+
+<!-- One menu row. Document order is the order on screen and the Tab order: name, badge, price,
+     sold-out button, up, down, edit, delete. Both badges and both sold-out buttons stand here and
+     the script shows the one that fits the sale status. -->
+<template id="menu-row-template">
+  <li class="list-row list-row--menu list-row--flush list-row--hover menu-row" data-menu-row>
+    <div class="menu-row-view" data-row-view>
+      <div class="menu-row-heading">
+        <span class="list-row-name" data-menu-name></span>
+        <span class="status-badge" data-status="on_sale" data-sale-badge hidden>
+          <svg viewBox="0 0 8 8" aria-hidden="true" focusable="false"><path d="M1 4.5 l2 2 l4 -5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span data-text="sale.onsale"></span>
+        </span>
+        <span class="status-badge" data-status="sold_out" data-sale-badge hidden>
+          <svg viewBox="0 0 8 8" aria-hidden="true" focusable="false"><path d="M1 1 l6 6 M7 1 l-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <span data-text="sale.soldout"></span>
+        </span>
+      </div>
+      <div class="menu-row-controls">
+        <div class="menu-row-sale">
+          <!-- The second value is never seen or read: it holds the room of the widest price,
+               so the prices of all rows end on the same line. -->
+          <span class="menu-row-price">
+            <span class="list-row-value" data-menu-price></span>
+            <span class="list-row-value" data-menu-price-room aria-hidden="true"></span>
+          </span>
+          <span class="menu-row-switch">
+            <button class="button-secondary" type="button" data-action="sale" data-sale-status="sold_out" data-text="button.soldout" data-text-aria="menu.aria.soldout" data-request-button></button>
+            <button class="button-secondary" type="button" data-action="sale" data-sale-status="on_sale" data-text="button.onsale" data-text-aria="menu.aria.onsale" data-request-button></button>
+          </span>
+        </div>
+        <div class="button-row menu-row-order">
+          <button class="button-secondary" type="button" data-action="up" data-text="button.up" data-text-aria="menu.aria.up" data-request-button></button>
+          <button class="button-secondary" type="button" data-action="down" data-text="button.down" data-text-aria="menu.aria.down" data-request-button></button>
+        </div>
+        <div class="button-row menu-row-change">
+          <button class="button-secondary" type="button" data-action="edit" data-text="button.edit" data-text-aria="menu.aria.edit" data-request-button></button>
+          <button class="button-danger" type="button" data-action="delete" data-text="button.delete" data-text-aria="menu.aria.delete" data-request-button></button>
+        </div>
+      </div>
+    </div>
+    <p class="error-line menu-row-error" role="alert" data-row-error hidden>
+      <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      <span data-feedback-text></span>
+    </p>
+  </li>
+</template>
+
+<!-- The edit state of a row. Only one row is in it at a time, so these ids stay unique. -->
+<template id="menu-edit-template">
+  <form class="menu-form menu-form--edit" method="post" novalidate data-row-edit>
+    <div class="field menu-form-name">
+      <div class="field-label-row">
+        <label class="field-label" for="edit-name" data-text="menu.name"></label>
+        <span class="required-mark" id="edit-name-required" data-text="mark.required"></span>
+      </div>
+      <input class="text-input" id="edit-name" name="name" type="text" data-field="name" aria-describedby="edit-name-required">
+      <p class="error-line" id="edit-name-error" data-field-error="name" hidden>
+        <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span data-feedback-text></span>
+      </p>
+    </div>
+
+    <div class="field menu-form-price">
+      <div class="field-label-row">
+        <label class="field-label" for="edit-price" data-text="menu.price"></label>
+        <span class="required-mark" id="edit-price-required" data-text="mark.required"></span>
+      </div>
+      <span class="input-unit-box">
+        <input class="text-input text-input--price" id="edit-price" name="price_krw" type="text" inputmode="numeric" data-field="price_krw" aria-describedby="edit-price-required edit-price-unit">
+        <span class="input-unit" id="edit-price-unit" data-text="menu.unit"></span>
+      </span>
+      <p class="error-line" id="edit-price-error" data-field-error="price_krw" hidden>
+        <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span data-feedback-text></span>
+      </p>
+    </div>
+
+    <div class="field menu-form-category">
+      <div class="field-label-row">
+        <label class="field-label" for="edit-category" data-text="menu.category"></label>
+        <span class="required-mark" id="edit-category-required" data-text="mark.required"></span>
+      </div>
+      <span class="select-box">
+        <select id="edit-category" name="category" data-field="category" aria-describedby="edit-category-required">
+          <option value="" data-text="menu.choose"></option>
+        </select>
+      </span>
+      <p class="error-line" id="edit-category-error" data-field-error="category" hidden>
+        <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3.5 v4.5 M7 9.75 v1.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span data-feedback-text></span>
+      </p>
+    </div>
+
+    <div class="button-row menu-form-actions">
+      <button class="button-primary" type="submit" data-text="button.save" data-edit-save data-request-button></button>
+      <button class="button-secondary" type="button" data-text="button.cancel" data-edit-cancel></button>
+    </div>
+  </form>
+</template>
+</body>
+</html>

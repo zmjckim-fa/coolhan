@@ -1,0 +1,238 @@
+/* S-04 menu management: the arrangement of this screen only.
+ * Authority: the layout table of the design plan (docs/plan, part 04, section 6) and the 375px
+ * rules of the screen plan (part 03, section 7.1).
+ * Component shapes (buttons, inputs, select box, badge, tip, error line, dialog, list row,
+ * section box, notice) come from screen.css. Every length here is a token, a share of the row,
+ * or the size of the content itself.
+ *
+ * Narrow screens (639px and below) are the default.
+ *   Add form: name on one line, price and category sharing the next, the add button on its own.
+ *   Menu row: four lines. Name and badge, price and sold-out button, up and down, edit and delete.
+ *   The last two lines are button rows: two buttons sharing the width.
+ * Wide screens start at 640px.
+ *   Add form, edit state and menu row are one line each. Where that line does not fit yet, the
+ *   buttons of the form and the price with the buttons of the row move to a second line at the
+ *   right, so nothing is cut off and nothing scrolls sideways.
+ * Document order, the order on screen and the Tab order are the same on every width.
+ */
+
+.menu-page {
+  background: var(--color-page-admin);
+}
+
+/* The page gutter grows on wide windows, so the content keeps the admin width in the middle,
+ * on the same line as the links of the top bar. */
+.menu-main {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-8) max(var(--gutter), calc((100% - var(--container-admin)) / 2)) var(--space-9);
+}
+
+.menu-content {
+  display: grid;
+  gap: var(--space-6);
+}
+
+/* Grid items may shrink below their content, so a long menu name wraps instead of widening the page. */
+.menu-main > *,
+.menu-content > * {
+  min-width: 0;
+}
+
+.menu-content .section-title {
+  margin-bottom: var(--space-5);
+}
+
+/* ---------- add form and edit state ---------- */
+
+.menu-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.menu-form > .menu-form-name,
+.menu-form > .menu-form-error,
+.menu-form > .menu-form-submit,
+.menu-form > .menu-form-actions {
+  flex: 1 1 100%;
+}
+
+.menu-form > .menu-form-price,
+.menu-form > .menu-form-category {
+  flex: 1 1 0;
+}
+
+.menu-form > .menu-form-error {
+  margin: 0;
+}
+
+/* ---------- menu list ---------- */
+
+.menu-list > .empty-row {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.menu-group + .menu-group {
+  margin-top: var(--space-6);
+}
+
+.menu-category-title {
+  color: var(--color-text-3);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-bold);
+}
+
+.menu-group-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The row stacks its lines. This replaces the one-line arrangement of the list row. */
+.menu-row {
+  display: block;
+}
+
+.menu-row-view,
+.menu-row-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Line 1: the name at the left, the badge at the right. */
+.menu-row-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+/* Line 2: the price at the left, the sold-out button at the right. If the two ever do not fit,
+ * the button moves to a line of its own and stays at the right. */
+.menu-row-sale {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+/* Two things share one cell here, so the cell is as wide as the wider of the two and every row
+ * has the same columns: the price with the room of the widest price, and the two sold-out
+ * buttons. What does not fit the row is not shown, takes no press and no focus. */
+.menu-row-price,
+.menu-row-switch {
+  display: grid;
+}
+
+.menu-row-price {
+  justify-items: start;
+}
+
+.menu-row-switch {
+  margin-left: auto;
+}
+
+.menu-row-price > *,
+.menu-row-switch > * {
+  grid-area: 1 / 1;
+}
+
+.menu-row-price > [data-menu-price-room],
+.menu-row-switch > [data-idle] {
+  visibility: hidden;
+}
+
+/* The error line of a row keeps the same distance as the lines of the row. */
+.menu-row > .menu-row-error {
+  margin-top: var(--space-4);
+}
+
+/* ---------- wide screens ---------- */
+
+@media (min-width: 640px) {
+  .menu-form {
+    column-gap: var(--space-6);
+  }
+
+  .menu-form > .menu-form-name {
+    flex: 2 1 40%;
+  }
+
+  /* Never narrower than their own label row or select box. */
+  .menu-form > .menu-form-price,
+  .menu-form > .menu-form-category {
+    flex: 1 1 15%;
+    min-width: min-content;
+  }
+
+  /* One line has no place above its button, so the line of the whole form goes above the form. */
+  .menu-form > .menu-form-error {
+    order: -1;
+  }
+
+  /* The buttons keep their own width at the right, level with the controls: below a label row. */
+  .menu-form > .menu-form-submit,
+  .menu-form > .menu-form-actions {
+    flex: none;
+    margin-left: auto;
+  }
+
+  .menu-form > .menu-form-submit {
+    margin-top: calc(var(--target-min-pointer) + var(--space-2));
+  }
+
+  .menu-form > .menu-form-actions {
+    margin-top: calc(var(--font-size-label) * var(--line-height-tight) + var(--space-2));
+  }
+
+  /* Rows bring their own side padding. The list reaches out by that much, so names start on the
+   * same line as the headings and the hover surface is wider than the text. */
+  .menu-group-list {
+    margin-right: calc(-1 * var(--space-6));
+    margin-left: calc(-1 * var(--space-6));
+  }
+
+  .menu-row-view,
+  .menu-row-controls {
+    flex-flow: row wrap;
+    align-items: center;
+  }
+
+  /* The name takes the room that is left. The badge follows the name. */
+  .menu-row-heading {
+    flex: 1 1 30%;
+    justify-content: flex-start;
+  }
+
+  .menu-row-heading > .list-row-name {
+    flex: 0 1 auto;
+  }
+
+  /* The price and the five buttons stay together at the right. */
+  .menu-row-controls {
+    flex: 0 1 auto;
+    justify-content: flex-end;
+    max-width: 100%;
+    margin-left: auto;
+  }
+
+  .menu-row-price {
+    justify-items: end;
+  }
+
+  .menu-row-sale {
+    flex-wrap: nowrap;
+  }
+
+  .menu-row-sale,
+  .menu-row-order,
+  .menu-row-change {
+    flex: none;
+  }
+}
