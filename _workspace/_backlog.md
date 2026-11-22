@@ -25,4 +25,4 @@
 | U19 | 모듈 추출 8차: 결제, 속도 제한, 보안 머리글, 비밀값 보관 | 모듈 저장소 `modules/` | module-admit --with-dependents --consumer | ✅ done (입고 검사 7/7 PASS; 모듈 시험 423/423; 저장소 형식 검사 133/133; 저장소 커밋 3건) |
 | U20 | 직전 보고에서 재지 못한 것을 잰다: 전체 입고 검사, PostgreSQL 실행, 알림 결함 직접 확인, 키보드 순서 | 모듈 저장소 `modules/`, 실증 프로젝트, `.coolhan-private/module-harvest/` | module-admit --all · PostgreSQL 실행 · 브라우저 | ✅ done (입고 검사 133/133; PostgreSQL 스키마 39/39, 추가전용 77/77; 알림 7건 직접 읽음; 키보드 확인과 결함 1건 수정; 저장소 커밋 2건) |
 | U21 | 추가 모듈 20개 (운영자 지시 2026-11-22: 지금 있는 것 외에 20개를 선정해 순서대로) | 모듈 저장소 `modules/` | module-admit --with-dependents --consumer | ✅ done (입고 검사 20/20 PASS; 모듈 시험 968/968; 저장소 전체 153/153 PASS; 저장소 커밋 4건) |
-| U22 | PostgreSQL 검사 스크립트와 형식 규칙 + 릴리스 v2.12.6 | `scripts/module-db-check.js`, `scripts/module-check.js`, `src/__tests__/`, `_harness_test/track46-module-db/`, 문서 | jest · track46 · checks-run · CI | ⬜ todo |
+| U22 | PostgreSQL 검사 스크립트와 형식 규칙 + 릴리스 v2.12.6 | `scripts/module-db-check.js`, `scripts/module-check.js`, `src/__tests__/`, `_harness_test/track46-module-db/`, 문서 | jest · track46 · checks-run · CI | ✅ done (jest 441/441; track46 6/6; checks-run 13/13; 커밋 a7ce16d 태그 v2.12.6; CI 4/4 success) |
