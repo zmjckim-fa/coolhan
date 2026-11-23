@@ -10,6 +10,8 @@
  * What is measured per module that has db/schema.sql:
  *   schema   db/schema.sql runs, and runs a second time (a site applies it again on every deploy)
  *   guards   every db/*.postgres.sql runs after the schema, twice
+ *   int32    no column that holds a point in time or money came out as a 32-bit integer (2026-11-23: 32 columns in 15
+ *            modules had; the schemas «passed» because running DDL inserts nothing). The name rule is module-check's
  *   counts   tables and triggers that exist afterwards (a number for the report, not a verdict)
  * Not measured: whether a guard refuses what it should (a module's docs/postgres-check.md holds those statements),
  * concurrency, other PostgreSQL versions, the module's own code against PostgreSQL.
@@ -32,6 +34,7 @@ const { argValue } = require('./lib/cli');
 const { isDir } = require('./lib/fs');
 const { t } = require('./messages');
 const { catalog } = require('./modules');
+const { int32Risk, int32Columns } = require('./module-check');
 
 const EXE = process.platform === 'win32' ? '.exe' : '';
 const TOOLS = ['initdb', 'pg_ctl', 'psql'];
@@ -104,12 +107,19 @@ function checkModule(name, dir, psql) {
   const guards = fs.readdirSync(path.join(dir, 'db')).filter(f => f.endsWith('.postgres.sql')).sort();
   if (ok) for (const g of guards) ok = apply(g, path.join(dir, 'db', g)) && ok;
   const count = (sql) => { const r = psql(db, ['-At', '-c', sql]); return r.status === 0 ? Number(String(r.stdout).trim()) : null; };
+  if (ok) {
+    // What the database really made: a time or money column that came out as a 32-bit integer cannot hold its values.
+    const r = psql(db, ['-At', '-c', "select table_name || '.' || column_name from information_schema.columns where table_schema = 'public' and data_type = 'integer' order by 1"]);
+    const allowed = int32Columns(dir).allowed;
+    const small = r.status === 0 ? String(r.stdout).split(/\r?\n/).map(s => s.trim()).filter(Boolean).filter(c => { const col = c.split('.')[1]; return int32Risk(col) && !allowed.has(col.toLowerCase()); }) : [];
+    if (small.length) { ok = false; steps.push({ step: 'int32', ok: false, columns: small, error: t('dbcheck.int32', { columns: small.join(', ') }) }); }
+  }
   const failed = steps.find(s => !s.ok);
   return {
     name, status: ok ? 'PASS' : 'FAIL', steps, guards: guards.length,
     tables: ok ? count("select count(*) from information_schema.tables where table_schema='public'") : null,
     triggers: ok ? count("select count(distinct trigger_name) from information_schema.triggers where trigger_schema='public'") : null,
-    detail: failed ? t('dbcheck.stepFailed', { step: failed.step, pass: failed.pass, error: failed.error }) : t('dbcheck.modulePass', { guards: guards.length })
+    detail: failed ? (failed.step === 'int32' ? failed.error : t('dbcheck.stepFailed', { step: failed.step, pass: failed.pass, error: failed.error })) : t('dbcheck.modulePass', { guards: guards.length })
   };
 }
 

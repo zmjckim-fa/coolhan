@@ -1,5 +1,38 @@
 # Changelog
 
+## [2.12.7] - 2026-11-23
+
+### Added
+
+- **Form rule `db-int32-column`** (`scripts/module-check.js`, part of G25). A column whose name says «a point in
+  time» or «an amount of money» (`*_at`, `*_until`, `at_ms`, `*_minor`, `*_cents`, `amount`, `balance`) and whose
+  type is `INTEGER` is a finding: that type is 64 bits on SQLite and 32 bits on PostgreSQL, where a millisecond
+  time of today does not fit. Found while the next modules were being extracted: 32 columns in 15 finished library
+  modules were declared that way, and every one of those schemas had passed the PostgreSQL check of v2.12.6,
+  because running DDL inserts nothing. All 15 were changed to `BIGINT` in the library. A column that stays small
+  carries `-- int4-ok: <reason>` on its line; lengths of time, counters and flags are not picked.
+- **Step `int32` in the module database check** (`scripts/module-db-check.js`). After the schema ran, the columns
+  the database really made are read from its catalogue; a time or money column of type `integer` fails the module
+  and is named. The name rule is the one the form gate exports (one place).
+
+### Verification
+
+- jest 444/444, 40 suites (`module-standard` 50/50, `module-db-check` 7/7, two of them on a real PostgreSQL where
+  the machine has one); lint clean 48 files; fixed list in full.
+- `_harness_test/track47-db-int32/run-track.js`: 7 scenarios, 7 match, 0 false +/-. Scenario 7 measures the
+  premise on a real PostgreSQL: a millisecond time is refused by an `INTEGER` column with «out of range» and kept
+  by a `BIGINT` column.
+- Real library after the fix: 0 `db-int32-column` findings over the finished modules; the changed modules and the
+  modules that require them passed admission (26 of 26) and the database check (16 of 16, PostgreSQL 16.13).
+
+### Honest bound
+
+- The rule picks columns by name. A time or an amount kept under a name that does not say so is not found.
+- The check reads the column's width. It does not insert values and does not run a module's store code on
+  PostgreSQL; no module ships a PostgreSQL store yet.
+- A site that already created the tables on PostgreSQL keeps the narrow columns until it runs the `ALTER TABLE`
+  statement the module's changelog names.
+
 ## [2.12.6] - 2026-11-22
 
 ### Added

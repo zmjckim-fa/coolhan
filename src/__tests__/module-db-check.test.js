@@ -84,6 +84,28 @@ describe('module-db-check: what cannot be measured is not a pass', () => {
   });
 });
 
+describe('module-db-check: a time or money column that the database made 32 bits wide', () => {
+  let library;
+  beforeEach(() => { library = fs.mkdtempSync(path.join(os.tmpdir(), 'dbcheck-int-')); });
+  afterEach(() => { fs.rmSync(library, { recursive: true, force: true }); });
+
+  test('the columns the database reports decide; a marked column and a counter are left alone (cluster replaced by a recorder)', () => {
+    makeModule(library, 'member-events', { 'db/schema.sql': 'create table if not exists member_event (\n  id text primary key,\n  created_at integer not null,\n  attempts integer,\n  expires_at integer -- int4-ok: days since sign-up\n);\n' });
+    const psql = (dbName, args) => {
+      const sql = args[args.length - 1];
+      if (/data_type = 'integer'/.test(sql)) return { status: 0, stdout: 'member_event.attempts\nmember_event.created_at\nmember_event.expires_at\n', stderr: '' };
+      return { status: 0, stdout: args.includes('-At') ? '1\n' : '', stderr: '' };
+    };
+    const r = quiet(() => db.main(['node', 'module-db-check.js', 'member-events', '--library', library, '--json'], { findBin: () => 'x', startCluster: () => ({ psql, stop: () => {} }) }));
+    const j = JSON.parse(r.out);
+    expect(r.code).toBe(1);
+    expect(j.modules[0].status).toBe('FAIL');
+    expect(j.modules[0].steps.find(s => s.step === 'int32').columns).toEqual(['member_event.created_at']);
+    expect(j.modules[0].detail).toMatch(/member_event\.created_at/);
+    expect(j.modules[0].detail).not.toMatch(/attempts|expires_at/);
+  });
+});
+
 const realBin = db.findBin();
 const onPostgres = realBin ? describe : describe.skip;
 onPostgres('module-db-check on a real PostgreSQL (skipped when the machine has none)', () => {
@@ -102,6 +124,17 @@ onPostgres('module-db-check on a real PostgreSQL (skipped when the machine has n
     expect(by['member-events']).toMatchObject({ status: 'PASS', tables: 1, triggers: 1, guards: 1 });
     expect(by['member-once'].status).toBe('FAIL'); expect(by['member-once'].detail).toMatch(/schema\.sql/);
     expect(by['member-typo'].status).toBe('FAIL'); expect(by['member-typo'].detail).toMatch(/append-only\.postgres\.sql/);
+    expect(r.code).toBe(1);
+  });
+
+  test('a time column the database made 32 bits wide fails and is named; the same column as BIGINT passes', () => {
+    const table = (type) => `create table if not exists member_event (id text primary key, created_at ${type} not null, attempts integer);\n`;
+    makeModule(library, 'member-narrow', { 'db/schema.sql': table('integer') });
+    makeModule(library, 'member-wide', { 'db/schema.sql': table('bigint') });
+    const r = quiet(() => db.main(['node', 'module-db-check.js', '--all', '--library', library, '--json']));
+    const by = Object.fromEntries(JSON.parse(r.out).modules.map(m => [m.name, m]));
+    expect(by['member-narrow'].status).toBe('FAIL'); expect(by['member-narrow'].detail).toMatch(/member_event\.created_at/);
+    expect(by['member-wide'].status).toBe('PASS');
     expect(r.code).toBe(1);
   });
 });

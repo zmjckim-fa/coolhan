@@ -48,6 +48,9 @@ origin, a README and a CHANGELOG. The library holds them under `modules/<name>/`
   trigger (append-only) ships for both databases (`<name>.sqlite.sql`, `<name>.postgres.sql`, the PostgreSQL one
   refusing UPDATE, DELETE and TRUNCATE); measure with `node scripts/module-db-check.js <name> --library <library>`
   (exit 4 means the machine has no PostgreSQL programs: not measured, say so).
+- A column that holds a point in time (milliseconds or seconds) or an amount of money (minor units) as an integer
+  is written `BIGINT`: `INTEGER` is 64 bits on SQLite and 32 bits on PostgreSQL, where today's millisecond time does
+  not fit (gate rule `db-int32-column`; a value that stays small carries `-- int4-ok: <reason>` on its line).
 - Version level: a new required field or property on a type that a project implements or passes is a breaking
   change (major), even when behaviour is unchanged. A minor version adds only what existing callers may ignore.
 - Done for a module means `node scripts/module-admit.js <name> --library <library>` exits 0: the form gate, the

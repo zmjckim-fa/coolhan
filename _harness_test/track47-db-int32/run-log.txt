@@ -1,0 +1,61 @@
+Track 47 32-bit columns: 7/7 scenarios match, 1 not judged
+
+MATCH #1 A time column and a money column declared INTEGER (the state of 32 columns in 15 library modules before this track)
+    expected: module-check exit 1 naming db-int32-column and both columns
+    actual:   exit 1; rule true; columns true
+MATCH #2 The same columns as BIGINT
+    expected: module-check exit 0
+    actual:   exit 0
+MATCH #3 INTEGER for a length of time, a counter, a flag, a format number; a time kept as text
+    expected: module-check exit 0 (no false finding)
+    actual:   exit 0
+MATCH #4 A time-named INTEGER column with «int4-ok: reason» on its line
+    expected: module-check exit 0
+    actual:   exit 0
+MATCH #5 The narrow schema on a real PostgreSQL
+    expected: exit 1 naming member_event.created_at and member_event.amount_minor
+    actual:   exit 1; names true
+MATCH #6 The wide, the small and the marked schema on a real PostgreSQL
+    expected: exit 0, three PASS (no false failure)
+    actual:   exit 0; PASS: PostgreSQL 16.13 · 모듈 3개 · 통과 3 · 실패 0 · 확인 안 함 0 · 표 3 · 트리거 0 · 보장 파일 0
+MATCH #7 An epoch-millisecond value written into an INTEGER column and into a BIGINT column on a real PostgreSQL
+    expected: INTEGER refuses with «out of range»; BIGINT keeps the value
+    actual:   integer: exit 1, out of range true; bigint: exit 0, read back 1795000000000
+OBSERVED #8 The form gate over the real library
+    expected: observation: number of db-int32-column findings
+    actual:   exit 1; db-int32-column findings 0
+
+--- commands ---
+$ [narrow] node scripts/module-check.js <tmp>\lib1\modules\member-narrow
+  exit 1
+  ✗ module-check: FAIL: 모듈 1개 · 지적 2건
+    [db-int32-column] member-narrow/db/schema.sql · 열 created_at 이 INTEGER 다. PostgreSQL 에서는 32비트라 시각(밀리초)이나 큰 금액이 들어가지 않는다 (BIGINT 로 적는다. 작게 머무는 값이면 그 줄에 `-- int4-ok: 이유`)
+    [db-int32-column] member-narrow/db/schema.sql · 열 amount_minor 이 INTEGER 다. PostgreSQL 에서는 32비트라 시각(밀리초)이나 큰 금액이 들어가지 않는다 (BIGINT 로 적는다. 작게 머무는 값이면 그 줄에 `-- int4-ok: 이유`)
+
+$ [wide] node scripts/module-check.js <tmp>\lib1\modules\member-wide
+  exit 0
+  ✔ module-check: PASS: 모듈 1개 · 지적 0건
+
+$ [small] node scripts/module-check.js <tmp>\lib1\modules\member-small
+  exit 0
+  ✔ module-check: PASS: 모듈 1개 · 지적 0건
+
+$ [marked] node scripts/module-check.js <tmp>\lib1\modules\member-marked
+  exit 0
+  ✔ module-check: PASS: 모듈 1개 · 지적 0건
+
+$ [db narrow] node scripts/module-db-check.js member-narrow --library <tmp>\lib1
+  exit 1
+    ✗ member-narrow: 32비트 정수 열에 시각이나 금액이 들어간다: member_event.amount_minor, member_event.created_at (BIGINT 로 바꾼다)
+  ✗ module-db-check: FAIL: PostgreSQL 16.13 · 모듈 1개 · 통과 0 · 실패 1 · 확인 안 함 0 · 표 0 · 트리거 0 · 보장 파일 0
+
+$ [db others] node scripts/module-db-check.js member-wide member-small member-marked --library <tmp>\lib1
+  exit 0
+  ✔ module-db-check: PASS: PostgreSQL 16.13 · 모듈 3개 · 통과 3 · 실패 0 · 확인 안 함 0 · 표 3 · 트리거 0 · 보장 파일 0
+
+$ [premise] insert 1795000000000 into integer: exit 1 ERROR:  integer out of range
+$ [premise] insert into bigint: exit 0, read back 1795000000000
+
+$ [real library form] node scripts/module-check.js <library>\modules
+  exit 1
+  ✗ module-check: FAIL: 모듈 179개 · 지적 4건

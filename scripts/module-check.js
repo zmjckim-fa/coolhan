@@ -24,6 +24,11 @@
  *   db-guard-one-dialect                  db/<name>.sqlite.sql without db/<name>.postgres.sql, or the reverse: a guarantee
  *                                         that holds on one database only (measured 2026-11-22: seven modules were
  *                                         append-only on SQLite and open to UPDATE and DELETE on PostgreSQL)
+ *   db-int32-column                       a column that holds a point in time or an amount of money is declared INTEGER:
+ *                                         64 bits on SQLite, 32 bits on PostgreSQL, where epoch milliseconds do not fit
+ *                                         (measured 2026-11-23: 32 such columns in 15 modules; every schema had «passed»
+ *                                         on PostgreSQL because running the DDL inserts nothing). `-- int4-ok: <reason>`
+ *                                         on the line keeps a column that is known to stay small
  *   public-entry-invalid                  provides.entries names a file that is missing, outside the module or under test/
  *   require-undeclared                    another module's entry is imported but not listed in `requires`
  *   origin-missing                        no origin, or an unknown commit without an `originNote`
@@ -58,6 +63,28 @@ const FRAMEWORK = /^(?:next|react|react-dom|vue|svelte|@angular|@nestjs|express|
 const IMPORT = /(?:import\s[^'"]*?from\s*|import\s*\(\s*|require\s*\(\s*|export\s[^'"]*?from\s*)['"]([^'"]+)['"]/g;
 const ENV = /process\.env(?:\.([A-Z][A-Z0-9_]*)|\[\s*['"]([A-Z][A-Z0-9_]*)['"]\s*\])/g;
 const LANG = /^[a-z]{2}(?:-[a-z]{2})?\.json$/;
+// A column name that says «a point in time» or «an amount of money». Lengths of time (duration, latency) stay small.
+const INT32_RISK = /(?:^|_)(?:at|until|deadline|expires|expiry)(?:_ms|_s)?$|(?:^|_)(?:minor|cents)$|^(?:amount|balance)$/i;
+const INT32_SMALL = /duration|latency|elapsed|timeout|ttl|interval/i;
+const int32Risk = (name) => INT32_RISK.test(name) && !INT32_SMALL.test(name);
+const INT_COLUMN = /^\s*["`]?([A-Za-z_][\w]*)["`]?\s+(?:INTEGER|INT|INT4)\b/i;
+const INT4_OK = /--.*\bint4-ok\b/i;
+
+/** Columns of db/*.sql (not the SQLite-only files) declared as a 32-bit integer on PostgreSQL: { risky: [{file, column}], allowed: Set }. */
+function int32Columns(dir) {
+  const risky = []; const allowed = new Set();
+  const db = path.join(dir, 'db');
+  if (!isDir(db)) return { risky, allowed };
+  for (const f of fs.readdirSync(db).filter(x => x.endsWith('.sql') && !x.endsWith('.sqlite.sql')).sort()) {
+    for (const line of fs.readFileSync(path.join(db, f), 'utf8').split(/\r?\n/)) {
+      const mt = INT_COLUMN.exec(line.replace(/--.*$/, ''));
+      if (!mt || !int32Risk(mt[1])) continue;
+      if (INT4_OK.test(line)) allowed.add(mt[1].toLowerCase()); else risky.push({ file: f, column: mt[1] });
+    }
+  }
+  return { risky, allowed };
+}
+
 const ENTRY = { core: /^index\.[a-z]+$/, api: /^routes\.[a-z]+$/, db: /^schema\.[a-z]+$/, text: LANG, style: /^tokens\.css$/ };
 
 const requireNames = (m) => (Array.isArray(m.requires) ? m.requires : []).map(r => (typeof r === 'string' ? r.split('@')[0] : r && r.name)).filter(Boolean);
@@ -196,6 +223,7 @@ function checkModule(dir) {
       const twin = `${m2[1]}.${m2[2] === 'sqlite' ? 'postgres' : 'sqlite'}.sql`;
       if (!dbFiles.includes(twin)) add('db-guard-one-dialect', `db/${f}`, 'module.dbGuardOneDialect', { file: f, twin });
     }
+    for (const c of int32Columns(dir).risky) add('db-int32-column', `db/${c.file}`, 'module.dbInt32Column', { column: c.column });
     const declared = new Set((m.provides && Array.isArray(m.provides.tables)) ? m.provides.tables : []);
     const prefix = `${String(m.area || '').replace(/-/g, '_')}_`;
     const own = new Set(); const refs = [];
@@ -247,4 +275,4 @@ function main(argv) {
 
 if (require.main === module) process.exit(main(process.argv));
 
-module.exports = { evaluate, checkModule, findModules, main, PARTS, BANNED, NAME, requireNames, settingNames };
+module.exports = { evaluate, checkModule, findModules, main, PARTS, BANNED, NAME, requireNames, settingNames, int32Risk, int32Columns };

@@ -113,6 +113,26 @@ describe('module-check: the form of a module (knowledge_base/00_MODULE_STANDARD.
     expect(rulesOf(withDb({ 'db/append-only.sqlite.sql': '-- guard\n', 'db/append-only.postgres.sql': '-- guard\n' }))).toEqual([]);
   });
 
+  test('a time or money column declared INTEGER is a finding (32 bits on PostgreSQL); BIGINT, small values and marked columns pass', () => {
+    const table = (cols) => `create table if not exists member_event (\n  id text primary key,\n${cols.map(c => `  ${c}`).join(',\n')}\n);\n`;
+    const withDb = (schema, more = {}) => {
+      fs.rmSync(path.join(root, 'member-signup'), { recursive: true, force: true });
+      return makeModule(root, 'member-signup', { parts: { ...ABSENT, core: true, test: true, db: true }, provides: { lib: ['rule'], tables: ['member_event'] } }, { 'db/schema.sql': schema, ...more });
+    };
+    expect(rulesOf(withDb(table(['created_at INTEGER NOT NULL'])))).toEqual(['db-int32-column']);
+    const four = check.checkModule(withDb(table(['at_ms integer not null', 'lease_until int', 'amount_minor INTEGER', 'balance integer']))).findings;
+    expect(four.map(f => f.rule)).toEqual(['db-int32-column', 'db-int32-column', 'db-int32-column', 'db-int32-column']);
+    expect(four.map(f => f.detail).join(' ')).toMatch(/at_ms.*lease_until.*amount_minor.*balance/);
+    // 64 bits, text, lengths of time, counters, flags: nothing to say
+    expect(rulesOf(withDb(table(['created_at BIGINT NOT NULL', 'updated_at text', 'duration_ms INTEGER', 'latency_ms integer', 'attempts INTEGER', 'cost_known INTEGER', 'format integer', 'ttl_at integer'])))).toEqual([]);
+    // a column the author knows stays small says so on its line
+    expect(rulesOf(withDb(table(['expires_at INTEGER NOT NULL -- int4-ok: days since the start of the plan'])))).toEqual([]);
+    // the SQLite-only file is 64-bit there and is not read for this rule
+    expect(rulesOf(withDb(table(['created_at bigint']), { 'db/extra.sqlite.sql': 'create table if not exists member_event_x (created_at integer);\n', 'db/extra.postgres.sql': '-- twin\n' })).filter(r => r === 'db-int32-column')).toEqual([]);
+    expect(check.int32Risk('paid_at')).toBe(true);
+    expect(check.int32Risk('format')).toBe(false);
+  });
+
   test('provides.entries must name files inside the module and not under test/', () => {
     for (const entry of ['core/nothing.js', '../member-login/core/index.js', 'test/rule.test.js', 'core']) {
       const dir = makeModule(root, 'member-signup', { provides: { lib: ['rule'], entries: [entry] } });

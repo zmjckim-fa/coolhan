@@ -20,8 +20,8 @@ Claude Code. It is the *product* (the harness itself), not an app built with it.
 gates (G1–G25) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.12.6` (package.json = git tag `v2.12.6` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **441 tests, 40 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.12.7` (package.json = git tag `v2.12.7` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **444 tests, 40 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -154,13 +154,13 @@ provide its own credentials in its own environment — they do NOT travel in thi
 ```bash
 git log --oneline -3
 node -e "console.log('pkg', require('./package.json').version)" && git describe --tags --abbrev=0
-npx jest --ci   # background it; expect 441 passed / 40 suites
+npx jest --ci   # background it; expect 444 passed / 40 suites
 node scripts/checks-run.js   # the fixed list (docs/CHECKS.md) — the G20 way to "verify"; C1 is the slow one
 node scripts/progress-check.js docs/PROGRESS.md   # this repo's ledger: current position + open D-numbers
 node doctor.js
 ```
 
-If those agree (version = v2.12.6, tests green, doctor healthy, ledger PASS), the handoff is intact and you
+If those agree (version = v2.12.7, tests green, doctor healthy, ledger PASS), the handoff is intact and you
 may proceed from § Next actions.
 
 
@@ -397,3 +397,11 @@ CREATE TABLE consent_records (user_id UUID, region TEXT, personalized BOOLEAN DE
 - 운영자 지시로 더 들어온 20개(순서와 근거는 비공개 대기열 10번 표): 쿠키 동의, 약관 동의 기록, 수신거부, 예약 실행, 작업 큐, 백업 점검, 로그인 잠금, 사람 확인, 밖으로 보내는 웹훅, 환율, 다른 통화 청구, 결제 대조, 주인 없는 결제 감지, 미수 안내, 권리침해 신고 접수, PDF 글 추출, 회계 내보내기, 은행 명세 점검, 받는 메일함, AI 제공자 호출.
 - 직전 보고의 «확인 안 함» 가운데 잰 것: 저장소 전체 입고 검사, PostgreSQL 실행, 운영자 알림 7건을 원천 코드에서 직접 읽음(알림 파일 아래쪽 표), 실증 프로젝트의 키보드 순서와 초점. 여전히 재지 않은 것: 화면 낭독기와 인쇄, 다른 브라우저, 밖의 서비스(결제사, 운송사, 메일 서버, AI 제공자) 실제 호출, 다른 PostgreSQL 판, 추출한 모듈을 실제 사이트에 갈아 끼우는 일.
 - 다음 단위 후보: 대기열 9번 표의 남은 줄(가장 큰 넷과 한 프로젝트에만 있는 것), 4번 표(이전 형식 38개의 분리), 7번 표(다음 판 후보), 빠진 어댑터(IMAP, OCR, 한글 글꼴 PDF, 통합문서).
+
+---
+## 인수인계 보강 (2026-11-23, v2.12.7): 시각과 금액 열은 64비트
+
+- 위 본문의 v2.12.6 수치는 이 보강으로 대체된다: 현재 `2.12.7`, jest **444 tests / 40 suites**. 열린 결함은 D-14 하나다.
+- 모듈의 `db/schema.sql`에서 시각(밀리초나 초)과 금액(최소 단위)을 정수로 담는 열은 `BIGINT`로 적는다. `INTEGER`는 SQLite에서 64비트, PostgreSQL에서 32비트라 지금의 밀리초 시각을 넣으면 «integer out of range»로 거절된다. 형식 검사가 이름으로 잡고(`db-int32-column`), PostgreSQL 검사가 DB가 실제로 만든 열의 폭을 읽어 잡는다. 작게 머무는 값이면 그 줄에 `-- int4-ok: 이유`.
+- 왜 생겼나: 완성된 모듈 15개의 열 32개가 그랬고, 그 스키마들은 v2.12.6의 PostgreSQL 검사를 모두 통과했다. DDL 실행은 값을 넣지 않기 때문이다. 저장소에서는 모두 고쳤다(패치 판, 이미 PostgreSQL에 표를 만든 사이트가 실행할 ALTER 문은 모듈마다 `CHANGELOG.md`).
+- 아직 재지 않은 것: 값을 실제로 넣어 보는 일, 모듈의 저장소 코드를 PostgreSQL에서 돌리는 일(PostgreSQL용 저장소 어댑터를 가진 모듈이 아직 없다).

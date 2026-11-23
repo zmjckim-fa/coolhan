@@ -228,3 +228,11 @@ a direct-API guard can be added the day a script calls the API.
 - Default chosen without asking: 이 기기에 설치된 PostgreSQL 프로그램만 쓰고(내려받지 않는다) 기기의 서비스와 자료에는 접속하지 않는다. 비밀번호를 쓰지 않는다(임시 클러스터는 127.0.0.1에서 trust 인증).
 - Default chosen without asking (2): 추가 20개는 남은 폴더 조사의 후보에서 여러 프로젝트에 반복되고 돈과 보안에 닿는 것을 먼저 골랐다. AI 호출 모듈은 본체의 AI 아키텍처 원칙(G19)을 조항별로 따르게 했다.
 - Not done / 확인 못 한 것: 보장이 실제로 거절하는지는 열세 모듈에서 손으로 쟀고 스크립트는 되풀이하지 않는다. PostgreSQL 한 판. 이 저장소의 CI 기기에 PostgreSQL 프로그램이 있는지는 재지 않았다(없으면 그 시험은 건너뛴다고 출력한다).
+
+## 2026-11-23: 시각과 금액을 담는 정수 열은 64비트 (v2.12.7)
+- Decision: 형식 검사에 `db-int32-column`을 더하고 PostgreSQL 검사가 DB가 만든 열의 폭을 읽는다. 열은 이름으로 고른다(`*_at`, `*_until`, `at_ms`, `*_minor`, `*_cents`, `amount`, `balance`). 길이를 담는 이름(`duration`, `latency`, `ttl`)은 고르지 않는다.
+- Rationale: 추출 보고 하나가 완성된 모듈의 밀리초 열이 INTEGER라고 적었다. 세어 보니 15개 모듈의 32개 열이었고, 그 스키마들은 PostgreSQL 검사를 통과해 있었다. 실제 PostgreSQL에서 값을 넣으면 거절된다(track47 7번).
+- Default chosen without asking: 금액도 같은 규칙에 넣었다(큰 합계는 32비트를 넘는다). 예외는 그 줄의 표시(`-- int4-ok: 이유`)로만 둔다. 저장소의 15개 모듈은 패치 판으로 고쳤다(SQLite 사이트는 옮길 일이 없다).
+- Default chosen without asking (2): 이전 형식 꾸러미는 `packages/`를 고치지 않고 표준 형식 모듈로 새로 옮긴다. 그 폴더에서 다른 세션이 일하고 있다. 꾸러미 사이의 테이블 직접 접근은 새 모듈에서 창구로 바꾼다. 옮긴 꾸러미를 `packages/`에서 빼는 일은 하지 않는다(그 폴더의 주인이 정한다).
+- Not done / 확인 못 한 것: 값을 넣어 보는 검사, PostgreSQL용 저장소 어댑터, 이름이 시각이나 금액을 말하지 않는 열.
+- Reversible: yes. 규칙은 `scripts/module-check.js`의 정규식 두 개다.

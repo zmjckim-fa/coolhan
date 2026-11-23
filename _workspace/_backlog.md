@@ -26,3 +26,7 @@
 | U20 | 직전 보고에서 재지 못한 것을 잰다: 전체 입고 검사, PostgreSQL 실행, 알림 결함 직접 확인, 키보드 순서 | 모듈 저장소 `modules/`, 실증 프로젝트, `.coolhan-private/module-harvest/` | module-admit --all · PostgreSQL 실행 · 브라우저 | ✅ done (입고 검사 133/133; PostgreSQL 스키마 39/39, 추가전용 77/77; 알림 7건 직접 읽음; 키보드 확인과 결함 1건 수정; 저장소 커밋 2건) |
 | U21 | 추가 모듈 20개 (운영자 지시 2026-11-22: 지금 있는 것 외에 20개를 선정해 순서대로) | 모듈 저장소 `modules/` | module-admit --with-dependents --consumer | ✅ done (입고 검사 20/20 PASS; 모듈 시험 968/968; 저장소 전체 153/153 PASS; 저장소 커밋 4건) |
 | U22 | PostgreSQL 검사 스크립트와 형식 규칙 + 릴리스 v2.12.6 | `scripts/module-db-check.js`, `scripts/module-check.js`, `src/__tests__/`, `_harness_test/track46-module-db/`, 문서 | jest · track46 · checks-run · CI | ✅ done (jest 441/441; track46 6/6; checks-run 13/13; 커밋 a7ce16d 태그 v2.12.6; CI 4/4 success) |
+| U23 | 남은 후보 여덟과 빠진 어댑터 | 모듈 저장소 `modules/` | module-admit --with-dependents --consumer · module-db-check | ✅ done (입고 검사 26/26, 3/3, 2/2 PASS; PostgreSQL 18/18 PASS; 저장소 커밋 4건) |
+| U24 | 이전 형식 꾸러미 38개를 표준 형식 모듈로 옮긴다 | 모듈 저장소 `modules/` | module-admit --with-dependents --consumer · module-db-check | ⏳ todo |
+| U25 | 다음 판 후보 정리, 저장소 전체 재측정, 원장과 인수인계 갱신 | 모듈 저장소 `modules/`, `docs/`, `HANDOFF.md` | module-admit --all · module-db-check --all · checks-run | ⏳ todo |
+| U26 | 32비트 열 규칙과 PostgreSQL 검사 단계 + 릴리스 v2.12.7 | `scripts/module-check.js`, `scripts/module-db-check.js`, `src/__tests__/`, `_harness_test/track47-db-int32/`, 문서 | jest · track47 · checks-run · CI | ⏳ todo |
