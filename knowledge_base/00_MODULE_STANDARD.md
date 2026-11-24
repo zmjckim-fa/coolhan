@@ -95,6 +95,7 @@
 | 안정적인 소스 | `core/`나 `api/`가 있으면 `test/`가 있다. 거절 시험(잘못된 입력, 권한 없음, 경계 값)을 포함한다. 판을 올릴 때 시험이 모두 통과한다 | 게이트 `test-missing`, 모듈의 시험 명령 |
 | 두 DB에서 같은 보장 | 추가전용 같은 보장을 트리거로 지키면 SQLite용과 PostgreSQL용 파일을 함께 둔다(`db/<이름>.sqlite.sql`, `db/<이름>.postgres.sql`). PostgreSQL 쪽은 UPDATE, DELETE, TRUNCATE를 막고 다시 실행해도 된다. 스키마와 보장 파일은 실제 PostgreSQL에서 두 번씩 실행해 본다 | 게이트 `db-guard-one-dialect`, `node scripts/module-db-check.js` |
 | 시각과 금액은 64비트 | 시각(밀리초나 초)과 금액(최소 단위)을 정수로 담는 열은 `BIGINT`로 적는다. `INTEGER`는 SQLite에서 64비트지만 PostgreSQL에서는 32비트라 지금의 밀리초 시각이 들어가지 않는다. 작게 머무는 값이면 그 줄에 `-- int4-ok: 이유`를 적는다. PostgreSQL 드라이버가 64비트 정수를 글자로 돌려주면 저장소 어댑터에서 범위를 확인하고 수로 바꾼다 | 게이트 `db-int32-column`, `node scripts/module-db-check.js`(DB가 실제로 만든 열의 폭을 읽는다) |
+| 표를 실제로 쓰는 저장소 | 표가 있는 모듈은 그 표에서 도는 저장소를 함께 낸다: `adapters/sqlite-store.ts`가 모듈의 `db/schema.sql`을 읽어 적용하고(DDL 사본을 두지 않는다), `test/sqlite.test.ts`가 같은 순서의 창구 호출을 메모리 저장소와 SQLite 저장소에 시켜 걸음마다 결과를 견준다. 그다음 서비스를 실제 표 위에서 돌리고, DB만 보여 줄 수 있는 것(겹치는 키 거절, 보장 파일의 거절, 두 쓰기 가운데 하나만 이김)을 확인한다. 두 저장소가 다르면 모듈의 결함이다 | 게이트 `db-schema-unexercised`, 모듈의 시험 |
 | 분리된 DB | 모듈의 테이블은 `db/`에만 있고 이름이 영역 낱말로 시작한다(`member_account`). 다른 모듈의 테이블을 가리키는 외래 키를 두지 않고 값(id)만 가진다. 내놓는 테이블은 매니페스트 `provides.tables`에 적는다 | 게이트 `db-table-prefix`, `db-table-undeclared`, `db-foreign-reference` |
 | 취약점 점검 | `api/`, `user/`, `admin/` 가운데 하나라도 있으면 `docs/security.md`에 위협, 통제, 그 통제를 확인하는 시험을 적는다. «취약점 없음»은 약속하지 않고 무엇을 확인했는지 적는다 | 게이트 `security-note-missing`, Security Reviewer |
 | 착탈 | 설치는 폴더 복사 하나, 제거는 폴더 삭제 하나다. 모듈 밖에 파일을 만들지 않는다. 프로젝트에 연결하는 방법은 `README.md`에 적는다 | `modules add`, `modules remove`, 빈 프로젝트 설치 시험 |
@@ -168,6 +169,7 @@
 | db-foreign-reference | 이 모듈에 없는 테이블을 외래 키로 가리킨다 |
 | db-guard-one-dialect | `db/<이름>.sqlite.sql`만 있고 `db/<이름>.postgres.sql`이 없다(또는 그 반대). 추가전용 같은 보장을 한 DB에서만 지킨다 |
 | db-int32-column | 시각이나 금액을 담는 이름의 열(`*_at`, `*_until`, `at_ms`, `*_minor`, `*_cents`, `amount`, `balance`)이 `INTEGER`다. PostgreSQL에서 32비트다. `BIGINT`로 적거나 그 줄에 `-- int4-ok: 이유` |
+| db-schema-unexercised | `db/schema.sql`이 있는데 `adapters/`나 `test/`의 어느 파일도 그 파일을 이름으로 읽지 않는다. 표를 모듈의 코드가 한 번도 적용하지 않는다 |
 | security-note-missing | `api/`, `user/`, `admin/`이 있는데 `docs/security.md`가 없다 |
 
 종료 코드: 0 PASS, 1 FAIL, 2 사용법 오류, 4 검사할 모듈이 없음(통과가 아니다).
@@ -179,4 +181,5 @@
 - 스택이 `none`이 아닌 모듈(화면과 서버가 든 것)은 같은 스택의 프로젝트에서만 그대로 쓴다. 다른 스택은 `core/`만 쓴다.
 - 폴더째 바꿔 끼우는 갱신은 DB 스키마를 옮겨 주지 않는다. `db/`가 바뀐 판은 `CHANGELOG.md`에 옮기는 절차를 적는다.
 - PostgreSQL 검사는 SQL이 실행되는지와 열의 폭을 본다. 32비트 규칙은 열 이름으로 고른다: 이름이 시각이나 금액을 말하지 않는 열은 잡지 못한다. 값이 실제로 들어가는지와 모듈의 저장소 코드가 PostgreSQL에서 도는지는 재지 않는다.
+- `db-schema-unexercised`는 글자를 본다. 스키마 파일을 읽는 코드가 있다는 것까지이고, 저장소가 창구의 모든 일을 다루는지는 대조 시험을 사람이 읽어 판단한다. 저장소는 SQLite용이다. PostgreSQL용 저장소를 가진 모듈은 아직 없다.
 - 흡수의 감지는 git 기록의 변화다. 바뀐 것이 고도화인지는 사람이나 에이전트가 읽고 판단한다.

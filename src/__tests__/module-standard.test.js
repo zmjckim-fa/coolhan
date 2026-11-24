@@ -103,7 +103,7 @@ describe('module-check: the form of a module (knowledge_base/00_MODULE_STANDARD.
 
   test('a guard written for one database only is a finding; both dialects, or a plain schema, pass', () => {
     const TABLE = 'create table member_event (id text primary key);\n';
-    const withDb = (files) => makeModule(root, 'member-signup', { parts: { ...ABSENT, core: true, test: true, db: true }, provides: { lib: ['rule'], tables: ['member_event'] } }, { 'db/schema.sql': TABLE, ...files });
+    const withDb = (files) => makeModule(root, 'member-signup', { parts: { ...ABSENT, core: true, test: true, db: true }, provides: { lib: ['rule'], tables: ['member_event'] } }, { 'db/schema.sql': TABLE, 'test/db.test.js': "import { readFileSync } from 'node:fs';\nreadFileSync(new URL('../db/schema.sql', import.meta.url));\n", ...files });
     expect(rulesOf(withDb({}))).toEqual([]);
     fs.rmSync(path.join(root, 'member-signup'), { recursive: true, force: true });
     expect(rulesOf(withDb({ 'db/append-only.sqlite.sql': '-- guard\n' }))).toEqual(['db-guard-one-dialect']);
@@ -117,7 +117,7 @@ describe('module-check: the form of a module (knowledge_base/00_MODULE_STANDARD.
     const table = (cols) => `create table if not exists member_event (\n  id text primary key,\n${cols.map(c => `  ${c}`).join(',\n')}\n);\n`;
     const withDb = (schema, more = {}) => {
       fs.rmSync(path.join(root, 'member-signup'), { recursive: true, force: true });
-      return makeModule(root, 'member-signup', { parts: { ...ABSENT, core: true, test: true, db: true }, provides: { lib: ['rule'], tables: ['member_event'] } }, { 'db/schema.sql': schema, ...more });
+      return makeModule(root, 'member-signup', { parts: { ...ABSENT, core: true, test: true, db: true }, provides: { lib: ['rule'], tables: ['member_event'] } }, { 'db/schema.sql': schema, 'test/db.test.js': "import { readFileSync } from 'node:fs';\nreadFileSync(new URL('../db/schema.sql', import.meta.url));\n", ...more });
     };
     expect(rulesOf(withDb(table(['created_at INTEGER NOT NULL'])))).toEqual(['db-int32-column']);
     const four = check.checkModule(withDb(table(['at_ms integer not null', 'lease_until int', 'amount_minor INTEGER', 'balance integer']))).findings;
@@ -131,6 +131,25 @@ describe('module-check: the form of a module (knowledge_base/00_MODULE_STANDARD.
     expect(rulesOf(withDb(table(['created_at bigint']), { 'db/extra.sqlite.sql': 'create table if not exists member_event_x (created_at integer);\n', 'db/extra.postgres.sql': '-- twin\n' })).filter(r => r === 'db-int32-column')).toEqual([]);
     expect(check.int32Risk('paid_at')).toBe(true);
     expect(check.int32Risk('format')).toBe(false);
+  });
+
+  test('tables that no code of the module applies are a finding; an adapter or a test that names the schema file passes', () => {
+    const TABLE = 'create table if not exists member_event (id text primary key);\n';
+    const withDb = (files) => {
+      fs.rmSync(path.join(root, 'member-signup'), { recursive: true, force: true });
+      const has = (part) => Object.keys(files).some((k) => k.startsWith(`${part}/`));
+      return makeModule(root, 'member-signup', { parts: { ...ABSENT, core: true, test: true, db: true, ...(has('adapters') ? { adapters: true } : {}), ...(has('docs') ? { docs: true } : {}) }, provides: { lib: ['rule'], tables: ['member_event'] } }, { 'db/schema.sql': TABLE, ...files });
+    };
+    // a memory store only: the tables are never applied by the module's own code
+    expect(rulesOf(withDb({ 'adapters/memory-store.js': 'export const store = () => new Map();\n' }))).toEqual(['db-schema-unexercised']);
+    // the schema named in a comment or in docs does not count
+    expect(rulesOf(withDb({ 'test/store.test.js': '// applies db/schema.sql some day\n', 'docs/db.md': "run 'db/schema.sql'\n" }))).toEqual(['db-schema-unexercised']);
+    // an adapter that reads it, or a test that reads it
+    expect(rulesOf(withDb({ 'adapters/sqlite-store.js': "const sql = read(new URL('../db/schema.sql', import.meta.url));\n" }))).toEqual([]);
+    expect(rulesOf(withDb({ 'test/sqlite.test.js': 'const sql = readFileSync(`${dir}/db/schema.sql`, "utf8");\n' }))).toEqual([]);
+    // a module without tables has nothing to apply
+    fs.rmSync(path.join(root, 'member-signup'), { recursive: true, force: true });
+    expect(rulesOf(makeModule(root, 'member-signup'))).toEqual([]);
   });
 
   test('provides.entries must name files inside the module and not under test/', () => {
@@ -150,7 +169,8 @@ describe('module-check: the form of a module (knowledge_base/00_MODULE_STANDARD.
     }, {
       'core/index.js': "import x from '../../member-login/core/index.js';\nexport const s = process.env.SIGNUP_SECRET;\n",
       'db/schema.sql': 'CREATE TABLE member_account (id INTEGER PRIMARY KEY);\nCREATE TABLE member_consent (id INTEGER PRIMARY KEY, account_id INTEGER REFERENCES member_account(id));\n',
-      'user/[id]/page.tsx': '', 'admin/member-list.js': '', 'api/routes.js': '', 'docs/security.md': '# 위협과 통제\n'
+      'user/[id]/page.tsx': '', 'admin/member-list.js': '', 'api/routes.js': '', 'docs/security.md': '# 위협과 통제\n',
+      'test/db.test.js': "import { readFileSync } from 'node:fs';\nreadFileSync(new URL('../db/schema.sql', import.meta.url));\n"
     });
     expect(check.checkModule(dir).findings).toEqual([]);
   });

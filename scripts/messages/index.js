@@ -183,6 +183,7 @@ const M = {
   'module.securityNoteMissing': 'api, user, admin 이 있는데 docs/security.md 가 없다 (표준 6-1절: 위협, 통제, 확인하는 시험)',
   'module.dbGuardOneDialect': '{file} 만 있고 {twin} 이 없다. 한 DB에서만 지켜지는 보장이다 (같은 규칙을 다른 DB용으로도 둔다)',
   'module.dbInt32Column': '열 {column} 이 INTEGER 다. PostgreSQL 에서는 32비트라 시각(밀리초)이나 큰 금액이 들어가지 않는다 (BIGINT 로 적는다. 작게 머무는 값이면 그 줄에 `-- int4-ok: 이유`)',
+  'module.dbSchemaUnexercised': 'db/schema.sql 을 실행하는 코드가 모듈 안에 없다. adapters/ 나 test/ 의 파일이 스키마 파일을 읽어 실제 표에서 돌아야 한다 (메모리 저장소만으로는 표와 코드가 맞는지 알 수 없다)',
   'module.dbTablePrefix': '테이블 {table} 의 이름이 영역 낱말 {prefix} 로 시작하지 않는다 (표준 6-1절: 분리된 DB)',
   'module.dbTableUndeclared': '테이블 {table} 이 provides.tables 에 없다',
   'module.dbForeignReference': '이 모듈에 없는 테이블 {table} 을 외래 키로 가리킨다. 값(id)만 갖고 창구로 확인한다',

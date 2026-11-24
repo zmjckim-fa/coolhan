@@ -236,3 +236,12 @@ a direct-API guard can be added the day a script calls the API.
 - Default chosen without asking (2): 이전 형식 꾸러미는 `packages/`를 고치지 않고 표준 형식 모듈로 새로 옮긴다. 그 폴더에서 다른 세션이 일하고 있다. 꾸러미 사이의 테이블 직접 접근은 새 모듈에서 창구로 바꾼다. 옮긴 꾸러미를 `packages/`에서 빼는 일은 하지 않는다(그 폴더의 주인이 정한다).
 - Not done / 확인 못 한 것: 값을 넣어 보는 검사, PostgreSQL용 저장소 어댑터, 이름이 시각이나 금액을 말하지 않는 열.
 - Reversible: yes. 규칙은 `scripts/module-check.js`의 정규식 두 개다.
+
+## 2026-11-24: 표가 있는 모듈은 그 표에서 도는 저장소를 함께 낸다 (v2.12.8)
+- Decision: 형식 검사에 `db-schema-unexercised`를 더했다. `db/schema.sql`이 있는데 `adapters/`나 `test/`의 어느 파일도 그 파일을 글자열로 이름하지 않으면 지적이다. 저장소는 SQLite용으로 쓰고 메모리 저장소와 걸음마다 견주는 대조 시험을 둔다.
+- Rationale: 운영자 지시 «모든 모듈이 다 완성될 때까지». 완성도를 재는 표를 만들자 표가 있는 모듈 57개에 메모리 저장소만 있었다. 저장소를 붙인 58개 모듈에서 실제 표가 결함 109건을 보여 줬다(각 실행 보고의 합).
+- Default chosen without asking: 관리자 틀을 «한 모듈»로 만들라는 지시는 여덟 모듈을 물리적으로 합치지 않고 그 위에 올라탄 한 모듈(`admin-kit`)로 풀었다. 사이트가 가져오는 이름, 진입점, 모양 파일이 하나다. 합치면 그 모듈들을 쓰는 스무 개 넘는 모듈이 깨지고 같은 코드가 두 곳에 생긴다.
+- Default chosen without asking (2): 기기 메모리가 모자라 입고 검사는 한 번에 하나씩만 돌린다. 다른 프로젝트의 개발 서버는 다른 세션의 것이라 건드리지 않는다.
+- Default chosen without asking (3): 다른 세션이 같은 저장소 폴더에서 함께 일한다. 같이 고치는 파일은 HEAD에 내 줄만 더한 내용을 스테이징해 내 변경만 커밋한다.
+- Not done / 확인 못 한 것: PostgreSQL용 저장소, 화면 49개 모듈의 브라우저 확인, 결함 109건의 건별 재확인(모듈마다 입고 검사는 다시 돌렸다).
+- Reversible: yes. 규칙은 `scripts/module-check.js`의 `schemaIsRun` 하나다.

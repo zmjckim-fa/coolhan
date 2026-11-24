@@ -29,6 +29,10 @@
  *                                         (measured 2026-11-23: 32 such columns in 15 modules; every schema had «passed»
  *                                         on PostgreSQL because running the DDL inserts nothing). `-- int4-ok: <reason>`
  *                                         on the line keeps a column that is known to stay small
+ *   db-schema-unexercised                 db/schema.sql exists and no file under adapters/ or test/ names it: the tables are
+ *                                         never applied by the module's own code, so whether the store port and the tables
+ *                                         fit is unknown (measured 2026-11-24: 57 modules had only a memory store; the
+ *                                         stores then written for 58 modules found, by the reports of the runs, 109 faults the memory stores could not show)
  *   public-entry-invalid                  provides.entries names a file that is missing, outside the module or under test/
  *   require-undeclared                    another module's entry is imported but not listed in `requires`
  *   origin-missing                        no origin, or an unknown commit without an `originNote`
@@ -98,6 +102,15 @@ function walk(dir, rel = '') {
     else out.push({ rel: r, dir: false });
   }
   return out;
+}
+
+// A source file under adapters/ or test/ that names the schema file in a string: the place where the module's own code
+// applies its own tables (an adapter that reads db/schema.sql, a test that runs it).
+const SCHEMA_READ = /['"`][^'"`\n]*schema\.sql['"`]/;
+/** Does anything in the module run its own schema? Text only: it finds the file being named, not that the store is complete. */
+function schemaIsRun(dir) {
+  return ['adapters', 'test'].some(part => isDir(path.join(dir, part))
+    && walk(path.join(dir, part)).some(f => !f.dir && SOURCE.test(f.rel) && SCHEMA_READ.test(fs.readFileSync(path.join(dir, part, f.rel), 'utf8'))));
 }
 
 /** Every module folder under `target`: the folder itself, or its direct children that hold a module.json. */
@@ -224,7 +237,7 @@ function checkModule(dir) {
       if (!dbFiles.includes(twin)) add('db-guard-one-dialect', `db/${f}`, 'module.dbGuardOneDialect', { file: f, twin });
     }
     for (const c of int32Columns(dir).risky) add('db-int32-column', `db/${c.file}`, 'module.dbInt32Column', { column: c.column });
-    const declared = new Set((m.provides && Array.isArray(m.provides.tables)) ? m.provides.tables : []);
+    if (dbFiles.includes('schema.sql') && !schemaIsRun(dir)) add('db-schema-unexercised', 'db/schema.sql', 'module.dbSchemaUnexercised');    const declared = new Set((m.provides && Array.isArray(m.provides.tables)) ? m.provides.tables : []);
     const prefix = `${String(m.area || '').replace(/-/g, '_')}_`;
     const own = new Set(); const refs = [];
     for (const f of fs.readdirSync(path.join(dir, 'db')).filter(x => /\.(?:sql|prisma)$/.test(x))) {

@@ -1,5 +1,45 @@
 # Changelog
 
+## [2.12.8] - 2026-11-24
+
+### Added
+
+- **Form rule `db-schema-unexercised`** (`scripts/module-check.js`, part of G25). A module that ships
+  `db/schema.sql` while no file under its `adapters/` or `test/` names that file is a finding: its tables are never
+  applied by its own code. Measured in the library: 57 modules had tables and only a memory store. Their schemas
+  passed the PostgreSQL check, and nothing showed whether the store port and the tables fitted each other. SQLite
+  stores with step-by-step parity tests against the memory store were then written for 58 modules; by the reports of
+  those runs the real tables showed 109 faults the memory stores could not show: memory stores that accepted a
+  duplicate key the table refuses, rules that existed only as read-then-write in store code or only as a comment,
+  schemas that ran on one database only, orderings that were never stated and differed between stores.
+  The rule is textual: it finds the schema file being named in a string of an adapter or a test, not in a comment
+  or a document.
+
+### Verification
+
+- jest 445/445, 40 suites (`module-standard` 51/51); lint clean 48 files; fixed list in full.
+- `_harness_test/track48-db-schema-run/run-track.js`: 6 scenarios, 6 match, 0 false +/-. Scenario 6 measures the
+  premise: the same id written twice is accepted twice by a memory store and refused the second time by the table.
+- Real library: 93 modules with tables, 0 findings of the new rule. Every module changed in this unit passed
+  admission and the PostgreSQL check before its library commit (PostgreSQL 16.13).
+
+### Also in this unit (library, private)
+
+- The older-format packages were brought over as standard modules in ten groups (orders, catalogue, money, member,
+  content, messages and partner, customs and shipping, reviews and loyalty, site frame), the remaining candidates and
+  four missing adapters were added, and the admin frame became one module (`admin-kit`: structure, page layout,
+  buttons, CSS and procedure from one entry and one stylesheet line), opened in a browser at two widths.
+
+### Honest bound
+
+- The rule shows that some code names the schema file. Whether the store covers every port method and every rule is
+  shown by the module's parity tests, which a reviewer reads.
+- The stores are SQLite. PostgreSQL is still measured by running the DDL and the guard files; no module ships a
+  PostgreSQL store.
+- The fault count is the sum of what the extraction runs reported. Each module was admitted again before commit;
+  the individual faults were not re-derived one by one.
+- Screens of 49 modules are type-checked and not yet opened in a browser.
+
 ## [2.12.7] - 2026-11-23
 
 ### Added

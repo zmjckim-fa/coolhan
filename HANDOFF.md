@@ -20,8 +20,8 @@ Claude Code. It is the *product* (the harness itself), not an app built with it.
 gates (G1–G25) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.12.7` (package.json = git tag `v2.12.7` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **444 tests, 40 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.12.8` (package.json = git tag `v2.12.8` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **445 tests, 40 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -154,13 +154,13 @@ provide its own credentials in its own environment — they do NOT travel in thi
 ```bash
 git log --oneline -3
 node -e "console.log('pkg', require('./package.json').version)" && git describe --tags --abbrev=0
-npx jest --ci   # background it; expect 444 passed / 40 suites
+npx jest --ci   # background it; expect 445 passed / 40 suites
 node scripts/checks-run.js   # the fixed list (docs/CHECKS.md) — the G20 way to "verify"; C1 is the slow one
 node scripts/progress-check.js docs/PROGRESS.md   # this repo's ledger: current position + open D-numbers
 node doctor.js
 ```
 
-If those agree (version = v2.12.7, tests green, doctor healthy, ledger PASS), the handoff is intact and you
+If those agree (version = v2.12.8, tests green, doctor healthy, ledger PASS), the handoff is intact and you
 may proceed from § Next actions.
 
 
@@ -405,3 +405,15 @@ CREATE TABLE consent_records (user_id UUID, region TEXT, personalized BOOLEAN DE
 - 모듈의 `db/schema.sql`에서 시각(밀리초나 초)과 금액(최소 단위)을 정수로 담는 열은 `BIGINT`로 적는다. `INTEGER`는 SQLite에서 64비트, PostgreSQL에서 32비트라 지금의 밀리초 시각을 넣으면 «integer out of range»로 거절된다. 형식 검사가 이름으로 잡고(`db-int32-column`), PostgreSQL 검사가 DB가 실제로 만든 열의 폭을 읽어 잡는다. 작게 머무는 값이면 그 줄에 `-- int4-ok: 이유`.
 - 왜 생겼나: 완성된 모듈 15개의 열 32개가 그랬고, 그 스키마들은 v2.12.6의 PostgreSQL 검사를 모두 통과했다. DDL 실행은 값을 넣지 않기 때문이다. 저장소에서는 모두 고쳤다(패치 판, 이미 PostgreSQL에 표를 만든 사이트가 실행할 ALTER 문은 모듈마다 `CHANGELOG.md`).
 - 아직 재지 않은 것: 값을 실제로 넣어 보는 일, 모듈의 저장소 코드를 PostgreSQL에서 돌리는 일(PostgreSQL용 저장소 어댑터를 가진 모듈이 아직 없다).
+
+---
+## 인수인계 보강 (2026-11-24, v2.12.8): 저장소 218개, 관리자 틀 한 벌, 표를 실제로 쓰는 저장소
+
+- 위 본문의 v2.12.7 수치는 이 보강으로 대체된다: 현재 `2.12.8`, jest **445 tests / 40 suites**. 저장소의 모듈은 218개다. 열린 결함은 D-14 하나다.
+- 모듈 현황(분류별 목록, 모듈별 완성도와 빈 항목)은 비공개 폴더의 `.coolhan-private/module-harvest/MODULE-STATUS.md`다. 다시 만드는 스크립트는 그 파일의 머리말에 적혀 있다. 2026-11-24 기준 완성 165, 부분 49(모두 «화면을 브라우저에서 열어 보지 않음»), 그 밖 4.
+- 표가 있는 모듈은 그 표에서 도는 저장소(`adapters/sqlite-store.ts`)와 대조 시험(`test/sqlite.test.ts`)을 함께 낸다. 없으면 형식 검사가 잡는다(`db-schema-unexercised`). 왜 생겼나: 표가 있는 모듈 57개가 메모리 저장소만 갖고 있었고, 저장소를 붙이자 실제 표가 결함 109건을 보여 줬다(에이전트 보고의 합).
+- 관리자 화면의 틀은 한 모듈이다: `admin-kit`. 진입점 한 곳(`admin/index.tsx`)과 모양 한 줄(`style/kleinanzeigen.css`)로 세 줄 머리, 화면 한 장의 자리 순서, 단추와 놓는 순서, 진행 방식(단계 줄, 조치의 상태 기계, 목록으로 돌아가기)을 가져온다. 목록, 상세, 확인창 등은 각자의 모듈이 주인이고 이 모듈이 다시 내보낸다. 실증 프로젝트의 `#/kit/orders`에서 연다.
+- 이전 형식 꾸러미 38개는 표준 형식 모듈로 옮겨졌다(열 묶음). `packages/`는 고치지 않았다(그 폴더에서 다른 세션이 일한다). 옮긴 꾸러미를 거기서 빼는 일은 그 폴더의 주인이 정한다.
+- 기기의 가상 메모리가 다른 프로젝트들의 개발 서버로 차 있을 때가 있다. 입고 검사를 여럿 겹쳐 돌리면 멈춘다. 한 번에 하나씩 돌리고, 먼저 `node scripts/resource-check.js`로 여유를 본다.
+- 이 저장소 폴더에서 다른 세션이 함께 일한다(모듈 사이 연동 검사 도구, 원장 56번). 원장과 `scripts/messages/index.js`는 두 세션이 같이 고치는 파일이다. 커밋할 때 내 줄만 스테이징한다.
+- 다음 단위: 화면이 있는 49개 모듈을 실증 프로젝트에 올려 브라우저에서 여는 일(설치는 해 두었다: 실증 프로젝트에 모듈 111개), 다음 판 후보(비공개 대기열 7번 표), 운영자 알림 8~10번(`OPERATOR-NOTICE.md`).

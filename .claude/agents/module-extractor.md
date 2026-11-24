@@ -51,6 +51,13 @@ origin, a README and a CHANGELOG. The library holds them under `modules/<name>/`
 - A column that holds a point in time (milliseconds or seconds) or an amount of money (minor units) as an integer
   is written `BIGINT`: `INTEGER` is 64 bits on SQLite and 32 bits on PostgreSQL, where today's millisecond time does
   not fit (gate rule `db-int32-column`; a value that stays small carries `-- int4-ok: <reason>` on its line).
+- A module with tables ships a store that runs on them: `adapters/sqlite-store.ts` applies the module's own
+  `db/schema.sql` (it reads the file, it carries no copy of the DDL) and `test/sqlite.test.ts` runs one scripted
+  sequence of port calls against the memory store and the SQLite store and compares the results step by step, then
+  runs the service on the real tables, then checks what only a database shows (a unique key that refuses a
+  duplicate, a guard that refuses a change, one winner of two writers). A memory store alone is a form finding
+  (gate rule `db-schema-unexercised`). Where the two stores differ, the fault is in the module: fix the schema, the
+  port's documentation or the memory store, and count it in the report.
 - Version level: a new required field or property on a type that a project implements or passes is a breaking
   change (major), even when behaviour is unchanged. A minor version adds only what existing callers may ignore.
 - Done for a module means `node scripts/module-admit.js <name> --library <library>` exits 0: the form gate, the

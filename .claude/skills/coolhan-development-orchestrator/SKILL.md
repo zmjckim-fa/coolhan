@@ -498,7 +498,9 @@ while (todo remains in backlog):
      A module with tables: node scripts/module-db-check.js <name> --library <dir> (v2.12.6: schema and PostgreSQL
      guard files run twice on a throwaway cluster; 0 PASS / 1 FAIL / 4 no PostgreSQL programs, not measured;
      v2.12.7: a time or money column that the database made 32 bits wide is a FAIL, and the form gate names such a
-     column before any database is started: rule db-int32-column).
+     column before any database is started: rule db-int32-column; v2.12.8: a module whose db/schema.sql no adapter
+     or test of its own names is a form finding, rule db-schema-unexercised: a store on the real tables with a
+     parity test against the memory store is part of a module that has tables).
      node scripts/modules.js drift names modules whose source project moved on since they were taken.
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)
