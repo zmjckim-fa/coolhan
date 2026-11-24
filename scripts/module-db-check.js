@@ -31,7 +31,7 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const { argValue } = require('./lib/cli');
-const { isDir } = require('./lib/fs');
+const { isDir, removeTree } = require('./lib/fs');
 const { t } = require('./messages');
 const { catalog } = require('./modules');
 const { int32Risk, int32Columns } = require('./module-check');
@@ -58,14 +58,38 @@ function findBin(explicit, env = process.env) {
   return candidateBins(explicit, env).find(dir => TOOLS.every(x => fs.existsSync(path.join(dir, x + EXE)))) || null;
 }
 
-/** A throwaway cluster: { psql(db, args), stop() } or { error }. */
+const CLUSTER_PREFIX = 'coolhan-pg-';
+const STALE_MS = 10 * 60 * 1000;
+/**
+ * Removes cluster folders an earlier run could not remove. Measured: a folder that was held right after its server
+ * stopped (ten tries over three seconds failed) was removable four minutes later. Only folders this gate names
+ * (the prefix), older than ten minutes, and without a server's pid file (a cluster another run is using has one)
+ * are touched; one try each, and a folder that is still held stays. Returns the names it removed.
+ */
+function clearStale(tmp = os.tmpdir(), now = Date.now(), rm = fs.rmSync) {
+  const removed = [];
+  let names = [];
+  try { names = fs.readdirSync(tmp); } catch (_) { return removed; }
+  for (const name of names) {
+    if (!name.startsWith(CLUSTER_PREFIX)) continue;
+    const dir = path.join(tmp, name);
+    let age = 0;
+    try { age = now - fs.statSync(dir).mtimeMs; } catch (_) { continue; }
+    if (age < STALE_MS || fs.existsSync(path.join(dir, 'postmaster.pid'))) continue;
+    if (removeTree(dir, rm, () => {}, 1) === null) removed.push(name);
+  }
+  return removed;
+}
+
+/** A throwaway cluster: { psql(db, args), stop() } or { error }. `stop()` returns the folder it could not remove, or null. */
 function startCluster(bin) {
-  const data = fs.mkdtempSync(path.join(os.tmpdir(), 'coolhan-pg-'));
+  clearStale();
+  const data = fs.mkdtempSync(path.join(os.tmpdir(), CLUSTER_PREFIX));
   const run = (exe, args, opts = {}) => spawnSync(path.join(bin, exe + EXE), args, { encoding: 'utf8', ...opts });
   const init = run('initdb', ['-D', data, '-U', 'tester', '-A', 'trust', '-E', 'UTF8', '--no-locale']);
-  if (init.status !== 0) { fs.rmSync(data, { recursive: true, force: true }); return { error: t('dbcheck.initFailed', { text: String(init.stderr || init.error || '').trim().split('\n')[0] }) }; }
+  if (init.status !== 0) { removeTree(data); return { error: t('dbcheck.initFailed', { text: String(init.stderr || init.error || '').trim().split('\n')[0] }) }; }
   const log = path.join(data, 'server.log');
-  const stop = () => { run('pg_ctl', ['stop', '-D', data, '-m', 'fast', '-w'], { stdio: 'ignore' }); fs.rmSync(data, { recursive: true, force: true }); };
+  const stop = () => { run('pg_ctl', ['stop', '-D', data, '-m', 'fast', '-w'], { stdio: 'ignore' }); return removeTree(data); };
   // A port can be taken or reserved by the system (measured: Windows keeps ranges inside 55000-59000 for itself and a
   // server asked to listen there does not start). Another port is tried before the run is called «not measured».
   let port = ''; let started = false; let why = '';
@@ -141,16 +165,20 @@ function main(argv, opts = {}) {
   if (!bin) { say({ status: 'NOT_RUN', reason: 'no_postgres', modules: [] }, t('dbcheck.noPostgres')); return 4; }
   const cluster = (opts.startCluster || startCluster)(bin);
   if (cluster.error) { say({ status: 'NOT_RUN', reason: 'no_cluster', detail: cluster.error, modules: [] }, t('dbcheck.noCluster', { detail: cluster.error })); return 4; }
-  let results; let version = '';
+  let results; let version = ''; let leftover = null;
   try {
     const v = cluster.psql('postgres', ['-At', '-c', 'show server_version']);
     version = String(v.stdout || '').trim();
     results = withSchema.map(n => checkModule(n, cat[n].dir, cluster.psql));
-  } finally { cluster.stop(); }
+  } finally {
+    // The cluster is always stopped; a stop or a removal that fails is reported and never replaces the verdict.
+    try { const left = cluster.stop(); leftover = typeof left === 'string' && left ? left : null; } catch (e) { leftover = String((e && e.message) || e); }
+  }
   const failed = results.filter(r => r.status === 'FAIL').length;
   const notRun = results.filter(r => r.status === 'NOT_RUN').length;
   const status = failed ? 'FAIL' : notRun ? 'NOT_RUN' : 'PASS';
-  if (json) console.log(JSON.stringify({ status, server: version, modules: results }, null, 2));
+  if (leftover && !json) console.error(t('dbcheck.leftover', { path: leftover }));
+  if (json) console.log(JSON.stringify({ status, server: version, modules: results, ...(leftover ? { leftover } : {}) }, null, 2));
   else {
     for (const r of results.filter(x => x.status !== 'PASS')) console.log(`  ${r.status === 'FAIL' ? '✗' : '○'} ${r.name}: ${r.detail}`);
     console.log(t('dbcheck.summary', {
@@ -163,4 +191,4 @@ function main(argv, opts = {}) {
 
 if (require.main === module) process.exit(main(process.argv));
 
-module.exports = { main, checkModule, findBin, candidateBins, startCluster };
+module.exports = { main, checkModule, findBin, candidateBins, startCluster, removeTree, clearStale };

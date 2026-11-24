@@ -240,6 +240,7 @@ const M = {
   'dbcheck.noPostgres': '○ module-db-check: NOT_RUN: 이 기기에서 PostgreSQL 프로그램(initdb, pg_ctl, psql)을 찾지 못했다 (--pg-bin 또는 환경 변수 COOLHAN_PG_BIN). 통과가 아니다',
   'dbcheck.noCluster': '○ module-db-check: NOT_RUN: {detail}. 통과가 아니다',
   'dbcheck.summary': '{mark} module-db-check: {status}: PostgreSQL {server} · 모듈 {total}개 · 통과 {pass} · 실패 {failed} · 확인 안 함 {notRun} · 표 {tables} · 트리거 {triggers} · 보장 파일 {guards}',
+  'dbcheck.leftover': '○ 임시 클러스터 폴더를 지우지 못했다: {path}. 결과는 적힌 그대로다. 다음 실행이 십 분 지난 것을 지운다',
   'admit.consumerNone': '{dir} 는 모듈을 설치한 프로젝트가 아니다 (coolhan.modules.json 이 없다)',
   'admit.consumerUpdate': '프로젝트의 모듈 갱신이 종료 코드 {exit} 로 끝났다: {text}',
   'admit.consumerNoCheck': '프로젝트에 확인 명령이 없다: {command}',

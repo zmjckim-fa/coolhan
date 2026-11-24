@@ -31,4 +31,22 @@ function isDir(p) { try { return fs.statSync(p).isDirectory(); } catch (_) { ret
 /** File text, or null when it cannot be read (the caller decides what a missing file means). */
 function readText(p) { try { return fs.readFileSync(p, 'utf8'); } catch (_) { return null; } }
 
-module.exports = { listFiles, readText, isDir };
+/** A synchronous pause (the callers are synchronous command-line runs). */
+function sleepMs(ms) { Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms); }
+
+/**
+ * Removes a throwaway folder a gate made for its measurement. Answers null when it is gone, the path when it could
+ * not be removed. It does not throw: cleaning up never decides a gate's result.
+ * Measured on Windows (2026-11-24): right after a process that used the folder ends, the folder can still be held
+ * for a moment and the removal fails with EPERM. A database check over the whole library had measured every module,
+ * then that exception took the verdict with it. The runtime's own retry option did not retry on this error (a held
+ * folder answered in 2ms with maxRetries 10), so the retry is done here.
+ */
+function removeTree(dir, rm = fs.rmSync, pause = sleepMs, tries = 10) {
+  for (let attempt = 1; attempt <= tries; attempt++) {
+    try { rm(dir, { recursive: true, force: true }); return null; } catch (_) { if (attempt < tries) pause(300); }
+  }
+  return dir;
+}
+
+module.exports = { listFiles, readText, isDir, removeTree };

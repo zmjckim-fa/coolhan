@@ -1,5 +1,65 @@
 # Changelog
 
+## [2.12.9] - 2026-11-24
+
+### Fixed
+
+- **Cleaning up never decides a gate's result** (`scripts/lib/fs.js` `removeTree`, used by
+  `scripts/module-db-check.js` and the install step of `scripts/module-admit.js`). A database check over the whole
+  module library measured every module, stopped its throwaway PostgreSQL cluster and then failed to remove the
+  cluster folder (`EPERM`, Windows, right after the server process ended). The exception left the script before
+  the result line: a stack trace, a crash exit status, no verdict, the folder left behind. The removal is now tried
+  up to ten times with a pause and answers the path it could not remove; the verdict is computed from the module
+  results alone; a leftover folder is named on stderr (text output) or in the field `leftover` (JSON output).
+  Measured on the way: the runtime's own retry option did not retry on this error (a folder held by another process
+  answered in 2ms with `maxRetries: 10`), so the retry is done in the helper. A cluster folder that stays held
+  past the retry is removed at the next start of the check (`clearStale`: the gate's own prefix, older than ten
+  minutes, no server pid file).
+  The admission's install step had the same shape (a removal inside `finally`, which on failure would have replaced
+  the step's result and ended a whole-library admission without its summary) and uses the same helper now.
+
+### Changed
+
+- **Module standard §6** (`knowledge_base/00_MODULE_STANDARD.md`): `provides.entries` bounds what another module
+  may import. A site imports what `provides` names from the fixed subfolders (screens from `user/` and `admin/`,
+  routes from `api/`, stores and ports from `adapters/`, text, style). Written down after a brief of this session
+  treated the list as a site boundary and produced findings in 66 modules that were not defects.
+
+### Verification
+
+- jest 449/449, 40 suites (`module-db-check` 11/11); lint clean 48 files; fixed list in full.
+- `_harness_test/track49-db-cleanup/run-track.js`: 8 scenarios, 8 match, 0 false +/-. Two of them hold a real folder
+  from a second process: a single removal fails with `EPERM`, the helper removes it on a later try; a folder held
+  throughout is answered as a path without an exception.
+- Whole library re-measured (219 modules): admission 207 of 219 passed in the run; the 12 that did not were admitted again and 10 passed (their requirements were being written by another session during the run), the remaining 2 were open in that session at the time; PostgreSQL check PASS, 94 modules with tables, 199 tables, 116 triggers, 53 guard files (PostgreSQL 16.13).
+
+### Also in this unit (library and demo project, private)
+
+- Every address of the 52 modules that ship screens (656 addresses) was opened in a browser at 1280px and
+  375px with a measuring tool kept in the demo project: an address that renders nothing, horizontal overflow, touch
+  targets under 44px and inputs under 16px at phone width, raw text keys, console errors. The first pass found 96
+  addresses with findings at phone width; the last pass finds 0 at both widths. Twenty-three modules got new
+  versions for what it showed (loading and no-permission states that rendered nothing, small targets, small input
+  text, browser-unsafe test doubles, a memory client that could not place an order, missing text keys).
+- The demo project's type check after taking the new versions caught five modules that did not compile under
+  strict type checking; their own tests strip types and cannot see it.
+- Next versions from the queue: pay partly from balance and the rest by card or transfer, staff handling of
+  customer objections and re-quote requests, a staff quote editor, read-only staff screens for received payment
+  webhooks, and edge tests for five loyalty modules (tests 108 to 225), which found unqueued memory stores and three
+  faults in the points conversion path.
+
+### Honest bound
+
+- The retry waits about three seconds. A folder held longer is left behind and named (this happened in the first
+  real run after the fix: verdict printed, folder named, removable four minutes later). The next start of the
+  database check removes cluster folders of its own prefix that are older than ten minutes and hold no server pid
+  file. A folder of a run that never comes again stays.
+- Other gates were not audited for a cleanup that can throw after the measurement.
+- The screen measurement is one browser engine, the look of an address when it opens. Nothing is clicked. Screen
+  reader, print, 200% text and other engines are not measured.
+- The whole-library runs read the library while another session was committing to it; a module that session was
+  writing at that moment can show a transient failure that a rerun does not show.
+
 ## [2.12.8] - 2026-11-24
 
 ### Added

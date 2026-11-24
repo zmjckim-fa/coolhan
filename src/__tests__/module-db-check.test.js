@@ -106,6 +106,78 @@ describe('module-db-check: a time or money column that the database made 32 bits
   });
 });
 
+describe('module-db-check: cleaning up never decides the result', () => {
+  let library;
+  beforeEach(() => { library = fs.mkdtempSync(path.join(os.tmpdir(), 'dbcheck-stop-')); });
+  afterEach(() => { fs.rmSync(library, { recursive: true, force: true }); });
+  const psql = (dbName, args) => ({ status: 0, stdout: args.includes('-At') ? '1\n' : '', stderr: '' });
+  const main = (args, stop) => quiet(() => db.main(['node', 'module-db-check.js', ...args, '--library', library], { findBin: () => 'x', startCluster: () => ({ psql, stop }) }));
+
+  test('removeTree answers null when the folder is gone and the path when the removal throws', () => {
+    const gone = fs.mkdtempSync(path.join(os.tmpdir(), 'dbcheck-rm-'));
+    fs.writeFileSync(path.join(gone, 'file'), 'x');
+    expect(db.removeTree(gone)).toBeNull();
+    expect(fs.existsSync(gone)).toBe(false);
+    const asked = []; const pauses = [];
+    const held = (dir, o) => { asked.push(o); const e = new Error('EPERM, Permission denied'); e.code = 'EPERM'; throw e; };
+    expect(db.removeTree('/held/folder', held, (ms) => pauses.push(ms))).toBe('/held/folder');
+    // the removal is tried again before it gives up: the runtime's own retry option did not retry on this error
+    expect(asked.length).toBe(10);
+    expect(asked[0]).toMatchObject({ recursive: true, force: true });
+    expect(pauses.length).toBe(9);
+    // a folder held only for a moment is removed on a later try
+    let n = 0;
+    const moment = () => { if (++n < 3) { const e = new Error('EPERM'); e.code = 'EPERM'; throw e; } };
+    expect(db.removeTree('/held/briefly', moment, () => {})).toBeNull();
+    expect(n).toBe(3);
+  });
+
+  test('folders an earlier run left are removed at the next start: only this gate\'s, old, and without a running server', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'dbcheck-stale-'));
+    const make = (name, files = []) => { fs.mkdirSync(path.join(tmp, name)); for (const f of files) fs.writeFileSync(path.join(tmp, name, f), 'x'); };
+    make('coolhan-pg-old', ['PG_VERSION']);
+    make('coolhan-pg-running', ['PG_VERSION', 'postmaster.pid']);
+    make('coolhan-pg-fresh', ['PG_VERSION']);
+    make('someone-elses-folder', ['file']);
+    const later = Date.now() + 11 * 60 * 1000;
+    // «fresh» is made young again by measuring from a time when only the others are older than ten minutes
+    fs.utimesSync(path.join(tmp, 'coolhan-pg-fresh'), new Date(later), new Date(later));
+    expect(db.clearStale(tmp, later).sort()).toEqual(['coolhan-pg-old']);
+    expect(fs.readdirSync(tmp).sort()).toEqual(['coolhan-pg-fresh', 'coolhan-pg-running', 'someone-elses-folder']);
+    // a folder that is still held stays and is not reported as removed; a missing temp folder is not an error
+    make('coolhan-pg-held', ['PG_VERSION']);
+    const held = () => { const e = new Error('EPERM'); e.code = 'EPERM'; throw e; };
+    expect(db.clearStale(tmp, later + 11 * 60 * 1000, held)).toEqual([]);
+    expect(db.clearStale(path.join(tmp, 'no-such-folder'))).toEqual([]);
+    fs.rmSync(tmp, { recursive: true, force: true });
+  });
+
+  test('a stop that throws keeps the verdict: PASS stays exit 0, the summary is printed, the folder is named', () => {
+    makeModule(library, 'member-events', { 'db/schema.sql': SCHEMA });
+    const text = main(['member-events'], () => { throw new Error('EPERM, Permission denied: C:/tmp/coolhan-pg-held'); });
+    expect(text.code).toBe(0);
+    expect(text.out).toMatch(/module-db-check: PASS/);
+    expect(text.out).toMatch(/coolhan-pg-held/);
+    const j = JSON.parse(main(['member-events', '--json'], () => 'C:/tmp/coolhan-pg-held').out);
+    expect(j.status).toBe('PASS');
+    expect(j.leftover).toBe('C:/tmp/coolhan-pg-held');
+  });
+
+  test('a stop that throws does not turn a failure into anything else, and a clean stop names no folder', () => {
+    makeModule(library, 'member-broken', { 'db/schema.sql': SCHEMA });
+    const failing = (dbName, args) => (args[0] === '-f' ? { status: 3, stdout: '', stderr: 'psql: ERROR:  syntax error' } : { status: 0, stdout: '1\n', stderr: '' });
+    const r = quiet(() => db.main(['node', 'module-db-check.js', 'member-broken', '--library', library], { findBin: () => 'x', startCluster: () => ({ psql: failing, stop: () => { throw new Error('held'); } }) }));
+    expect(r.code).toBe(1);
+    expect(r.out).toMatch(/module-db-check: FAIL/);
+    makeModule(library, 'member-events', { 'db/schema.sql': SCHEMA });
+    const clean = JSON.parse(main(['member-events', '--json'], () => null).out);
+    expect(clean.status).toBe('PASS');
+    expect('leftover' in clean).toBe(false);
+    // a stop that answers something that is not a path (an older caller's return value) names no folder either
+    expect('leftover' in JSON.parse(main(['member-events', '--json'], () => 3).out)).toBe(false);
+  });
+});
+
 const realBin = db.findBin();
 const onPostgres = realBin ? describe : describe.skip;
 onPostgres('module-db-check on a real PostgreSQL (skipped when the machine has none)', () => {

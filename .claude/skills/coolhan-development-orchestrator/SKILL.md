@@ -500,7 +500,8 @@ while (todo remains in backlog):
      v2.12.7: a time or money column that the database made 32 bits wide is a FAIL, and the form gate names such a
      column before any database is started: rule db-int32-column; v2.12.8: a module whose db/schema.sql no adapter
      or test of its own names is a form finding, rule db-schema-unexercised: a store on the real tables with a
-     parity test against the memory store is part of a module that has tables).
+     parity test against the memory store is part of a module that has tables; v2.12.9: a throwaway folder that
+     cannot be removed after the measurement is named and never replaces the verdict).
      node scripts/modules.js drift names modules whose source project moved on since they were taken.
    ✗ any unit not done / done-but-unvalidated → NOT complete → keep going (loop back)
    ✓ every unit done + validated → ✅ 전체 완료 (relay end)

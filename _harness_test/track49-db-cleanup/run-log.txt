@@ -1,0 +1,73 @@
+Track 49 cleanup never decides the result: 8/8 scenarios match, 0 not judged
+
+MATCH #1 Every module passed and the cluster folder cannot be removed (the incident)
+    expected: exit 0, the PASS line printed, the folder named
+    actual:   exit 0; verdict PASS; folder named true
+MATCH #2 A module failed and the cluster folder cannot be removed
+    expected: exit 1, the FAIL line printed (the cleanup does not hide the failure)
+    actual:   exit 1; verdict FAIL
+MATCH #3 Every module passed and the folder was removed
+    expected: exit 0, PASS, no folder note (no false note)
+    actual:   exit 0; verdict PASS; note false
+MATCH #4 A module failed and the folder was removed
+    expected: exit 1, FAIL, no folder note
+    actual:   exit 1; verdict FAIL; note false
+MATCH #5 JSON output when the folder is left behind
+    expected: stdout is one JSON document with status PASS and the folder in `leftover`
+    actual:   exit 0; parses true; status PASS; leftover held-cluster-folder; stderr empty true
+MATCH #6 JSON output after a clean stop
+    expected: no `leftover` field
+    actual:   exit 0; has leftover false
+MATCH #7 A folder held for a moment (the incident): one removal fails, the gate tries again
+    expected: removed by a later try, no exception
+    actual:   platform win32; a single removal: EPERM; removeTree: removed after 1236ms; threw false
+MATCH #8 A folder held for the whole run
+    expected: answers the path without throwing; removable once released
+    actual:   platform win32; removeTree: path after 2902ms; threw false; after release: removed
+
+--- commands ---
+$ [pass, stop throws] driver <tmp>\good throws
+  exit 0
+  ✔ module-db-check: PASS: PostgreSQL 1 · 모듈 1개 · 통과 1 · 실패 0 · 확인 안 함 0 · 표 1 · 트리거 1 · 보장 파일 0
+  ○ 임시 클러스터 폴더를 지우지 못했다: EPERM, Permission denied: <cluster folder>. 결과는 적힌 그대로다. 다음 실행이 십 분 지난 것을 지운다
+
+$ [fail, stop throws] driver <tmp>\bad throws
+  exit 1
+    ✗ member-events: schema.sql 실행이 2번째에 실패했다: psql: ERROR:  relation "member_event" already exists
+  ✗ module-db-check: FAIL: PostgreSQL 1 · 모듈 1개 · 통과 0 · 실패 1 · 확인 안 함 0 · 표 0 · 트리거 0 · 보장 파일 0
+  ○ 임시 클러스터 폴더를 지우지 못했다: EPERM, Permission denied: <cluster folder>. 결과는 적힌 그대로다. 다음 실행이 십 분 지난 것을 지운다
+
+$ [pass, clean stop] driver <tmp>\good clean
+  exit 0
+  ✔ module-db-check: PASS: PostgreSQL 1 · 모듈 1개 · 통과 1 · 실패 0 · 확인 안 함 0 · 표 1 · 트리거 1 · 보장 파일 0
+
+$ [fail, clean stop] driver <tmp>\bad clean
+  exit 1
+    ✗ member-events: schema.sql 실행이 2번째에 실패했다: psql: ERROR:  relation "member_event" already exists
+  ✗ module-db-check: FAIL: PostgreSQL 1 · 모듈 1개 · 통과 0 · 실패 1 · 확인 안 함 0 · 표 0 · 트리거 0 · 보장 파일 0
+
+$ [json, leftover] driver <tmp>\good leftover --json
+  exit 0
+  {
+    "status": "PASS",
+    "server": "1",
+    "modules": [
+      {
+        "name": "member-events",
+
+$ [json, clean] driver <tmp>\good clean --json
+  exit 0
+  {
+    "status": "PASS",
+    "server": "1",
+    "modules": [
+      {
+        "name": "member-events",
+
+$ [held for a moment] probe 1500
+  exit 0
+  {"platform":"win32","held":true,"first":"EPERM","answer":"removed","threw":false,"ms":1236,"afterRelease":"removed"}
+
+$ [held throughout] probe 30000
+  exit 0
+  {"platform":"win32","held":true,"first":"EPERM","answer":"path","threw":false,"ms":2902,"afterRelease":"removed"}

@@ -20,8 +20,8 @@ Claude Code. It is the *product* (the harness itself), not an app built with it.
 gates (G1–G25) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.12.8` (package.json = git tag `v2.12.8` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **445 tests, 40 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.12.9` (package.json = git tag `v2.12.9` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **449 tests, 40 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -154,13 +154,13 @@ provide its own credentials in its own environment — they do NOT travel in thi
 ```bash
 git log --oneline -3
 node -e "console.log('pkg', require('./package.json').version)" && git describe --tags --abbrev=0
-npx jest --ci   # background it; expect 445 passed / 40 suites
+npx jest --ci   # background it; expect 449 passed / 40 suites
 node scripts/checks-run.js   # the fixed list (docs/CHECKS.md) — the G20 way to "verify"; C1 is the slow one
 node scripts/progress-check.js docs/PROGRESS.md   # this repo's ledger: current position + open D-numbers
 node doctor.js
 ```
 
-If those agree (version = v2.12.8, tests green, doctor healthy, ledger PASS), the handoff is intact and you
+If those agree (version = v2.12.9, tests green, doctor healthy, ledger PASS), the handoff is intact and you
 may proceed from § Next actions.
 
 
@@ -417,3 +417,15 @@ CREATE TABLE consent_records (user_id UUID, region TEXT, personalized BOOLEAN DE
 - 기기의 가상 메모리가 다른 프로젝트들의 개발 서버로 차 있을 때가 있다. 입고 검사를 여럿 겹쳐 돌리면 멈춘다. 한 번에 하나씩 돌리고, 먼저 `node scripts/resource-check.js`로 여유를 본다.
 - 이 저장소 폴더에서 다른 세션이 함께 일한다(모듈 사이 연동 검사 도구, 원장 56번). 원장과 `scripts/messages/index.js`는 두 세션이 같이 고치는 파일이다. 커밋할 때 내 줄만 스테이징한다.
 - 다음 단위: 화면이 있는 49개 모듈을 실증 프로젝트에 올려 브라우저에서 여는 일(설치는 해 두었다: 실증 프로젝트에 모듈 111개), 다음 판 후보(비공개 대기열 7번 표), 운영자 알림 8~10번(`OPERATOR-NOTICE.md`).
+
+---
+## 인수인계 보강 (2026-11-24, v2.12.9): 화면 656개 주소를 두 폭에서 쟀다, 정리 실패가 판정을 지우지 않는다
+
+- 위 본문의 v2.12.8 수치는 이 보강으로 대체된다: 현재 `2.12.9`, jest **449 tests / 40 suites**. 저장소의 모듈은 219개다. 열린 결함은 D-14 하나다.
+- 화면이 있는 모듈 52개는 실증 프로젝트(`.coolhan-private/module-demo/`)에 올라 있다: 모듈마다 `src/screens/mods/<모듈>.tsx`, 주소는 `#/s/<모듈>/<화면>`, 목록은 `#/s`. 측정 도구는 `src/screens/measure.ts`다. 개발 서버를 띄우고(`npx vite --port 4317 --strictPort --host 127.0.0.1`) 브라우저 콘솔에서 `__sweep()`을 부르면 지금 폭에서 모든 주소를 열고 잰다(결과는 `__all`). 폭은 1280px와 375px 두 번이다. 2026-11-24 마지막 측정: 두 폭 모두 656개 주소, 지적 0건. 기준과 고친 목록은 비공개 폴더의 `.coolhan-private/module-harvest/09-screen-sweep.md`.
+- 화면이 든 모듈을 고쳤으면: 입고 검사, 저장소 커밋, 실증 프로젝트에서 `modules update <이름>`, `npx tsc --noEmit -p tsconfig.json`, 그 모듈의 주소를 두 폭에서 다시 잰다(`__sweep(['<모듈>'])`). 타입 검사는 모듈의 시험이 보지 못하는 것을 잡는다(이번에 다섯 모듈).
+- `provides.entries`는 모듈이 다른 모듈을 가져올 때의 경계다. 사이트는 `provides`가 이름한 화면, 서버 경로, 저장소, 문구, 모양을 정해진 하위 폴더에서 가져온다(표준 §6).
+- `module-db-check`와 `module-admit`는 임시 폴더를 지우지 못해도 판정을 그대로 낸다. 남은 폴더의 경로가 출력에 적히고, PostgreSQL 검사는 다음에 시작할 때 십 분 지난 자기 폴더를 지운다. 왜 생겼나: 저장소 전체 PostgreSQL 검사가 모든 모듈을 잰 뒤 폴더 삭제에서 예외로 끝나 판정 줄이 나오지 않았다.
+- 모듈 저장소의 git 색인은 다른 세션과 함께 쓴다. 커밋은 경로를 붙여서 한다(`git commit -F <파일> -- modules/<이름>`). 경로 없는 커밋은 다른 세션이 스테이징해 둔 파일까지 가져간다(한 번 그랬고 곧바로 되돌려 다시 했다).
+- 비공개 대기열(`QUEUE.md`)에 «대기» 줄은 없다. 운영자가 볼 것은 `OPERATOR-NOTICE.md`의 1~16번이다(11번과 12번은 고객의 돈이 걸린 항목).
+- 아직 재지 않은 것: 화면 낭독기, 인쇄, 글자 200%, 다른 브라우저 엔진, 화면에서 누른 뒤의 흐름, 밖의 서비스 실제 호출, PostgreSQL용 저장소, 추출한 모듈을 실제 사이트에 갈아 끼우는 일.

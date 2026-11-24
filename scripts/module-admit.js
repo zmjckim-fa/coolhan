@@ -39,7 +39,7 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const { argValue } = require('./lib/cli');
-const { isDir } = require('./lib/fs');
+const { isDir, removeTree } = require('./lib/fs');
 const { runNode, neverStarted } = require('./lib/spawn-node');
 const { t } = require('./messages');
 const { evaluate } = require('./module-check');
@@ -89,7 +89,8 @@ function stepInstall(name, command, library) {
     return tested.status === 'PASS' ? { status: 'PASS', detail: t('admit.installPass', { detail: tested.detail }) }
       : { status: tested.status, detail: t('admit.installedTest', { detail: tested.detail }) };
   } finally {
-    fs.rmSync(app, { recursive: true, force: true });
+    // A folder that cannot be removed is left behind; the step's result stands (track49).
+    removeTree(app);
   }
 }
 
