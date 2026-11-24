@@ -30,3 +30,4 @@
 | U24 | 이전 형식 꾸러미 38개를 표준 형식 모듈로 옮긴다 | 모듈 저장소 `modules/` | module-admit --with-dependents --consumer · module-db-check | ⏳ todo |
 | U25 | 다음 판 후보 정리, 저장소 전체 재측정, 원장과 인수인계 갱신 | 모듈 저장소 `modules/`, `docs/`, `HANDOFF.md` | module-admit --all · module-db-check --all · checks-run | ⏳ todo |
 | U26 | 32비트 열 규칙과 PostgreSQL 검사 단계 + 릴리스 v2.12.7 | `scripts/module-check.js`, `scripts/module-db-check.js`, `src/__tests__/`, `_harness_test/track47-db-int32/`, 문서 | jest · track47 · checks-run · CI | ✅ done (jest 444/444; track47 7/7; checks-run 13/13; 커밋 e8197ae 태그 v2.12.7; CI 4/4 success) |
+| U27 | 표가 있는 모듈의 SQLite 저장소와 대조 시험 + 스키마를 실행하지 않는 모듈을 잡는 형식 규칙 | 모듈 저장소 `modules/`, `scripts/module-check.js`, `src/__tests__/`, `_harness_test/` | module-admit · module-db-check · jest · 트랙 · checks-run · CI | ⏳ todo |
