@@ -1,0 +1,99 @@
+$ [agreeing library] node scripts/module-integration-check.js <tmp>\lib1
+  exit 0
+  ✔ module-integration-check: PASS, 모듈 2개, 지적 0건
+
+$ [requires-unresolved] node scripts/module-integration-check.js <tmp>\lib2
+  exit 1
+  ✗ module-integration-check: FAIL, 모듈 1개, 지적 1건
+    [requires-unresolved] aaa-one/module.json · aaa-one이 요구하는 모듈 zzz-missing이 저장소에 없다
+    requires-unresolved 1
+
+$ [requires-range] node scripts/module-integration-check.js <tmp>\lib3
+  exit 1
+  ✗ module-integration-check: FAIL, 모듈 2개, 지적 1건
+    [requires-range] aaa-one/module.json · aaa-one은 bbb-two@^2.0.0를 요구하지만 저장소의 판은 1.0.0이다
+    requires-range 1
+
+$ [requires-cycle] node scripts/module-integration-check.js <tmp>\lib4
+  exit 1
+  ✗ module-integration-check: FAIL, 모듈 2개, 지적 1건
+    [requires-cycle] aaa-one/module.json · 모듈이 서로를 요구한다: aaa-one > bbb-two > aaa-one
+    requires-cycle 1
+
+$ [lib-not-exported] node scripts/module-integration-check.js <tmp>\lib5
+  exit 1
+  ✗ module-integration-check: FAIL, 모듈 1개, 지적 1건
+    [lib-not-exported] calc-core/core/index · calc-core의 provides.lib에 ghostFn이 있으나 core/index와 열어 둔 파일이 내보내지 않는다
+    lib-not-exported 1
+
+$ [lib-not-reachable] node scripts/module-integration-check.js <tmp>\lib6
+  exit 1
+  ✗ module-integration-check: FAIL, 모듈 1개, 지적 1건
+    [lib-not-reachable] calc-core/core/rules.ts · calc-core의 provides.lib hiddenFn은 core/rules.ts에 있으나 core/index와 열어 둔 파일로는 가져올 수 없다. core/index에서 다시 내보내거나 provides.entries에 적는다
+    lib-not-reachable 1
+
+$ [screen-without-tokens] node scripts/module-integration-check.js <tmp>\lib7
+  exit 1
+  ✗ module-integration-check: FAIL, 모듈 1개, 지적 1건
+    [screen-without-tokens] shop-view/style/tokens.css · shop-view에 사용자 또는 관리자 화면이 있는데 style/tokens.css가 없다. 모양이 모듈과 함께 이관되지 않는다
+    screen-without-tokens 1
+
+$ [color-literal] node scripts/module-integration-check.js <tmp>\lib8
+  exit 1
+  ✗ module-integration-check: FAIL, 모듈 1개, 지적 1건
+    [color-literal] shop-view/user/view.tsx:1 · shop-view: 색을 값으로 직접 썼다. 토큰(var(--…))으로 바꾼다. 그래야 이관한 사이트의 디자인을 입는다
+    color-literal 1
+
+$ [text-language-gap] node scripts/module-integration-check.js <tmp>\lib9
+  exit 1
+  ✗ module-integration-check: FAIL, 모듈 1개, 지적 1건
+    [text-language-gap] shop-view/text/en.json · shop-view: 문구 키 b가 en.json에 없다
+    text-language-gap 1
+
+$ [table-owner-conflict] node scripts/module-integration-check.js <tmp>\lib10
+  exit 1
+  ✗ module-integration-check: FAIL, 모듈 2개, 지적 1건
+    [table-owner-conflict] bbb-two/db · 테이블 shared_t을 aaa-one와 bbb-two가 둘 다 만든다
+    table-owner-conflict 1
+
+$ [bridge gap] node scripts/module-integration-check.js <tmp>\lib11
+  exit 1
+  ✗ module-integration-check: FAIL, 모듈 2개, 지적 1건
+    [bridge-gap] design-kd/style/bridge.css · design-kd의 bridge.css가 shop-view의 토큰 1개를 하나도 잇지 않는다. 이 디자인을 입혀도 shop-view은 자기 기본 모양 그대로다
+    bridge-gap 1
+
+$ [bridge ok] node scripts/module-integration-check.js <tmp>\lib12
+  exit 0
+  ✔ module-integration-check: PASS, 모듈 2개, 지적 0건
+
+$ [only clean] node scripts/module-integration-check.js <tmp>\lib13 --only ccc-clean
+  exit 0
+  ✔ module-integration-check: PASS, 모듈 2개, 지적 0건
+
+$ [only defective] node scripts/module-integration-check.js <tmp>\lib13 --only aaa-one
+  exit 1
+  ✗ module-integration-check: FAIL, 모듈 2개, 지적 1건
+    [requires-unresolved] aaa-one/module.json · aaa-one이 요구하는 모듈 zzz-missing이 저장소에 없다
+    requires-unresolved 1
+
+$ [empty library] node scripts/module-integration-check.js <tmp>\lib14
+  exit 4
+  module-integration-check: no module (module.json) under <tmp>\lib14
+
+$ [admission] node scripts/module-admit.js member-rules --library <tmp>\lib15 --json
+  exit 1
+  {
+    "status": "FAIL",
+    "modules": [
+      {
+
+$ [real library] node scripts/module-integration-check.js <library>\modules
+  exit 0
+  ✔ module-integration-check: PASS, 모듈 219개, 지적 0건
+
+$ [real library order] node scripts/module-integration-check.js <library>\modules --order
+  exit 0
+  access-permissions
+  access-guard
+  access-menu
+  integration-net-guard

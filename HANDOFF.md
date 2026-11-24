@@ -20,7 +20,7 @@ Claude Code. It is the *product* (the harness itself), not an app built with it.
 gates (G1–G25) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.12.9` (package.json = git tag `v2.12.9` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Current version:** `2.13.0` (package.json = git tag `v2.12.9` = CHANGELOG top = GitHub releases/latest, all aligned)
 - **Test suite:** `npx jest` → **449 tests, 40 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
@@ -160,7 +160,7 @@ node scripts/progress-check.js docs/PROGRESS.md   # this repo's ledger: current 
 node doctor.js
 ```
 
-If those agree (version = v2.12.9, tests green, doctor healthy, ledger PASS), the handoff is intact and you
+If those agree (version = v2.13.0, tests green, doctor healthy, ledger PASS), the handoff is intact and you
 may proceed from § Next actions.
 
 
@@ -429,3 +429,13 @@ CREATE TABLE consent_records (user_id UUID, region TEXT, personalized BOOLEAN DE
 - 모듈 저장소의 git 색인은 다른 세션과 함께 쓴다. 커밋은 경로를 붙여서 한다(`git commit -F <파일> -- modules/<이름>`). 경로 없는 커밋은 다른 세션이 스테이징해 둔 파일까지 가져간다(한 번 그랬고 곧바로 되돌려 다시 했다).
 - 비공개 대기열(`QUEUE.md`)에 «대기» 줄은 없다. 운영자가 볼 것은 `OPERATOR-NOTICE.md`의 1~16번이다(11번과 12번은 고객의 돈이 걸린 항목).
 - 아직 재지 않은 것: 화면 낭독기, 인쇄, 글자 200%, 다른 브라우저 엔진, 화면에서 누른 뒤의 흐름, 밖의 서비스 실제 호출, PostgreSQL용 저장소, 추출한 모듈을 실제 사이트에 갈아 끼우는 일.
+
+---
+## 인수인계 보강 (2026-11-24, v2.13.0): 모듈 사이 연동 검사, 디자인 이관, 모듈 219개 전수 점검
+
+- 위 본문의 v2.12.9 수치는 이 보강으로 대체된다: 현재 `2.13.0`, jest **465 tests / 41 suites**. 저장소의 모듈은 219개다. 열린 결함은 D-14 하나다.
+- 입고 검사에 다섯째 단계 `integration`이 있다: `scripts/module-integration-check.js`가 저장소 전체를 한 번 읽고 그 모듈 몫만 낸다(필수 모듈과 판 범위, 다른 모듈이 가져올 수 있는 내보내기, 토큰과 색, 문구 언어 짝, 표, 경로, 디자인 다리). 저장소 전체는 `node scripts/module-integration-check.js C:/sites/00Module_site/modules`(고정 검증 C14). 현재 0건.
+- 디자인이 모듈과 함께 간다(표준 §6-2): 화면 모듈은 `style/tokens.css`에 기본값을 갖고, 사이트는 디자인 체계 모듈의 `bridge.css`로 토큰만 덮어쓴다.
+- 모듈 219개를 하나씩 에이전트로 점검했다(규약과 보고서는 비공개 폴더 `.coolhan-private/module-audit/`: `PROTOCOL.md`, `reports/<이름>.md`, 교차 항목은 `reports/_cross-*.md`, 남은 일 `STATE.md`). 보고서 표로 센 고친 결함은 약 980건. 새 모듈을 만들거나 고칠 때도 같은 규약(읽기, 기계 지적, 여섯 가지 점검, 시험 추가, 판과 CHANGELOG, 입고 검사)을 쓴다.
+- 모듈을 고친 뒤의 한 줄: `node scripts/module-admit.js <이름...> --with-dependents --consumer .coolhan-private/module-demo --library C:/sites/00Module_site`. 마지막 실행: 모듈 24개 입고 가능 24, 실증 프로젝트가 새 판 65개를 받아 `npm run typecheck` 통과.
+- 아직 재지 않은 것: 점검 뒤의 화면 656개 주소 두 폭 재측정(실증 프로젝트의 개발 서버가 많은 갱신 뒤 느려서 이 세션에서는 끝내지 못했다. `__sweep()`를 다시 돌린다), 화면 낭독기, 인쇄, 밖의 서비스 실제 호출, PostgreSQL용 저장소.

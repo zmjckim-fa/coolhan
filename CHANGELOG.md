@@ -1,5 +1,43 @@
 # Changelog
 
+## [2.13.0] - 2026-11-24
+
+### Added
+
+- **Module integration check** (`scripts/module-integration-check.js`, 14 rules; messages `integration.*`; unit tests
+  `src/__tests__/module-integration-check.test.js`, 15). Operator order: find the weak points of the finished
+  modules, check that modules work with each other, and make sure a module carries its design when it moves to
+  another site (adapted to the site, never rebuilt). The form gate reads one module; this reads the library:
+  requires that are missing, out of range or in a ring; `provides.lib` names that `core/index` does not export or that
+  another module may not import; tokens that are provided and not defined, used and not defined, or colours written
+  outside tokens; a screen module without `style/tokens.css`; a text key in one language only; two modules creating
+  one table; SQL on a table another module owns without `requires`; two modules with one route; a design module
+  whose bridge assigns none of a screen module's tokens. `--only a,b` scopes it, `--order` prints the audit order
+  (required modules first). Exit 4 when the folder has no module.
+- **Admission has a fifth step, `integration`** (`scripts/module-admit.js`): the library is read once per run and the
+  findings of the named module are its result, so a module that passes its own tests and does not fit the library
+  around it fails admission. Fixed list entry C14 runs the check over the whole library.
+- **Module standard §6-2, §6-3, §9-1**: the design travels with the module (own tokens, a bridge as the only way a
+  site changes it, text by key), module-to-module fit, and the 14 integration rules.
+
+### Measured (the audit that built it)
+
+- Every one of the 219 library modules was audited one by one by its own agent (protocol in the private audit
+  folder), then admitted (form, tests, empty-folder install, secret scan, integration) and committed in 48 path-scoped
+  commits. By the agents' report tables about 980 findings were fixed: behaviour and logic (largest group),
+  vulnerabilities (about 100: path and permission bypasses, injection through object names, unchecked money and
+  dates, appendable-log overwrite through `INSERT OR REPLACE`, leaked internal names), input and storage mismatches,
+  integration (44), design and touch targets. Each fix has a test and a CHANGELOG entry in its module; versions went
+  up by patch, minor where an export or optional field was added.
+- Library integration check: 392 findings on the first measurement, 0 after (219 modules). Admission of the last 24
+  modules together with the demo project's own type check: 24/24 PASS, 65 versions taken by the project.
+- jest 465/465, 41 suites; track50 18/18, 0 false +/-.
+
+### Verification
+
+- Honest bounds: the check reads text. Whether two modules fit at run time is shown by their tests and the consumer's
+  type check; whether a screen looks right on a site is a person's look at two widths.
+
 ## [2.12.9] - 2026-11-24
 
 ### Fixed

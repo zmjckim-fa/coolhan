@@ -13,6 +13,10 @@
  *   install  the module (with what it requires) into an empty throwaway folder through the module manager,
  *            `status` there, and the same test command inside the installed copy: it must stand without the library
  *   secrets  scripts/secret-scan.js rules on every file of the module
+ *   integration  scripts/module-integration-check.js over the whole library, filtered to this module: requires and
+ *            versions, exports another module may import, tokens and colours, text languages, tables, routes and
+ *            design bridges (v2.13.0). It reads the library, not the module alone: a module that passes its own
+ *            tests can still not fit the modules around it.
  * A step that could not measure anything (no test command, a test run that counted 0 tests, a child that never
  * started) is NOT_RUN, never PASS. Nothing is committed here: admission says whether a commit may follow.
  *
@@ -44,10 +48,11 @@ const { runNode, neverStarted } = require('./lib/spawn-node');
 const { t } = require('./messages');
 const { evaluate } = require('./module-check');
 const { scanPath } = require('./secret-scan');
-const { catalog, withRequirements, INSTALL_DIR } = require('./modules');
+const { evaluate: evaluateIntegration, belongsTo } = require('./module-integration-check');
+const { catalog, withRequirements, modulesRoot, INSTALL_DIR } = require('./modules');
 
 const MANAGER = path.join(__dirname, 'modules.js');
-const STEPS = ['form', 'test', 'install', 'secrets'];
+const STEPS = ['form', 'test', 'install', 'secrets', 'integration'];
 const COUNT = /^(?:#|ℹ) (tests|fail|skipped) (\d+)/gm;
 
 /** Counts printed by Node's test runner, or null when the command printed none. */
@@ -102,6 +107,20 @@ function stepSecrets(dir) {
     : { status: 'PASS', detail: t('admit.secretsPass', { files: r.files }) };
 }
 
+// The whole library is read once per run: the check looks at every module and the answer for one is a filter of it.
+let integrationMemo = null;
+
+/** The module fits the library it will be installed beside: requires, exports, tokens, tables, routes, design bridges. */
+function stepIntegration(name, library) {
+  if (!integrationMemo || integrationMemo.library !== library) integrationMemo = { library, result: evaluateIntegration(modulesRoot(library)) };
+  const r = integrationMemo.result;
+  if (r.status === 'NO_MODULES') return { status: 'NOT_RUN', detail: t('admit.integrationNone') };
+  const mine = r.findings.filter(f => belongsTo(f, [name]));
+  return mine.length
+    ? { status: 'FAIL', detail: t('admit.integrationFail', { count: mine.length, rules: [...new Set(mine.map(f => f.rule))].join(', ') }) }
+    : { status: 'PASS', detail: t('admit.integrationPass', { modules: r.modules }) };
+}
+
 /** Admission result of one module of the library. */
 function admit(name, library, cat) {
   const entry = cat[name];
@@ -113,6 +132,7 @@ function admit(name, library, cat) {
   steps.test = runTest(command, dir);
   steps.install = steps.form.status === 'PASS' ? stepInstall(name, command, library) : { status: 'NOT_RUN', detail: t('admit.skippedAfterForm') };
   steps.secrets = stepSecrets(dir);
+  steps.integration = stepIntegration(name, library);
   const all = STEPS.map(s => steps[s].status);
   const status = all.includes('FAIL') ? 'FAIL' : all.includes('NOT_RUN') ? 'NOT_RUN' : 'PASS';
   return { name, version: entry.version, status, steps };

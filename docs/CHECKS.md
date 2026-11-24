@@ -7,7 +7,7 @@
 
 | ID | 검사 | 명령 | 비고 |
 |---|---|---|---|
-| C1 | 전체 단위 시험 (jest, 40 suites) | `npx jest --ci` | 느림(~6분) |
+| C1 | 전체 단위 시험 (jest, 41 suites) | `npx jest --ci` | 느림(~6분) |
 | C2 | 프롬프트 현대화 린트 (에이전트·스킬) | `node scripts/prompt-modernization-check.js .claude/agents .claude/skills` | |
 | C3 | 플레이스홀더·TODO 잔존 | `node scripts/no-placeholder-check.js scripts src/health.js src/server.js doctor.js install.js` | |
 | C4 | 비밀값 스캔 (스테이징 전 전체) | `node scripts/secret-scan.js` | 커밋 직전엔 `--staged`로 한 번 더 |
@@ -20,3 +20,4 @@
 | C11 | 교훈 문서가 레지스트리에서 파생한 그대로인가 (G22) | `node scripts/field-lessons.js render --check` | 어긋나면 손으로 고치지 말고 `render` |
 | C12 | 교훈 검사 래칫: 하네스 자기 실행 (G22) | `node scripts/field-lessons.js check . --baseline docs/FIELD_LESSONS_BASELINE.json --skip-dirs docs` | 종료 코드 4 = 훑은 것이 없음 = 확인 안 함 |
 | C13 | 전역 상시 지시 블록이 레지스트리에서 파생한 그대로인가 (G24) | `node scripts/install-global.js --check` | 종료 코드 4 = 이 기기에 설치되지 않음 = 확인 안 함. 1이면 `node scripts/install-global.js` |
+| C14 | 모듈 저장소 전체의 연동과 디자인 이관 (G25) | `node scripts/module-integration-check.js C:/sites/00Module_site/modules` | 종료 코드 4 = 저장소가 이 기기에 없음 = 확인 안 함. 지적이 있으면 그 모듈의 새 판으로 고친다 |

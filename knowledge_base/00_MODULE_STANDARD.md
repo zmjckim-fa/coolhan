@@ -102,6 +102,20 @@
 | 착탈 | 설치는 폴더 복사 하나, 제거는 폴더 삭제 하나다. 모듈 밖에 파일을 만들지 않는다. 프로젝트에 연결하는 방법은 `README.md`에 적는다 | `modules add`, `modules remove`, 빈 프로젝트 설치 시험 |
 | 지속적인 고도화 | 판 번호와 `CHANGELOG.md`. 원천 프로젝트가 앞서 나가면 `modules drift`가 알리고, 판이 오르면 쓰는 프로젝트의 `modules status`가 알린다 | `modules drift`, `modules status` |
 
+## 6-2. 디자인이 모듈과 함께 간다 (운영자 지시 2026-11-24)
+
+«모듈을 이관할 때 디자인도 같이 이관되어야 한다. 이관하는 사이트에 어울리게 바뀌는 것은 되지만 아예 새로 만들어지면 안 된다. 조화롭게 이관되어야 한다.»
+
+| 기준 | 모듈이 지킬 것 | 확인 |
+|---|---|---|
+| 모양이 모듈 안에 있다 | 화면(`user/`, `admin/`)이 있으면 `style/tokens.css`에 색, 모서리, 그림자, 글꼴의 기본값을 모듈 이름의 접두사(`--al-*`)로 정의한다. 화면은 `var(--토큰, 기본값)`으로만 쓰고 색을 값으로 직접 쓰지 않는다. 토큰 기본값만으로도 모양이 완성이다 | 게이트 `screen-without-tokens`, `color-literal`, `token-undefined`, `token-not-defined` |
+| 사이트에 맞게 바뀌는 길 | 사이트가 값을 바꾸는 길은 토큰 덮어쓰기 하나다. 디자인 체계 모듈(`design-*`)의 `style/bridge.css`가 모듈의 토큰을 체계의 토큰으로 잇는다(`--ap-accent: var(--kd-accent)`). 모듈을 다시 짜지 않는다 | 게이트 `bridge-gap` (연결이 하나도 없는 화면 모듈을 알린다) |
+| 사람 말은 사전 키 | 화면의 문구는 `text/` 사전의 열쇠로만 쓴다. 한 언어에 있는 열쇠가 다른 언어에 없으면 안 된다 | 게이트 `text-language-gap` |
+
+## 6-3. 모듈 사이 연동
+
+모듈 하나의 형식은 `module-check`가, 모듈들이 서로 맞는지는 `module-integration-check`가 읽는다(§9-1). 입고 검사의 다섯째 단계이기도 하다.
+
 ## 7. 가져다 쓰기와 바꿔 끼우기
 
 | 일 | 명령 | 결과 |
@@ -124,7 +138,7 @@
 | 감지 | `node scripts/modules.js drift` | 매니페스트의 `origin` 경로가 원천 프로젝트에서 그 뒤로 바뀌었는지 git 기록으로 본다(읽기만). 바뀐 모듈이 흡수 후보다 |
 | 조사 | Site Analyzer, Module Extractor | 프로젝트의 새 기능을 읽고 모듈 경계로 나눈다. 고객 자료, 비밀값, 남의 코드는 가져오지 않는다 |
 | 작성 | Developer | 이 표준의 폴더 구성으로 모듈을 만들거나 판을 올린다. `CHANGELOG.md`와 `origin`을 갱신한다 |
-| 검사 | `node scripts/module-admit.js <이름> --library <저장소>` | 입고 검사 한 명령: 형식(`module-check`), 모듈의 시험, 빈 폴더에 설치해 설치본에서 다시 시험, 비밀값 스캔. 종료 코드 0일 때만 저장소에 커밋한다. 재지 못한 단계가 있으면 4다(통과가 아니다). 이미 있는 모듈을 고쳤으면 `--with-dependents`로 그 모듈을 `requires`로 쓰는 모듈까지 함께 재고, `--consumer <프로젝트>`로 모듈을 쓰는 프로젝트가 새 판을 받아 자기 확인 명령(기본 `npm run typecheck`)을 통과하는지 잰다 |
+| 검사 | `node scripts/module-admit.js <이름> --library <저장소>` | 입고 검사 한 명령: 형식(`module-check`), 모듈의 시험, 빈 폴더에 설치해 설치본에서 다시 시험, 비밀값 스캔, 저장소 안의 연동과 디자인 이관(`module-integration-check`). 종료 코드 0일 때만 저장소에 커밋한다. 재지 못한 단계가 있으면 4다(통과가 아니다). 이미 있는 모듈을 고쳤으면 `--with-dependents`로 그 모듈을 `requires`로 쓰는 모듈까지 함께 재고, `--consumer <프로젝트>`로 모듈을 쓰는 프로젝트가 새 판을 받아 자기 확인 명령(기본 `npm run typecheck`)을 통과하는지 잰다 |
 | 배포 | `modules status`, `modules update` | 그 모듈을 쓰는 프로젝트가 새 판을 본다 |
 
 ### 8-1. 가져올 때 정돈한다 (운영자 지시 2026-11-22)
@@ -175,8 +189,26 @@
 
 종료 코드: 0 PASS, 1 FAIL, 2 사용법 오류, 4 검사할 모듈이 없음(통과가 아니다).
 
+### 9-1. 모듈 사이 연동 규칙
+
+`scripts/module-integration-check.js <저장소의 modules 폴더> [--only a,b] [--order] [--json]` (읽기만 한다. 종료 코드 0 PASS, 1 FAIL, 2 사용법 오류, 4 모듈 없음)
+
+| 규칙 | 뜻 |
+|---|---|
+| requires-unresolved, requires-range, requires-cycle | 필요한 모듈이 저장소에 없다, 저장소의 판이 범위를 만족하지 않는다, 모듈끼리 고리로 서로를 요구한다 |
+| lib-not-exported, lib-not-reachable | `provides.lib`가 이름을 말하는데 `core/index`가 내놓지 않는다, 내놓지만 다른 모듈이 가져올 수 있는 길(`core/index`, `provides.entries`)로 닿지 않는다 |
+| token-not-defined, token-undefined | `provides.tokens`가 자기 스타일에 없는 토큰을 말한다, 어디에도 정의되지 않고 기본값도 없는 `var(--x)` |
+| color-literal, screen-without-tokens | 토큰 밖에 색을 직접 적었다, 화면이 있는데 `style/tokens.css`가 없다 |
+| text-language-gap | 한 언어 사전에만 있는 문구 열쇠 |
+| table-owner-conflict, table-foreign-access | 두 모듈이 같은 표를 만든다, `requires` 없이 다른 모듈의 표를 SQL로 읽는다 |
+| route-conflict | 두 모듈이 같은 방법과 경로를 내놓는다 |
+| bridge-gap | 디자인 체계 모듈의 `bridge.css`가 어떤 화면 모듈의 토큰도 잇지 않는다 |
+
+입고 검사(`module-admit`)는 이 검사를 저장소 전체에 한 번 돌려 그 모듈 몫만 걸러 다섯째 단계로 낸다. 오래된 모듈이 새 모듈 때문에 깨지는 것도 같은 방법으로 보인다(`--with-dependents`).
+
 ## 10. 정직한 한계
 
+- 연동 검사는 글자를 본다. 이름, 판, 토큰, 표, 경로가 서류로 맞는다는 것까지다. 두 모듈이 실행할 때 맞는지는 모듈의 시험과 쓰는 프로젝트의 타입 검사(`module-admit --consumer`)가 보여 준다. 화면이 사이트에서 실제로 조화로운지는 브라우저에서 두 폭으로 열어 사람이 본다.
 - 게이트는 형식을 본다. 모듈이 실제로 홀로 서는지는 그 모듈의 시험과 빈 프로젝트에 설치해 돌려 보는 것으로 확인한다.
 - 입고 검사는 모듈의 시험이 단언하는 것만 읽는다. 시험이 약한 모듈도 통과한다. 시험이 충분한지는 검토자가 본다. 화면은 브라우저에서 열어 보지 않는다.
 - 스택이 `none`이 아닌 모듈(화면과 서버가 든 것)은 같은 스택의 프로젝트에서만 그대로 쓴다. 다른 스택은 `core/`만 쓴다.
