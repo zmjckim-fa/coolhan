@@ -20,8 +20,8 @@ Claude Code. It is the *product* (the harness itself), not an app built with it.
 gates (G1–G25) + 3 Claude Code hooks that enforce the non-stop loop at the harness level.
 
 - **Repo / remote:** `https://github.com/zmjckim-fa/coolhan.git` (branch `main`)
-- **Current version:** `2.13.0` (package.json = git tag `v2.12.9` = CHANGELOG top = GitHub releases/latest, all aligned)
-- **Test suite:** `npx jest` → **449 tests, 40 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
+- **Current version:** `2.13.0` (package.json = git tag `v2.13.0` = CHANGELOG top = GitHub releases/latest, all aligned)
+- **Test suite:** `npx jest` → **465 tests, 41 suites, all pass** (under a minute on an idle machine, several minutes on a loaded one; the G15 HTTP-probe suite adds ~10s of real timeouts, so a 240s tool timeout is too short — run it backgrounded)
 - **Related production site:** `https://coolhanx.com` (a SEPARATE repo/server — hardened via G15; see § Server access)
 
 ## 2. Absolute working rules (read before doing anything)
@@ -154,7 +154,7 @@ provide its own credentials in its own environment — they do NOT travel in thi
 ```bash
 git log --oneline -3
 node -e "console.log('pkg', require('./package.json').version)" && git describe --tags --abbrev=0
-npx jest --ci   # background it; expect 449 passed / 40 suites
+npx jest --ci   # background it; expect 465 passed / 41 suites
 node scripts/checks-run.js   # the fixed list (docs/CHECKS.md) — the G20 way to "verify"; C1 is the slow one
 node scripts/progress-check.js docs/PROGRESS.md   # this repo's ledger: current position + open D-numbers
 node doctor.js
@@ -439,3 +439,14 @@ CREATE TABLE consent_records (user_id UUID, region TEXT, personalized BOOLEAN DE
 - 모듈 219개를 하나씩 에이전트로 점검했다(규약과 보고서는 비공개 폴더 `.coolhan-private/module-audit/`: `PROTOCOL.md`, `reports/<이름>.md`, 교차 항목은 `reports/_cross-*.md`, 남은 일 `STATE.md`). 보고서 표로 센 고친 결함은 약 980건. 새 모듈을 만들거나 고칠 때도 같은 규약(읽기, 기계 지적, 여섯 가지 점검, 시험 추가, 판과 CHANGELOG, 입고 검사)을 쓴다.
 - 모듈을 고친 뒤의 한 줄: `node scripts/module-admit.js <이름...> --with-dependents --consumer .coolhan-private/module-demo --library C:/sites/00Module_site`. 마지막 실행: 모듈 24개 입고 가능 24, 실증 프로젝트가 새 판 65개를 받아 `npm run typecheck` 통과.
 - 아직 재지 않은 것: 점검 뒤의 화면 656개 주소 두 폭 재측정(실증 프로젝트의 개발 서버가 많은 갱신 뒤 느려서 이 세션에서는 끝내지 못했다. `__sweep()`를 다시 돌린다), 화면 낭독기, 인쇄, 밖의 서비스 실제 호출, PostgreSQL용 저장소.
+
+---
+## 인수인계 보강 (2026-11-25, v2.13.0 그대로): 점검 뒤 재측정, 그리고 누른 뒤의 흐름
+
+- 본체 코드는 바뀌지 않았다(판 `2.13.0`, jest 465 tests / 41 suites, 고정 검증 14개). 위 본문 머리의 판 줄과 시험 수가 이전 값으로 남아 있던 것을 고쳤다.
+- 전수 점검 뒤의 저장소 전체 재측정(모듈 219개): 연동 검사 지적 0건, PostgreSQL 검사 94개 모두 통과, 입고 검사(다섯 단계) 219개 모두 입고 가능. 직전에 통과하지 못했던 두 모듈도 통과했다.
+- 화면 주소 656개를 점검 뒤에 두 폭(1280px, 375px)에서 다시 쟀다: 지적 0건.
+- 누른 뒤의 흐름을 잰다: 실증 프로젝트의 측정 도구에 `__press()`가 있다. 주소마다 단추를 하나씩(주소를 새로 연 뒤 한 번) 누르고, 던짐, 빈 화면, 가로 넘침, 콘솔 오류, 문구 열쇠, «눌러도 아무 일 없음»을 잰다. 1280px에서 656개 주소, 1,432번: 모듈 결함 0건. «아무 일 없음» 후보는 갈래별로 읽었고(이미 켜진 탭, 같은 조건의 재조회, 꺼진 묶음 안의 단추, 브라우저의 빈 칸 알림, 인쇄) 실증 파일의 빈 콜백 여섯 곳만 고쳤다. 기준과 갈래는 비공개 폴더의 `.coolhan-private/module-harvest/10-press-sweep.md`.
+- 화면이 든 모듈을 고친 뒤의 순서에 한 줄이 늘었다: 입고 검사, 저장소 커밋, 실증 프로젝트에서 `modules update`, 타입 검사, `__sweep(['<모듈>'])` 두 폭, `__press(['<모듈>'])`.
+- 측정은 창이 가려지거나 기기가 다른 검사로 바쁘면 몇 배 느려진다. 도구는 일꾼(worker)의 타이머로 기다린다. 전체 입고 검사와 겹치지 않게 돌린다.
+- 아직 재지 않은 것: 이어서 누르는 흐름과 값을 적은 뒤의 제출, 375px에서의 누르기, 확인창의 «아니오» 쪽, 화면 낭독기, 인쇄 결과물, 다른 브라우저 엔진, 밖의 서비스 실제 호출, PostgreSQL용 저장소, 추출한 모듈을 실제 사이트에 갈아 끼우는 일.
