@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.14.0] - 2026-11-26
+
+### Added
+
+- **Schema-first / single source of truth as a basic rule** (operator order 2026-11-26: "이름과 모양을 한 곳에 먼저
+  정의한 뒤 나머지 코드를 거기서 만든다. 모듈들에 전체 적용하라"). `knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md` §1-1
+  gives the table (DB schema and migrations, state values, API shape, input validation, text, tokens, parts, settings,
+  permissions, naming, shared functions; S9 to S12 added to S1 to S8). `00_MODULE_STANDARD.md` §6-4 and §9-2 say how a module
+  keeps it, and §10 states what the check cannot see.
+- **Module single-source check** (`scripts/module-single-source-check.js`, 9 rules; messages `modsingle.*`; unit tests
+  `src/__tests__/module-single-source-check.test.js`, 9). Reads the whole library and reports for the named modules:
+  text outside the dictionaries, value sets written twice, functions and files copied between modules, shared screen parts
+  redrawn by hand, colours in code, validation regexes in screens, `CREATE TABLE` outside `db/`, `process.env` outside
+  `adapters/`. Exemption by `single-source-ok: <reason>` (line) or `single-source-ok-file: <reason>` (file).
+- **Admission has a sixth step, `singleSource`** (`scripts/module-admit.js`): a module that passes its tests and keeps a
+  sentence, a value set or a copied function in the wrong place fails admission.
+- Developer and Validator agents carry the rule (Developer: define first; Validator stage 7 cites the findings).
+
+### Measured (first application)
+
+- The 221 modules of the library `00Module_site/modules` had 2121 findings (1919 text, 65 value sets, 104 function copies,
+  13 file copies, 73 redrawn parts, 18 colours, 5 screen regexes). After one pass: 0. 41 modules changed a returned shape
+  and went to a new major version (each CHANGELOG has the migration line). Tests 7959 pass over 221 modules, admission
+  221 admitted. Not verified: the screens in a browser and the type checks of the sites that use these modules.
+
 ## [2.13.0] - 2026-11-24
 
 ### Added

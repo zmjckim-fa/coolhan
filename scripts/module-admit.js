@@ -17,6 +17,9 @@
  *            versions, exports another module may import, tokens and colours, text languages, tables, routes and
  *            design bridges (v2.13.0). It reads the library, not the module alone: a module that passes its own
  *            tests can still not fit the modules around it.
+ *   singleSource  scripts/module-single-source-check.js over the whole library, filtered to this module: its text in the
+ *            dictionaries, its value sets once, no function or file copied from another module, no colour or
+ *            validation regex in the wrong place (v2.14.0). One thing lives in one place.
  * A step that could not measure anything (no test command, a test run that counted 0 tests, a child that never
  * started) is NOT_RUN, never PASS. Nothing is committed here: admission says whether a commit may follow.
  *
@@ -49,10 +52,11 @@ const { t } = require('./messages');
 const { evaluate } = require('./module-check');
 const { scanPath } = require('./secret-scan');
 const { evaluate: evaluateIntegration, belongsTo } = require('./module-integration-check');
+const { evaluate: evaluateSingleSource } = require('./module-single-source-check');
 const { catalog, withRequirements, modulesRoot, INSTALL_DIR } = require('./modules');
 
 const MANAGER = path.join(__dirname, 'modules.js');
-const STEPS = ['form', 'test', 'install', 'secrets', 'integration'];
+const STEPS = ['form', 'test', 'install', 'secrets', 'integration', 'singleSource'];
 const COUNT = /^(?:#|ℹ) (tests|fail|skipped) (\d+)/gm;
 
 /** Counts printed by Node's test runner, or null when the command printed none. */
@@ -121,6 +125,20 @@ function stepIntegration(name, library) {
     : { status: 'PASS', detail: t('admit.integrationPass', { modules: r.modules }) };
 }
 
+// Read once per run like the integration check: a copy is found by looking at the other modules.
+let singleSourceMemo = null;
+
+/** The module keeps one thing in one place: its text in the dictionaries, its values once, nothing copied from another module. */
+function stepSingleSource(name, library) {
+  if (!singleSourceMemo || singleSourceMemo.library !== library) singleSourceMemo = { library, result: evaluateSingleSource(modulesRoot(library)) };
+  const r = singleSourceMemo.result;
+  if (r.status === 'NO_MODULES') return { status: 'NOT_RUN', detail: t('admit.singleSourceNone') };
+  const mine = r.findings.filter(f => f.where.startsWith(name + '/'));
+  return mine.length
+    ? { status: 'FAIL', detail: t('admit.singleSourceFail', { count: mine.length, rules: [...new Set(mine.map(f => f.rule))].join(', ') }) }
+    : { status: 'PASS', detail: t('admit.singleSourcePass', { modules: r.modules }) };
+}
+
 /** Admission result of one module of the library. */
 function admit(name, library, cat) {
   const entry = cat[name];
@@ -133,6 +151,7 @@ function admit(name, library, cat) {
   steps.install = steps.form.status === 'PASS' ? stepInstall(name, command, library) : { status: 'NOT_RUN', detail: t('admit.skippedAfterForm') };
   steps.secrets = stepSecrets(dir);
   steps.integration = stepIntegration(name, library);
+  steps.singleSource = stepSingleSource(name, library);
   const all = STEPS.map(s => steps[s].status);
   const status = all.includes('FAIL') ? 'FAIL' : all.includes('NOT_RUN') ? 'NOT_RUN' : 'PASS';
   return { name, version: entry.version, status, steps };

@@ -42,7 +42,7 @@ describe('module-admit: what a module must show before it is committed to the li
     const r = run(library, 'member-signup');
     expect(r.code).toBe(0);
     expect(r.json.status).toBe('PASS');
-    expect(stepsOf(r, 'member-signup')).toEqual({ form: 'PASS', test: 'PASS', install: 'PASS', secrets: 'PASS', integration: 'PASS' });
+    expect(stepsOf(r, 'member-signup')).toEqual({ form: 'PASS', test: 'PASS', install: 'PASS', secrets: 'PASS', integration: 'PASS', singleSource: 'PASS' });
     expect(r.json.modules[0].steps.test.counts).toMatchObject({ tests: 1, fail: 0 });
   });
 
@@ -57,7 +57,7 @@ describe('module-admit: what a module must show before it is committed to the li
     makeModule(library, 'member-signup', {}, { 'test/fixture.test.js': `${GOOD_TEST}const password = 'correct-horse-battery-staple-1';\n` }); // secret-scan:allow the line the admitted module's scan must catch (the marker stays outside the fixture)
     const r = run(library, 'member-signup');
     expect(r.code).toBe(1);
-    expect(stepsOf(r, 'member-signup')).toEqual({ form: 'PASS', test: 'PASS', install: 'PASS', secrets: 'FAIL', integration: 'PASS' });
+    expect(stepsOf(r, 'member-signup')).toEqual({ form: 'PASS', test: 'PASS', install: 'PASS', secrets: 'FAIL', integration: 'PASS', singleSource: 'PASS' });
     expect(r.json.modules[0].steps.secrets.detail).toMatch(/test\/fixture\.test\.js:\d+/);
   });
 

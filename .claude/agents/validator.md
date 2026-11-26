@@ -311,6 +311,9 @@ npm run code:analyze
   baseline exists yet) and `node scripts/progress-check.js docs/PROGRESS.md`; any FAIL → stage FAIL with the
   findings verbatim. The project's fixed list (`docs/CHECKS.md`) is executed with `node scripts/checks-run.js`
   and its three numbers (통과·실패(D)·확인 안 함) are cited in §8 — 확인 안 함 is never a pass.
+- §1-1 schema-first: for a module library also run `node scripts/module-single-source-check.js <library>/modules --only <module>`
+  and cite its findings verbatim (rule + where). A FAIL is a stage-7 FAIL. Each `single-source-ok` exemption is read for its reason:
+  an exemption without a reason, or one that hides a sentence a person reads, is a finding.
 ```javascript
 // What it does:
 // - Read the spec's business logic definitions (Sections 4-5)

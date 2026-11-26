@@ -65,6 +65,10 @@ execution results pass a gate (C10). Full map: `references/companion-skills.md`.
 - §4-d new code obeys the rules; legacy code migrates only in files you touch. Pre-commit:
   `node scripts/single-source-check.js <root> --baseline docs/SINGLE_SOURCE_BASELINE.json` is clean
   (ratchet: no count may grow); a FAIL names file:line.
+- §1-1 **스키마 우선(기본 규칙)**: 새 기능은 이름과 모양(DB 스키마, 상태값, API·입력 검증 스키마, 문구 키, 설정, 권한, 디자인
+  토큰, 공용 부품)을 **한 곳에 먼저 정의**하고 나머지는 거기서 만들거나 거기를 부른다. 같은 모양을 두 번째로 적는 줄은
+  쓰지 않는다. 모듈 라이브러리에서는 `node scripts/module-single-source-check.js <library>/modules --only <module>` 가 0건이어야
+  커밋한다(`module-admit`의 `singleSource` 단계). 면제는 `single-source-ok: <이유>`로만.
 - §9/§10 update `docs/PROGRESS.md` in place when the unit ends (never batched later); 완료 only with
   captured evidence (test numbers / commit hash) — otherwise 진행 중(남은 항목). §12 "fix" without a D-number
   or symptom → ask what; with one → change only that defect's cause, register anything else as a new D-number.
