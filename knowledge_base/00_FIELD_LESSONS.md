@@ -36,6 +36,7 @@
 | O-17 | **병렬로 나누고 끝에 다시 검토**: 독립적인 조사, 기획, 구현은 영역별 에이전트로 나눠 병렬로 돌리고 하나 끝나기를 기다리며 멈추지 않는다. 끝나면 한 에이전트가 합친 결과를 다시 검토해 충돌과 빠진 것을 고친다. | 에이전트: orchestrator, 게이트: parallel-plan | 메시지 47건, 8개 군 |
 | O-18 | **정한 결정은 다시 묻지 않는다**: 운영자가 이미 정한 결정은 `docs/DECISIONS.md`와 `HANDOFF.md`에 적고 이어서 쓴다. 같은 것을 다시 묻지 않는다. | 규칙 | 여러 군의 규칙 기록 |
 | O-19 | **모듈은 가져다 쓰고, 고도화한 것은 저장소로 돌려준다**: 회원가입, 관리자, 결제 같은 기능을 새로 만들기 전에 `node scripts/coolhan.js modules list`에서 찾아 `modules add <이름>`으로 가져온다. 세션을 시작하면 `modules status`로 새 판을 보고 `modules update <이름>`으로 바꿔 끼운다. `coolhan_modules/` 안의 파일은 고치지 않는다. 프로젝트에서 더 좋게 만든 기능은 모듈 표준(쿨한 본체의 `knowledge_base/00_MODULE_STANDARD.md`: 이름 하나, 같은 하위 폴더, 파일 이름 규칙, 분리된 DB, 시험, 보안 문서)대로 정돈해 저장소에 새 모듈이나 새 판으로 올린다. 다른 프로젝트 폴더의 파일은 밖에서 바꾸지 않는다. | 고정 검증: modules status, 게이트: module-check | 운영자 지시 2026-11-22 (회원가입과 회원관리를 사이트마다 새로 만드는 반복) |
+| O-20 | **스키마 우선: 이름과 모양은 한 곳에 먼저 정의하고 나머지는 거기서 만든다**: 사이트나 모듈을 짓거나 고칠 때 DB 스키마와 마이그레이션, 상태값, API 모양과 입력 검증, 화면 문구(번역 사전 열쇠), 디자인 토큰과 공용 부품, 환경 설정, 권한, 이름 규칙을 각각 한 곳에 먼저 정의하고 나머지는 거기서 만들거나 거기를 부른다. 같은 상태값 목록, 정규식, 함수를 두 곳에 적지 않고 색을 화면마다 적지 않으며 사람 말 문장을 코드에 박지 않는다. 바깥 양식과 글자가 같아야 하는 값만 `single-source-ok: <이유>`로 면제한다. 모듈 라이브러리는 `node scripts/module-single-source-check.js <modules 폴더>`가 0건이어야 입고되고, 일반 프로젝트는 `single-source-check.js`로 잰다. 원칙 `knowledge_base/00_MINIMAL_SOURCE_PRINCIPLES.md` §1-1, 모듈 `00_MODULE_STANDARD.md` §6-4와 §9-2. | 고정 검증: module-single-source-check, 게이트: module-admit singleSource, single-source-check | 운영자 지시 2026-11-26 (모듈 전체에 적용, 사이트 구축의 기본 규칙으로) |
 
 ## 실패 패턴과 방지
 
